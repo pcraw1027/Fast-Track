@@ -1,0 +1,65 @@
+<p id="notice"><%= notice %></p>
+
+<div class="jumbotron">
+  <h1 class="display-4">
+    <%= @company.name %>
+    <%= image_tag @company.logo.url if @company.logo? %>
+  </h1>
+  
+  <p>
+  <strong>Established:</strong>
+  <%= @company.established.to_s(:long) %>
+  </p>
+  <p class="lead">
+    <%= @company.industry_category_type.title %>
+  </p>
+  <hr class="my-4">
+  <p>
+  
+    <%= @company.address_1 %></br>
+    <%= @company.address_2 %></br>
+    <%= @company.city %></br>
+    <%= @company.state %></br>
+    <%= @company.country %></br></br>
+    <%= link_to @company.website %>
+  
+  </p>
+  <!--
+  <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+  -->
+  <%= link_to 'Edit', edit_company_path(@company), class: "btn btn-secondary" %> 
+  <%= link_to 'Back', companies_path, class: "btn btn-secondary" %>
+</div>
+
+
+
+<%= render 'home/submenu' %>
+
+
+<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+
+<p>
+  <strong>Established:</strong>
+  <%= @company.established.to_s(:long) %>
+</p>
+
+<p>
+  <strong>Website:</strong>
+  <%= @company.website %>
+</p>
+
+<p>
+  <strong>Diversity report:</strong>
+  <%= link_to @company.diversity_report %>
+</p>
+
+<p>
+  <strong>Diversity score:</strong>
+  <%= @company.diversity_score %>
+</p>
+
+<p>
+  <strong>Total employees:</strong>
+  <%= @company.total_employees %>
+</p>
+

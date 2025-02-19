@@ -1,0 +1,2 @@
+module GenderTypesHelper
+end

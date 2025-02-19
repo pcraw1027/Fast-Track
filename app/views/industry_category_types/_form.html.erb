@@ -1,0 +1,32 @@
+<%= form_with(model: industry_category_type) do |form| %>
+  <% if industry_category_type.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(industry_category_type.errors.count, "error") %> prohibited this industry_category_type from being saved:</h2>
+
+      <ul>
+        <% industry_category_type.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field form-group">
+    <%= form.label :category_code %>
+    <%= form.text_field :category_code, class: "form-control" %>
+  </div>
+
+  <div class="field form-group">
+    <%= form.label :title %>
+    <%= form.text_field :title, class: "form-control" %>
+  </div>
+
+  <div class="field form-group">
+    <%= form.label :naics_year %>
+    <%= form.number_field :naics_year, class: "form-control" %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "Submit", class: 'btn btn-secondary' %>
+  </div>
+<% end %>

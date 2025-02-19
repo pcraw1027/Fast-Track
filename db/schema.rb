@@ -1,0 +1,230 @@
+# This file is auto-generated from the current state of the database. Instead
+# of editing this file, please use the migrations feature of Active Record to
+# incrementally modify your database, and then regenerate this schema definition.
+#
+# This file is the source Rails uses to define your schema when running `bin/rails
+# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
+# be faster and is potentially less error prone than running all of your
+# migrations from scratch. Old migrations may fail to apply correctly if those
+# migrations use external dependencies or application code.
+#
+# It's strongly recommended that you check this file into your version control system.
+
+ActiveRecord::Schema.define(version: 2025_02_11_112636) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
+  create_table "bricks", force: :cascade do |t|
+    t.integer "code"
+    t.string "title"
+    t.string "description"
+    t.bigint "klass_id", null: false
+    t.bigint "product_category_source_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["klass_id"], name: "index_bricks_on_klass_id"
+    t.index ["product_category_source_id"], name: "index_bricks_on_product_category_source_id"
+  end
+
+  create_table "companies", force: :cascade do |t|
+    t.string "name"
+    t.string "logo"
+    t.bigint "industry_category_type_id", null: false
+    t.string "address_1"
+    t.string "address_2"
+    t.string "city"
+    t.string "state"
+    t.string "country"
+    t.date "established"
+    t.string "website"
+    t.string "diversity_report"
+    t.integer "diversity_score"
+    t.integer "total_employees"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["industry_category_type_id"], name: "index_companies_on_industry_category_type_id"
+  end
+
+  create_table "company_contact_types", force: :cascade do |t|
+    t.string "role"
+    t.string "definition"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "company_contacts", force: :cascade do |t|
+    t.bigint "company_id", null: false
+    t.bigint "company_contact_type_id", null: false
+    t.string "name"
+    t.string "job_title"
+    t.string "email"
+    t.string "phone"
+    t.string "photo"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["company_contact_type_id"], name: "index_company_contacts_on_company_contact_type_id"
+    t.index ["company_id"], name: "index_company_contacts_on_company_id"
+  end
+
+  create_table "company_ethnicity_stats", force: :cascade do |t|
+    t.bigint "company_id", null: false
+    t.bigint "ethnicity_type_id", null: false
+    t.bigint "employee_type_id", null: false
+    t.integer "count"
+    t.integer "percentage"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["company_id"], name: "index_company_ethnicity_stats_on_company_id"
+    t.index ["employee_type_id"], name: "index_company_ethnicity_stats_on_employee_type_id"
+    t.index ["ethnicity_type_id"], name: "index_company_ethnicity_stats_on_ethnicity_type_id"
+  end
+
+  create_table "company_gender_stats", force: :cascade do |t|
+    t.bigint "company_id", null: false
+    t.bigint "gender_type_id", null: false
+    t.bigint "employee_type_id", null: false
+    t.integer "count"
+    t.integer "percentage"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["company_id"], name: "index_company_gender_stats_on_company_id"
+    t.index ["employee_type_id"], name: "index_company_gender_stats_on_employee_type_id"
+    t.index ["gender_type_id"], name: "index_company_gender_stats_on_gender_type_id"
+  end
+
+  create_table "company_relationship_types", force: :cascade do |t|
+    t.string "relationship"
+    t.string "definition"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "company_relationships", force: :cascade do |t|
+    t.bigint "company_relationship_type_id", null: false
+    t.bigint "parent_company_id", null: false
+    t.bigint "child_company_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["child_company_id"], name: "index_company_relationships_on_child_company_id"
+    t.index ["company_relationship_type_id"], name: "index_company_relationships_on_company_relationship_type_id"
+    t.index ["parent_company_id"], name: "index_company_relationships_on_parent_company_id"
+  end
+
+  create_table "employee_types", force: :cascade do |t|
+    t.string "employee"
+    t.string "definition"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "ethnicity_types", force: :cascade do |t|
+    t.string "ethnicity"
+    t.string "definition"
+    t.string "source"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "families", force: :cascade do |t|
+    t.integer "code"
+    t.string "title"
+    t.string "description"
+    t.bigint "segment_id", null: false
+    t.bigint "product_category_source_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["product_category_source_id"], name: "index_families_on_product_category_source_id"
+    t.index ["segment_id"], name: "index_families_on_segment_id"
+  end
+
+  create_table "gender_types", force: :cascade do |t|
+    t.string "gender"
+    t.string "definition"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "industry_category_types", force: :cascade do |t|
+    t.string "category_code"
+    t.string "title"
+    t.integer "naics_year"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "klasses", force: :cascade do |t|
+    t.integer "code"
+    t.string "title"
+    t.string "description"
+    t.bigint "family_id", null: false
+    t.bigint "product_category_source_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["family_id"], name: "index_klasses_on_family_id"
+    t.index ["product_category_source_id"], name: "index_klasses_on_product_category_source_id"
+  end
+
+  create_table "product_category_sources", force: :cascade do |t|
+    t.string "code"
+    t.string "description"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "products", force: :cascade do |t|
+    t.bigint "company_id", null: false
+    t.string "name"
+    t.string "description"
+    t.string "barcode"
+    t.string "qrcode"
+    t.string "size"
+    t.bigint "segment_id", null: false
+    t.bigint "family_id", null: false
+    t.bigint "klass_id", null: false
+    t.bigint "brick_id", null: false
+    t.string "image"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["brick_id"], name: "index_products_on_brick_id"
+    t.index ["company_id"], name: "index_products_on_company_id"
+    t.index ["family_id"], name: "index_products_on_family_id"
+    t.index ["klass_id"], name: "index_products_on_klass_id"
+    t.index ["segment_id"], name: "index_products_on_segment_id"
+  end
+
+  create_table "segments", force: :cascade do |t|
+    t.integer "code"
+    t.string "title"
+    t.string "description"
+    t.bigint "product_category_source_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["product_category_source_id"], name: "index_segments_on_product_category_source_id"
+  end
+
+  add_foreign_key "bricks", "klasses"
+  add_foreign_key "bricks", "product_category_sources"
+  add_foreign_key "companies", "industry_category_types"
+  add_foreign_key "company_contacts", "companies"
+  add_foreign_key "company_contacts", "company_contact_types"
+  add_foreign_key "company_ethnicity_stats", "companies"
+  add_foreign_key "company_ethnicity_stats", "employee_types"
+  add_foreign_key "company_ethnicity_stats", "ethnicity_types"
+  add_foreign_key "company_gender_stats", "companies"
+  add_foreign_key "company_gender_stats", "employee_types"
+  add_foreign_key "company_gender_stats", "gender_types"
+  add_foreign_key "company_relationships", "companies", column: "child_company_id"
+  add_foreign_key "company_relationships", "companies", column: "parent_company_id"
+  add_foreign_key "company_relationships", "company_relationship_types"
+  add_foreign_key "families", "product_category_sources"
+  add_foreign_key "families", "segments"
+  add_foreign_key "klasses", "families"
+  add_foreign_key "klasses", "product_category_sources"
+  add_foreign_key "products", "bricks"
+  add_foreign_key "products", "companies"
+  add_foreign_key "products", "families"
+  add_foreign_key "products", "klasses"
+  add_foreign_key "products", "segments"
+  add_foreign_key "segments", "product_category_sources"
+end

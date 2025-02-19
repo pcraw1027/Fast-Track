@@ -1,0 +1,97 @@
+# This file should contain all the record creation needed to seed the database with its default values.
+# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
+#
+# Examples:
+#
+#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
+#   Character.create(name: 'Luke', movie: movies.first)
+
+require 'csv'
+
+Company.destroy_all
+IndustryCategoryType.destroy_all
+CompanyRelationshipType.destroy_all
+CompanyRelationship.destroy_all
+CompanyContactType.destroy_all
+CompanyContact.destroy_all
+EthnicityType.destroy_all
+EmployeeType.destroy_all
+GenderType.destroy_all
+CompanyEthnicityStat.destroy_all
+CompanyGenderStat.destroy_all
+
+
+
+csv_text = File.read(Rails.root.join('lib','seeds','6-digit_2022_Codes.xlsx - 2022_6-digit_industries.csv'))
+csv = CSV.parse(csv_text, :headers => true, :encoding => 'ISO-8859-1')
+
+csv.each do |row|
+    t = IndustryCategoryType.new
+    t.category_code = row['2022 NAICS Code']
+    t.title = row['2022 NAICS Title']
+    t.naics_year = row['NAICS Year']
+    t.save
+end
+
+CompanyRelationshipType.create(
+    [{relationship: "Parent/Child", definition: "Parent Company has a Child Subsidary"},
+    {relationship: "Parent/Brand", definition: "Parent Company has a Child Brand"},
+    {relationship: "Parent/Supplier", definition: "Parent Company has a Child Supplier"},
+    {relationship: "Other", definition: "Other type of relationship not yet defined"}]
+)
+
+CompanyContactType.create(
+    [{role: "CEO", definition: "Company head"},
+    {role: "Decision Maker", definition: "Company officer"},
+    {role: "CMO", definition: "Chief Marketing Officer - Head of Marketing"},
+    {role: "PR Head", definition: "Head of Public Relations"}]
+)
+
+EthnicityType.create(
+    [{ethnicity: "Hispanic", definition: "Hispanic or Latino - A person of Cuban, Mexican, Puerto Rican, South or Central American, or other Spanish culture or origin regardless of race.", source: "Hispanic or Latino"},
+    {ethnicity: "White", definition: "White - A person having origins in any of the original peoples of Europe, the Middle East, or North Africa.", source: "White"},
+    {ethnicity: "Black", definition: "Black or African American - A person having origins in any of the black racial groups of Africa.", source: "Black or African American"},
+    {ethnicity: "Native Hawaiian", definition: "Native Hawaiian or Other Pacific Islander - A person having origins in any of the peoples of Hawaii, Guam, Samoa, or other Pacific Islands.", source: "Native Hawaiian or Other Pacific Islander"},
+    {ethnicity: "Asian", definition: "Asian - A person having origins in any of the original peoples of the Far East, Southeast Asia, or the Indian Subcontinent, including, for example, Cambodia, China, India, Japan, Korea, Malaysia, Pakistan, the Philippine Islands, Thailand, and Vietnam.", source: "Asian"},
+    {ethnicity: "American Indian", definition: "American Indian or Alaska Native - A person having origins in any of the original peoples of North and South America (including Central America), and who maintain tribal affiliation or community attachment.", source: "American Indian or Alaska Native"},
+    {ethnicity: "Two or More", definition: "Two or More Races - All persons who identify with more than one of the above five races (White, Black or African American, Native Hawaiian or Other Pacific Islander, Asian, American Indian or Alaska Native). For the purposes of this group, identifying as Hispanic or Latino and only one of the listed 5 race groups does NOT qualify.", source: "Two or More Races"}]
+)
+
+GenderType.create(
+    [{gender: "Male", definition: ""},
+    {gender: "Female", definition: ""},
+    {gender: "Transgender", definition: ""},
+    {gender: "Nonbinary", definition: ""},
+    {gender: "Other", definition: ""}]
+)
+
+EmployeeType.create(
+    [{employee: "Management", definition: "A type of employee classification that can include top-level, mid-level, and first-line management."},
+    {employee: "Exempt", definition: "Employees who are paid a salary of at least $684 per week and work in an exempt profession. Exempt employees are not subject to the same tracking requirements as non-exempt employees, such as tracking hours, overtime, and meal periods."},
+    {employee: "Non-Exempt", definition: "Employees who are paid an hourly rate and are subject to minimum wage."},
+    {employee: "Full-Time", definition: "Employees who are regularly scheduled to work 40 hours per week. Full-time employees are eligible for benefits like paid time off and medical insurance."},
+    {employee: "Part-Time", definition: "Employees who are regularly scheduled to work more than 20 hours but less than 40 hours per week."},
+    {employee: "Contract", definition: "Employees who have a clearly defined time period of employment."},
+    {employee: "Independent Contractor", definition: "Also known as freelancers, independent contractors are considered self-employed and are responsible for their own taxes."},
+    {employee: "Temporary", definition: "Employees who work full- or part-time for a period of no more than 90 days."},
+    {employee: "On-Call", definition: "Employees who are not regularly scheduled but are employed as needed by the company."},
+    {employee: "Volunteer/Intern", definition: "Employees who are employed for a specific period of time, such as a school semester."}]
+)
+
+ProductCategorySource.create(
+    [{code: "AMZ", description "Amazon"},
+    {code: "GPC" , description: "Global Product Classification"}]
+)
+
+=begin
+IndustryCategoryType.create(
+    [{type: "11", definition: "Agriculture, Forestry, Fishing and Hunting"},
+    {type: "21", definition: "Mining, Quarrying, Oil and Gas Extraction"},
+    {type: "22", definition: "Utilities"},
+    {type: "23", definition: "Construction"},
+    {type: "31-33", definition: "Manufacturing"},
+    {type: "42", definition: "Wholesale Trade"},
+    {type: "44-45", definition: "Retail Trade"},
+    {type: "48-49", definition: "Transportation and Warehousing"}]
+)
+=end
