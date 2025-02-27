@@ -1,12 +1,12 @@
 databases:
-  - name: fast-track
-    databaseName: fast-track
+  - name: fasttrack
+    databaseName: fasttrack
     user: croupier
     plan: free
 
 services:
   - type: web
-    name: fast-track
+    name: fasttrack
     runtime: ruby
     plan: free
     buildCommand: "./bin/render-build.sh"
