@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  company: one
+  ethnicity_type: one
+  employee_type: one
+  count: 1
+  percentage: 1
+
+two:
+  company: two
+  ethnicity_type: two
+  employee_type: two
+  count: 1
+  percentage: 1
