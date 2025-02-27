@@ -1,7 +1,9 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.6.1'
+# ruby '2.6.1'
+
+ruby '3.4.2'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
 gem 'rails', '~> 6.1.7', '>= 6.1.7.10'
@@ -60,3 +62,7 @@ gem 'carrierwave', '~> 3.0'
 gem 'mini_magick'
 
 gem "net-http"
+
+gem "mutex_m"
+gem "base64"
+gem "bigdecimal"
