@@ -7,5 +7,4 @@ class Family < ApplicationRecord
 
   validates :code, uniqueness: { scope: :segment,
   message: "should be unique to class" }
-
 end

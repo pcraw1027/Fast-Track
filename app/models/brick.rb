@@ -5,5 +5,4 @@ class Brick < ApplicationRecord
 
   validates :code, uniqueness: { scope: :klass,
   message: "should be unique to segment" }
-
 end
