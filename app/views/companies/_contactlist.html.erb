@@ -17,7 +17,7 @@
     <% company_contacts.each do |company_contact| %>
       <tr>
         <td><%= company_contact.company.name %></td>
-        <td><%= company_contact.photo %></td>
+        <td><%= image_tag company_contact.photo.thumb.url if company_contact.photo? %></td>
         <td><%= company_contact.company_contact_type.role %></td>
         <td><%= company_contact.name %></td>
         <td><%= company_contact.job_title %></td>
