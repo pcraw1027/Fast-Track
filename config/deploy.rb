@@ -40,7 +40,16 @@ append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/syst
 
 # Default value for keep_releases is 5
 set :keep_releases, 5
-set :default_env, { 'NODE_OPTIONS' => '--openssl-legacy-provider' }
+set :default_env, {  }
+
+set :default_env, {
+  'NODE_OPTIONS' => '--openssl-legacy-provider',
+  'FAST_TRACK_DB' => ENV['FAST_TRACK_DB'],
+  'FAST_TRACK_DB_USER' => ENV['FAST_TRACK_DB_USER'],
+  'FAST_TRACK_DB_HOST' => 'localhost',
+  'FAST_TRACK_DB_PORT' => '5432',
+  'FAST_TRACK_DB_PASSWORD' => ENV['FAST_TRACK_DB_PASSWORD']
+}
 
 # Uncomment the following to require manually verifying the host key before first deploy.
 # set :ssh_options, verify_host_key: :secure
