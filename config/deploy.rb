@@ -27,7 +27,7 @@ set :deploy_to, "/var/www/fast_track"
 # set :pty, true
 
 # Default value for :linked_files is []
-append :linked_files, "config/credentials/production.key", "config/secrets.yml"
+append :linked_files, "config/credentials/production.key", "config/secrets.yml", "config/database.yml"
 
 # Default value for linked_dirs is []
 append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/system", "vendor", "storage"
@@ -41,6 +41,7 @@ append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/syst
 # Default value for keep_releases is 5
 set :keep_releases, 5
 set :default_env, { 'NODE_OPTIONS' => '--openssl-legacy-provider' }
+
 # Uncomment the following to require manually verifying the host key before first deploy.
 # set :ssh_options, verify_host_key: :secure
 
