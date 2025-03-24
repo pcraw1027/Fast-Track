@@ -80,6 +80,6 @@ production:
   <<: *default
   database: <%= ENV['FAST_TRACK_DB'] %>
   username: <%= ENV['FAST_TRACK_DB_USER'] %>
-  host: <%= ENV['FAST_TRACK_DB_HOST'] %>
+  host: localhost
   port: <%= ENV['FAST_TRACK_DB_PORT'] %>
   password: <%= ENV['FAST_TRACK_DB_PASSWORD'] %>
