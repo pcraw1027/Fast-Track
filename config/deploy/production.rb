@@ -42,7 +42,7 @@ role :db,  %w{deploy@13.53.135.242}
 # Global options
 # --------------
  set :ssh_options, {
-   keys: %w(/root/.ssh/id_rsa.pub),
+   keys: %w(~/.ssh/id_rsa),
    forward_agent: false,
    auth_methods: %w(publickey password)
  }

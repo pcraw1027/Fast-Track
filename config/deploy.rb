@@ -1,11 +1,14 @@
 # config valid for current version and patch releases of Capistrano
 lock "~> 3.19.2"
 
+server "13.53.135.242", user: "deploy", roles: %w{app db web}, primary: true
+
 set :application, "fast_track"
 set :repo_url, "git@github.com:pcraw1027/Fast-Track.git"
 
-set :rvm_ruby_version, '3.4.2'
+set :ruby, '3.2.3'
 set :passenger_restart_with_touch, true
+set :branch, 'main'
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp

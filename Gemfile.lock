@@ -65,6 +65,8 @@ GEM
     airbrussh (1.5.3)
       sshkit (>= 1.6.1, != 1.7.0)
     base64 (0.2.0)
+    bcrypt_pbkdf (1.1.1)
+    bcrypt_pbkdf (1.1.1-x86_64-darwin)
     benchmark (0.4.0)
     bigdecimal (3.1.9)
     bindex (0.8.1)
@@ -84,9 +86,9 @@ GEM
     capistrano-rails (1.7.0)
       capistrano (~> 3.1)
       capistrano-bundler (>= 1.1, < 3)
-    capistrano-rvm (0.1.2)
-      capistrano (~> 3.0)
-      sshkit (~> 1.2)
+    capistrano-rbenv (2.2.0)
+      capistrano (~> 3.1)
+      sshkit (~> 1.3)
     capistrano-sidekiq (3.0.0)
       capistrano (>= 3.9.0)
       capistrano-bundler
@@ -112,6 +114,7 @@ GEM
     connection_pool (2.5.0)
     crass (1.0.6)
     date (3.4.1)
+    ed25519 (1.3.0)
     erubi (1.13.0)
     ffi (1.17.0)
     ffi (1.17.0-x86_64-darwin)
@@ -294,6 +297,7 @@ PLATFORMS
 
 DEPENDENCIES
   base64
+  bcrypt_pbkdf (~> 1.0)
   benchmark
   bigdecimal
   bootsnap (>= 1.4.4)
@@ -302,10 +306,11 @@ DEPENDENCIES
   capistrano-bundler
   capistrano-puma (~> 0.2.3)
   capistrano-rails
-  capistrano-rvm
+  capistrano-rbenv
   capistrano-sidekiq (~> 3.0)
   capybara (>= 3.26)
   carrierwave (~> 3.0)
+  ed25519 (~> 1.2)
   jbuilder (~> 2.7)
   listen (~> 3.3)
   mini_magick
