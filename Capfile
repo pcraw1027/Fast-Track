@@ -35,6 +35,7 @@ require "capistrano/rails/migrations"
 require "capistrano/bundler"
 require "capistrano/rails"
 require "capistrano/puma"
+require "capistrano/secrets_yml"
 
 
 # Load custom tasks from `lib/capistrano/tasks` if you have any defined
