@@ -56,16 +56,16 @@ set :default_env, {
 
 
 namespace :deploy do
-  desc "Run seed"
-  task :seed do
-    on roles(:all) do
-      within current_path do
-        execute :bundle, :exec, 'rails', 'db:seed', 'RAILS_ENV=production'
-      end
-    end
-  end
+  # desc "Run seed"
+  # task :seed do
+  #   on roles(:all) do
+  #     within current_path do
+  #       execute :bundle, :exec, 'rails', 'db:seed', 'RAILS_ENV=production'
+  #     end
+  #   end
+  # end
  
-  after :migrating, :seed
+  # after :migrating, :seed
 
   after :restart, :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 10 do
