@@ -46,7 +46,7 @@ set :deploy_to, "/var/www/fast_track"
 # set :pty, true
 
 # Default value for :linked_files is []
-append :linked_files, "config/credentials/production.key", "config/secrets.yml"
+append :linked_files, "config/credentials/production.key", "config/secrets.yml", "config/database.yml"
 
 # Default value for linked_dirs is []
 append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/system", "vendor", "storage"
@@ -61,12 +61,7 @@ append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/syst
 set :keep_releases, 3
 
 set :default_env, {
-  'NODE_OPTIONS' => '--openssl-legacy-provider',
-  'FAST_TRACK_DB' => ENV['FAST_TRACK_DB'],
-  'FAST_TRACK_DB_USER' => ENV['FAST_TRACK_DB_USER'],
-  'FAST_TRACK_DB_HOST' => 'localhost',
-  'FAST_TRACK_DB_PORT' => '5432',
-  'FAST_TRACK_DB_PASSWORD' => ENV['FAST_TRACK_DB_PASSWORD']
+  'NODE_OPTIONS' => '--openssl-legacy-provider'
 }
 
 # Uncomment the following to require manually verifying the host key before first deploy.
