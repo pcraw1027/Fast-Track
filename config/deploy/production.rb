@@ -7,8 +7,6 @@
 # server "example.com", user: "deploy", roles: %w{app web}, other_property: :other_value
 # server "db.example.com", user: "deploy", roles: %w{db}
 
-
-
 # role-based syntax
 # ==================
 
@@ -17,8 +15,7 @@
 # property set. Specify the username and a domain or IP for the server.
 # Don't use `:all`, it's a meta role.
 
-server '13.53.135.242', user: 'deploy', roles: %w{app web} 
-
+server '13.61.251.1', user: 'deploy', roles: %w{app web} 
 
 
 # Configuration
