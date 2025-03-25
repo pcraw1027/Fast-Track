@@ -1,7 +1,7 @@
 # config valid for current version and patch releases of Capistrano
 lock "~> 3.19.2"
 
-server "13.53.135.242", user: "deploy", roles: %w{app db web}, primary: true
+server "13.61.251.1", user: "deploy", roles: %w{app db web}, primary: true
 
 set :application, "fast_track"
 set :repo_url, "git@github.com:pcraw1027/Fast-Track.git"
