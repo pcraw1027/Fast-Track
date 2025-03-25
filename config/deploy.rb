@@ -93,6 +93,6 @@ namespace :deploy do
   end
 
   # Ensure puma starts on deploy
-  after :publishing, 'puma:restart'
+  #after :publishing, 'puma:restart'
 
 end
