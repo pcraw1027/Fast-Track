@@ -13,6 +13,25 @@ set :branch, 'main'
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 
+# Ensure correct Puma settings
+set :puma_threads, [4, 16]
+set :puma_workers, 2
+
+set :puma_bind, "unix:///var/www/fast_track/shared/sockets/puma.sock"
+set :puma_state, "/var/www/fast_track/shared/pids/puma.state"
+set :puma_pid, "/var/www/fast_track/shared/pids/puma.pid"
+set :puma_access_log, "/var/www/fast_track/shared/log/puma.access.log"
+set :puma_error_log, "/var/www/fast_track/shared/log/puma.error.log"
+
+set :puma_preload_app, true
+# set :puma_prune_bundler, true
+
+set :puma_service_unit_name, "puma_#{fetch(:application)}"
+set :puma_systemctl_user, :system
+set :puma_restart_command, 'bundle exec puma -C config/puma.rb'
+#set :puma_restart_command, '/usr/local/bin/bundle exec /var/www/fast_track/shared/bundle/ruby/3.2.0/bin/puma -C config/puma.rb'
+
+
 # Default deploy_to directory is /var/www/my_app_name
 set :deploy_to, "/var/www/fast_track"
 
@@ -39,8 +58,7 @@ append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/syst
 # set :local_user, -> { `git config user.name`.chomp }
 
 # Default value for keep_releases is 5
-set :keep_releases, 5
-set :default_env, {  }
+set :keep_releases, 3
 
 set :default_env, {
   'NODE_OPTIONS' => '--openssl-legacy-provider',
@@ -55,23 +73,6 @@ set :default_env, {
 # set :ssh_options, verify_host_key: :secure
 
 
-# Ensure correct Puma settings
-set :puma_threads, [4, 16]
-set :puma_workers, 2
-
-set :puma_bind, "unix:///var/www/fast_track/shared/sockets/puma.sock"
-set :puma_state, "/var/www/fast_track/shared/pids/puma.state"
-set :puma_pid, "/var/www/fast_track/shared/pids/puma.pid"
-set :puma_access_log, "/var/www/fast_track/shared/log/puma.access.log"
-set :puma_error_log, "/var/www/fast_track/shared/log/puma.error.log"
-
-set :puma_preload_app, true
-# set :puma_prune_bundler, true
-
-set :puma_service_unit_name, "puma_#{fetch(:application)}"
-set :puma_systemctl_user, :system
-set :puma_restart_command, 'bundle exec puma -C config/puma.rb'
-#set :puma_restart_command, '/usr/local/bin/bundle exec /var/www/fast_track/shared/bundle/ruby/3.2.0/bin/puma -C config/puma.rb'
 
 
 
