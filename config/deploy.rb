@@ -72,7 +72,9 @@ set :puma_prune_bundler, true
 set :puma_service_unit_name, "puma_#{fetch(:application)}"
 set :puma_enable_socket_service, true
 set :puma_systemctl_user, :system
-set :puma_restart_command, 'bundle exec puma -C config/puma.rb'
+# set :puma_restart_command, 'bundle exec puma -C config/puma.rb'
+set :puma_restart_command, '/usr/local/bin/bundle exec /var/www/fast_track/shared/bundle/ruby/3.2.0/bin/puma -C config/puma.rb'
+
 
 
 namespace :deploy do
