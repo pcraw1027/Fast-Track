@@ -76,3 +76,5 @@ gem "benchmark"
 gem "capistrano-puma", "~> 0.2.3"
 gem "capistrano-sidekiq", "~> 3.0"
 gem "capistrano-secrets-yml"
+gem 'capistrano3-puma'
+

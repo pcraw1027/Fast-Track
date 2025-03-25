@@ -96,6 +96,10 @@ GEM
       capistrano (>= 3.9.0)
       capistrano-bundler
       sidekiq (>= 6.0.6)
+    capistrano3-puma (6.0.0)
+      capistrano (~> 3.7)
+      capistrano-bundler
+      puma (>= 5.1, < 7.0)
     capybara (3.36.0)
       addressable
       matrix
@@ -312,6 +316,7 @@ DEPENDENCIES
   capistrano-rbenv
   capistrano-secrets-yml
   capistrano-sidekiq (~> 3.0)
+  capistrano3-puma
   capybara (>= 3.26)
   carrierwave (~> 3.0)
   ed25519 (~> 1.2)

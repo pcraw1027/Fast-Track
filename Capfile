@@ -34,8 +34,11 @@ require "capistrano/rails/assets"
 require "capistrano/rails/migrations"
 require "capistrano/bundler"
 require "capistrano/rails"
-require "capistrano/puma"
 require "capistrano/secrets_yml"
+require 'capistrano/puma'
+require 'capistrano/puma/nginx'
+require 'capistrano/puma/systemd' # Optional if using systemd
+
 
 
 # Load custom tasks from `lib/capistrano/tasks` if you have any defined
