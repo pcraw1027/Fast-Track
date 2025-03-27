@@ -6,6 +6,9 @@ server "13.61.251.1", user: "deploy", roles: %w{app db web}, primary: true
 set :application, "fast_track"
 set :repo_url, "git@github.com:pcraw1027/Fast-Track.git"
 
+set :assets_roles, [:web, :app]
+set :keep_assets, 2
+
 set :ruby, '3.2.3'
 
 set :branch, 'main'

@@ -78,3 +78,10 @@ gem "capistrano-sidekiq", "~> 3.0"
 gem "capistrano-secrets-yml"
 gem 'capistrano3-puma'
 
+gem 'rack-cors'
+gem 'devise'
+gem 'devise-jwt'
+gem 'jsonapi-serializer'
+gem 'pundit'
+
+gem 'dotenv-rails', groups: [:development, :test]

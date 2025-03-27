@@ -1,6 +1,8 @@
 module MonolithRoutes
   def self.extended(router)
     router.instance_exec do
+      devise_for :users#, controllers: { registrations: 'registrations' }
+      resources :users, only: [:show, :index, :destroy]
       resources :attribute_titles
       resources :product_attributes
       resources :attribute_values
@@ -25,7 +27,8 @@ module MonolithRoutes
         resources :products
       end
       #get 'home/index'
-      root 'home#index'
+
+      root to: "home#index"
       get 'home/about'
       get '/prodlist', to: 'companies#_prodlist', via: :get
     end

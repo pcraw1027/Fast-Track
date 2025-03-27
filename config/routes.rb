@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   
-    # extend MonolithRoutes
+    extend MonolithRoutes
  
   defaults format: :json do
     namespace :api do
