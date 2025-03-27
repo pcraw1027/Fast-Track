@@ -79,8 +79,8 @@ Rails.application.configure do
     :address => 'smtp.gmail.com',
     :port => 587,
     :domain => 'ec2-13-61-251-1.eu-north-1.compute.amazonaws.com',
-    :user_name => ENV['GMAIL_USER'],
-    :password => ENV['GMAIL_PASS'],
+    :user_name => Rails.application.credentials.gmail_user,
+    :password => Rails.application.credentials.gmail_pass,
     :authentication => :plain,
     :enable_starttls_auto => true
   }
@@ -89,4 +89,5 @@ Rails.application.configure do
   config.action_mailer.perform_deliveries = true
 
 end
+
 
