@@ -83,9 +83,9 @@
                 Account Settings
                 <%end%>
 
-        <%= link_to destroy_user_session_path(current_user), method: :delete, class:"nav-link" do%> 
-                  Logout
-                <%end%>
+           <%= button_to 'Logout', destroy_user_session_path, method: :delete, class: "nav-link btn btn-outline-link btn-sm" %>
+
+
 
         </div>
       </li>
