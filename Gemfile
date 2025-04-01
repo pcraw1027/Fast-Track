@@ -83,5 +83,7 @@ gem 'devise'
 gem 'devise-jwt'
 gem 'jsonapi-serializer'
 gem 'pundit'
+gem 'rack-attack'
+
 
 gem 'dotenv-rails', groups: [:development, :test]
