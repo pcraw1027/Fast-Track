@@ -1,0 +1,145 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <%= link_to 'FastTrack', root_path, class:"navbar-brand" %>
+  
+  <!--
+  <a class="navbar-brand" href="#">
+    <img src = "app/assets/images/cr147 Final_2022_short form-01.jpg" />
+  </a>
+  -->
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+          Company
+        </a>
+        <div class="dropdown-menu">
+          <%= link_to "Company", companies_path, class: "nav-link" %>
+          <div class="dropdown-divider"></div>
+          <%= link_to "Company Relationships", company_relationships_path, class: "nav-link" %>
+          <%= link_to "Company Contacts", company_contacts_path, class:"nav-link" %>
+          <%= link_to "Ethnicity Stats", company_ethnicity_stats_path, class:"nav-link" %>
+          <%= link_to "Gender Stats", company_gender_stats_path, class:"nav-link" %>
+          <%= link_to "Product Attributes", product_attributes_path, class:"nav-link" %>
+        </div>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="/users">
+          Users
+        </a>
+     </li>
+
+      <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+        Product
+      </a>
+      <div class="dropdown-menu">
+        <%= link_to "Product", products_path, class: "nav-link" %>
+        <div class="dropdown-divider"></div>
+        <%= link_to "Segment", segments_path, class: "nav-link" %>
+        <%= link_to "Family", families_path, class:"nav-link" %>
+        <%= link_to "Class", klasses_path, class:"nav-link" %>
+        <%= link_to "Brick", bricks_path, class:"nav-link" %>
+        <%= link_to "Attribute", attribute_titles_path, class:"nav-link" %>
+        <%= link_to "Attribute Value", attribute_values_path, class:"nav-link" %>
+      </div>
+    </li>
+
+
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+        Process Flow
+      </a>
+      <div class="dropdown-menu">
+        <%= link_to "Scan", scans_path, class: "nav-link" %>
+        <div class="dropdown-divider"></div>
+        <%= link_to "BIT Record", bit_records_path, class: "nav-link" %>
+        <%= link_to "PIT Records", pit_records_path, class:"nav-link" %>
+        <%= link_to "CIT Records", cit_records_path, class:"nav-link" %>
+        <%= link_to "Upload Record", upload_records_path, class:"nav-link" %>
+      </div>
+    </li>
+
+      <li class="nav-item">
+        <%= link_to "About Us", home_about_path, class:"nav-link" %>
+      </li>
+
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+          Reference Data
+        </a>
+        <div class="dropdown-menu">
+          <%= link_to "Industry Sector", industry_category_types_path, class:"nav-link" %>
+          <%= link_to "Relationship Types", company_relationship_types_path, class:"nav-link" %>
+          <%= link_to "Contact Types", company_contact_types_path, class:"nav-link" %>
+          <%= link_to "Ethnicity Types", ethnicity_types_path, class:"nav-link" %>
+          <%= link_to "Gender Types", gender_types_path, class:"nav-link" %>
+          <%= link_to "Employee Types", employee_types_path, class:"nav-link" %>
+          <div class="dropdown-divider"></div>
+          <%= link_to "Product Category Source", product_category_sources_path, class:"nav-link" %>
+          <a class="dropdown-item" href="#">Product Segment</a>
+        </div>
+      </li>
+
+<%if current_user %>
+   <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+          Hi, <%= current_user.username%>
+        </a>
+        <div class="dropdown-menu">
+       <a href="/users/<%= current_user.id %>" class="nav-link"> Profile</a>
+        <%= link_to edit_user_registration_path(current_user), class:"nav-link" do %>
+                Account Settings
+                <%end%>
+
+           <%= button_to 'Logout', destroy_user_session_path, method: :delete, class: "nav-link btn btn-outline-link btn-sm" %>
+
+
+
+        </div>
+      </li>
+<%else%>
+  <li class="nav-item">
+      <a class="nav-link" href="/users/sign_in">
+        Sign in
+      </a>
+  </li>
+<%end%>
+      
+
+
+<!--
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Link</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+          Dropdown
+        </a>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled">Disabled</a>
+      </li>
+ -->     
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+  </div>
+</nav>

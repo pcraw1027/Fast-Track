@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  product_activity_count: 1
+  barcode: MyString
+  level: 1
+  source: MyString
+  product: one
+  mid: MyString
+
+two:
+  product_activity_count: 1
+  barcode: MyString
+  level: 1
+  source: MyString
+  product: two
+  mid: MyString

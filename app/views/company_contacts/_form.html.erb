@@ -1,0 +1,53 @@
+<%= form_with(model: company_contact) do |form| %>
+  <% if company_contact.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(company_contact.errors.count, "error") %> prohibited this company_contact from being saved:</h2>
+
+      <ul>
+        <% company_contact.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field form-group">
+    <%= form.label :company_id %>
+    <%= form.collection_select :company_id, @companies, :id, :name, class: "form-control"  %>
+  </div>
+
+  <div class="field form-group">
+    <%= form.label :company_contact_type_id %>
+    <%= form.collection_select :company_contact_type_id, @company_contact_types, :id, :role, class: "form-control"  %>
+  </div>
+
+  <div class="field form-group">
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div class="field form-group">
+    <%= form.label :photo %>
+    <%= form.file_field :photo %>
+  </div>
+
+  <div class="field form-group">
+    <%= form.label :job_title %>
+    <%= form.text_field :job_title %>
+  </div>
+
+  <div class="field form-group">
+    <%= form.label :email %>
+    <%= form.text_field :email %>
+  </div>
+
+  <div class="field form-group">
+    <%= form.label :phone %>
+    <%= form.text_field :phone %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "Submit", class: 'btn btn-secondary' %>
+  </div>
+  <br/>
+<% end %>

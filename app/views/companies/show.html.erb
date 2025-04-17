@@ -1,0 +1,88 @@
+
+
+<div class="jumbotron">
+  <div class="row">
+    <div class="col">
+      <h1 class="display-4">
+        <%= @company.name %>
+      </h1>
+  
+      <p>
+        <strong>Established:</strong>
+        <%= @company.established.to_s(:long) %>
+      </p>
+      <p class="lead">
+        <%= @company.industry_category_type.title %>
+      </p>
+    </div>
+    <div class="col">
+    </div>
+    <div class="col">  
+      <%= image_tag @company.logo.url if @company.logo? %>
+    </div>
+   </div>
+  <hr class="my-4">
+  <div class="row">
+    <div class="col">
+      <p>
+        <%= @company.address_1 %></br>
+        <%= @company.address_2 %></br>
+        <%= @company.city %></br>
+        <%= @company.state %></br>
+        <%= @company.country %></br></br>
+        <%= link_to @company.website %>
+      </p>
+    </div>
+    <div class="col">
+      <p>
+        <strong>Diversity score:</strong>
+        <%= @company.diversity_score %>
+      </p>
+
+      <p>
+        <strong>Total employees:</strong>
+        <%= @company.total_employees %>
+      </p>
+<<<<<<< HEAD
+      
+      <p>
+        <strong>Sector:</strong>
+        <%= @company.sector %>
+      </p>
+=======
+>>>>>>> f23b7e48ec63383043386d1601ad646396189564
+
+      <p>
+        <strong>MIDs:</strong>
+        <%= @company.mids %>
+      </p>
+
+      <p>
+        <strong>Diversity report:</strong>
+        <%= link_to @company.diversity_report %>
+      </p>
+
+    </div>
+  </div>
+  <!--
+  <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+  -->
+  <%= link_to 'Edit', edit_company_path(@company), class: "btn btn-secondary" %> 
+  <%= link_to 'Back', companies_path, class: "btn btn-secondary" %>
+</div>
+
+
+
+<%= render partial: 'companies/menu', locals: {products: @products,
+                                                product_attributes: @product_attributes,
+                                                company_relationships: @company_relationships,
+                                                company_contacts: @company_contacts,
+                                                company_ethnicity_stats: @company_ethnicity_stats,
+                                                company_gender_stats: @company_gender_stats}%>
+
+
+<br/><br/><br/>
+
+
+
+

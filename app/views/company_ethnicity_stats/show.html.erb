@@ -1,0 +1,29 @@
+
+
+<p>
+  <strong>Company:</strong>
+  <%= @company_ethnicity_stat.company.name %>
+</p>
+
+<p>
+  <strong>Ethnicity type:</strong>
+  <%= @company_ethnicity_stat.ethnicity_type.ethnicity %>
+</p>
+
+<p>
+  <strong>Employee type:</strong>
+  <%= @company_ethnicity_stat.employee_type.employee %>
+</p>
+
+<p>
+  <strong>Count:</strong>
+  <%= @company_ethnicity_stat.count %>
+</p>
+
+<p>
+  <strong>Percentage:</strong>
+  <%= @company_ethnicity_stat.percentage %>
+</p>
+
+<%= link_to 'Edit', edit_company_ethnicity_stat_path(@company_ethnicity_stat) %> |
+<%= link_to 'Back', company_ethnicity_stats_path %>

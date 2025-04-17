@@ -1,0 +1,16 @@
+<div class="container mt-5">
+    <h3>Additional Product Detail</h3>
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Level users</a>
+        </li>
+  
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+             <%= render partial: "level_users", locals: {level_users: level_users} %>
+        </div>
+        
+    </div>
+</div>
+

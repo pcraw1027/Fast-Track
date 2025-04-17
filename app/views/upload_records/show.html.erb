@@ -1,0 +1,55 @@
+<div class="jumbotron">
+  <div class="row">
+    <div class="col">
+
+<p>
+  <strong>Scan:</strong>
+  <a href="/scans/<%= @upload_record.scan_id %>"><%= @upload_record.scan.barcode %> - <%= time_ago_in_words(@upload_record.scan.scan_date) %> ago</a>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <a href="/users/<%= @upload_record.user_id %>"><%= @upload_record.user.username %> </a>
+</p>
+
+<p>
+  <strong>Resolve status:</strong>
+  <%= @upload_record.resolve_status %>
+</p>
+
+<p>
+  <strong>Date:</strong>
+  <%= @upload_record.date %>
+</p>
+
+<p>
+  <strong>Barcode:</strong>
+  <%= @upload_record.barcode %>
+</p>
+
+<p>
+  <strong>Product name:</strong>
+  <%= @upload_record.product_name %>
+</p>
+
+<p>
+  <strong>Company name:</strong>
+  <%= @upload_record.company_name %>
+</p>
+
+<p>
+  <strong>Remarks:</strong>
+  <%= @upload_record.remarks %>
+</p>
+
+<p>
+  <strong>Image:</strong>
+  <%= @upload_record.image %>
+</p>
+
+</div>
+</div>
+</div>
+
+<%= link_to 'Edit', edit_upload_record_path(@upload_record) %> |
+<%= link_to 'Back', upload_records_path %>

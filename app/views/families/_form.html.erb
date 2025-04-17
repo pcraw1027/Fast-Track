@@ -1,0 +1,42 @@
+<%= form_with(model: family) do |form| %>
+  <% if family.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(family.errors.count, "error") %> prohibited this family from being saved:</h2>
+
+      <ul>
+        <% family.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= form.label :code %>
+    <%= form.number_field :code %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :title %>
+    <%= form.text_field :title %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :description %>
+    <%= form.text_field :description %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :segment_id %>
+    <%= form.collection_select :segment_id, @segments, :id, :code, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :product_category_source_id %>
+    <%= form.collection_select :product_category_source_id, @product_category_sources, :id, :code, class: "form-control" %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "Submit", class: 'btn btn-secondary'%>
+  </div>
+<% end %>

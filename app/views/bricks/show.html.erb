@@ -1,0 +1,31 @@
+
+
+<p>
+  <strong>Code:</strong>
+  <%= @brick.code %>
+</p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @brick.title %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @brick.description %>
+</p>
+
+<p>
+  <strong>Klass:</strong>
+  <%= @brick.klass.code %> | 
+  <%= @brick.klass.title %>
+</p>
+
+<p>
+  <strong>Product category source:</strong>
+  <%= @brick.product_category_source.code %> | 
+  <%= @brick.product_category_source.description %>
+</p>
+
+<%= link_to 'Edit', edit_brick_path(@brick) %> |
+<%= link_to 'Back', bricks_path %>

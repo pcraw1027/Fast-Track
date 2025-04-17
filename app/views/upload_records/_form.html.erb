@@ -1,0 +1,57 @@
+<%= form_with(model: upload_record) do |form| %>
+  <% if upload_record.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(upload_record.errors.count, "error") %> prohibited this upload_record from being saved:</h2>
+
+      <ul>
+        <% upload_record.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :scan_id %>
+    <%= form.text_field :scan_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :resolve_status %>
+    <%= form.check_box :resolve_status %>
+  </div>
+
+  <div class="field">
+    <%= form.label :date %>
+    <%= form.date_select :date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :barcode %>
+    <%= form.text_field :barcode %>
+  </div>
+
+  <div class="field">
+    <%= form.label :product_name %>
+    <%= form.text_field :product_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :company_name %>
+    <%= form.text_field :company_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :remarks %>
+    <%= form.text_area :remarks %>
+  </div>
+
+  <div class="field">
+    <%= form.label :image %>
+    <%= form.text_field :image %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

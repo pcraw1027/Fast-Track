@@ -1,0 +1,2 @@
+module CompanyEthnicityStatsHelper
+end

@@ -1,0 +1,42 @@
+<%= form_with(model: company_ethnicity_stat) do |form| %>
+  <% if company_ethnicity_stat.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(company_ethnicity_stat.errors.count, "error") %> prohibited this company_ethnicity_stat from being saved:</h2>
+
+      <ul>
+        <% company_ethnicity_stat.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field form-row">
+    <%= form.label :company_id %>
+    <%= form.collection_select :company_id, @company, :id, :name, class: "form-control"  %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :ethnicity_type_id %>
+    <%= form.collection_select :ethnicity_type_id, @ethnicity_types, :id, :ethnicity, class: "form-control"  %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :employee_type_id %>
+    <%= form.collection_select :employee_type_id, @employee_types, :id, :employee, class: "form-control"  %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :count %>
+    <%= form.number_field :count %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :percentage %>
+    <%= form.number_field :percentage %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

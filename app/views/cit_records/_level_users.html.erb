@@ -1,0 +1,19 @@
+<table class="table table-striped table-bordered table-hover table-sm">
+  <thead class="thead-dark">
+    <tr>
+ 
+      <th>User</th>
+      <th>level</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% level_users.each do |level_user| %>
+      <tr>
+        <td><a href="/users/<%= level_user.user_id %>"><%= level_user.user.username %> </a></td>
+        <td><%= level_user.level %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

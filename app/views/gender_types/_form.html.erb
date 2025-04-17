@@ -1,0 +1,27 @@
+<%= form_with(model: gender_type) do |form| %>
+  <% if gender_type.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(gender_type.errors.count, "error") %> prohibited this gender_type from being saved:</h2>
+
+      <ul>
+        <% gender_type.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= form.label :gender %>
+    <%= form.text_field :gender %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :definition %>
+    <%= form.text_field :definition %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

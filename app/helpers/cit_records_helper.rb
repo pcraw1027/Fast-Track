@@ -1,0 +1,2 @@
+module CitRecordsHelper
+end

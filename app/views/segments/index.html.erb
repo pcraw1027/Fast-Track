@@ -1,0 +1,33 @@
+
+
+<h1>Segments</h1>
+
+<table class="table table-striped table-bordered table-hover table-sm container-fluid">
+  <thead class="thead-dark">
+    <tr>
+      <th>Code</th>
+      <th>Title</th>
+      <th>Description</th>
+      <th>Product category source</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @segments.each do |segment| %>
+      <tr>
+        <td><%= segment.code %></td>
+        <td><%= segment.title %></td>
+        <td><%= segment.description %></td>
+        <td><%= segment.product_category_source.code %></td>
+        <td><%= link_to 'View', segment %></td>
+        <td><%= link_to 'Edit', edit_segment_path(segment) %></td>
+        <td><%= button_to 'Delete', segment, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-outline-danger btn-sm" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Segment', new_segment_path, class: "btn btn-secondary" %>

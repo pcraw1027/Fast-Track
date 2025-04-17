@@ -1,0 +1,36 @@
+<div class="jumbotron">
+  <div class="row">
+    <div class="col">
+
+<<<<<<< HEAD
+<% if @bit_record.user_id %>
+<p>
+  <strong>User:</strong>
+
+  <a href="/users/<%= @bit_record.user_id %>"><%= @bit_record.user.username %> </a>
+</p>
+<% end %>
+
+=======
+>>>>>>> f23b7e48ec63383043386d1601ad646396189564
+<p>
+  <strong>Barcode:</strong>
+  <%= @bit_record.barcode %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @bit_record.status %>
+</p>
+
+<p>
+  <strong>Source:</strong>
+  <%= @bit_record.source %>
+</p>
+
+</div>
+</div>
+</div>
+
+<%= link_to 'Edit', edit_bit_record_path(@bit_record), class: "btn btn-primary" %> |
+<%= link_to 'Back', bit_records_path, class: "btn btn-secondary" %>

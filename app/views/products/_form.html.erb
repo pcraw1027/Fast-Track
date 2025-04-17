@@ -1,0 +1,127 @@
+<%= form_for(product) do |form| %>
+
+  <% if product.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(product.errors.count, "error") %> prohibited this product from being saved:</h2>
+
+      <ul>
+        <% product.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= form.label :company_id %>
+
+    <%= form.select :company_id, [], 
+      { prompt: "Search for a company" }, 
+
+      data: { controller: "company-select" } 
+    %>
+
+
+  </div>
+
+
+
+  <div class="form-group">
+    <%= form.label :name %>
+    <%= form.text_field :name, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :image %>
+    <div class="uploaded-title">
+      <div class="uploaded-pic">
+          <%= image_tag product.image_url,  width: 60, height: 50  if product.image? %>
+          <%= form.file_field :image, class: "form-control-file"  %>
+          <%if product.image?%>
+            <%= form.hidden_field :image_cache %>
+            <%= form.check_box :remove_image %>
+              Remove image
+          <%end%>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :description %>
+    <%= form.text_field :description, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :barcode %>
+    <%= form.text_field :barcode, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :qrcode %>
+    <%= form.text_field :qrcode, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :size %>
+    <%= form.text_field :size, class: "form-control" %>
+  </div>
+
+
+  <div data-controller="product-classification">
+  <div class="form-group">
+    <%= form.label :segment_id %>
+    <%= form.select :segment_id,
+      @segments.map { |segment| ["#{segment.code} #{segment.title}", segment.id] },
+      { include_blank: true },
+      {
+        
+        id: "segment_id",
+        data: { product_classification_target: "segment" }
+      } %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :family_id %>
+    <%= form.select :family_id,
+      [],
+      { include_blank: true },
+      {
+        
+        id: "family_id",
+        data: { product_classification_target: "family" }
+      } %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :klass_id %>
+    <%= form.select :klass_id,
+      [],
+      { include_blank: true },
+      {
+        
+        id: "klass_id",
+        data: { product_classification_target: "klass" }
+      } %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :brick_id %>
+    <%= form.select :brick_id,
+      [],
+      { include_blank: true },
+      {
+        
+        id: "brick_id",
+        data: { product_classification_target: "brick" }
+      } %>
+  </div>
+</div>
+
+
+
+  <div class="actions">
+    <%= form.submit "Submit", class: 'btn btn-secondary' %>
+  </div>
+<% end %>
+
+

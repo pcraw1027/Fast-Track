@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  product_activity_count: 1
+  mid: MyString
+  company_name: MyString
+  level: 1
+  product_orphan_count: 1
+  source: MyString
+  company: one
+
+two:
+  product_activity_count: 1
+  mid: MyString
+  company_name: MyString
+  level: 1
+  product_orphan_count: 1
+  source: MyString
+  company: two

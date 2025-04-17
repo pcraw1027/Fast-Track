@@ -1,0 +1,39 @@
+
+
+<h1>Cit Records</h1>
+
+<table class="table table-striped table-bordered table-hover table-sm container-fluid">
+  <thead class="thead-dark">
+    <tr>
+      <th>Product activity count</th>
+      <th>Mid</th>
+      <th>Company name</th>
+      <th>Level</th>
+      <th>Product orphan count</th>
+      <th>Source</th>
+      <th>Company</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @cit_records.each do |cit_record| %>
+      <tr>
+        <td><%= cit_record.product_activity_count %></td>
+        <td><%= cit_record.mid %></td>
+        <td><%= cit_record.company_name %></td>
+        <td><%= cit_record.level %></td>
+        <td><%= cit_record.product_orphan_count %></td>
+        <td><%= cit_record.source %></td>
+        <td><%= cit_record.company_id %></td>
+        <td><%= link_to 'Show', cit_record %></td>
+        <td><%= link_to 'Edit', edit_cit_record_path(cit_record) %></td>
+        <td><%= link_to 'Destroy', cit_record, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-outline-danger btn-sm" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Cit Record', new_cit_record_path, class: "btn btn-secondary" %>

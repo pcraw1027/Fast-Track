@@ -1,0 +1,24 @@
+
+
+<p>
+  <strong>Code:</strong>
+  <%= @attribute_value.code %>
+</p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @attribute_value.title %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @attribute_value.description %>
+</p>
+
+<p>
+  <strong>Product category source:</strong>
+  <%= @attribute_value.product_category_source.code %>
+</p>
+
+<%= link_to 'Edit', edit_attribute_value_path(@attribute_value) %> |
+<%= link_to 'Back', attribute_values_path %>

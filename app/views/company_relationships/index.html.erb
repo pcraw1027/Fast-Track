@@ -1,0 +1,31 @@
+
+
+<h1>Company Relationships</h1>
+
+<table class="table table-striped table-bordered table-hover table-sm container-fluid">
+  <thead class="thead-dark">
+    <tr>
+      <th>Company Relationship type</th>
+      <th>Parent Company</th>
+      <th>Child Company</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @company_relationships.each do |company_relationship| %>
+      <tr>
+        <td><%= company_relationship.company_relationship_type.relationship %></td>
+        <td><%= company_relationship.parent_company.name %></td>
+        <td><%= company_relationship.child_company.name %></td>
+        <td><%= link_to 'View', company_relationship %></td>
+        <td><%= link_to 'Edit', edit_company_relationship_path(company_relationship) %></td>
+        <td><%= button_to 'Delete', company_relationship, data: { confirm: 'Are you sure?' }, method: :delete, class: "btn btn-outline-danger btn-sm" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Company Relationship', new_company_relationship_path %>

@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  product: one
+  user: one
+  scan_date: 2025-04-09 15:34:46
+  barcode: MyString
+  product_exists: false
+
+two:
+  product: two
+  user: two
+  scan_date: 2025-04-09 15:34:46
+  barcode: MyString
+  product_exists: false

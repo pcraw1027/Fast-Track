@@ -1,0 +1,73 @@
+<div class="jumbotron">
+  <div class="row">
+    <div class="col">
+
+        <p>
+          <strong>Company:</strong>
+          <%= @product.company.name %>
+        </p>
+
+        <p>
+          <strong>Name:</strong>
+          <%= @product.name %>
+        </p>
+
+        <p>
+          <strong>Image:</strong>
+        <!-- <%= @product.image %>-->
+          <%= image_tag @product.image.url if @product.image? %>
+        </p>
+
+        <p>
+          <strong>Description:</strong>
+          <%= @product.description %>
+        </p>
+
+        <p>
+          <strong>Barcode:</strong>
+          <%= @product.barcode %>
+        </p>
+
+        <p>
+          <strong>Qrcode:</strong>
+          <%= @product.qrcode %>
+        </p>
+
+        <p>
+          <strong>Size:</strong>
+          <%= @product.size %>
+        </p>
+
+        <p>
+          <strong>Segment:</strong>
+          <%= @product.segment.code %>
+          <%= @product.segment.title %>
+        </p>
+
+        <p>
+          <strong>Family:</strong>
+          <%= @product.family.code %>
+          <%= @product.family.title %>
+        </p>
+
+        <p>
+          <strong>Klass:</strong>
+          <%= @product.klass.code %>
+          <%= @product.klass.title %>
+        </p>
+
+        <p>
+          <strong>Brick:</strong>
+          <%= @product.brick.code %>
+          <%= @product.brick.title %>
+        </p>
+
+
+        <%= link_to 'Edit', edit_product_path(@product) %> |
+        <%= link_to 'Back', products_path %>
+        </div>
+    </div>
+</div>
+<%= render partial: 'products/menu', locals: {variants: @variants}%>
+
+<br/><br/><br/>
