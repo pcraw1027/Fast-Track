@@ -89,10 +89,6 @@ end
 
     # Only allow a list of trusted parameters through.
     def company_params
-<<<<<<< HEAD
       params.require(:company).permit(:name, :sector, :logo, :mid, :industry_category_type_id, :address_1, :address_2, :city, :state, :country, :established, :website, :diversity_report, :diversity_score, :total_employees)
-=======
-      params.require(:company).permit(:name, :logo, :mid, :industry_category_type_id, :address_1, :address_2, :city, :state, :country, :established, :website, :diversity_report, :diversity_score, :total_employees)
->>>>>>> f23b7e48ec63383043386d1601ad646396189564
     end
 end
