@@ -1,0 +1,40 @@
+
+
+<h1>Company Contacts</h1>
+
+<table class="table table-striped table-bordered table-hover table-sm container-fluid" >
+  <thead class="thead-dark" >
+    <tr>
+      <th>Company</th>
+      <th>Photo</th>
+      <th>Company contact type</th>
+      <th>Name</th>
+      <th>Job title</th>
+      <th>Email</th>
+      <th>Phone</th>
+
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @company_contacts.each do |company_contact| %>
+      <tr>
+        <td><%= company_contact.company.name %></td>
+        <td><%= image_tag company_contact.photo.thumb.url if company_contact.photo? %></td>
+        <td><%= company_contact.company_contact_type.role %></td>
+        <td><%= company_contact.name %></td>
+        <td><%= company_contact.job_title %></td>
+        <td><%= company_contact.email %></td>
+        <td><%= company_contact.phone %></td>
+        <td><%= link_to 'View', company_contact %></td>
+        <td><%= link_to 'Edit', edit_company_contact_path(company_contact) %></td>
+        <td><%= button_to 'Delete', company_contact, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-outline-danger btn-sm" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Company Contact', new_company_contact_path, class: "btn btn-secondary" %>

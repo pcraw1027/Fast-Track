@@ -1,0 +1,22 @@
+<ul class="nav nav-tabs">
+
+  <li class="nav-item">
+    <a class="nav-link active" href="#">Products</a>
+    <br/>
+    <div class=""> <br/> <%= render partial: "prodlist", locals: {products: products} %> </div>
+
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#">Relationships</a>
+    <h2>test copy</h2> 
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#">Contacts</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#">Ethnicity Stats</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#">Gender Stats</a>
+  </li>
+</ul>

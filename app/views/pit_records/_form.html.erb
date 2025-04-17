@@ -1,0 +1,47 @@
+<%= form_with(model: pit_record) do |form| %>
+  <% if pit_record.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(pit_record.errors.count, "error") %> prohibited this pit_record from being saved:</h2>
+
+      <ul>
+        <% pit_record.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :product_activity_count %>
+    <%= form.number_field :product_activity_count %>
+  </div>
+
+  <div class="field">
+    <%= form.label :barcode %>
+    <%= form.text_field :barcode %>
+  </div>
+
+  <div class="field">
+    <%= form.label :level %>
+    <%= form.number_field :level %>
+  </div>
+
+  <div class="field">
+    <%= form.label :source %>
+    <%= form.text_field :source %>
+  </div>
+
+  <div class="field">
+    <%= form.label :product_id %>
+    <%= form.text_field :product_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :mid %>
+    <%= form.text_field :mid %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

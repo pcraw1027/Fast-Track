@@ -1,0 +1,44 @@
+<div class="container mt-5">
+    <h3>Additional Company Detail</h3>
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Products</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="attributes-tab" data-toggle="tab" href="#attributes" role="tab" aria-controls="attributes" aria-selected="false">Attributes</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="relationships-tab" data-toggle="tab" href="#relationships" role="tab" aria-controls="relationships" aria-selected="false">Relationships</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="contacts-tab" data-toggle="tab" href="#contacts" role="tab" aria-controls="contacts" aria-selected="false">Contacts</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="ethnicity-tab" data-toggle="tab" href="#ethnicity" role="tab" aria-controls="ethnicity" aria-selected="false">Ethnicity Stats</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="gender-tab" data-toggle="tab" href="#gender" role="tab" aria-controls="gender" aria-selected="false">Gender Stats</a>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+             <%= render partial: "prodlist", locals: {products: products} %>
+        </div>
+        <div class="tab-pane fade" id="attributes" role="tabpanel" aria-labelledby="attributes-tab">
+             <%= render partial: "attriblist", locals: {product_attributes: product_attributes} %>
+        </div>
+        <div class="tab-pane fade" id="relationships" role="tabpanel" aria-labelledby="relationships-tab">
+            <%= render partial: "relationlist", locals: {company_relationships: company_relationships} %>
+        </div>
+        <div class="tab-pane fade" id="contacts" role="tabpanel" aria-labelledby="contacts-tab">
+            <%= render partial: "contactlist", locals: {company_contacts: company_contacts} %>
+        </div>
+        <div class="tab-pane fade" id="ethnicity" role="tabpanel" aria-labelledby="ethnicity-tab">
+            <%= render partial: "ethstatlist", locals: {company_ethnicity_stats: company_ethnicity_stats} %>
+        </div>
+        <div class="tab-pane fade" id="gender" role="tabpanel" aria-labelledby="gender-tab">
+            <%= render partial: "genstatlist", locals: {company_gender_stats: company_gender_stats} %>
+        </div>
+    </div>
+</div>
+

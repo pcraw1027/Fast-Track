@@ -1,0 +1,31 @@
+
+
+<h1>Ethnicity Types</h1>
+
+<table class="table table-striped table-bordered table-hover table-sm container-fluid" >
+  <thead class="thead-dark" >
+    <tr>
+      <th>Ethnicity</th>
+      <th>Definition</th>
+      <th>Source</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @ethnicity_types.each do |ethnicity_type| %>
+      <tr>
+        <td><%= ethnicity_type.ethnicity %></td>
+        <td><%= ethnicity_type.definition %></td>
+        <td><%= ethnicity_type.source %></td>
+        <td><%= link_to 'View', ethnicity_type %></td>
+        <td><%= link_to 'Edit', edit_ethnicity_type_path(ethnicity_type) %></td>
+        <td><%= link_to 'Delete', ethnicity_type, data: { confirm: 'Are you sure?' }, method: :delete, class: "btn btn-outline-danger btn-sm"  %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Ethnicity Type', new_ethnicity_type_path, class: "btn btn-secondary" %>

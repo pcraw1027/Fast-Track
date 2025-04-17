@@ -1,0 +1,27 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  company: one
+  name: MyString
+  description: MyString
+  barcode: MyString
+  qrcode: MyString
+  size: MyString
+  segment: one
+  family: one
+  klass: one
+  brick: one
+  image: MyString
+
+two:
+  company: two
+  name: MyString
+  description: MyString
+  barcode: MyString
+  qrcode: MyString
+  size: MyString
+  segment: two
+  family: two
+  klass: two
+  brick: two
+  image: MyString

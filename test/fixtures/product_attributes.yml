@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  company: one
+  product: one
+  brick: one
+  attribute: one
+  attribute_value: one
+  product_category_source: one
+
+two:
+  company: two
+  product: two
+  brick: two
+  attribute: two
+  attribute_value: two
+  product_category_source: two

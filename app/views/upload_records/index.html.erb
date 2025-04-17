@@ -1,0 +1,43 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Upload Records</h1>
+
+<table class="table table-striped table-bordered table-hover table-sm container-fluid">
+  <thead class="thead-dark">
+    <tr>
+      <th>Scan</th>
+      <th>User</th>
+      <th>Resolve status</th>
+      <th>Date</th>
+      <th>Barcode</th>
+      <th>Product name</th>
+      <th>Company name</th>
+      <th>Remarks</th>
+      <th>Image</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @upload_records.each do |upload_record| %>
+      <tr>
+        <td><%= upload_record.scan_id %></td>
+        <td><%= upload_record.user_id %></td>
+        <td><%= upload_record.resolve_status %></td>
+        <td><%= upload_record.date %></td>
+        <td><%= upload_record.barcode %></td>
+        <td><%= upload_record.product_name %></td>
+        <td><%= upload_record.company_name %></td>
+        <td><%= upload_record.remarks %></td>
+        <td><%= upload_record.image %></td>
+        <td><%= link_to 'Show', upload_record %></td>
+        <td><%= link_to 'Edit', edit_upload_record_path(upload_record) %></td>
+        <td><%= button_to 'Destroy', upload_record, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-outline-danger btn-sm" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Upload Record', new_upload_record_path, class: "btn btn-secondary" %>

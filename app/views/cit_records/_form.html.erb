@@ -1,0 +1,52 @@
+<%= form_with(model: cit_record) do |form| %>
+  <% if cit_record.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(cit_record.errors.count, "error") %> prohibited this cit_record from being saved:</h2>
+
+      <ul>
+        <% cit_record.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :product_activity_count %>
+    <%= form.number_field :product_activity_count %>
+  </div>
+
+  <div class="field">
+    <%= form.label :mid %>
+    <%= form.text_field :mid %>
+  </div>
+
+  <div class="field">
+    <%= form.label :company_name %>
+    <%= form.text_field :company_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :level %>
+    <%= form.number_field :level %>
+  </div>
+
+  <div class="field">
+    <%= form.label :product_orphan_count %>
+    <%= form.number_field :product_orphan_count %>
+  </div>
+
+  <div class="field">
+    <%= form.label :source %>
+    <%= form.text_field :source %>
+  </div>
+
+  <div class="field">
+    <%= form.label :company_id %>
+    <%= form.text_field :company_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,18 @@
+
+<p>
+  <strong>Ethnicity:</strong>
+  <%= @ethnicity_type.ethnicity %>
+</p>
+
+<p>
+  <strong>Definition:</strong>
+  <%= @ethnicity_type.definition %>
+</p>
+
+<p>
+  <strong>Source:</strong>
+  <%= @ethnicity_type.source %>
+</p>
+
+<%= link_to 'Edit', edit_ethnicity_type_path(@ethnicity_type) %> |
+<%= link_to 'Back', ethnicity_types_path %>
