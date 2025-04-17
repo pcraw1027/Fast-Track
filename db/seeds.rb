@@ -160,23 +160,14 @@ ProductCategorySource.create(
 )
 
 
-<<<<<<< HEAD
 csv_text = File.read(Rails.root.join('lib','seeds','GPC_May_2024_Schema.csv'))
 csv = CSV.parse(csv_text, :headers => true, :encoding => 'ISO-8859-1')
-=======
-csv_text2 = File.read(Rails.root.join('lib','seeds','GPC_May_2024_Schema.csv'))
-csv2 = CSV.parse(csv_text2, :headers => true, :encoding => 'ISO-8859-1')
->>>>>>> f23b7e48ec63383043386d1601ad646396189564
 last_segment_code = ""
 last_family_code = ""
 last_class_code = ""
 last_brick_code = ""
 
-<<<<<<< HEAD
 csv.each do |row|
-=======
-csv2.each do |row|
->>>>>>> f23b7e48ec63383043386d1601ad646396189564
     if row['SegmentCode'] != last_segment_code
         t = Segment.new
         t.code = row['SegmentCode']

@@ -51,10 +51,7 @@ ActiveRecord::Schema.define(version: 2025_04_17_083909) do
     t.string "source"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-<<<<<<< HEAD
     t.bigint "user_id", null: false
-=======
->>>>>>> f23b7e48ec63383043386d1601ad646396189564
     t.index ["barcode", "source"], name: "index_bit_records_on_barcode_and_source", unique: true
   end
 
@@ -70,7 +67,6 @@ ActiveRecord::Schema.define(version: 2025_04_17_083909) do
     t.index ["product_category_source_id"], name: "index_bricks_on_product_category_source_id"
   end
 
-<<<<<<< HEAD
   create_table "cit_level_users", force: :cascade do |t|
     t.integer "level", default: 0, null: false
     t.bigint "user_id"
@@ -81,8 +77,6 @@ ActiveRecord::Schema.define(version: 2025_04_17_083909) do
     t.index ["user_id"], name: "index_cit_level_users_on_user_id"
   end
 
-=======
->>>>>>> f23b7e48ec63383043386d1601ad646396189564
   create_table "cit_records", force: :cascade do |t|
     t.bigint "product_activity_count", default: 0, null: false
     t.string "mid", default: "", null: false
@@ -93,26 +87,10 @@ ActiveRecord::Schema.define(version: 2025_04_17_083909) do
     t.bigint "company_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-<<<<<<< HEAD
     t.string "brand", default: ""
     t.index ["company_id"], name: "index_cit_records_on_company_id"
   end
 
-=======
-    t.index ["company_id"], name: "index_cit_records_on_company_id"
-  end
-
-  create_table "cit_users", force: :cascade do |t|
-    t.integer "level", default: 0, null: false
-    t.bigint "user_id"
-    t.bigint "cit_record_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["cit_record_id"], name: "index_cit_users_on_cit_record_id"
-    t.index ["user_id"], name: "index_cit_users_on_user_id"
-  end
-
->>>>>>> f23b7e48ec63383043386d1601ad646396189564
   create_table "companies", force: :cascade do |t|
     t.string "name"
     t.string "logo"
@@ -130,13 +108,9 @@ ActiveRecord::Schema.define(version: 2025_04_17_083909) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.text "mids", default: [], array: true
-<<<<<<< HEAD
     t.string "sector", default: ""
     t.index ["industry_category_type_id"], name: "index_companies_on_industry_category_type_id"
     t.index ["mids"], name: "index_companies_on_mids", using: :gin
-=======
-    t.index ["industry_category_type_id"], name: "index_companies_on_industry_category_type_id"
->>>>>>> f23b7e48ec63383043386d1601ad646396189564
   end
 
   create_table "company_contact_types", force: :cascade do |t|
@@ -390,7 +364,6 @@ ActiveRecord::Schema.define(version: 2025_04_17_083909) do
     t.string "last_sign_in_ip"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-<<<<<<< HEAD
     t.integer "status", default: 0, null: false
     t.string "photo", default: ""
     t.string "avatar", default: ""
@@ -398,8 +371,6 @@ ActiveRecord::Schema.define(version: 2025_04_17_083909) do
     t.string "last_name", default: ""
     t.boolean "app_notify_on", default: true, null: false
     t.boolean "email_notify_on", default: true, null: false
-=======
->>>>>>> f23b7e48ec63383043386d1601ad646396189564
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -409,15 +380,9 @@ ActiveRecord::Schema.define(version: 2025_04_17_083909) do
   add_foreign_key "attribute_values", "product_category_sources"
   add_foreign_key "bricks", "klasses"
   add_foreign_key "bricks", "product_category_sources"
-<<<<<<< HEAD
   add_foreign_key "cit_level_users", "cit_records"
   add_foreign_key "cit_level_users", "users"
   add_foreign_key "cit_records", "companies"
-=======
-  add_foreign_key "cit_records", "companies"
-  add_foreign_key "cit_users", "cit_records"
-  add_foreign_key "cit_users", "users"
->>>>>>> f23b7e48ec63383043386d1601ad646396189564
   add_foreign_key "companies", "industry_category_types"
   add_foreign_key "company_contacts", "companies"
   add_foreign_key "company_contacts", "company_contact_types"

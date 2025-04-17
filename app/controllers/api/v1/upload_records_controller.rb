@@ -23,12 +23,8 @@ class Api::V1::UploadRecordsController < Api::V1::BaseController
 
 
   def upload_record_params
-<<<<<<< HEAD
     params.require(:upload_record).permit(:scan_id, :resolve_status, :date, :barcode, :product_name, 
                     :company_name, :remarks, :image, :asin, :brand)
-=======
-    params.require(:upload_record).permit(:scan_id, :resolve_status, :date, :barcode, :product_name, :company_name, :remarks, :image, :asin)
->>>>>>> f23b7e48ec63383043386d1601ad646396189564
   end
 
 
