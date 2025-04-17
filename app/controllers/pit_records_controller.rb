@@ -8,10 +8,7 @@ class PitRecordsController < ApplicationController
 
   # GET /pit_records/1 or /pit_records/1.json
   def show
-<<<<<<< HEAD
     @level_users = PitLevelUser.includes(:user).where(pit_record_id: params[:id])
-=======
->>>>>>> f23b7e48ec63383043386d1601ad646396189564
   end
 
   # GET /pit_records/new
