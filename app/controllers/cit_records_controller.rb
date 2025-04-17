@@ -8,10 +8,7 @@ class CitRecordsController < ApplicationController
 
   # GET /cit_records/1 or /cit_records/1.json
   def show
-<<<<<<< HEAD
     @level_users = CitLevelUser.includes(:user).where(cit_record_id: params[:id])
-=======
->>>>>>> f23b7e48ec63383043386d1601ad646396189564
   end
 
   # GET /cit_records/new

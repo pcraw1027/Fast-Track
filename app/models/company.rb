@@ -12,12 +12,9 @@ class Company < ApplicationRecord
 
   validates :name, presence: true
   validates :mids, uniqueness: true
-<<<<<<< HEAD
 
   default_scope -> { order(created_at: :desc) }
   scope :find_by_mid, -> (mid) { where("mids @> ARRAY[?]::varchar[]", [mid]) }
 
 
-=======
->>>>>>> f23b7e48ec63383043386d1601ad646396189564
 end

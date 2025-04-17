@@ -10,8 +10,5 @@ class Product < ApplicationRecord
 
   has_many :product_attributes
   has_many :product_variants
-<<<<<<< HEAD
   default_scope -> { order(created_at: :desc) }
-=======
->>>>>>> f23b7e48ec63383043386d1601ad646396189564
 end

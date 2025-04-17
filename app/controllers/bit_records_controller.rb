@@ -1,9 +1,6 @@
 class BitRecordsController < ApplicationController
   before_action :set_bit_record, only: %i[ show edit update destroy ]
-<<<<<<< HEAD
   before_action :authenticate_user!, only: %i[ new edit update create destroy ]
-=======
->>>>>>> f23b7e48ec63383043386d1601ad646396189564
 
   # GET /bit_records or /bit_records.json
   def index
@@ -26,11 +23,7 @@ class BitRecordsController < ApplicationController
   # POST /bit_records or /bit_records.json
   def create
     @bit_record = BitRecord.new(bit_record_params)
-<<<<<<< HEAD
     @bit_record.user_id = current_user.id
-=======
-
->>>>>>> f23b7e48ec63383043386d1601ad646396189564
     respond_to do |format|
       if @bit_record.save
         format.html { redirect_to @bit_record, notice: "Bit record was successfully created." }
