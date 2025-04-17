@@ -12,11 +12,7 @@ class CreateCitRecords < ActiveRecord::Migration[6.1]
       t.timestamps
     end
 
-<<<<<<< HEAD
     create_table :cit_level_users do |t|
-=======
-    create_table :cit_users do |t|
->>>>>>> f23b7e48ec63383043386d1601ad646396189564
       t.integer :level, null: false, default: 0
       t.references :user, null: true, foreign_key: true
       t.references :cit_record, null: true, foreign_key: true
@@ -24,9 +20,5 @@ class CreateCitRecords < ActiveRecord::Migration[6.1]
       t.timestamps
     end
 
-<<<<<<< HEAD
-=======
-
->>>>>>> f23b7e48ec63383043386d1601ad646396189564
   end
 end
