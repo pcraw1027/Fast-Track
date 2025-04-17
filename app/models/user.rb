@@ -7,7 +7,6 @@ class User < ApplicationRecord
          :jwt_authenticatable, jwt_revocation_strategy: self
 
   enum role: { user: 0, admin: 1 }
-<<<<<<< HEAD
   enum status: { active: 0, suspended: 1, deleted: 2 }
   
   mount_uploader :photo, PhotoUploader
@@ -15,11 +14,6 @@ class User < ApplicationRecord
   after_create :send_welcome_email
   validates :username, :country, :email, :postal_code, presence: true
   default_scope -> { order(created_at: :desc) }
-=======
-  
-  after_create :send_welcome_email
-  validates :username, :country, :email, :postal_code, presence: true
->>>>>>> f23b7e48ec63383043386d1601ad646396189564
   
 
       def generate_password_token!

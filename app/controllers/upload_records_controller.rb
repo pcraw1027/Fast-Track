@@ -73,10 +73,6 @@ class UploadRecordsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def upload_record_params
       params.require(:upload_record).permit(:scan_id, :asin, :resolve_status, :date, :barcode, 
-<<<<<<< HEAD
       :product_name, :company_name, :brand, :remarks, :image)
-=======
-      :product_name, :company_name, :remarks, :image)
->>>>>>> f23b7e48ec63383043386d1601ad646396189564
     end
 end
