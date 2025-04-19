@@ -16,8 +16,10 @@ class Api::V1::LandingController < Api::V1::BaseController
       }, status: :ok
   end
 
+
   private 
 
+  
   def activity_stats
     total_scans = Scan.count
     total_uploads = UploadRecord.count

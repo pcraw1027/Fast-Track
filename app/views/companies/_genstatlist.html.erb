@@ -14,8 +14,8 @@
     <% company_gender_stats.each do |company_gender_stat| %>
       <tr>
         <td><%= company_gender_stat.company_id %></td>
-        <td><%= company_gender_stat.gender_type.gender %></td>
-        <td><%= company_gender_stat.employee_type.employee %></td>
+        <td><%= company_gender_stat.gender_type.gender if company_gender_stat.gender_type%></td>
+        <td><%= company_gender_stat.employee_type.employee if company_gender_stat.employee_type%></td>
         <td><%= company_gender_stat.count %></td>
         <td><%= company_gender_stat.percentage %></td>
         <td><%= link_to 'Show', company_gender_stat %></td>

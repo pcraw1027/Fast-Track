@@ -11,9 +11,9 @@
   <tbody>
     <% company_relationships.each do |company_relationship| %>
       <tr>
-        <td><%= company_relationship.company_relationship_type.relationship %></td>
-        <td><%= company_relationship.parent_company.name %></td>
-        <td><%= company_relationship.child_company.name %></td>
+        <td><%= company_relationship.company_relationship_type.relationship if company_relationship.company_relationship_type%></td>
+        <td><%= company_relationship.parent_company.name if company_relationship.parent_company%></td>
+        <td><%= company_relationship.child_company.name if company_relationship.child_company%></td>
         <td><%= link_to 'Show', company_relationship %></td>
         <td><%= link_to 'Edit', edit_company_relationship_path(company_relationship) %></td>
         <td><%= button_to 'Delete', company_relationship, data: { confirm: 'Are you sure?' }, method: :delete, class: "btn btn-outline-danger btn-sm" %></td>

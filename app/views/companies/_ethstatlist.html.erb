@@ -14,8 +14,8 @@
     <% company_ethnicity_stats.each do |company_ethnicity_stat| %>
       <tr>
         <td><%= company_ethnicity_stat.company.name %></td>
-        <td><%= company_ethnicity_stat.ethnicity_type.ethnicity %></td>
-        <td><%= company_ethnicity_stat.employee_type.employee %></td>
+        <td><%= company_ethnicity_stat.ethnicity_type.ethnicity if company_ethnicity_stat.ethnicity_type%></td>
+        <td><%= company_ethnicity_stat.employee_type.employee if company_ethnicity_stat.employee_type %></td>
         <td><%= company_ethnicity_stat.count %></td>
         <td><%= company_ethnicity_stat.percentage %></td>
         <td><%= link_to 'View', company_ethnicity_stat %></td>

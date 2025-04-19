@@ -18,7 +18,7 @@
       <tr>
         <td><%= company_contact.company.name %></td>
         <td><%= image_tag company_contact.photo.thumb.url if company_contact.photo? %></td>
-        <td><%= company_contact.company_contact_type.role %></td>
+        <td><%= company_contact.company_contact_type.role if company_contact.company_contact_type%></td>
         <td><%= company_contact.name %></td>
         <td><%= company_contact.job_title %></td>
         <td><%= company_contact.email %></td>
