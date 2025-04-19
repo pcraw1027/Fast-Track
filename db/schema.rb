@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_04_17_083909) do
+ActiveRecord::Schema.define(version: 2025_04_18_043610) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -218,6 +218,7 @@ ActiveRecord::Schema.define(version: 2025_04_17_083909) do
     t.integer "naics_year"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["category_code"], name: "index_industry_category_types_on_category_code", unique: true
   end
 
   create_table "klasses", force: :cascade do |t|
@@ -290,17 +291,18 @@ ActiveRecord::Schema.define(version: 2025_04_17_083909) do
   end
 
   create_table "products", force: :cascade do |t|
-    t.bigint "company_id", null: false
+    t.bigint "company_id"
     t.string "name"
     t.string "description"
     t.string "qrcode"
     t.string "size"
-    t.bigint "segment_id", null: false
-    t.bigint "family_id", null: false
-    t.bigint "klass_id", null: false
-    t.bigint "brick_id", null: false
+    t.bigint "segment_id"
+    t.bigint "family_id"
+    t.bigint "klass_id"
+    t.bigint "brick_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "product_category_source_id", null: false
     t.index ["brick_id"], name: "index_products_on_brick_id"
     t.index ["company_id"], name: "index_products_on_company_id"
     t.index ["family_id"], name: "index_products_on_family_id"

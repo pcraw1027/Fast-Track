@@ -1,3 +1,3 @@
 class IndustryCategoryType < ApplicationRecord
-    has_many :companies
+    has_many :companies, dependent: :destroy
 end

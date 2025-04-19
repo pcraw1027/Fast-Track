@@ -2,9 +2,16 @@
   <div class="row">
     <div class="col">
 
+        
+        <%if @product.family %>
         <p>
           <strong>Company:</strong>
           <%= @product.company.name %>
+        </p>
+<%end%>
+        <p>
+          <strong>Product category source:</strong>
+          <%= @product.product_category_source.description %>
         </p>
 
         <p>
@@ -38,30 +45,34 @@
           <%= @product.size %>
         </p>
 
+<%if @product.family %>
         <p>
           <strong>Segment:</strong>
           <%= @product.segment.code %>
           <%= @product.segment.title %>
         </p>
-
+<%end%>
+        <%if @product.family %>
         <p>
           <strong>Family:</strong>
           <%= @product.family.code %>
           <%= @product.family.title %>
         </p>
-
+        <%end%>
+        <%if @product.family %>
         <p>
           <strong>Klass:</strong>
           <%= @product.klass.code %>
           <%= @product.klass.title %>
         </p>
-
+<%end%>
+<%if @product.family %>
         <p>
           <strong>Brick:</strong>
           <%= @product.brick.code %>
           <%= @product.brick.title %>
         </p>
-
+<%end%>
 
         <%= link_to 'Edit', edit_product_path(@product) %> |
         <%= link_to 'Back', products_path %>

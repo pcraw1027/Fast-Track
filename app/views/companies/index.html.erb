@@ -41,7 +41,7 @@
         <td><%= company.city %></td>
         <td><%= company.state %></td>
         <td><%= company.country %></td>
-        <td><%= company.established.to_s(:rfc822) %></td>
+        <td><%= company.established.to_s(:rfc822) if company.established %></td>
         <td><%= link_to company.website %></td>
         <td><%= link_to company.diversity_report %></td>
         <td><%= company.diversity_score %></td>

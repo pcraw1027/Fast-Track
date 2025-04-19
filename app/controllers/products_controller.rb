@@ -88,11 +88,13 @@ class ProductsController < ApplicationController
       @families = Family.all
       @klasses = Klass.all
       @bricks = Brick.all
+      @product_category_sources = ProductCategorySource.all
     end
 
     # Only allow a list of trusted parameters through.
     def product_params
-      params.require(:product).permit(:company_id, :name, :description, :qrcode, :size, :segment_id, :family_id, :klass_id, :brick_id)
+      params.require(:product).permit(:company_id, :name, :product_category_source_id, :description, 
+      :qrcode, :size, :segment_id, :family_id, :klass_id, :brick_id)
     end
     def product_variant_params
       params.require(:product).permit(:barcode, :image)
