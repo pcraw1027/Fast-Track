@@ -1,6 +1,11 @@
 class Api::V1::SessionsController < Api::V1::BaseController
   
-  before_action :authenticate_user!, only: [:destroy, :destroy_all]
+  before_action :authenticate_user!, only: [:show, :destroy, :destroy_all]
+
+
+  def show 
+    render json: { user_profile: Api::V1::UserSerializer.new(current_user).serializable_hash[:data][:attributes] }, status: :ok
+  end
 
   def create
     user = User.find_by(email: params[:email])

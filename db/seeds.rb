@@ -38,6 +38,81 @@ User.destroy_all
 admin = User.create!(email:"oshanani@gmail.com", password:"edpass", role: 1, status: 0, 
 username:"Ed", country: "US", postal_code:"07077")
 
+
+
+csv_text = File.read(Rails.root.join('lib','seeds','6_digit_2022_Codes_2022_6_digit_industries.csv'))
+csv = CSV.parse(csv_text, :headers => true, :encoding => 'ISO-8859-1')
+
+csv.each do |row|
+    t = IndustryCategoryType.find_by(category_code: row['2022 NAICS Code'])
+    next if t
+    t = IndustryCategoryType.new
+    t.category_code = row['2022 NAICS Code']
+    t.title = row['2022 NAICS Title']
+    t.naics_year = row['NAICS Year']
+    t.save
+end
+
+csv_text = File.read(Rails.root.join('lib','seeds','2017_naics_codes.csv'))
+csv = CSV.parse(csv_text, :headers => true, :encoding => 'ISO-8859-1')
+
+csv.each do |row|
+    t = IndustryCategoryType.find_by(category_code: row['2017 NAICS Code'])
+    next if t
+    t = IndustryCategoryType.new
+    t.category_code = row['2017 NAICS Code']
+    t.title = row['2017 NAICS Title']
+    t.naics_year = row['NAICS Year']
+    t.save
+end
+
+
+
+#Companies Seed
+companies = []
+csv_text = File.read(Rails.root.join('lib','seeds','Companies.csv'))
+csv = CSV.parse(csv_text, :headers => true, :encoding => 'ISO-8859-1')
+
+csv.each do |row|
+    t = nil
+    i = 0
+    companies.find{|c| c.name == row['Company']}
+    companies.each.with_index do |c, ind| 
+        if c.name == row['Company']
+            t = c
+            i = ind
+            break
+        end
+    end
+    if t
+        mids = t.mids
+        mids << row['MID']
+        t.mids = mids
+        t.save
+        companies[i] = t
+    else
+        t = Company.new
+        t.mids = [row['MID']]
+        t.name = row['Company']
+        ind_type = IndustryCategoryType.find_by(category_code: row['Industry_NAICS_Code'])
+        t.industry_category_type_id = ind_type.id if ind_type
+         unless ind_type
+            p row['Industry_NAICS_Code']
+            next
+         end
+        t.website = row['Website']
+        begin
+            t.save!
+            companies << t
+        rescue => e
+            p e.message
+        end
+    end
+   
+end
+
+
+
 #BIT Record Seed
 csv_text = File.read(Rails.root.join('lib','seeds','BIT.csv'))
 csv = CSV.parse(csv_text, :headers => true, :encoding => 'ISO-8859-1')
@@ -98,16 +173,7 @@ csv.each do |row|
     end
 end
 
-csv_text = File.read(Rails.root.join('lib','seeds','6_digit_2022_Codes_2022_6_digit_industries.csv'))
-csv = CSV.parse(csv_text, :headers => true, :encoding => 'ISO-8859-1')
 
-csv.each do |row|
-    t = IndustryCategoryType.new
-    t.category_code = row['2022 NAICS Code']
-    t.title = row['2022 NAICS Title']
-    t.naics_year = row['NAICS Year']
-    t.save
-end
 
 CompanyRelationshipType.create(
     [{relationship: "Parent/Child", definition: "Parent Company has a Child Subsidary"},
@@ -158,6 +224,48 @@ ProductCategorySource.create(
     [{code: "AMZ", description: "Amazon"},
     {code: "GPC" , description: "Global Product Classification"}]
 )
+
+
+#Products Seed
+csv_text = File.read(Rails.root.join('lib','seeds','Products.csv'))
+csv = CSV.parse(csv_text, :headers => true, :encoding => 'ISO-8859-1')
+products = []
+csv.each do |row|
+    v = ProductVariant.find_by(barcode: row['Barcode'])
+    next if v
+    match = products.find{|p|p.name == row['Product_Name']}
+    image_path = Rails.root.join('lib','seeds', 'prod_images', "#{row['Barcode']}.jpg")
+    if match
+        v = ProductVariant.new
+        v.barcode = row['Barcode']
+        v.product_id = match.id
+        if File.exist?(image_path)
+            v.image = File.open(image_path) 
+        else
+            puts "Image not found for #{row['Barcode']}: #{image_path}"
+        end
+        v.save!
+    else
+
+        t = Product.new
+        t.product_category_source_id = ProductCategorySource.find_by(code: 'AMZ').id 
+        t.name = row['Product_Name']
+        t.size = row['Size']
+        if t.save
+            v = ProductVariant.new
+            v.barcode = row['Barcode']
+            v.product_id = t.id
+            if File.exist?(image_path)
+                v.image = File.open(image_path) 
+            else
+                puts "Image not found for #{row['Barcode']}: #{image_path}"
+            end
+            v.save!
+    
+        end
+        products << t
+    end
+end
 
 
 csv_text = File.read(Rails.root.join('lib','seeds','GPC_May_2024_Schema.csv'))

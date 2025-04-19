@@ -1,6 +1,15 @@
 class Api::V1::ScansController < Api::V1::BaseController
   before_action :authenticate_user!
 
+  def my_scans
+    my_top_scan_products = RawQueryModule.my_top_scan_products(20, current_user.id)
+    render json: { my_scans: my_top_scan_products }, status: :ok
+  end
+
+  def top_scans
+    top_scan_products = RawQueryModule.top_scan_products(20)
+    render json: { my_scans: top_scan_products }, status: :ok
+  end
 
   def create
     finder_claims = CroupierCore::ProductFinder.call!(barcode: scan_params[:barcode])

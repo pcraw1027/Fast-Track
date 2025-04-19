@@ -10,6 +10,11 @@ class User < ApplicationRecord
   enum status: { active: 0, suspended: 1, deleted: 2 }
   
   mount_uploader :photo, PhotoUploader
+  mount_uploader :avatar, AvatarUploader
+
+  has_many :scans, dependent: :destroy
+  has_many :upload_records, dependent: :destroy
+  has_many :bit_records, dependent: :destroy
   
   after_create :send_welcome_email
   validates :username, :country, :email, :postal_code, presence: true
