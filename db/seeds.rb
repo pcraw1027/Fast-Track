@@ -32,7 +32,7 @@ CitLevelUser.destroy_all
 BitRecord.destroy_all
 PitRecord.destroy_all
 CitRecord.destroy_all
-
+ProductCategorySource.destroy_all
 User.destroy_all
 
 admin = User.create!(email:"oshanani@gmail.com", password:"edpass", role: 1, status: 0, 
