@@ -1,0 +1,42 @@
+<div class="container mt-5">
+   
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        
+        <li class="nav-item">
+            <a class="nav-link <%= 'disabled' if pit_record.level != 0 %> <%= 'active' if pit_record.level == 0 %>" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Level 1</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link <%= 'disabled' if pit_record.level != 1 %> <%= 'active' if pit_record.level == 1 %>" id="relationships-tab" data-toggle="tab" href="#relationships" role="tab" aria-controls="relationships" aria-selected="false">Level 2</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link <%= 'disabled' if pit_record.level != 2 %> <%= 'active' if pit_record.level == 2 %>" id="contacts-tab" data-toggle="tab" href="#contacts" role="tab" aria-controls="contacts" aria-selected="false">Level 3</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link <%= 'disabled' if pit_record.level != 3 %> <%= 'active' if pit_record.level == 3 %>" id="ethnicity-tab" data-toggle="tab" href="#ethnicity" role="tab" aria-controls="ethnicity" aria-selected="false">Level 4</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link <%= 'disabled' if pit_record.level != 4 %> <%= 'active' if pit_record.level == 4 %>" id="gender-tab" data-toggle="tab" href="#gender" role="tab" aria-controls="gender" aria-selected="false">Level 5</a>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="myTabContent">
+
+        <div class="tab-pane fade <%= 'show active' if pit_record.level == 0 %>" id="home" role="tabpanel" aria-labelledby="home-tab">
+             <%= render partial: "pit_records/form_level1", locals: {product: product, product_category_sources: product_category_sources, pit_record: pit_record} %>
+        </div>
+        <div class="tab-pane fade <%= 'show active' if pit_record.level == 1 %>" id="relationships" role="tabpanel" aria-labelledby="relationships-tab">
+            <%= render partial: "pit_records/form_level2", locals: {product: product, segments: segments, pit_record: pit_record} %>
+        </div>
+        
+        <div class="tab-pane fade <%= 'show active' if pit_record.level == 2 %>" id="contacts" role="tabpanel" aria-labelledby="contacts-tab">
+            <%= render partial: "pit_records/form_level3", locals: {product: product} %>
+        </div>
+
+        <div class="tab-pane fade <%= 'show active' if pit_record.level == 3 %>" id="ethnicity" role="tabpanel" aria-labelledby="ethnicity-tab">
+            <%= render partial: "pit_records/form_level4", locals: {product: product} %>
+        </div>
+        <div class="tab-pane fade <%= 'show active' if pit_record.level == 4 %>" id="gender" role="tabpanel" aria-labelledby="gender-tab">
+            <%= render partial: "pit_records/form_level5", locals: {product: product} %>
+        </div>
+    </div>
+</div>

@@ -1,4 +1,3 @@
-// app/javascript/controllers/product_classification_controller.js
 import { Controller } from "stimulus"
 import TomSelect from "tom-select"
 

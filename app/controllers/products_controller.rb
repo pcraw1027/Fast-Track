@@ -1,10 +1,65 @@
 class ProductsController < ApplicationController
   before_action :set_product, only: %i[ show edit update destroy ]
   before_action :set_dropdowns, only: %i[ new edit ]
+  before_action :authenticate_user!, only: %i[ new edit update create destroy insert_product update_to_level_two]
+
 
   # GET /products or /products.json
   def index
     @products = Product.all
+  end
+
+  def insert_product
+    error = ""
+    error += "company is required, " if product_params[:company_id].blank?
+    error += "product name is required, " if product_params[:company_id].blank?
+    error += "description is required" if product_params[:description].blank?
+
+    if error.length > 0
+      respond_to_invalid_entries(error, pit_record_product_capture_interface_path(pit_record_id: params[:product][:pit_record_id]))  
+    else
+        
+
+        @product = Product.new(product_params)
+        respond_to do |format|
+          if @product.save
+
+            variant_exist = ProductVariant.find_by(barcode: product_variant_params[:barcode])
+            if variant_exist && !product_variant_params[:image].blank?
+                variant_exist.update(image: product_variant_params[:image])
+            elsif !variant_exist
+              ProductVariant.create!(
+                      barcode: product_variant_params[:barcode],
+                      image: product_variant_params[:image],
+                      product_id: @product.id
+                    )
+            end
+
+            CroupierCore::UpgradePitLevel.call!(barcode: product_variant_params[:barcode], product_id: @product.id)
+            format.html { redirect_to @product, notice: "Product successfully added" }
+            format.json { render :show, status: :created, location: @product }
+          else
+            format.html { render :new, status: :unprocessable_entity }
+            format.json { render json: @product.errors, status: :unprocessable_entity }
+          end
+        end
+        
+    end
+  end
+
+
+  def update_to_level_two
+    @product = Product.find(params[:product_id])
+    respond_to do |format|
+      if @product.update(product_params)
+        CroupierCore::UpgradePitLevel.call!(barcode: product_variant_params[:barcode], product_id: @product.id)
+        format.html { redirect_to @product, notice: "Product was successfully updated." }
+        format.json { render :show, status: :ok, location: @product }
+      else
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: @product.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   # GET /products/1 or /products/1.json
@@ -24,34 +79,38 @@ class ProductsController < ApplicationController
     @family = Family.find(@product.family_id)
     @klass = Klass.find(@product.klass_id)
     @brick = Brick.find(@product.brick_id)
+
+    @families = Family.all
+    @klasses = Klass.all
+    @bricks = Brick.all
   end
 
   # POST /products or /products.json
   def create
-    variant_exist = ProductVariant.find_by(barcode: product_variant_params[:barcode])
-    if variant_exist
-        respond_to do |format|
-            format.html { redirect_to new_product_path, notice: "Product variant already exist.", status: :unprocessable_entity }
-            format.json { render json: {errors: [{barcode:"variant already exisr"}]}, status: :unprocessable_entity }
-        end
+    if product_variant_params[:barcode].length < 12
+      respond_to_invalid_entries("minimum barcode length is 12")  
     else
-        @product = Product.new(product_params)
-
-        respond_to do |format|
-          if @product.save
-            ProductVariant.create!(
-              barcode: product_variant_params[:barcode],
-              image: product_variant_params[:image],
-              product_id: @product.id
-            )
-            format.html { redirect_to @product, notice: "Product successfully created" }
-            format.json { render :show, status: :created, location: @product }
-          else
-            format.html { render :new, status: :unprocessable_entity }
-            format.json { render json: @product.errors, status: :unprocessable_entity }
-          end
+        variant_exist = ProductVariant.find_by(barcode: product_variant_params[:barcode])
+        if variant_exist
+            respond_to_invalid_entries("Product variant already exist.")
+        else
+            @product = Product.new(product_params)
+            respond_to do |format|
+              if @product.save
+                ProductVariant.create!(
+                  barcode: product_variant_params[:barcode],
+                  image: product_variant_params[:image],
+                  product_id: @product.id
+                )
+                format.html { redirect_to @product, notice: "Product successfully created" }
+                format.json { render :show, status: :created, location: @product }
+              else
+                format.html { render :new, status: :unprocessable_entity }
+                format.json { render json: @product.errors, status: :unprocessable_entity }
+              end
+            end
         end
-      end
+    end
   end
 
   # PATCH/PUT /products/1 or /products/1.json
@@ -85,12 +144,16 @@ class ProductsController < ApplicationController
 
     def set_dropdowns
       @segments = Segment.all
-      @families = Family.all
-      @klasses = Klass.all
-      @bricks = Brick.all
       @product_category_sources = ProductCategorySource.all
     end
 
+    def respond_to_invalid_entries(msg, path=new_product_path)
+      respond_to do |format|
+        format.html { redirect_to path, notice: msg, status: :unprocessable_entity }
+        format.json { render json: {errors: [{barcode: msg}]}, status: :unprocessable_entity }
+      end
+    end
+    
     # Only allow a list of trusted parameters through.
     def product_params
       params.require(:product).permit(:company_id, :name, :product_category_source_id, :description, 

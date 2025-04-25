@@ -1,9 +1,34 @@
 class CitRecordsController < ApplicationController
   before_action :set_cit_record, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!, only: %i[ new edit update create destroy cit_interface company_capture_interface]
 
   # GET /cit_records or /cit_records.json
   def index
     @cit_records = CitRecord.all
+  end
+
+  def company_capture_interface
+    @industry_category_type = IndustryCategoryType.new
+    @cit_record = CitRecord.find(params[:cit_record_id])
+    @company = Company.new
+    if @cit_record.company_id 
+      @company = @cit_record.company
+    end
+    @company.mid = @cit_record.mid
+    if @company.industry_category_type_id 
+      @industry_category_type = @company.industry_category_type
+    end
+    @company_contact = CompanyContact.new
+    @industry_category_types = IndustryCategoryType.all
+  end
+
+  def cit_interface
+    @cit_records_0s = CitRecord.by_level(0)
+    @cit_records_1s = CitRecord.by_level(1)
+    @cit_records_2s = CitRecord.by_level(2)
+    @cit_records_3s = CitRecord.by_level(3)
+    @cit_records_4s = CitRecord.by_level(4)
+    @cit_records_5s = CitRecord.by_level(5)
   end
 
   # GET /cit_records/1 or /cit_records/1.json
@@ -18,6 +43,10 @@ class CitRecordsController < ApplicationController
 
   # GET /cit_records/1/edit
   def edit
+    @industry_category_type = IndustryCategoryType.new
+    if @company.industry_category_type_id 
+      @industry_category_type = @company.industry_category_type
+    end
   end
 
   # POST /cit_records or /cit_records.json

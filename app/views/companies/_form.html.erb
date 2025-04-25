@@ -12,12 +12,12 @@
   <% end %>
 
   <div class="form-row">
-    <div class = "form-group, col-md-6">
+    <div class = "form-group col-md-6">
       <%= form.label :name %>
       <%= form.text_field :name, class: "form-control" %>
     </div>
 
-    <div class = "form-group, col-md-6">
+    <div class = "form-group col-md-6">
       <%= form.label :logo %>
       <%= image_tag company.logo_url,  width: 60, height: 50  if company.logo? %>
       <%= form.file_field :logo, class: "form-control-file"  %>
@@ -33,12 +33,19 @@
   </br>
 
   <div class="form-row">
-    <div class = "form-group, col-md-6">
-      <%= form.label :industry_category_type_id %>
-      <%= form.select :industry_category_type_id, @industry_category_types.map { |ind_typ| ["#{ind_typ.category_code&.to_s} #{ind_typ.title&.to_s}", ind_typ.id] },  class: "form-control"  %>
-    </div>
+ 
 
-    <div class = "form-group, col-md-6">
+    <div class="form-group col-md-6">
+      <%= form.label :industry_category_type_id %>
+
+      <%= form.select :industry_category_type_id, [], 
+        { prompt: "Search for an industry categiry" }, 
+
+        data: { controller: "ind-cat-select" } 
+      %>
+   </div>
+
+    <div class = "form-group col-md-6">
       <%= form.label :established %>
       <%= form.date_select :established, class: "form-control"  %>
     </div>
@@ -86,7 +93,7 @@
     </div>
     <div class = "form-group col-md-4">
       <%= form.label :sector %>
-      <%= form.url_field :sector, class: "form-control"  %>
+      <%= form.text_field :sector, class: "form-control"  %>
     </div>
   </div>
 

@@ -1,0 +1,78 @@
+<%= form_for(company, url: insert_company_path, html: { method: :post }) do |form| %>
+  <% if company.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(company.errors.count, "error") %> prohibited this company from being saved:</h2>
+
+      <ul>
+        <% company.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+   <%= form.hidden_field :cit_record_id, value: cit_record.id %>
+
+  <div class="form-row">
+    <div class = "form-group col-md-6">
+      <%= form.label :name %>
+      <%= form.text_field :name, class: "form-control", required: true %>
+    </div>
+
+    <div class = "form-group col-md-6">
+      <%= form.label :logo %>
+      <%= image_tag company.logo_url,  width: 60, height: 50  if company.logo? %>
+      <%= form.file_field :logo, class: "form-control-file"  %>
+
+    <%= form.hidden_field :logo_cache %>
+  
+    <%= form.check_box :remove_logo %>
+      remove logo
+    </div>
+  </div>
+  </br>
+
+  
+
+  <div class="form-row">
+
+    <div class="form-group col-md-12">
+      <%= form.label :industry_category_type_id %>
+
+      <%= form.select :industry_category_type_id, [], 
+        { prompt: "Search for an industry categiry" }, 
+
+        data: { controller: "ind-cat-select" } 
+      %>
+   </div>
+
+  </div>
+  </br>  
+ 
+  <div class="form-row">
+    <div class = "form-group col-md-6">
+      <%= form.label :website %>
+      <%= form.url_field :website, class: "form-control" %>
+    </div>
+
+    <div class = "form-group col-md-6">
+      <%= form.label :established %>
+      <%= form.date_select :established, class: "form-control"  %>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class = "form-group col-md-6">
+      <%= form.label :mid %>
+      <%= form.text_field :mid, value: cit_record.mid, class: "form-control", readonly: true  %>
+    </div>
+       <div class = "form-group col-md-6">
+      <%= form.label :sector %>
+      <%= form.text_field :sector, class: "form-control", required: true  %>
+    </div>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "Submit", class: 'btn btn-secondary' %>
+  </div>
+<% end %>

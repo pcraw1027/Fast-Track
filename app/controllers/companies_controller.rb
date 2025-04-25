@@ -1,11 +1,58 @@
 class CompaniesController < ApplicationController
   before_action :set_company, only: %i[ show edit update destroy ]
   before_action :set_dropdowns, only: %i[ new edit ]
+  before_action :authenticate_user!, only: %i[ new edit update create destroy insert_company update_to_level_two]
 
   # GET /companies or /companies.json
   def index
     @companies = Company.all
   end
+
+  def insert_company
+    error = ""
+    error += "company name is required, " if company_params[:name].blank?
+    error += "sector is required, " if company_params[:sector].blank?
+    error += "industry category type is required" if company_params[:industry_category_type_id].blank?
+
+    if error.length > 0
+      respond_to_invalid_entries(error, cit_record_company_capture_interface_path(cit_record_id: params[:company][:cit_record_id]))  
+    else
+      @company = Company.new(company_params.except(:mid))
+      @company.mids = [company_params[:mid]]
+      respond_to do |format|
+        if @company.save
+          CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, company_name: @company.name)
+          format.html { redirect_to @company, notice: "Company was successfully created." }
+          format.json { render :show, status: :created, location: @company }
+        else
+          format.html { render :new, status: :unprocessable_entity }
+          format.json { render json: @company.errors, status: :unprocessable_entity }
+        end
+      end
+        
+    end
+  end
+
+  def update_to_level_two
+    @company = Company.find(params[:company_id])
+    respond_to do |format|
+      if @company.update(company_params.except(:mid))
+        company_contact = CompanyContact.new(company_contact_params.except(:contact_name, :company_contact_type_id))
+        company_contact.name = company_contact_params[:contact_name]
+        company_contact.company_id = @company.id
+        company_contact.company_contact_type_id = CompanyContactType.find_by(role: "CEO").id
+        company_contact.save!
+        CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, company_name: @company.name)
+        format.html { redirect_to @company, notice: "company was successfully updated." }
+        format.json { render :show, status: :ok, location: @company }
+      else
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: @company.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  
 
   # GET /companies/1 or /companies/1.json
   def show
@@ -87,8 +134,19 @@ end
       @industry_category_types = IndustryCategoryType.all
     end
 
+    def respond_to_invalid_entries(msg, path=new_product_path)
+      respond_to do |format|
+        format.html { redirect_to path, notice: msg, status: :unprocessable_entity }
+        format.json { render json: {errors: [{barcode: msg}]}, status: :unprocessable_entity }
+      end
+    end
+
     # Only allow a list of trusted parameters through.
     def company_params
       params.require(:company).permit(:name, :sector, :logo, :mid, :industry_category_type_id, :address_1, :address_2, :city, :state, :country, :established, :website, :diversity_report, :diversity_score, :total_employees)
+    end
+
+    def company_contact_params
+      params.require(:company).permit(:company_contact_type_id, :contact_name, :job_title, :email, :phone, :photo)
     end
 end

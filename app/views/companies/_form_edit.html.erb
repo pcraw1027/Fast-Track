@@ -1,0 +1,120 @@
+<%= form_with(model: company) do |form| %>
+  <% if company.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(company.errors.count, "error") %> prohibited this company from being saved:</h2>
+
+      <ul>
+        <% company.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-row">
+    <div class = "form-group col-md-6">
+      <%= form.label :name %>
+      <%= form.text_field :name, class: "form-control" %>
+    </div>
+
+    <div class = "form-group col-md-6">
+      <%= form.label :logo %>
+      <%= image_tag company.logo_url,  width: 60, height: 50  if company.logo? %>
+      <%= form.file_field :logo, class: "form-control-file"  %>
+
+    <%= form.hidden_field :logo_cache %>
+  
+    <%= form.check_box :remove_logo %>
+      Remove Profile Pic
+
+
+    </div>
+  </div>
+  </br>
+
+  <div class="form-row">
+ 
+
+    <div class = "form-group col-md-6">
+      <%= form.label :industry_category_type_id %>
+
+      <%= form.select :industry_category_type_id, [["#{@industry_category_type.category_code&.to_s} - #{@industry_category_type.title&.to_s}", @industry_category_type.id]], 
+        {}, 
+
+        data: { controller: "ind-cat-select" } 
+      %>
+    </div>
+
+    <div class = "form-group col-md-6">
+      <%= form.label :established %>
+      <%= form.date_select :established, class: "form-control"  %>
+    </div>
+  </div>
+  </br>  
+
+  <div class="form-row">
+    <div class = "form-group col-md-6">
+      <%= form.label :address_1 %>
+      <%= form.text_field :address_1, class: "form-control"  %>
+    </div>
+
+    <div class = "form-group col-md-6">
+      <%= form.label :address_2 %>
+      <%= form.text_field :address_2, class: "form-control"  %>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class = "form-group col-md-4">
+      <%= form.label :city %>
+      <%= form.text_field :city, class: "form-control"  %>
+    </div>
+
+    <div class = "form-group col-md-4">
+      <%= form.label :state %>
+      <%= form.text_field :state, class: "form-control"  %>
+    </div>
+
+    <div class = "form-group col-md-4">
+      <%= form.label :country %>
+      <%= form.text_field :country, class: "form-control"  %>
+    </div>
+  </div>
+ 
+  <div class="form-row">
+    <div class = "form-group col-md-4">
+      <%= form.label :website %>
+      <%= form.url_field :website, class: "form-control" %>
+    </div>
+
+    <div class = "form-group col-md-4">
+      <%= form.label :diversity_report %>
+      <%= form.url_field :diversity_report, class: "form-control"  %>
+    </div>
+    <div class = "form-group col-md-4">
+      <%= form.label :sector %>
+      <%= form.text_field :sector, class: "form-control"  %>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class = "form-group col-md-4">
+      <%= form.label :diversity_score %>
+      <%= form.number_field :diversity_score, class: "form-control"  %>
+    </div>
+
+    <div class = "form-group col-md-4">
+      <%= form.label :total_employees %>
+      <%= form.number_field :total_employees, class: "form-control"  %>
+    </div>
+
+    <div class = "form-group col-md-4">
+      <%= form.label :mid %>
+      <%= form.text_field :mid, class: "form-control"  %>
+    </div>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "Submit", class: 'btn btn-secondary' %>
+  </div>
+<% end %>

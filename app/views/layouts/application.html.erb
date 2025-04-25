@@ -21,7 +21,7 @@
   <body>
 
     <%= render 'home/header' %>
-    <div class="container-xl">
+    <div class="container">
 
       <% flash.each do |message_type, message| %>
          <div class="alert alert-success" role="alert"><%= message_type.to_s.capitalize %> - <%= message %></div>

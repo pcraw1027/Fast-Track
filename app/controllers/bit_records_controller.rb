@@ -1,6 +1,6 @@
 class BitRecordsController < ApplicationController
   before_action :set_bit_record, only: %i[ show edit update destroy ]
-  before_action :authenticate_user!, only: %i[ new edit update create destroy ]
+  before_action :authenticate_user!, only: %i[ new edit update create destroy bit_interface insert_barcode]
 
   # GET /bit_records or /bit_records.json
   def index
@@ -14,6 +14,32 @@ class BitRecordsController < ApplicationController
   # GET /bit_records/new
   def new
     @bit_record = BitRecord.new
+  end
+
+   # GET /bit_interface
+   def bit_interface
+    @bit_record = BitRecord.new
+    @bit_records = BitRecord.where(user_id: current_user.id)
+  end
+
+  # POST /insert_barcode
+  def insert_barcode
+    begin
+      if bit_record_params[:barcode].present?
+        @brc_intrf_claims = CroupierCore::BarcodeInterface.call!(barcode: bit_record_params[:barcode], 
+                                      source: "BIT Load", asin: nil, user_id: current_user.id)
+        if @brc_intrf_claims && @brc_intrf_claims.success?
+          render json: {bit_records: [@brc_intrf_claims.payload], error:""}
+        else
+          render json: {bit_records: [], error:@brc_intrf_claims.error}
+        end
+      elsif bit_record_load_params[:file].present?
+        bit_records = BitRecord.load_from_file(bit_record_load_params[:file].tempfile, current_user.id)
+        render json: {bit_records: bit_records, error: ""}
+      end
+    rescue => e
+      render json: {bit_records: [], error: e.message}
+    end
   end
 
   # GET /bit_records/1/edit
@@ -67,5 +93,8 @@ class BitRecordsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def bit_record_params
       params.require(:bit_record).permit(:barcode, :status, :source)
+    end
+    def bit_record_load_params
+      params.require(:bit_record).permit(:file)
     end
 end
