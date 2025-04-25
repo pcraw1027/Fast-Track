@@ -66,6 +66,17 @@
       </div>
     </li>
 
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+        Import Triggers
+      </a>
+      <div class="dropdown-menu">
+        <%= link_to "Barcode import", bit_interface_path, class: "nav-link" %>
+        <%= link_to "Product import", pit_interface_path, class: "nav-link" %>
+        <%= link_to "Company import", cit_interface_path, class:"nav-link" %>
+      </div>
+    </li>
+
       <li class="nav-item">
         <%= link_to "About Us", home_about_path, class:"nav-link" %>
       </li>
@@ -87,30 +98,30 @@
         </div>
       </li>
 
-<%if current_user %>
-   <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
-          Hi, <%= current_user.username%>
-        </a>
-        <div class="dropdown-menu">
-       <a href="/users/<%= current_user.id %>" class="nav-link"> Profile</a>
-        <%= link_to edit_user_registration_path(current_user), class:"nav-link" do %>
-                Account Settings
-                <%end%>
+      <%if current_user %>
+        <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+                Hi, <%= current_user.username%>
+              </a>
+              <div class="dropdown-menu">
+            <a href="/users/<%= current_user.id %>" class="nav-link"> Profile</a>
+              <%= link_to edit_user_registration_path(current_user), class:"nav-link" do %>
+                      Account Settings
+                      <%end%>
 
-           <%= button_to 'Logout', destroy_user_session_path, method: :delete, class: "nav-link btn btn-outline-link btn-sm" %>
+                <%= button_to 'Logout', destroy_user_session_path, method: :delete, class: "nav-link btn btn-outline-link btn-sm" %>
 
 
 
-        </div>
-      </li>
-<%else%>
-  <li class="nav-item">
-      <a class="nav-link" href="/users/sign_in">
-        Sign in
-      </a>
-  </li>
-<%end%>
+              </div>
+            </li>
+      <%else%>
+        <li class="nav-item">
+            <a class="nav-link" href="/users/sign_in">
+              Sign in
+            </a>
+        </li>
+      <%end%>
       
 
 

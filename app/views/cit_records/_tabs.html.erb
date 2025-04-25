@@ -1,0 +1,43 @@
+<div class="container mt-5">
+   
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Level 0</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="attributes-tab" data-toggle="tab" href="#attributes" role="tab" aria-controls="attributes" aria-selected="false">Level 1</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="relationships-tab" data-toggle="tab" href="#relationships" role="tab" aria-controls="relationships" aria-selected="false">Level 2</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="contacts-tab" data-toggle="tab" href="#contacts" role="tab" aria-controls="contacts" aria-selected="false">Level 3</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="ethnicity-tab" data-toggle="tab" href="#ethnicity" role="tab" aria-controls="ethnicity" aria-selected="false">Level 4</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="gender-tab" data-toggle="tab" href="#gender" role="tab" aria-controls="gender" aria-selected="false">Level 5</a>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+             <%= render partial: "level0", locals: {cit_records_0s: cit_records_0s} %>
+        </div>
+        <div class="tab-pane fade" id="attributes" role="tabpanel" aria-labelledby="attributes-tab">
+             <%= render partial: "level1", locals: {cit_records_1s: cit_records_1s} %>
+        </div>
+        <div class="tab-pane fade" id="relationships" role="tabpanel" aria-labelledby="relationships-tab">
+            <%= render partial: "level2", locals: {cit_records_2s: cit_records_2s} %>
+        </div>
+        <div class="tab-pane fade" id="contacts" role="tabpanel" aria-labelledby="contacts-tab">
+            <%= render partial: "level3", locals: {cit_records_3s: cit_records_3s} %>
+        </div>
+        <div class="tab-pane fade" id="ethnicity" role="tabpanel" aria-labelledby="ethnicity-tab">
+            <%= render partial: "level4", locals: {cit_records_4s: cit_records_4s} %>
+        </div>
+        <div class="tab-pane fade" id="gender" role="tabpanel" aria-labelledby="gender-tab">
+            <%= render partial: "level5", locals: {cit_records_5s: cit_records_5s} %>
+        </div>
+    </div>
+</div>

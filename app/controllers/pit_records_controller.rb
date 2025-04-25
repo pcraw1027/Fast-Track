@@ -1,15 +1,44 @@
 class PitRecordsController < ApplicationController
   before_action :set_pit_record, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!, only: %i[ new edit update create destroy pit_interface product_capture_interface]
+
 
   # GET /pit_records or /pit_records.json
   def index
     @pit_records = PitRecord.all
   end
 
+  def product_capture_interface
+    @pit_record = PitRecord.find(params[:pit_record_id])
+    @product = Product.new
+    @product.barcode = @pit_record.barcode
+    if @pit_record.product_id
+      @product = @pit_record.product
+      variants = ProductVariant.find_by(barcode: @pit_record.barcode)
+      if variants
+        @product.barcode = variants.barcode
+        @product.image = variants.image
+      end
+    end
+    @product.product_category_source_id = ProductCategorySource.find_by(code: 'AMZ').id
+    @product_category_sources = ProductCategorySource.all
+    @segments = Segment.all
+  end
+
+  def pit_interface
+    @pit_records_0s = PitRecord.by_level(0)
+    @pit_records_1s = PitRecord.by_level(1)
+    @pit_records_2s = PitRecord.by_level(2)
+    @pit_records_3s = PitRecord.by_level(3)
+    @pit_records_4s = PitRecord.by_level(4)
+    @pit_records_5s = PitRecord.by_level(5)
+  end
+
   # GET /pit_records/1 or /pit_records/1.json
   def show
     @level_users = PitLevelUser.includes(:user).where(pit_record_id: params[:id])
   end
+  
 
   # GET /pit_records/new
   def new

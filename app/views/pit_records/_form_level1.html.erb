@@ -1,0 +1,74 @@
+
+<%= form_for(product, url: insert_product_path, html: { method: :post }) do |form| %>
+
+  <% if product.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(product.errors.count, "error") %> prohibited this product from being saved:</h2>
+
+      <ul>
+        <% product.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+
+  <div class="form-group">
+    <%= form.label :barcode %>
+    <%= form.text_field :barcode, value: pit_record.barcode, class: "form-control", readonly: true %>
+  </div>
+
+   <div class="form-group">
+    <%= form.label :name %>
+    <%= form.text_field :name, class: "form-control", required: true %>
+  </div>
+
+  <%= form.hidden_field :pit_record_id, value: pit_record.id %>
+
+  <div class = "form-group">
+      <%= form.label :product_category_source_id %>
+      <%= form.select :product_category_source_id, product_category_sources.map { |cat_source| ["#{cat_source.code&.to_s} #{cat_source.description&.to_s}", cat_source.id] },  class: "form-control", required: true  %>
+  </div>
+
+   <div class="form-group">
+    <%= form.label :description %>
+    <%= form.text_field :description, class: "form-control", required: true %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :company_id %>
+    <%= form.select :company_id, [], 
+      { prompt: "Search for a company" }, 
+      data: { controller: "company-select" } 
+    %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :image %>
+    <div class="uploaded-title">
+      <div class="uploaded-pic">
+
+      <%= form.file_field :image, class: "form-control-file"  %>
+
+      </div>
+    </div>
+  </div>
+
+ 
+  <div class="form-group">
+    <%= form.label :qrcode %>
+    <%= form.text_field :qrcode, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :size %>
+    <%= form.text_field :size, class: "form-control" %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "Submit", class: 'btn btn-secondary' %>
+  </div>
+<% end %>
+
+

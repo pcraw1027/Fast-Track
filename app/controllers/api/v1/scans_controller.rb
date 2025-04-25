@@ -44,7 +44,7 @@ class Api::V1::ScansController < Api::V1::BaseController
       elsif  @brc_intrf_claims && @brc_intrf_claims.success?
         render json: {
           scan: @scan,
-        message: @brc_intrf_claims.payload
+        message: @brc_intrf_claims.payload[:message]
       }, status: :ok
       else
         render json: @scan.errors, status: :unprocessable_entity

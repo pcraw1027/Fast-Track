@@ -16,3 +16,4 @@ class CroupierCore::Bit < ApplicationService
     end
   end
 end
+

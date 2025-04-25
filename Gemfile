@@ -64,7 +64,10 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 # Carrierwave
 gem 'carrierwave', '~> 3.0'
 gem 'mini_magick'
-
+gem 'carrierwave-base64'
+gem 'fog-aws'
+gem 'image_processing'
+gem 'fog', '~>1.3'
 gem "net-http"
 
 gem "mutex_m"
