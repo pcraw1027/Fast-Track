@@ -1,6 +1,7 @@
 class Product < ApplicationRecord
   attr_accessor :image
   attr_accessor :barcode
+  attr_accessor :new_company_name
   belongs_to :company, optional: true
   belongs_to :segment, optional: true
   belongs_to :family, optional: true

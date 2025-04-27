@@ -3,12 +3,12 @@
     <div class="col">
 
         
-        <%if @product.family %>
+        <%if @product.company_id %>
         <p>
           <strong>Company:</strong>
           <%= @product.company.name %>
         </p>
-<%end%>
+      <%end%>
         <p>
           <strong>Product category source:</strong>
           <%= @product.product_category_source.description %>
