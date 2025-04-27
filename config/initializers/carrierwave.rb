@@ -8,6 +8,8 @@ CarrierWave.configure do |config|
     }
     config.fog_directory = Rails.application.credentials.s3_bucket_name
     config.storage = :fog
+    config.fog_attributes = {}
+    config.fog_public     = false
   else
     config.storage = :file
     config.enable_processing = Rails.env.development?

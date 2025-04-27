@@ -11,14 +11,21 @@ class ProductsController < ApplicationController
 
   def insert_product
     error = ""
-    error += "company is required, " if product_params[:company_id].blank?
-    error += "product name is required, " if product_params[:company_id].blank?
+    #error += "company is required, " if product_params[:company_id].blank?
+    error += "product name is required, " if product_params[:name].blank?
     error += "description is required" if product_params[:description].blank?
 
+    company_name = params[:product][:new_company_name]
+
+    
     if error.length > 0
       respond_to_invalid_entries(error, pit_record_product_capture_interface_path(pit_record_id: params[:product][:pit_record_id]))  
     else
-        
+      
+      unless product_params[:company_id].blank?
+        company = Company.find(product_params[:company_id])
+        company_name = company.name
+      end
 
         @product = Product.new(product_params)
         respond_to do |format|
@@ -35,7 +42,8 @@ class ProductsController < ApplicationController
                     )
             end
 
-            CroupierCore::UpgradePitLevel.call!(barcode: product_variant_params[:barcode], product_id: @product.id)
+            CroupierCore::UpgradePitLevel.call!(barcode: product_variant_params[:barcode], 
+                              product_id: @product.id, company_name: company_name)
             format.html { redirect_to @product, notice: "Product successfully added" }
             format.json { render :show, status: :created, location: @product }
           else
@@ -52,7 +60,8 @@ class ProductsController < ApplicationController
     @product = Product.find(params[:product_id])
     respond_to do |format|
       if @product.update(product_params)
-        CroupierCore::UpgradePitLevel.call!(barcode: product_variant_params[:barcode], product_id: @product.id)
+        CroupierCore::UpgradePitLevel.call!(barcode: product_variant_params[:barcode], 
+        product_id: @product.id, company_name: nil)
         format.html { redirect_to @product, notice: "Product was successfully updated." }
         format.json { render :show, status: :ok, location: @product }
       else

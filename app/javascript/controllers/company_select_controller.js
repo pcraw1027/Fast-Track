@@ -9,7 +9,7 @@ export default class extends Controller {
         valueField: 'id',
         labelField: 'name',
         searchField: 'name',
-        create: false,
+        create: true,
         //persist: false,
         hideSelected: true,
         placeholder: 'Search for a company',
@@ -20,6 +20,15 @@ export default class extends Controller {
             .then(json => callback(json))
             .catch(() => callback())
         },
+        onOptionAdd: function(value, data) {
+          document.getElementById('new_company_name').value = value;
+        },
+        onItemAdd: function(value, item) {
+          const existingOption = companySelect.querySelector(`option[value="${value}"]`);
+          if (existingOption) {
+            document.getElementById('new_company_name').value = "";
+          }
+        }
       })
       
   }
