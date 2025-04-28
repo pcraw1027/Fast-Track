@@ -43,7 +43,8 @@ class ProductsController < ApplicationController
             end
 
             CroupierCore::UpgradePitLevel.call!(barcode: product_variant_params[:barcode], 
-                              product_id: @product.id, company_name: company_name)
+                              product_id: @product.id, company_name: company_name, asin: params[:product][:asin],
+                              user_id: current_user.id)
             format.html { redirect_to @product, notice: "Product successfully added" }
             format.json { render :show, status: :created, location: @product }
           else
@@ -61,7 +62,7 @@ class ProductsController < ApplicationController
     respond_to do |format|
       if @product.update(product_params)
         CroupierCore::UpgradePitLevel.call!(barcode: product_variant_params[:barcode], 
-        product_id: @product.id, company_name: nil)
+        product_id: @product.id, company_name: nil, asin: nil, user_id: current_user.id)
         format.html { redirect_to @product, notice: "Product was successfully updated." }
         format.json { render :show, status: :ok, location: @product }
       else

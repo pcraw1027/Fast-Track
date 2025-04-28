@@ -1,7 +1,7 @@
 class CroupierCore::MidExtractor < ApplicationService
   STRATEGIES = {
-    12 => ->(barcode) { barcode[1..6] },
-    13 => ->(barcode) { barcode[2..7] }
+    12 => ->(barcode) { barcode[1..5] },
+    13 => ->(barcode) { barcode[2..6] }
   }.freeze
 
   def call(barcode:)

@@ -1,15 +1,12 @@
 class CroupierCore::IncrPitCitProdCount < ApplicationService
   def call(barcode:)
-    pit_rec = PitRecord.find_by(barcode: barcode)
-    pit_rec.increment!(:product_activity_count) if pit_rec
+    PitRecord.where(barcode: barcode).update_all("product_activity_count = product_activity_count + 1")
+
     serv_req = CroupierCore::MidExtractor.call!(barcode: barcode)
-    cit_rec = CitRecord.find_by(mid: serv_req.payload) if serv_req.payload
-
-    if cit_rec
-      cit_rec.product_activity_count += 1
-      cit_rec.product_orphan_count += 1 if cit_rec.level == 0
-      cit_rec.save!
+    if serv_req.success?
+      CitRecord.where(mid: serv_req.payload)
+               .update_all("product_activity_count = product_activity_count + 1, product_orphan_count = product_orphan_count + CASE WHEN level = 0 THEN 1 ELSE 0 END")
     end
-
+    
   end
 end
