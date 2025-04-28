@@ -9,11 +9,13 @@ class CroupierCore::Bit < ApplicationService
       CitRecordHandler.update_existing(cit_rec) if cit_rec
       success({:found_in_pit => true})
     else
-      PitRecord.create!(barcode: barcode, source: source, mid: mid, asin: asin, product_activity_count: 1)
+      pit_rec = PitRecord.create!(barcode: barcode, source: source, mid: mid, asin: asin, product_activity_count: 1)
+      PitLevelUser.create!(level: 0, user_id: user_id, pit_record_id: pit_rec.id )
       cit_rec = CitRecordHandler.update_or_create(cit_rec, mid: mid, source: source, 
                       user_id: user_id, brand: brand)
       success({:found_in_pit => false})
     end
   end
+
 end
 

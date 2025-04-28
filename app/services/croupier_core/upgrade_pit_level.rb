@@ -1,18 +1,41 @@
 class CroupierCore::UpgradePitLevel < ApplicationService
-  def call(barcode:, product_id:, company_name:)
+
+  def call(barcode:, product_id:, company_name:, asin:, user_id:)
     pit_rec = PitRecord.find_by(barcode: barcode)
-    pit_rec.update(product_activity_count: pit_rec.product_activity_count + 1, 
-      product_id: product_id, level: pit_rec.level + 1) if pit_rec
-    serv_req = CroupierCore::MidExtractor.call!(barcode: barcode)
-    cit_rec = CitRecord.find_by(mid: serv_req.payload) if serv_req.payload
-    if cit_rec && cit_rec.level == 0
-      cit_rec.product_activity_count = cit_rec.product_activity_count + 1
-      cit_rec.product_orphan_count = cit_rec.product_orphan_count + 1,
-      cit_rec.company_name = company_name if company_name
-      cit_rec.save! 
-    elsif cit_rec && cit_rec.level != 0
-      cit_rec.update(product_activity_count: cit_rec.product_activity_count + 1) if cit_rec
+    if pit_rec
+      pit_rec.product_activity_count = pit_rec.product_activity_count + 1
+      pit_rec.product_id = product_id
+      pit_rec.level = pit_rec.level + 1
+      pit_rec.asin = asin if asin
+      pit_rec.save!
+      PitLevelUser.create!(level: pit_rec.level, user_id: user_id, pit_record_id: pit_rec.id )
     end
+
+    serv_req = CroupierCore::MidExtractor.call!(barcode: barcode)
+
+    if serv_req.success?
+      updates = [
+        "product_activity_count = product_activity_count + 1",
+      ]
     
+      if company_name.present?
+        updates << "company_name = ?"
+        params = [company_name]
+      else
+        params = []
+      end
+    
+      # Update orphan count only if company_id is NULL
+      CitRecord.where(mid: serv_req.payload)
+               .update_all([
+                 updates.join(", ") + ", product_orphan_count = CASE WHEN company_id IS NULL THEN COALESCE(product_orphan_count, 0) + 1 ELSE product_orphan_count END",
+                 *params
+               ])
+    end
+
+    
+
+
   end
+
 end

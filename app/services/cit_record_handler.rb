@@ -1,7 +1,7 @@
 module CitRecordHandler
   def self.update_existing(cit_rec)
     cit_rec.product_activity_count += 1
-    cit_rec.product_orphan_count += 1 if cit_rec.level == 0
+    cit_rec.product_orphan_count += 1 unless cit_rec.company_id
     cit_rec.save!
     cit_rec
   end

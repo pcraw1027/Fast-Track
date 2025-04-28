@@ -21,7 +21,8 @@ class CompaniesController < ApplicationController
       @company.mids = [company_params[:mid]]
       respond_to do |format|
         if @company.save
-          CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, company_name: @company.name)
+          CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, 
+          company_name: @company.name, user_id: current_user.id)
           format.html { redirect_to @company, notice: "Company was successfully created." }
           format.json { render :show, status: :created, location: @company }
         else
@@ -42,7 +43,8 @@ class CompaniesController < ApplicationController
         company_contact.company_id = @company.id
         company_contact.company_contact_type_id = CompanyContactType.find_by(role: "CEO").id
         company_contact.save!
-        CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, company_name: @company.name)
+        CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, 
+        company_name: @company.name, user_id: current_user.id)
         format.html { redirect_to @company, notice: "company was successfully updated." }
         format.json { render :show, status: :ok, location: @company }
       else
