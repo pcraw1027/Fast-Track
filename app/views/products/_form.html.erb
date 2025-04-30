@@ -42,13 +42,10 @@
     <%= form.label :image %>
     <div class="uploaded-title">
       <div class="uploaded-pic">
-          <%= image_tag product.image_url,  width: 60, height: 50  if product.image? %>
+    
           <%= form.file_field :image, class: "form-control-file"  %>
-          <%if product.image?%>
-            <%= form.hidden_field :image_cache %>
-            <%= form.check_box :remove_image %>
-              Remove image
-          <%end%>
+        
+            
       </div>
     </div>
   </div>

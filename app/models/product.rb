@@ -1,6 +1,6 @@
 class Product < ApplicationRecord
+
   attr_accessor :image
-  mount_uploader :image, ImageUploader
   attr_accessor :barcode
   attr_accessor :new_company_name
   attr_accessor :asin
@@ -15,6 +15,7 @@ class Product < ApplicationRecord
   has_many :product_variants, dependent: :destroy
   has_many :pit_records, dependent: :destroy
   default_scope -> { order(updated_at: :desc) }
+
 end
 
 
