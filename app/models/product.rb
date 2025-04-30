@@ -1,5 +1,6 @@
 class Product < ApplicationRecord
   attr_accessor :image
+  mount_uploader :image, ImageUploader
   attr_accessor :barcode
   attr_accessor :new_company_name
   attr_accessor :asin

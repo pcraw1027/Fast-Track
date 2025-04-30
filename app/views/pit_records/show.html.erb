@@ -3,11 +3,6 @@
     <div class="col">
 
         <p>
-          <strong>Product activity count:</strong>
-          <%= @pit_record.product_activity_count %>
-        </p>
-
-        <p>
           <strong>Barcode:</strong>
           <%= @pit_record.barcode %>
         </p>
@@ -17,10 +12,17 @@
           <%= @pit_record.asin %>
         </p>
 
-        <p>
+         <p>
           <strong>Level:</strong>
           <%= @pit_record.level %>
         </p>
+
+        <p>
+          <strong>Product activity count:</strong>
+          <%= @pit_record.product_activity_count %>
+        </p>
+
+       
 
         <p>
           <strong>Source:</strong>
@@ -28,7 +30,7 @@
         </p>
 
         <p>
-          <strong>Product:</strong>
+          <strong>Product ID:</strong>
           <%= @pit_record.product_id %>
         </p>
 
@@ -36,6 +38,17 @@
           <strong>Mid:</strong>
           <%= @pit_record.mid %>
         </p>
+
+        <p>
+      <strong>Created at:</strong>
+      <%= @pit_record.created_at %>
+    </p>
+
+     <p>
+      <strong>Updated at:</strong>
+      <%= @pit_record.updated_at %>
+    </p>
+
       </div>
     </div>
 </div>

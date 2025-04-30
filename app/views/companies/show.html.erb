@@ -5,11 +5,11 @@
     <div class="col">
       <h1 class="display-4">
         <%= @company.name %>
-      </h1>
+      </h3>
   
       <p>
         <strong>Established:</strong>
-        <%= @company.established.to_s(:long) %>
+        <%= @company.created_at.strftime("%Y") %>
       </p>
       <p class="lead">
         <%= @company.industry_category_type.title %>

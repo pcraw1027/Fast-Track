@@ -16,7 +16,6 @@ class Company < ApplicationRecord
   validates :mids, uniqueness: true
 
   default_scope -> { order(created_at: :desc) }
-  scope :find_by_mid, -> (mid) { where("mids @> ARRAY[?]::varchar[]", [mid]) }
-
+  scope :find_by_mid, ->(mid) { where("mids @> ARRAY[?]::text[]", [mid]) }
 
 end
