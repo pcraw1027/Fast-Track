@@ -27,20 +27,33 @@ class ProductsController < ApplicationController
         company_name = company.name
       end
 
-        @product = Product.new(product_params)
+      @product = Product.new(product_params.except(:image))
+
+      variant_exist = ProductVariant.find_by(barcode: product_variant_params[:barcode])
+      if variant_exist
+        @product = variant_exist.product
+        variant_exist.update(image: product_variant_params[:image]) unless product_variant_params[:image].blank?
+        if @product.update(product_params.except(:image))
+          CroupierCore::UpgradePitLevel.call!(barcode: product_variant_params[:barcode], 
+          product_id: @product.id, company_name: company_name, 
+          asin: params[:product][:asin], user_id: current_user.id)
+          redirect_to @product, notice: "Product was successfully updated." and return
+         
+        end
+
+      end
+        
         respond_to do |format|
           if @product.save
 
             variant_exist = ProductVariant.find_by(barcode: product_variant_params[:barcode])
-            if variant_exist && !product_variant_params[:image].blank?
-                variant_exist.update(image: product_variant_params[:image])
-            elsif !variant_exist
+          
               ProductVariant.create!(
                       barcode: product_variant_params[:barcode],
                       image: product_variant_params[:image],
                       product_id: @product.id
                     )
-            end
+            
 
             CroupierCore::UpgradePitLevel.call!(barcode: product_variant_params[:barcode], 
                               product_id: @product.id, company_name: company_name, asin: params[:product][:asin],
