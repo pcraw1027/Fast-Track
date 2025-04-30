@@ -12,13 +12,13 @@
   <% end %>
 
   <div class="field">
-    <%= form.label :product_activity_count %>
-    <%= form.number_field :product_activity_count %>
+    <%= form.label :barcode %>
+    <%= form.text_field :barcode %>
   </div>
 
   <div class="field">
-    <%= form.label :barcode %>
-    <%= form.text_field :barcode %>
+    <%= form.label :asin %>
+    <%= form.text_field :asin %>
   </div>
 
   <div class="field">
@@ -26,6 +26,12 @@
     <%= form.number_field :level %>
   </div>
 
+
+  <div class="field">
+    <%= form.label :product_activity_count %>
+    <%= form.number_field :product_activity_count %>
+  </div>
+  
   <div class="field">
     <%= form.label :source %>
     <%= form.text_field :source %>

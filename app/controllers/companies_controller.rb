@@ -13,10 +13,16 @@ class CompaniesController < ApplicationController
     error += "company name is required, " if company_params[:name].blank?
     error += "sector is required, " if company_params[:sector].blank?
     error += "industry category type is required" if company_params[:industry_category_type_id].blank?
-
-    if error.length > 0
+    
+    if error.length > 0 
       respond_to_invalid_entries(error, cit_record_company_capture_interface_path(cit_record_id: params[:company][:cit_record_id]))  
     else
+      companies = Company.find_by_mid(company_params[:mid])
+      if companies.any?
+        CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: companies[0].id, 
+          company_name: company_params[:name], user_id: current_user.id)
+        return update_company_and_return(companies[0]) 
+      end
       @company = Company.new(company_params.except(:mid))
       @company.mids = [company_params[:mid]]
       respond_to do |format|
@@ -26,12 +32,13 @@ class CompaniesController < ApplicationController
           format.html { redirect_to @company, notice: "Company was successfully created." }
           format.json { render :show, status: :created, location: @company }
         else
-          format.html { render :new, status: :unprocessable_entity }
+          msg = @company.errors.map(&:attribute).map(&:to_s).join(" ") + " already exists"
+          format.html { redirect_to cit_record_company_capture_interface_path(cit_record_id: params[:company][:cit_record_id]), notice: msg, status: :unprocessable_entity }
           format.json { render json: @company.errors, status: :unprocessable_entity }
         end
       end
-        
     end
+
   end
 
   def update_to_level_two
@@ -105,15 +112,7 @@ end
 
   # PATCH/PUT /companies/1 or /companies/1.json
   def update
-    respond_to do |format|
-      if @company.update(company_params)
-        format.html { redirect_to @company, notice: "Company was successfully updated." }
-        format.json { render :show, status: :ok, location: @company }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @company.errors, status: :unprocessable_entity }
-      end
-    end
+    return update_company_and_return(@company)
   end
 
   # DELETE /companies/1 or /companies/1.json
@@ -134,6 +133,18 @@ end
 
     def set_dropdowns
       @industry_category_types = IndustryCategoryType.all
+    end
+
+    def update_company_and_return(company)
+      respond_to do |format|
+        if company.update(company_params)
+          format.html { redirect_to company, notice: "Company was successfully updated." }
+          format.json { render :show, status: :ok, location: company }
+        else
+          format.html { render :edit, status: :unprocessable_entity }
+          format.json { render json: company.errors, status: :unprocessable_entity }
+        end
+      end
     end
 
     def respond_to_invalid_entries(msg, path=new_product_path)

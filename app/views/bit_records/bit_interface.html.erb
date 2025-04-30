@@ -1,5 +1,5 @@
 <div data-controller="barcode">
-  <h2>Barcode Interface</h2>
+  <h3>Barcode Interface</h3>
 
   <%= form_for(@bit_record, url: insert_barcode_path, html: { method: :post }) do |f| %>
     <div class="row">
@@ -8,12 +8,15 @@
         <%= f.text_field :barcode, autofocus: true, id:"barcode", required: true, data: { barcode_target: "barcodeInput" } %>
       </div>
     
-      <div class="actions col-md-6">
-        <%= f.submit "Add", data: { action: "click->barcode#submitAdd" } %>
+      <div class="form-group col-md-6">
+        <br />
+        <%= f.submit "Add", data: { action: "click->barcode#submitAdd" }, class: "btn btn-primary" %>
       </div>
+
     </div>
   <% end %>
 
+<hr>
 
   <%= form_for(@bit_record, url: insert_barcode_path, html: { method: :post, multipart: true }) do |f| %>
     <div class="row">
@@ -22,8 +25,10 @@
         <%= f.label :file %><br />
         <%= f.file_field :file, id: "fileinput", required: true, data: { barcode_target: "fileInput" } %>
       </div>
-      <div class="actions col-md-6">
-        <%= f.submit "Load", data: { action: "click->barcode#handleLoad" } %>
+
+      <div class="form-group col-md-6">
+        <br />
+        <%= f.submit "Load", data: { action: "click->barcode#handleLoad" }, class: "btn btn-primary" %>
       </div>
     </div>
   <% end %>

@@ -11,10 +11,7 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= form.label :product_activity_count %>
-    <%= form.number_field :product_activity_count %>
-  </div>
+ 
 
   <div class="field">
     <%= form.label :mid %>
@@ -26,9 +23,24 @@
     <%= form.text_field :company_name %>
   </div>
 
+<div class="field">
+    <%= form.label :brand, "Company name" %>
+    <%= form.text_field :brand %>
+  </div>
+
   <div class="field">
     <%= form.label :level %>
     <%= form.number_field :level %>
+  </div>
+
+  <div class="field">
+    <%= form.label :company_id, "Comapany ID" %>
+    <%= form.text_field :company_id %>
+  </div>
+
+   <div class="field">
+    <%= form.label :product_activity_count %>
+    <%= form.number_field :product_activity_count %>
   </div>
 
   <div class="field">
@@ -41,10 +53,7 @@
     <%= form.text_field :source %>
   </div>
 
-  <div class="field">
-    <%= form.label :company_id %>
-    <%= form.text_field :company_id %>
-  </div>
+  
 
   <div class="actions">
     <%= form.submit %>

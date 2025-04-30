@@ -14,28 +14,23 @@ class CroupierCore::UpgradePitLevel < ApplicationService
     serv_req = CroupierCore::MidExtractor.call!(barcode: barcode)
 
     if serv_req.success?
-      updates = [
-        "product_activity_count = product_activity_count + 1",
-      ]
-    
-      if company_name.present?
-        updates << "company_name = ?"
-        params = [company_name]
-      else
+        updates = [
+          "product_activity_count = product_activity_count + 1",
+        ]
         params = []
-      end
-    
-      # Update orphan count only if company_id is NULL
-      CitRecord.where(mid: serv_req.payload)
+      
+        if company_name.present?
+          updates << "company_name = ?"
+          params = [company_name]
+        end
+      
+        CitRecord.where(mid: serv_req.payload)
                .update_all([
                  updates.join(", ") + ", product_orphan_count = CASE WHEN company_id IS NULL THEN COALESCE(product_orphan_count, 0) + 1 ELSE product_orphan_count END",
                  *params
                ])
-    end
-
-    
-
-
+     end
+     
   end
 
 end

@@ -13,11 +13,25 @@
 
    <%= form.hidden_field :cit_record_id, value: cit_record.id %>
 
-  <div class="form-row">
+
+   <div class="form-row">
+    <div class = "form-group col-md-6">
+      <%= form.label :mid %>
+      <%= form.text_field :mid, value: cit_record.mid, class: "form-control", readonly: true  %>
+    </div>
+    
     <div class = "form-group col-md-6">
       <%= form.label :name %>
       <%= form.text_field :name, class: "form-control", required: true %>
     </div>
+
+  </div>
+
+
+
+  <div class="form-row">
+    
+   
 
     <div class = "form-group col-md-6">
       <%= form.label :logo %>
@@ -25,10 +39,14 @@
       <%= form.file_field :logo, class: "form-control-file"  %>
 
     <%= form.hidden_field :logo_cache %>
-  
-    <%= form.check_box :remove_logo %>
-      remove logo
+
     </div>
+
+     <div class = "form-group col-md-6">
+      <%= form.label :sector %>
+      <%= form.text_field :sector, class: "form-control", required: true  %>
+    </div>
+
   </div>
   </br>
 
@@ -51,26 +69,18 @@
  
   <div class="form-row">
     <div class = "form-group col-md-6">
-      <%= form.label :website %>
+      <%= form.label :website %><br>
       <%= form.url_field :website, class: "form-control" %>
     </div>
 
     <div class = "form-group col-md-6">
-      <%= form.label :established %>
-      <%= form.date_select :established, class: "form-control"  %>
+      <%= form.label :established %><br>
+      <%= form.date_select :established, discard_day: true, discard_month: true, start_year: 1900, end_year: Date.today.year, class: "form-control" %>
+
     </div>
   </div>
 
-  <div class="form-row">
-    <div class = "form-group col-md-6">
-      <%= form.label :mid %>
-      <%= form.text_field :mid, value: cit_record.mid, class: "form-control", readonly: true  %>
-    </div>
-       <div class = "form-group col-md-6">
-      <%= form.label :sector %>
-      <%= form.text_field :sector, class: "form-control", required: true  %>
-    </div>
-  </div>
+
 
   <div class="actions">
     <%= form.submit "Submit", class: 'btn btn-secondary' %>

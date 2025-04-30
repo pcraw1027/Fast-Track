@@ -15,6 +15,8 @@ class CitRecordsController < ApplicationController
       @company = @cit_record.company
     end
     @company.mid = @cit_record.mid
+    @company.name = @cit_record.company_name
+
     if @company.industry_category_type_id 
       @industry_category_type = @company.industry_category_type
     end
