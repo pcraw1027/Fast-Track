@@ -4,7 +4,12 @@ class KlassesController < ApplicationController
 
   # GET /klasses or /klasses.json
   def index
-    @klasses = Klass.all
+    if params[:product_category_source_id]
+      product_category_source_id = ProductCategorySource.find_by(code: params[:product_category_source_id]).id 
+      @klasses = Klass.where(product_category_source_id: product_category_source_id)
+    else 
+      @klasses = Klass.all
+    end
   end
 
   # GET /klasses/1 or /klasses/1.json

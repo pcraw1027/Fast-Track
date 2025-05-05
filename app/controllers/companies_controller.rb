@@ -11,7 +11,7 @@ class CompaniesController < ApplicationController
   def insert_company
     error = ""
     error += "company name is required, " if company_params[:name].blank?
-    error += "sector is required, " if company_params[:sector].blank?
+    #error += "sector is required, " if company_params[:sector].blank?
     error += "industry category type is required" if company_params[:industry_category_type_id].blank?
     
     if error.length > 0 

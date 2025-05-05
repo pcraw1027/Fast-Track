@@ -3,8 +3,12 @@ class SegmentsController < ApplicationController
 
   # GET /segments or /segments.json
   def index
-    product_category_source_id = ProductCategorySource.find_by(code: (params[:product_category_source_id] || 'AMZ')).id 
-    @segments = Segment.where(product_category_source_id: product_category_source_id)
+    if params[:product_category_source_id]
+      product_category_source_id = ProductCategorySource.find_by(code: params[:product_category_source_id]).id 
+      @segments = Segment.where(product_category_source_id: product_category_source_id)
+    else 
+      @segments = Segment.all
+    end
   end
 
   # GET /segments/1 or /segments/1.json

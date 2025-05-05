@@ -166,8 +166,9 @@ class ProductsController < ApplicationController
     end
 
     def set_dropdowns
-      @segments = Segment.all
       @product_category_sources = ProductCategorySource.all
+      product_category_source_id = @product_category_sources.find{|p| p.code == 'AMZ'}&.id 
+      @segments = Segment.where(product_category_source_id: product_category_source_id)
     end
 
     def respond_to_invalid_entries(msg, path=new_product_path)
@@ -182,6 +183,7 @@ class ProductsController < ApplicationController
       params.require(:product).permit(:company_id, :name, :product_category_source_id, :description, 
       :qrcode, :size, :segment_id, :family_id, :klass_id, :brick_id)
     end
+    
     def product_variant_params
       params.require(:product).permit(:barcode, :image)
     end

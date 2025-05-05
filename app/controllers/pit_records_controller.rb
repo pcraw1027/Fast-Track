@@ -20,9 +20,14 @@ class PitRecordsController < ApplicationController
         @product.image = variants.image
       end
     end
-    @product.product_category_source_id = ProductCategorySource.find_by(code: 'AMZ').id
+    
     @product_category_sources = ProductCategorySource.all
-    @segments = Segment.all
+    product_category_source_id = @product_category_sources.find{|p| p.code == 'AMZ'}&.id 
+    @product.product_category_source_id = product_category_source_id
+    @segments = Segment.where(product_category_source_id: product_category_source_id)
+
+
+
   end
 
   def pit_interface
