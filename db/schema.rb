@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_04_18_043610) do
+ActiveRecord::Schema.define(version: 2025_05_02_133619) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -221,6 +221,20 @@ ActiveRecord::Schema.define(version: 2025_04_18_043610) do
     t.index ["category_code"], name: "index_industry_category_types_on_category_code", unique: true
   end
 
+  create_table "invitations", force: :cascade do |t|
+    t.string "invite_code"
+    t.string "email"
+    t.string "username"
+    t.string "country"
+    t.string "postal_code"
+    t.integer "status"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "invited_by_id"
+    t.index ["invite_code"], name: "index_invitations_on_invite_code", unique: true
+    t.index ["invited_by_id"], name: "index_invitations_on_invited_by_id"
+  end
+
   create_table "klasses", force: :cascade do |t|
     t.integer "code"
     t.string "title"
@@ -375,6 +389,7 @@ ActiveRecord::Schema.define(version: 2025_04_18_043610) do
     t.boolean "email_notify_on", default: true, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["username"], name: "index_users_on_username", unique: true
   end
 
   add_foreign_key "allowlisted_jwts", "users", on_delete: :cascade
@@ -399,6 +414,7 @@ ActiveRecord::Schema.define(version: 2025_04_18_043610) do
   add_foreign_key "company_relationships", "company_relationship_types"
   add_foreign_key "families", "product_category_sources"
   add_foreign_key "families", "segments"
+  add_foreign_key "invitations", "users", column: "invited_by_id"
   add_foreign_key "klasses", "families"
   add_foreign_key "klasses", "product_category_sources"
   add_foreign_key "pit_level_users", "pit_records"

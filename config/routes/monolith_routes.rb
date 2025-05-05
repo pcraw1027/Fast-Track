@@ -41,6 +41,9 @@ module MonolithRoutes
         put :update_to_level_two
         resources :products
       end
+
+      resources :invitations
+      
       #get 'home/index'
 
       root to: "home#index"

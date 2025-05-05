@@ -7,9 +7,10 @@ class Api::V1::SessionsController < Api::V1::BaseController
     render json: { user_profile: Api::V1::UserSerializer.new(current_user).serializable_hash[:data][:attributes] }, status: :ok
   end
 
+  
   def create
-    user = User.find_by(email: params[:email])
-
+    user = User.find_by(email: params[:email]) || User.find_by(username: params[:email])
+    render json: { error: 'email or username not found.' }, status: :unauthorized unless user
     if user && user.valid_password?(params[:password])
       
       token = AuthJwtStrategy.new(user).authenticate_user()
@@ -20,7 +21,7 @@ class Api::V1::SessionsController < Api::V1::BaseController
         token: token
       }, status: :ok
     else
-      render json: { error: 'Invalid email or password.' }, status: :unauthorized
+      render json: { error: 'Invalid password.' }, status: :unauthorized
     end
   end
 
