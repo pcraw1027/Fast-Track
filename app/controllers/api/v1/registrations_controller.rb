@@ -11,6 +11,18 @@ class Api::V1::RegistrationsController < Api::V1::BaseController
     end
   end
 
+  def verify_invite_code
+    invitation = Invitation.find_by(invite_code: params[:invite_code])
+    if invitation
+      render json: invitation, status: 200
+    else
+      render json: {
+        message: "Invalid invitation code #{params[:invite_code]}!"
+      }, status: 401
+    end
+  end
+
+
   private
 
 

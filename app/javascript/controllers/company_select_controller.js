@@ -9,7 +9,12 @@ export default class extends Controller {
         valueField: 'id',
         labelField: 'name',
         searchField: 'name',
-        create: true,
+        create: (input) => {
+          return {
+            id: input,
+            name: input
+          };
+        },
         //persist: false,
         hideSelected: true,
         placeholder: 'Search for a company',

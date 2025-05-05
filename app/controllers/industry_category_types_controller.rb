@@ -11,11 +11,12 @@ class IndustryCategoryTypesController < ApplicationController
   end
 
   def search
-    companies = if params[:q].present?
-                  IndustryCategoryType.where("title ILIKE ?", "%#{params[:q]}%").limit(20)
-                else
-                  IndustryCategoryType.none
-                end
+    if params[:q].present?
+      query = "%#{params[:q]}%"
+      companies = IndustryCategoryType.where("title ILIKE ? OR category_code ILIKE ?", query, query).limit(20)
+    else
+      companies = IndustryCategoryType.none
+    end
   
     render json: companies.select(:id, :category_code, :title)
   end

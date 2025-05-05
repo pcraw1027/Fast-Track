@@ -7,8 +7,8 @@ class Api::V1::LandingController < Api::V1::BaseController
 
   
   def landing_metrics
-    my_top_scan_products = RawQueryModule.my_top_scan_products(3, current_user.id)
-    top_scan_products = RawQueryModule.top_scan_products(3)
+    my_top_scan_products = RawQueryModule.my_top_scan_products(10, current_user.id)
+    top_scan_products = RawQueryModule.top_scan_products(10)
     render json: {
       my_scans: my_top_scan_products,
       top_scans: top_scan_products,

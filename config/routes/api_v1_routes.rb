@@ -14,6 +14,7 @@ module ApiV1Routes
         delete 'logout_all', to: 'sessions#destroy_all'
         get 'profile_data', to: 'sessions#show'
         get 'landing_metrics', to: 'landing#landing_metrics'
+        get 'verify_invite_code', to: 'registrations#verify_invite_code'        
         post 'send_password_reset_instruction', to: 'passwords#send_password_reset_instruction'
         post 'reset_password', to: 'passwords#reset_password'
         
