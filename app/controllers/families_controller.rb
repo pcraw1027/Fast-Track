@@ -4,7 +4,12 @@ class FamiliesController < ApplicationController
 
   # GET /families or /families.json
   def index
-    @families = Family.all
+    if params[:product_category_source_id]
+      product_category_source_id = ProductCategorySource.find_by(code: params[:product_category_source_id]).id 
+      @families = Family.where(product_category_source_id: product_category_source_id)
+    else 
+      @families = Family.all
+    end
   end
 
   # GET /families/1 or /families/1.json

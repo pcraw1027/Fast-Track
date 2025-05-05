@@ -399,18 +399,13 @@ last_family_title = ""
 last_class_title = ""
 last_brick_title = ""
 
-s_code = 82300
-f_code = 54100
-c_code = 54100
-b_code = 31000
 ac_rows = 1
 csv.each do |row|
     p "AC - #{ac_rows} " +  row['SegmentTitle'] + " " + row['FamilyTitle'] +  " " + row['ClassTitle'] + " " + row['BrickTitle']
     ac_rows +=1
     if row['SegmentTitle']&.strip != last_segment_title
         t = Segment.new
-        t.code = s_code
-        s_code +=1 
+        t.code = row['SegmentCode']
         last_segment_title = row['SegmentTitle'].strip
         t.title = last_segment_title
         t.description = row['SegmentDefinition']
@@ -420,8 +415,7 @@ csv.each do |row|
         
         s = Family.new
         s.segment_id = Segment.find_by(title: last_segment_title)&.id
-        s.code = f_code
-        f_code += 1
+        s.code = row['FamilyCode']
         last_family_title = row['FamilyTitle'].strip
         s.title = last_family_title
         s.description = row['FamilyDefinition']
@@ -431,19 +425,16 @@ csv.each do |row|
         
         r = Klass.new
         r.family_id = Family.find_by(title: last_family_title)&.id
-        r.code = c_code
-        c_code += 1
+        r.code = row['ClassCode']
         last_class_title = row['ClassTitle'].strip
         r.title = last_class_title
         r.description = row['ClassDefinition']
         r.product_category_source_id = ProductCategorySource.find_by(code: 'AMZ').id 
         r.save
         
-        
         q = Brick.new
         q.klass_id = Klass.find_by(title: last_class_title)&.id
-        q.code = b_code
-        b_code += 1
+        q.code = row['BrickCode']
         last_brick_title = row['BrickTitle'].strip
         q.title = last_brick_title
         q.description = row['BrickDefinition']
@@ -454,8 +445,7 @@ csv.each do |row|
     elsif row['FamilyTitle']&.strip != last_family_title
         s = Family.new
         s.segment_id = Segment.find_by(title: last_segment_title)&.id
-        s.code = f_code
-        f_code += 1
+        s.code = row['FamilyCode']
         last_family_title = row['FamilyTitle'].strip
         s.title = last_family_title
         s.description = row['FamilyDefinition']
@@ -465,8 +455,7 @@ csv.each do |row|
 
         r = Klass.new
         r.family_id = Family.find_by(title: last_family_title)&.id
-        r.code = c_code
-        c_code += 1
+        r.code = row['ClassCode']
         last_class_title = row['ClassTitle'].strip
         r.title = last_class_title
         r.description = row['ClassDefinition']
@@ -476,8 +465,7 @@ csv.each do |row|
 
         q = Brick.new
         q.klass_id = Klass.find_by(title: last_class_title)&.id
-        q.code = b_code
-        b_code += 1
+        q.code = row['BrickCode']
         last_brick_title = row['BrickTitle'].strip
         q.title = last_brick_title
         q.description = row['BrickDefinition']
@@ -490,8 +478,7 @@ csv.each do |row|
 
         r = Klass.new
         r.family_id = Family.find_by(title: last_family_title)&.id
-        r.code = c_code
-        c_code += 1
+        r.code = row['ClassCode']
         last_class_title = row['ClassTitle'].strip
         r.title = last_class_title
         r.description = row['ClassDefinition']
@@ -501,8 +488,7 @@ csv.each do |row|
 
         q = Brick.new
         q.klass_id = Klass.find_by(title: last_class_title)&.id
-        q.code = b_code
-        b_code += 1
+        q.code = row['BrickCode']
         last_brick_title = row['BrickTitle'].strip
         q.title = last_brick_title
         q.description = row['BrickDefinition']
@@ -513,8 +499,7 @@ csv.each do |row|
 
         q = Brick.new
         q.klass_id = Klass.find_by(title: last_class_title)&.id
-        q.code = b_code
-        b_code += 1    
+        q.code = row['BrickCode'] 
         last_brick_title = row['BrickTitle'].strip     
         q.title = last_brick_title
         q.description = row['BrickDefinition']

@@ -38,6 +38,7 @@ class Api::V1::ScansController < Api::V1::BaseController
       if finder_claims.payload
         render json: {
           product: finder_claims.payload,
+          product_variants: finder_claims.payload.product_variants,
           company: finder_claims.payload.company,
         message: "Scan was successfully created."
       }, status: :ok

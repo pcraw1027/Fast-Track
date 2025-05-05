@@ -4,7 +4,12 @@ class BricksController < ApplicationController
 
   # GET /bricks or /bricks.json
   def index
-    @bricks = Brick.all
+    if params[:product_category_source_id]
+      product_category_source_id = ProductCategorySource.find_by(code: params[:product_category_source_id]).id 
+      @bricks = Brick.where(product_category_source_id: product_category_source_id)
+    else 
+      @bricks = Brick.all
+    end
   end
 
   # GET /bricks/1 or /bricks/1.json
