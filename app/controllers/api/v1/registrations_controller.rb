@@ -2,9 +2,11 @@ class Api::V1::RegistrationsController < Api::V1::BaseController
 
   # Create action for user registration
   def create
-    user = User.new(user_params)
-
+    user = User.new(user_params.except(:invite_code))
     if user.save
+      invitation = Invitation.find_by(invite_code: user_params[:invite_code])
+      invitation.update(username: user_params[:username], country: user_params[:country], 
+      postal_code: user_params[:postal_code], status: 1) if invitation
       respond_with(user)
     else
       respond_with(user)
@@ -27,7 +29,7 @@ class Api::V1::RegistrationsController < Api::V1::BaseController
 
 
   def user_params
-    params.require(:user).permit(:email, :password, :password_confirmation, :username, :country, :postal_code)
+    params.require(:user).permit(:email, :invite_code, :password, :password_confirmation, :username, :country, :postal_code)
   end
   
 
