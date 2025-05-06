@@ -6,7 +6,7 @@ class Invitation < ApplicationRecord
 
   def generate_invite_code
     self.invite_code = loop do
-      code = rand(100_000_000).to_s.rjust(6, '0') 
+      code = rand(100_000_000).to_s.rjust(8, '0') 
       break code unless User.exists?(invite_code: code)
     end
   end
