@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_05_02_133619) do
+ActiveRecord::Schema.define(version: 2025_05_12_104345) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -109,6 +109,7 @@ ActiveRecord::Schema.define(version: 2025_05_02_133619) do
     t.datetime "updated_at", precision: 6, null: false
     t.text "mids", default: [], array: true
     t.string "sector", default: ""
+    t.string "postal_code"
     t.index ["industry_category_type_id"], name: "index_companies_on_industry_category_type_id"
     t.index ["mids"], name: "index_companies_on_mids", using: :gin
   end

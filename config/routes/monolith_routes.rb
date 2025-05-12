@@ -5,9 +5,11 @@ module MonolithRoutes
 
       resources :cit_records do 
         get :company_capture_interface
+        get :success_redirect
       end
       resources :pit_records do
         get :product_capture_interface
+        get :success_redirect
       end
       resources :upload_records
       resources :bit_records

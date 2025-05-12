@@ -1,15 +1,12 @@
 class Api::V1::ScansController < Api::V1::BaseController
   before_action :authenticate_user!
 
-  def my_scans
-    my_top_scan_products = RawQueryModule.my_top_scan_products(20, current_user.id)
-    render json: { my_scans: my_top_scan_products }, status: :ok
+
+  def my_top_scans
+    my_top_scan_products = RawQueryModule.my_top_scan_products(25, current_user.id)
+    render json: my_top_scan_products, status: :ok
   end
 
-  def top_scans
-    top_scan_products = RawQueryModule.top_scan_products(20)
-    render json: { my_scans: top_scan_products }, status: :ok
-  end
 
   def create
     finder_claims = CroupierCore::ProductFinder.call!(barcode: scan_params[:barcode])
@@ -18,7 +15,6 @@ class Api::V1::ScansController < Api::V1::BaseController
       scan_date: Date.today, barcode: scan_params[:barcode], product_exists: true)
       CroupierCore::IncrPitCitProdCount.call!(barcode: scan_params[:barcode])
     else
-    
       @scan = Scan.create(user_id: current_user.id, product_id: scan_params[:product_id], 
       scan_date: Date.today, barcode: scan_params[:barcode], product_exists: false)
         
@@ -30,7 +26,6 @@ class Api::V1::ScansController < Api::V1::BaseController
                 user_id: current_user.id, 
                 asin: scan_params[:asin],
                 upload_params: scan_params[:uploads]) unless scan_params[:uploads].blank? 
-
       end
       
     end

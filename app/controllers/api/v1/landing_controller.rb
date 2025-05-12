@@ -5,21 +5,64 @@ class Api::V1::LandingController < Api::V1::BaseController
     render json: { message: 'FastTrack is live!' }, status: 200
   end
 
+  def top_scans
+    render json: top_scan_products(25), status: :ok
+  end
   
+
+  def open_activity_stats
+    render json: {
+      top_scans: top_scan_products(10),
+      activity_stats: all_activity_stats
+      }, status: :ok
+  end
+
+
   def landing_metrics
     my_top_scan_products = RawQueryModule.my_top_scan_products(10, current_user.id)
-    top_scan_products = RawQueryModule.top_scan_products(10)
     render json: {
       my_scans: my_top_scan_products,
-      top_scans: top_scan_products,
+      top_scans: top_scan_products(10),
       activity_stats: activity_stats
       }, status: :ok
   end
 
 
+
   private 
+
+
   
+  def top_scan_products(limit)
+    RawQueryModule.top_scan_products(limit)
+  end
   
+  def all_activity_stats
+    total_scans = Scan.count
+    total_uploads = UploadRecord.count
+    total_products = Product.count
+    total_companies = Company.count
+    [
+      {
+        type:"scans",
+        overall: total_scans
+      },
+      {
+        type:"uploads",
+        overall: total_uploads
+      },
+      {
+        type:"products",
+        overall: total_products
+      },
+      {
+        type:"companies",
+        overall: total_companies
+      }
+    ]
+  end
+
+
   def activity_stats
     start_date = Time.current.beginning_of_month
     end_date = Time.current.end_of_month

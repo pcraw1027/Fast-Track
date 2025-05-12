@@ -1,5 +1,5 @@
 class CitRecordsController < ApplicationController
-  before_action :set_cit_record, only: %i[ show edit update destroy ]
+  before_action :set_cit_record, only: %i[ show edit update destroy success_redirect company_capture_interface ]
   before_action :authenticate_user!, only: %i[ new edit update create destroy cit_interface company_capture_interface]
 
   # GET /cit_records or /cit_records.json
@@ -7,9 +7,11 @@ class CitRecordsController < ApplicationController
     @cit_records = CitRecord.all
   end
 
+  def success_redirect
+  end
+
   def company_capture_interface
     @industry_category_type = IndustryCategoryType.new
-    @cit_record = CitRecord.find(params[:cit_record_id])
     @company = Company.new
     if @cit_record.company_id 
       @company = @cit_record.company
@@ -54,7 +56,6 @@ class CitRecordsController < ApplicationController
   # POST /cit_records or /cit_records.json
   def create
     @cit_record = CitRecord.new(cit_record_params)
-
     respond_to do |format|
       if @cit_record.save
         format.html { redirect_to @cit_record, notice: "Cit record was successfully created." }
@@ -82,7 +83,6 @@ class CitRecordsController < ApplicationController
   # DELETE /cit_records/1 or /cit_records/1.json
   def destroy
     @cit_record.destroy
-
     respond_to do |format|
       format.html { redirect_to cit_records_path, status: :see_other, notice: "Cit record was successfully destroyed." }
       format.json { head :no_content }
@@ -92,7 +92,7 @@ class CitRecordsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_cit_record
-      @cit_record = CitRecord.find(params[:id])
+      @cit_record = CitRecord.find(params[:id] || params[:cit_record_id])
     end
 
     # Only allow a list of trusted parameters through.

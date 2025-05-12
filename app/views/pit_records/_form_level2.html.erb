@@ -15,6 +15,7 @@
   <% end %>
 
     <%= form.hidden_field :barcode, value: pit_record.barcode %>
+    <%= form.hidden_field :pit_record_id, value: pit_record.id %>
 
   <div data-controller="product-classification">
   <div class="form-group">
@@ -62,7 +63,6 @@
       } %>
   </div>
 </div>
-
 
 
   <div class="actions">
