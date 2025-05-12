@@ -1,5 +1,13 @@
-  <h3>Product Capture Interface</h3>
+  <h3>Product Interface</h3>
 
+  <div class="form-group">
+      <label> Barcode: </label>
+      <input value="<%= @pit_record.barcode%>" class="form-control" readonly />
+    </div>
+    <div class="form-group">
+      <label> Product ID: </label>
+      <input value="<%= @pit_record.product_id%>" class="form-control" readonly />
+    </div>
 
     <%= render partial: 'pit_records/capture_tabs', locals: { 
                                                 product: @product,

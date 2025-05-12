@@ -13,17 +13,7 @@
     </div>
   <% end %>
 
-
-  <div class="form-group">
-    <%= form.label :barcode %>
-    <%= form.text_field :barcode, value: pit_record.barcode, class: "form-control", readonly: true %>
-  </div>
-
-  <div class="form-group">
-    <%= form.label :asin %>
-    <%= form.text_field :asin, class: "form-control" %>
-  </div>
-
+<%= form.hidden_field :barcode, value: pit_record.barcode %>
    <div class="form-group">
     <%= form.label :name %>
     <%= form.text_field :name, class: "form-control", required: true %>
@@ -33,10 +23,23 @@
   <%= form.label :description %>
   <%= form.text_area :description, class: "form-control", required: true, rows: 5 %>
 </div>
+
+
   
    <div class="form-group">
     <%= form.label :size %>
     <%= form.text_field :size, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :asin %>
+    <%= form.text_field :asin, class: "form-control" %>
+  </div>
+
+
+    <div class = "form-group">
+      <%= form.label :product_category_source_id %><br>
+      <%= form.select :product_category_source_id, product_category_sources.map { |cat_source| ["#{cat_source.code&.to_s} #{cat_source.description&.to_s}", cat_source.id] },  class: "form-control", required: true  %>
   </div>
 
   <%= form.hidden_field :pit_record_id, value: pit_record.id %>
@@ -61,11 +64,6 @@
     </div>
   </div>
 
-
-  <div class = "form-group">
-      <%= form.label :product_category_source_id %><br>
-      <%= form.select :product_category_source_id, product_category_sources.map { |cat_source| ["#{cat_source.code&.to_s} #{cat_source.description&.to_s}", cat_source.id] },  class: "form-control", required: true  %>
-  </div>
  
   <div class="form-group">
     <%= form.label :qrcode %>
@@ -78,5 +76,6 @@
     <%= form.submit "Submit", class: 'btn btn-secondary' %>
   </div>
 <% end %>
+
 
 

@@ -1,5 +1,5 @@
 class PitRecordsController < ApplicationController
-  before_action :set_pit_record, only: %i[ show edit update destroy ]
+  before_action :set_pit_record, only: %i[ show edit update destroy success_redirect product_capture_interface ]
   before_action :authenticate_user!, only: %i[ new edit update create destroy pit_interface product_capture_interface]
 
 
@@ -8,8 +8,10 @@ class PitRecordsController < ApplicationController
     @pit_records = PitRecord.all
   end
 
+  def success_redirect
+  end
+
   def product_capture_interface
-    @pit_record = PitRecord.find(params[:pit_record_id])
     @product = Product.new
     @product.barcode = @pit_record.barcode
     if @pit_record.product_id
@@ -95,7 +97,7 @@ class PitRecordsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_pit_record
-      @pit_record = PitRecord.find(params[:id])
+      @pit_record = PitRecord.find(params[:id] || params[:pit_record_id])
     end
 
     # Only allow a list of trusted parameters through.

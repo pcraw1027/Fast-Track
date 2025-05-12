@@ -22,7 +22,8 @@ export default class extends Controller {
           if (!query.length) return callback()
           fetch(`/companies_search?q=${encodeURIComponent(query)}`)
             .then(response => response.json())
-            .then(json => callback(json))
+            .then(json => json.map((c)=>({id: c.id, name: `${c.id} - ${c.name}`})))
+            .then(res => callback(res))
             .catch(() => callback())
         },
         onOptionAdd: function(value, data) {

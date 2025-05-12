@@ -13,43 +13,8 @@
     </div>
   <% end %>
 
-  <div class="form-row">
-    <div class = "form-group col-md-6">
-      <%= form.label :name %>
-      <%= form.text_field :name, class: "form-control", required: true %>
-    </div>
-
-    <div class = "form-group col-md-6">
-      <%= form.label :logo %>
-      <%= image_tag company.logo_url,  width: 60, height: 50  if company.logo? %>
-      <%= form.file_field :logo, class: "form-control-file"  %>
-
-    <%= form.hidden_field :logo_cache %>
-  
-    <%= form.check_box :remove_logo %>
-      remove logo
-    </div>
-  </div>
-  </br>
-
-
-  <div class="form-row">
-    <div class = "form-group col-md-6">
-      <%= form.label :industry_category_type_id %>
-
-      <%= form.select :industry_category_type_id, [["#{industry_category_type.category_code&.to_s} - #{industry_category_type.title&.to_s}", industry_category_type.id]], 
-        {}, 
-
-        data: { controller: "ind-cat-select" } 
-      %>
-    </div>
-
-    <div class = "form-group col-md-6">
-      <%= form.label :established %>
-      <%= form.date_select :established, class: "form-control", required: true  %>
-    </div>
-  </div>
-  </br>  
+  <%= form.hidden_field :cit_record_id, value: cit_record.id %>
+  <%= form.hidden_field :mid, value: cit_record.mid %>
 
   <div class="form-row">
     <div class = "form-group col-md-6">
@@ -64,39 +29,34 @@
   </div>
 
   <div class="form-row">
-    <div class = "form-group col-md-4">
+    <div class = "form-group col-md-3">
       <%= form.label :city %>
       <%= form.text_field :city, class: "form-control", required: true  %>
     </div>
 
-    <div class = "form-group col-md-4">
+    <div class = "form-group col-md-3">
       <%= form.label :state %>
       <%= form.text_field :state, class: "form-control", required: true  %>
     </div>
 
-    <div class = "form-group col-md-4">
+    <div class = "form-group col-md-3">
+      <%= form.label :postal_code %>
+      <%= form.text_field :postal_code, class: "form-control"  %>
+    </div>
+
+    <div class = "form-group col-md-3">
       <%= form.label :country %>
       <%= form.text_field :country, class: "form-control", required: true  %>
     </div>
   </div>
  
   <div class="form-row">
+  
     <div class = "form-group col-md-4">
-      <%= form.label :website %>
-      <%= form.url_field :website, class: "form-control" %>
+      <%= form.label :diversity_report, "Diversity snapshot" %>
+      <%= form.text_field :diversity_report, class: "form-control"  %>
     </div>
 
-    <div class = "form-group col-md-4">
-      <%= form.label :diversity_report %>
-      <%= form.url_field :diversity_report, class: "form-control"  %>
-    </div>
-    <div class = "form-group col-md-4">
-      <%= form.label :sector, "Captured Company Sector" %>
-      <%= form.text_field :sector, class: "form-control"  %>
-    </div>
-  </div>
-
-  <div class="form-row">
     <div class = "form-group col-md-4">
       <%= form.label :diversity_score %>
       <%= form.number_field :diversity_score, class: "form-control"  %>
@@ -107,16 +67,13 @@
       <%= form.number_field :total_employees, class: "form-control"  %>
     </div>
 
-    <div class = "form-group col-md-4">
-      <%= form.label :mid %>
-      <%= form.text_field :mid, value: cit_record.mid, class: "form-control", readonly: true  %>
-    </div>
   </div>
+
 
 <h2>Company contact details</h2>
   <div class="form-row">
     <div class = "form-group col-md-4">
-    <%= form.label :company_contact_type_id %>
+    <%= form.label :company_contact_type_id, "Management Position" %>
     <%= form.text_field :company_contact_type_id, value: "CEO", class: "form-control", readonly: true  %>
   </div>
 
@@ -141,12 +98,12 @@
   </div>
 
   <div class = "form-group col-md-4">
-    <%= form.label :email %>
+    <%= form.label :email, "Contact email" %>
     <%= form.email_field :email %>
   </div>
 
   <div class = "form-group col-md-4">
-    <%= form.label :phone %>
+    <%= form.label :phone, "Contact phone" %>
     <%= form.text_field :phone %>
   </div>
 </div>

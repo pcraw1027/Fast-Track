@@ -19,9 +19,11 @@ class CompaniesController < ApplicationController
     else
       companies = Company.find_by_mid(company_params[:mid])
       if companies.any?
-        CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: companies[0].id, 
-          company_name: company_params[:name], user_id: current_user.id)
-        return update_company_and_return(companies[0]) 
+        if companies[0].update(company_params)
+          CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: companies[0].id, 
+            company_name: company_params[:name], user_id: current_user.id)
+          redirect_to cit_record_success_redirect_path(cit_record_id: params[:company][:cit_record_id]), notice: "company was successfully updated." and return
+        end
       end
       @company = Company.new(company_params.except(:mid))
       @company.mids = [company_params[:mid]]
@@ -29,7 +31,7 @@ class CompaniesController < ApplicationController
         if @company.save
           CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, 
           company_name: @company.name, user_id: current_user.id)
-          format.html { redirect_to @company, notice: "Company was successfully created." }
+          format.html { redirect_to cit_record_success_redirect_path(cit_record_id: params[:company][:cit_record_id]), notice: "Company was successfully created." }
           format.json { render :show, status: :created, location: @company }
         else
           msg = @company.errors.map(&:attribute).map(&:to_s).join(" ") + " already exists"
@@ -52,7 +54,7 @@ class CompaniesController < ApplicationController
         company_contact.save!
         CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, 
         company_name: @company.name, user_id: current_user.id)
-        format.html { redirect_to @company, notice: "company was successfully updated." }
+        format.html { redirect_to cit_record_success_redirect_path(cit_record_id: params[:company][:cit_record_id]), notice: "company was successfully updated." }
         format.json { render :show, status: :ok, location: @company }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -112,7 +114,15 @@ end
 
   # PATCH/PUT /companies/1 or /companies/1.json
   def update
-    return update_company_and_return(@company)
+    respond_to do |format|
+        if @company.update(company_params)
+          format.html { redirect_to @company, notice: "Company was successfully updated." }
+          format.json { render :show, status: :ok, location: @company }
+        else
+          format.html { render :edit, status: :unprocessable_entity }
+          format.json { render json: @company.errors, status: :unprocessable_entity }
+        end
+      end
   end
 
   # DELETE /companies/1 or /companies/1.json
@@ -135,17 +145,7 @@ end
       @industry_category_types = IndustryCategoryType.all
     end
 
-    def update_company_and_return(company)
-      respond_to do |format|
-        if company.update(company_params)
-          format.html { redirect_to company, notice: "Company was successfully updated." }
-          format.json { render :show, status: :ok, location: company }
-        else
-          format.html { render :edit, status: :unprocessable_entity }
-          format.json { render json: company.errors, status: :unprocessable_entity }
-        end
-      end
-    end
+  
 
     def respond_to_invalid_entries(msg, path=new_product_path)
       respond_to do |format|
@@ -156,7 +156,7 @@ end
 
     # Only allow a list of trusted parameters through.
     def company_params
-      params.require(:company).permit(:name, :sector, :logo, :mid, :industry_category_type_id, :address_1, :address_2, :city, :state, :country, :established, :website, :diversity_report, :diversity_score, :total_employees)
+      params.require(:company).permit(:name, :sector, :postal_code, :logo, :mid, :industry_category_type_id, :address_1, :address_2, :city, :state, :country, :established, :website, :diversity_report, :diversity_score, :total_employees)
     end
 
     def company_contact_params
