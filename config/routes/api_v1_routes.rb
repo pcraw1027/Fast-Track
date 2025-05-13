@@ -16,7 +16,7 @@ module ApiV1Routes
         get 'landing_metrics', to: 'landing#landing_metrics'
         get 'open_activity_stats', to: 'landing#open_activity_stats' 
         get 'top_scans', to: 'landing#top_scans'
-        get 'my_top_scans', to: 'scans#my_top_scans'
+        get 'my_scans', to: 'scans#my_scans'
         get 'verify_invite_code', to: 'registrations#verify_invite_code'        
         post 'send_password_reset_instruction', to: 'passwords#send_password_reset_instruction'
         post 'reset_password', to: 'passwords#reset_password'

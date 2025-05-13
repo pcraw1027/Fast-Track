@@ -6,23 +6,26 @@ class Api::V1::LandingController < Api::V1::BaseController
   end
 
   def top_scans
-    render json: top_scan_products(25), status: :ok
+    page = params[:page] || 1
+    per_page = params[:per_page] || 20
+    per_page = 20 if per_page.to_i > 20
+    render json: top_scan_products(per_page, page), status: :ok
   end
   
 
   def open_activity_stats
     render json: {
-      top_scans: top_scan_products(10),
+      top_scans: top_scan_products(10, 1).records,
       activity_stats: all_activity_stats
       }, status: :ok
   end
 
 
   def landing_metrics
-    my_top_scan_products = RawQueryModule.my_top_scan_products(10, current_user.id)
+    my_scan_products = RawQueryModule.my_scan_products(10, 1, current_user.id)
     render json: {
-      my_scans: my_top_scan_products,
-      top_scans: top_scan_products(10),
+      my_scans: my_scan_products.records,
+      top_scans: top_scan_products(10, 1).records,
       activity_stats: activity_stats
       }, status: :ok
   end
@@ -33,8 +36,8 @@ class Api::V1::LandingController < Api::V1::BaseController
 
 
   
-  def top_scan_products(limit)
-    RawQueryModule.top_scan_products(limit)
+  def top_scan_products(per_page, page)
+    RawQueryModule.top_scan_products(per_page, page)
   end
   
   def all_activity_stats

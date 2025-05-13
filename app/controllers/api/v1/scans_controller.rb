@@ -2,9 +2,12 @@ class Api::V1::ScansController < Api::V1::BaseController
   before_action :authenticate_user!
 
 
-  def my_top_scans
-    my_top_scan_products = RawQueryModule.my_top_scan_products(25, current_user.id)
-    render json: my_top_scan_products, status: :ok
+  def my_scans
+    page = params[:page] || 1
+    per_page = params[:per_page] || 20
+    per_page = 20 if per_page.to_i > 20
+    my_scan_products = RawQueryModule.my_scan_products(per_page, page, current_user.id)
+    render json: my_scan_products, status: :ok
   end
 
 
@@ -53,7 +56,6 @@ class Api::V1::ScansController < Api::V1::BaseController
   private
 
 
-  # Only allow a list of trusted parameters through.
   def scan_params
     params.require(:scan).permit(
             :barcode, :asin,
