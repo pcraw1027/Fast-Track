@@ -23,7 +23,6 @@ module RawQueryModule
       total_count_result = ActiveRecord::Base.connection.exec_query(count_query)
       total_count = total_count_result.first["total_count"]
 
-
       data_query = <<-SQL
         WITH recent_scans AS (
           SELECT DISTINCT ON (barcode) *
