@@ -50,12 +50,12 @@ def record_not_found(exception)
         allowlisted_token = AllowlistedJwt.find_by(jti: payload[0]['jti'], user_id: user_id)
   
         if allowlisted_token.nil?
-          render json: { error: 'Token has been revoked or does not exist' }, status: :unauthorized
+          render json: { error: 'Authorization token has been revoked or does not exist' }, status: :unauthorized
         else
           @current_user = User.find(user_id)
         end
       rescue JWT::DecodeError
-        render json: { error: 'Invalid token' }, status: :unauthorized
+        render json: { error: 'Invalid authorization token' }, status: :unauthorized
       rescue ActiveRecord::RecordNotFound
         render json: { error: 'User not found' }, status: :unauthorized
       end
