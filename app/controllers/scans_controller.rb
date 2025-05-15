@@ -24,12 +24,12 @@ class ScansController < ApplicationController
   def create
     finder_claims = CroupierCore::ProductFinder.call!(barcode: scan_params[:barcode])
     if finder_claims.payload
-      @scan = Scan.create(user_id: current_user.id, product_id: scan_params[:product_id], 
+      @scan = Scan.create(user_id: current_user.id, product_id: finder_claims.payload.id, 
       scan_date: Date.today, barcode: scan_params[:barcode], product_exists: true)
       CroupierCore::IncrPitCitProdCount.call!(barcode: scan_params[:barcode])
     else
     
-      @scan = Scan.create(user_id: current_user.id, product_id: scan_params[:product_id], 
+      @scan = Scan.create(user_id: current_user.id, 
       scan_date: Date.today, barcode: scan_params[:barcode], product_exists: false)
         
       if @scan.id

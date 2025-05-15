@@ -24,9 +24,9 @@ class Api::V1::LandingController < Api::V1::BaseController
   def landing_metrics
     my_scan_products = RawQueryModule.my_scan_products(10, 1, current_user.id)
     render json: {
-      my_scans: my_scan_products.records,
-      top_scans: top_scan_products(10, 1).records,
-      activity_stats: activity_stats
+        my_scans: my_scan_products.records,
+        top_scans: top_scan_products(10, 1).records,
+        activity_stats: activity_stats
       }, status: :ok
   end
 
