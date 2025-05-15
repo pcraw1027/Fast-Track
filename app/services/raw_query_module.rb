@@ -20,15 +20,18 @@ module RawQueryModule
 
         #count product scans on matched products
         product_ids = recent_scans.map(&:product_id).compact
-        scan_counts_query = <<-SQL
-          SELECT product_id, COUNT(*) AS scan_count
-          FROM scans
-          WHERE product_id IN (#{product_ids.join(',')})
-          GROUP BY product_id
-        SQL
+        product_scan_counts = {}
+        if product_ids.any?
+          scan_counts_query = <<-SQL
+            SELECT product_id, COUNT(*) AS scan_count
+            FROM scans
+            WHERE product_id IN (#{product_ids.join(',')})
+            GROUP BY product_id
+          SQL
 
-        scan_counts = ActiveRecord::Base.connection.exec_query(scan_counts_query)
-        product_scan_counts = scan_counts.rows.to_h
+          scan_counts = ActiveRecord::Base.connection.exec_query(scan_counts_query)
+          product_scan_counts = scan_counts.rows.to_h
+        end
 
         #load product_variants data
         product_variants = ProductVariant
@@ -134,16 +137,18 @@ module RawQueryModule
 
        #count product scans on matched products
         product_ids = recent_scans.map(&:product_id).compact
-        scan_counts_query = <<-SQL
-          SELECT product_id, COUNT(*) AS scan_count
-          FROM scans
-          WHERE product_id IN (#{product_ids.join(',')})
-          GROUP BY product_id
-        SQL
+        product_scan_counts = {}
+        if product_ids.any?
+          scan_counts_query = <<-SQL
+            SELECT product_id, COUNT(*) AS scan_count
+            FROM scans
+            WHERE product_id IN (#{product_ids.join(',')})
+            GROUP BY product_id
+          SQL
 
-        scan_counts = ActiveRecord::Base.connection.exec_query(scan_counts_query)
-        product_scan_counts = scan_counts.rows.to_h
-
+          scan_counts = ActiveRecord::Base.connection.exec_query(scan_counts_query)
+          product_scan_counts = scan_counts.rows.to_h
+        end
         #load product_variants data
         product_variants = ProductVariant
             .left_outer_joins(product: :company)
