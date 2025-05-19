@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_05_12_104345) do
+ActiveRecord::Schema.define(version: 2025_05_18_165554) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -248,6 +248,17 @@ ActiveRecord::Schema.define(version: 2025_05_12_104345) do
     t.index ["product_category_source_id"], name: "index_klasses_on_product_category_source_id"
   end
 
+  create_table "media", force: :cascade do |t|
+    t.string "mediaable_type", null: false
+    t.bigint "mediaable_id", null: false
+    t.string "file"
+    t.integer "position", default: 1, null: false
+    t.integer "media_type", default: 0, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["mediaable_type", "mediaable_id"], name: "index_media_on_mediaable"
+  end
+
   create_table "pit_level_users", force: :cascade do |t|
     t.integer "level", default: 0, null: false
     t.bigint "user_id"
@@ -268,6 +279,8 @@ ActiveRecord::Schema.define(version: 2025_05_12_104345) do
     t.string "mid"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["barcode", "level", "product_activity_count"], name: "index_pit_on_b_level_activity"
+    t.index ["barcode"], name: "index_pit_on_b_where_level_gte_1", where: "(level >= 1)"
     t.index ["product_id"], name: "index_pit_records_on_product_id"
   end
 
@@ -325,6 +338,21 @@ ActiveRecord::Schema.define(version: 2025_05_12_104345) do
     t.index ["segment_id"], name: "index_products_on_segment_id"
   end
 
+  create_table "reviews", force: :cascade do |t|
+    t.string "reviewable_type", null: false
+    t.bigint "reviewable_id", null: false
+    t.bigint "user_id", null: false
+    t.integer "rating", null: false
+    t.text "comment"
+    t.text "title"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["reviewable_id", "reviewable_type", "rating"], name: "index_reviews_on_reviewable_and_rating"
+    t.index ["reviewable_type", "reviewable_id"], name: "index_reviews_on_reviewable"
+    t.index ["reviewable_type", "reviewable_id"], name: "index_reviews_on_reviewable_type_and_reviewable_id"
+    t.index ["user_id"], name: "index_reviews_on_user_id"
+  end
+
   create_table "scans", force: :cascade do |t|
     t.bigint "product_id"
     t.bigint "user_id", null: false
@@ -333,7 +361,10 @@ ActiveRecord::Schema.define(version: 2025_05_12_104345) do
     t.boolean "product_exists"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["barcode"], name: "index_scans_on_barcode"
     t.index ["product_id"], name: "index_scans_on_product_id"
+    t.index ["user_id", "barcode", "created_at"], name: "index_scans_on__b_c_at_exists_true", order: { created_at: :desc }, where: "(product_exists = true)"
+    t.index ["user_id", "barcode", "created_at"], name: "index_scans_on_u_b_created_at", order: { created_at: :desc }
     t.index ["user_id"], name: "index_scans_on_user_id"
   end
 
@@ -356,9 +387,9 @@ ActiveRecord::Schema.define(version: 2025_05_12_104345) do
     t.string "product_name"
     t.string "company_name"
     t.text "remarks"
-    t.string "image"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["barcode", "resolve_status"], name: "index_upload_records_on_barcode_and_resolve_status"
     t.index ["scan_id"], name: "index_upload_records_on_scan_id"
     t.index ["user_id"], name: "index_upload_records_on_user_id"
   end
@@ -433,6 +464,7 @@ ActiveRecord::Schema.define(version: 2025_05_12_104345) do
   add_foreign_key "products", "families"
   add_foreign_key "products", "klasses"
   add_foreign_key "products", "segments"
+  add_foreign_key "reviews", "users"
   add_foreign_key "scans", "products"
   add_foreign_key "scans", "users"
   add_foreign_key "segments", "product_category_sources"

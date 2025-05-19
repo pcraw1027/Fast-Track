@@ -27,13 +27,13 @@ class ProductsController < ApplicationController
         company_name = company.name
       end
 
-      @product = Product.new(product_params.except(:image))
+      @product = Product.new(product_params)
 
       variant_exist = ProductVariant.find_by(barcode: product_variant_params[:barcode])
       if variant_exist
         @product = variant_exist.product
-        variant_exist.update(image: product_variant_params[:image]) unless product_variant_params[:image].blank?
-        if @product.update(product_params.except(:image))
+        variant_exist.update(product_variant_params) unless product_variant_params.blank?
+        if @product.update(product_params)
           CroupierCore::UpgradePitLevel.call!(barcode: product_variant_params[:barcode], 
           product_id: @product.id, company_name: company_name, 
           asin: params[:product][:asin], user_id: current_user.id)
@@ -88,7 +88,7 @@ class ProductsController < ApplicationController
 
   # GET /products/1 or /products/1.json
   def show
-    @variants = @product.product_variants
+    @variants = @product.product_variants.includes(:media)
   end
 
   # GET /products/new
@@ -98,11 +98,11 @@ class ProductsController < ApplicationController
 
   # GET /products/1/edit
   def edit
-    @company = Company.find(@product.company_id)
-    @segment = Segment.find(@product.segment_id)
-    @family = Family.find(@product.family_id)
-    @klass = Klass.find(@product.klass_id)
-    @brick = Brick.find(@product.brick_id)
+    @company = Company.find(@product.company_id) if @product.company_id
+    @segment = Segment.find(@product.segment_id) if @product.segment_id
+    @family = Family.find(@product.family_id) if @product.family_id
+    @klass = Klass.find(@product.klass_id) if @product.klass_id
+    @brick = Brick.find(@product.brick_id) if @product.brick_id
 
     @families = Family.all
     @klasses = Klass.all
@@ -186,6 +186,6 @@ class ProductsController < ApplicationController
     end
     
     def product_variant_params
-      params.require(:product).permit(:barcode, :image)
+      params.require(:product).permit(:barcode, media_attributes: [:id, :file, :_destroy])
     end
 end

@@ -28,7 +28,8 @@ class Api::V1::ScansController < Api::V1::BaseController
                 scan_id: @scan.id, 
                 user_id: current_user.id, 
                 asin: scan_params[:asin],
-                upload_params: scan_params[:uploads]) unless scan_params[:uploads].blank? 
+                brand: upload_record_params[:brand],
+                upload_params: scan_params[:uploads].except(:brand)) unless scan_params[:uploads].blank? 
       end
       
     end
@@ -36,8 +37,6 @@ class Api::V1::ScansController < Api::V1::BaseController
       if finder_claims.payload
         render json: {
           product: finder_claims.payload,
-          product_variants: finder_claims.payload.product_variants,
-          company: finder_claims.payload.company,
         message: "Scan was successfully created."
       }, status: :ok
       elsif  @brc_intrf_claims && @brc_intrf_claims.success?
@@ -59,7 +58,8 @@ class Api::V1::ScansController < Api::V1::BaseController
   def scan_params
     params.require(:scan).permit(
             :barcode, :asin,
-            uploads: [:product_name, :company_name, :brand, :remarks, :image])
+            upload: [:product_name, :company_name, :brand, 
+      :remarks, media_attributes: [:id, :file, :media_type, :position, :_destroy]])
   end
 
 

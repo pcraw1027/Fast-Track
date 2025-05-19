@@ -18,6 +18,7 @@ class User < ApplicationRecord
   has_many :bit_records, dependent: :destroy
   has_many :invitations, class_name: "Invitation", foreign_key: :invited_by_id
   has_many :invited_users, through: :invitations, class_name: "User"
+  has_many :reviews, dependent: :destroy
   
   after_create :send_welcome_email
   validates :username, :country, :email, :postal_code, presence: true

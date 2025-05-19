@@ -21,6 +21,13 @@ module ApiV1Routes
         post 'send_password_reset_instruction', to: 'passwords#send_password_reset_instruction'
         post 'reset_password', to: 'passwords#reset_password'
         
+        post 'product_reviews', to: 'reviews#product_reviews'
+        post 'company_reviews', to: 'reviews#company_reviews'
+        get 'product_reviews', to: 'reviews#get_product_reviews'
+        get 'company_reviews', to: 'reviews#get_company_reviews'
+        get 'my_uploads', to: 'upload_records#my_uploads'
+        
+        resources :reviews, only: [:show, :update]
         resources :upload_records, only: [:create]
         resources :scans, only: [:create]
         resources :products, only: [:show]

@@ -1,19 +1,23 @@
 class CroupierCore::UploadTrigger < ApplicationService
-  def call(barcode:, scan_id:, user_id:, asin:, upload_params:)
+  def call(barcode:, scan_id:, user_id:, asin:, brand:, upload_params:)
     source = "Upload"
     bit_rec = BitRecord.find_by(barcode: barcode, source: source)
-
+    
     unless bit_rec
       bit_rec = BitRecord.create!(barcode: barcode, status: 0, source: source, 
                         asin: asin, user_id: user_id) 
-      bit_rec.invoke_bit(barcode, source, asin, user_id, upload_params[:brand])
+      bit_rec.invoke_bit(barcode, source, asin, user_id, brand)
     end
+    p upload_params
+    p "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+    upload = UploadRecord.new(upload_params)
+    upload.barcode = barcode 
+    upload.date = Date.today 
+    upload.scan_id = scan_id
+    upload.user_id = user_id
+    upload.resolve_status = false
+    upload.save!
 
-    upload = UploadRecord.create!(product_name: upload_params[:product_name], 
-                        company_name: upload_params[:company_name], 
-                        remarks: upload_params[:remarks], image: upload_params[:image],
-                        barcode: barcode, date: Date.today, 
-                        scan_id: scan_id, user_id: user_id, resolve_status: false)
     success upload
   end
 end

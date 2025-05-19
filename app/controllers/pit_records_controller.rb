@@ -14,13 +14,16 @@ class PitRecordsController < ApplicationController
   def product_capture_interface
     @product = Product.new
     @product.barcode = @pit_record.barcode
+    product_variant = ProductVariant.new
+    product_variant.media.build
+    @product.media = product_variant.media
     if @pit_record.product_id
       @product = @pit_record.product
       variants = ProductVariant.find_by(barcode: @pit_record.barcode)
       if variants
         @product.barcode = variants.barcode
-        @product.image = variants.image
-      end
+        @product.media = variants.media
+      end      
     end
     
     @product_category_sources = ProductCategorySource.all

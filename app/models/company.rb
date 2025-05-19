@@ -11,6 +11,7 @@ class Company < ApplicationRecord
   has_many :company_gender_stats, dependent: :destroy
   has_many :products, dependent: :destroy
   has_many :cit_records, dependent: :destroy
+  has_many :reviews, as: :reviewable, dependent: :destroy
 
   validates :name, presence: true
   validates :mids, uniqueness: true

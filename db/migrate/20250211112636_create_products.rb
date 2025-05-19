@@ -18,8 +18,6 @@ class CreateProducts < ActiveRecord::Migration[6.1]
     create_table :product_variants do |t|
       t.references :product, null: false, foreign_key: true
       t.string :barcode
-      t.string :image
-
       t.timestamps
     end
     add_index :product_variants, :barcode, unique: true
