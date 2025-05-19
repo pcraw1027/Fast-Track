@@ -279,8 +279,6 @@ ActiveRecord::Schema.define(version: 2025_05_18_165554) do
     t.string "mid"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["barcode", "level", "product_activity_count"], name: "index_pit_on_b_level_activity"
-    t.index ["barcode"], name: "index_pit_on_b_where_level_gte_1", where: "(level >= 1)"
     t.index ["product_id"], name: "index_pit_records_on_product_id"
   end
 
@@ -311,7 +309,6 @@ ActiveRecord::Schema.define(version: 2025_05_18_165554) do
   create_table "product_variants", force: :cascade do |t|
     t.bigint "product_id", null: false
     t.string "barcode"
-    t.string "image"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["barcode"], name: "index_product_variants_on_barcode", unique: true
@@ -347,6 +344,7 @@ ActiveRecord::Schema.define(version: 2025_05_18_165554) do
     t.text "title"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["rating"], name: "index_reviews_on_rating"
     t.index ["reviewable_id", "reviewable_type", "rating"], name: "index_reviews_on_reviewable_and_rating"
     t.index ["reviewable_type", "reviewable_id"], name: "index_reviews_on_reviewable"
     t.index ["reviewable_type", "reviewable_id"], name: "index_reviews_on_reviewable_type_and_reviewable_id"
@@ -361,10 +359,9 @@ ActiveRecord::Schema.define(version: 2025_05_18_165554) do
     t.boolean "product_exists"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["barcode"], name: "index_scans_on_barcode"
+    t.index ["product_id", "id"], name: "index_scans_on_product_id_and_id"
     t.index ["product_id"], name: "index_scans_on_product_id"
-    t.index ["user_id", "barcode", "created_at"], name: "index_scans_on__b_c_at_exists_true", order: { created_at: :desc }, where: "(product_exists = true)"
-    t.index ["user_id", "barcode", "created_at"], name: "index_scans_on_u_b_created_at", order: { created_at: :desc }
+    t.index ["user_id", "barcode", "created_at"], name: "index_scans_user_barcode_created_at_filtered", order: { created_at: :desc }, where: "(product_exists = true)"
     t.index ["user_id"], name: "index_scans_on_user_id"
   end
 
@@ -389,7 +386,6 @@ ActiveRecord::Schema.define(version: 2025_05_18_165554) do
     t.text "remarks"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["barcode", "resolve_status"], name: "index_upload_records_on_barcode_and_resolve_status"
     t.index ["scan_id"], name: "index_upload_records_on_scan_id"
     t.index ["user_id"], name: "index_upload_records_on_user_id"
   end
