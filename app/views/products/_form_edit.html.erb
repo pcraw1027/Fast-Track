@@ -14,7 +14,7 @@
 
   <div class="form-group">
     <%= form.label :company_id %>
-   <%= form.select :company_id, [[@company.name, @company.id]], {}, 
+   <%= form.select :company_id, [[@company&.name, @company&.id]], {}, 
       data: { controller: "company-select" } %>
   </div>
 
@@ -22,6 +22,7 @@
       <%= form.label :product_category_source_id %>
       <%= form.select :product_category_source_id, @product_category_sources.map { |cat_source| ["#{cat_source.code&.to_s} #{cat_source.description&.to_s}", cat_source.id] },  class: "form-control"  %>
   </div>
+
 
   <div class="form-group">
     <%= form.label :name %>
@@ -62,7 +63,7 @@
         <div class="form-group">
             <%= form.label :family_id %>
             <%= form.select :family_id,
-            [["#{@family.code} #{@family.title}", @family.id]],
+            [["#{@family&.code} #{@family&.title}", @family&.id]],
             { include_blank: true },
             {
                 
@@ -74,7 +75,7 @@
         <div class="form-group">
             <%= form.label :klass_id %>
             <%= form.select :klass_id,
-            [["#{@klass.code} #{@klass.title}", @klass.id]],
+            [["#{@klass&.code} #{@klass&.title}", @klass&.id]],
             { include_blank: true },
             {
                 
@@ -86,7 +87,7 @@
         <div class="form-group">
             <%= form.label :brick_id %>
             <%= form.select :brick_id,
-            [["#{@brick.code} #{@brick.title}", @brick.id]],
+            [["#{@brick&.code} #{@brick&.title}", @brick&.id]],
             { include_blank: true },
             {
                 

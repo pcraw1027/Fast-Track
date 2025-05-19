@@ -17,6 +17,7 @@ module RawQueryModule
 
         recent_scans = Scan.find_by_sql(recent_scans_sql)
 
+
         #count product scans on matched products
         product_ids = recent_scans.map(&:product_id).compact
         product_scan_counts = {}
@@ -33,26 +34,21 @@ module RawQueryModule
         end
 
         #load product_variants data
-        product_variants = ProductVariant.unscoped
-          .left_outer_joins(:media, product: [:company, :reviews])
-          .select(
-            'product_variants.*',
-            'products.id AS product_id',
-            'products.name AS product_name',
-            'products.description AS product_description',
-            'products.company_id AS product_company_id',
-            'companies.name AS company_name',
-            'AVG(reviews.rating) AS avrg_rating'
-          )
-           .where(barcode: recent_scans.map(&:barcode))
-          .group(
-            'products.id',
-            'products.name',
-            'products.description',
-            'products.company_id',
-            'product_variants.id',
-            'companies.name'
-          )
+        product_variants = ProductVariant
+              .left_outer_joins(product: :company)
+              .select(
+                'product_variants.*',
+                'products.id AS product_id',
+                'products.name AS product_name',
+                'products.description AS product_description',
+                'products.company_id AS product_company_id',
+                'companies.name AS company_name'
+              )
+              .where(barcode: recent_scans.map(&:barcode))
+              .order('product_variants.created_at DESC')
+              .limit(per_page)
+              .offset(offset)
+
 
         count_query = <<-SQL
           SELECT COUNT(*) AS total_count FROM (
@@ -68,11 +64,12 @@ module RawQueryModule
         total_count = total_count_result.first["total_count"]
 
         #scan_map = recent_scans.index_by(&:barcode)
+
         records = product_variants.map do |pv|
           {
+            avrg_rating: 4.5,
             scan_count: product_scan_counts[pv.product_id] || 0,
-            product_variant: pv,
-            media: pv.media
+            product_variant: pv
           }
         end
 
@@ -86,35 +83,60 @@ module RawQueryModule
       page = page.to_i
       offset = (page - 1) * per_page
 
-      # 1. Get product IDs sorted by scan count, with pagination
-      product_ids_query = <<-SQL
+      count_query = <<-SQL
+        WITH ranked_scans AS (
+          SELECT 
+            scans.barcode,
+            MAX(pit_records.product_activity_count) AS max_activity_count
+          FROM 
+            scans
+          JOIN 
+            pit_records ON pit_records.barcode = scans.barcode
+          WHERE 
+            pit_records.level >= 1
+          GROUP BY 
+            scans.barcode
+        )
+        SELECT COUNT(*) AS total_count FROM ranked_scans
+      SQL
+
+      total_count_result = ActiveRecord::Base.connection.exec_query(count_query)
+      total_count = total_count_result.first["total_count"]
+
+      data_query = <<-SQL
+        WITH ranked_scans AS (
+          SELECT 
+            scans.barcode,
+            MAX(pit_records.product_activity_count) AS max_activity_count
+          FROM 
+            scans
+          JOIN 
+            pit_records ON pit_records.barcode = scans.barcode
+          WHERE 
+            pit_records.level >= 1
+          GROUP BY 
+            scans.barcode
+          ORDER BY 
+            max_activity_count DESC
+        )
         SELECT 
-          products.id
+          scans.*, 
+          ranked_scans.barcode AS ranked_barcode
         FROM 
-          scans
+          ranked_scans
         JOIN 
-          products ON products.id = scans.product_id
-        GROUP BY 
-          products.id
-        ORDER BY 
-          COUNT(scans.id) DESC
+          product_variants ON product_variants.barcode = ranked_scans.barcode
+        JOIN 
+          products ON products.id = product_variants.product_id
+        JOIN 
+          scans ON scans.barcode = ranked_scans.barcode
         LIMIT #{per_page} OFFSET #{offset}
       SQL
 
-      product_ids = ActiveRecord::Base.connection.select_values(product_ids_query)
+      recent_scans = Scan.find_by_sql(data_query)
 
-      # 2. Total count of unique products with scans
-      count_query = <<-SQL
-        SELECT COUNT(*) FROM (
-          SELECT products.id
-          FROM scans
-          JOIN products ON products.id = scans.product_id
-          GROUP BY products.id
-        ) AS product_counts
-      SQL
-
-      total_count = ActiveRecord::Base.connection.select_value(count_query).to_i
-
+       #count product scans on matched products
+        product_ids = recent_scans.map(&:product_id).compact
         product_scan_counts = {}
         if product_ids.any?
           scan_counts_query = <<-SQL
@@ -126,44 +148,34 @@ module RawQueryModule
 
           scan_counts = ActiveRecord::Base.connection.exec_query(scan_counts_query)
           product_scan_counts = scan_counts.rows.to_h
-
         end
-
         #load product_variants data
-        product_variants = ProductVariant.unscoped
-          .left_outer_joins(:media, product: [:company, :reviews])
-          .select(
-            'product_variants.*',
-            'products.id AS product_id',
-            'products.name AS product_name',
-            'products.description AS product_description',
-            'products.company_id AS product_company_id',
-            'companies.name AS company_name',
-            'AVG(reviews.rating) AS avrg_rating'
-          )
-          .where(product_id: product_ids)
-          .group(
-            'products.id',
-            'products.name',
-            'products.description',
-            'products.company_id',
-            'product_variants.id',
-            'companies.name'
-          )
+        product_variants = ProductVariant
+            .left_outer_joins(product: :company)
+            .select(
+              'product_variants.*',
+              'products.id AS product_id',
+              'products.name AS product_name',
+              'products.description AS product_description',
+              'products.company_id AS product_company_id',
+              'companies.name AS company_name'
+            )
+            .where(barcode: recent_scans.map(&:barcode))
+            .order('product_variants.created_at DESC')
+            .limit(per_page)
+            .offset(offset)
 
           
       records = product_variants.map do |pv|
           {
+            avrg_rating: 4.5,
             scan_count: product_scan_counts[pv.product_id] || 0,
-            product_variant: pv,
-            media: pv.media
+            product_variant: pv
           }
-      end
+        end
 
       PaginatedResult.new(records, per_page, page, total_count)
     end
-
-
 
   
 end

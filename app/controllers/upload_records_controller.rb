@@ -26,9 +26,9 @@ class UploadRecordsController < ApplicationController
                               scan_id: upload_record_params[:scan_id], 
                               user_id: current_user.id, 
                               asin: upload_record_params[:asin],
-                              upload_params: upload_record_params) unless upload_record_params.blank?
+                              brand: upload_record_params[:brand],
+                              upload_params: upload_record_params.except(:brand)) unless upload_record_params.blank?
     
-
 
     respond_to do |format|
       if upload_claims.payload
@@ -73,6 +73,6 @@ class UploadRecordsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def upload_record_params
       params.require(:upload_record).permit(:scan_id, :asin, :resolve_status, :date, :barcode, 
-      :product_name, :company_name, :brand, :remarks, :image)
+      :product_name, :company_name, :brand, :remarks, media_attributes: [:id, :file, :media_type, :position, :_destroy])
     end
 end

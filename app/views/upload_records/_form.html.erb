@@ -46,12 +46,24 @@
     <%= form.text_area :remarks %>
   </div>
 
-  <div class="field">
-    <%= form.label :image %>
-    <%= form.text_field :image %>
+  <div class="form-group">
+  <label>Upload Images</label>
+    <%= form.fields_for :media do |mf| %>
+    <div class="media-upload">
+      <% if mf.object.file.present? %>
+        <%= image_tag mf.object.file.url(:thumb) if mf.object.image? %>
+        <%= link_to 'Remove', '#', class: 'remove-media' %>
+        <%= mf.check_box :_destroy %>
+      <% end %>
+
+      <%= mf.label :file %>
+      <%= mf.file_field :file %>
+    </div>
+  <% end %>
   </div>
 
   <div class="actions">
     <%= form.submit %>
   </div>
+  
 <% end %>

@@ -14,20 +14,22 @@
 
 
 
-  <div class="form-group">
-    <%= form.label :image %>
-    <div class="uploaded-title">
-      <div class="uploaded-pic">
-          <%= image_tag product_variant.image_url,  width: 60, height: 50  if product_variant.image? %>
-          <%= form.file_field :image, class: "form-control-file"  %>
-          <%if product_variant.image?%>
-            <%= form.hidden_field :image_cache %>
-            <%= form.check_box :remove_image %>
-              Remove image
-          <%end%>
-      </div>
+  <div class="form-group" id="media-fields">
+  <label>Product Images</label>
+    <%= form.fields_for :media do |mf| %>
+    <div class="media-upload">
+      <% if mf.object.file.present? %>
+        <%= image_tag mf.object.file.url(:thumb) if mf.object.image? %>
+        <%= link_to 'Remove', '#', class: 'remove-media' %>
+        <%= mf.check_box :_destroy %>
+      <% end %>
+
+      <%= mf.label :file %>
+      <%= mf.file_field :file %>
     </div>
+  <% end %>
   </div>
+  <%= link_to 'Add another image', '#', id: 'add-media-field' %>
 
 
   <div class="form-group">

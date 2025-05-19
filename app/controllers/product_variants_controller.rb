@@ -42,6 +42,6 @@ class ProductVariantsController < ApplicationController
 
 
     def product_variant_params
-      params.require(:product_variant).permit(:barcode, :image)
+      params.require(:product_variant).permit(:barcode, media_attributes: [:id, :file, :_destroy])
     end
 end

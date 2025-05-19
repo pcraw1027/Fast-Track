@@ -9,7 +9,6 @@ class CreateUploadRecords < ActiveRecord::Migration[6.1]
       t.string :product_name
       t.string :company_name
       t.text :remarks
-      t.string :image
 
       t.timestamps
     end

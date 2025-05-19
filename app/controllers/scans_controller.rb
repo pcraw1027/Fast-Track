@@ -39,7 +39,8 @@ class ScansController < ApplicationController
                 scan_id: @scan.id, 
                 user_id: current_user.id, 
                 asin: scan_params[:asin],
-                upload_params: scan_params[:uploads]) unless scan_params[:uploads].blank? 
+                brand: upload_record_params[:brand],
+                upload_params: scan_params[:uploads].except(:brand)) unless scan_params[:uploads].blank? 
 
       end
       
@@ -89,9 +90,8 @@ class ScansController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def scan_params
-      params.require(:scan).permit(
-              :barcode, :asin,
-              uploads: [:product_name, :company_name, :brand, :remarks, :image])
+      params.require(:scan).permit(:barcode, :asin, upload: [:product_name, :company_name, :brand, 
+      :remarks, media_attributes: [:id, :file, :media_type, :position, :_destroy]])
     end
 end
 
