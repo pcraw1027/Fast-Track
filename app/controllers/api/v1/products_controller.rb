@@ -8,13 +8,12 @@ class Api::V1::ProductsController < Api::V1::BaseController
     rating_distribution = Review.rating_distribution_for(product)
     review_stats = Review.stats_for(product)
     
-    variant_data = product.product_variants.map do |v|
-      h = {}
-      h["product_variant"] = v
-      h["media"] = v.media
-      return h
+    variant_data = product.product_variants&.map do |v|
+      {
+        "product_variant" => v,
+        "media" => v.media
+      }
     end
-
 
     render json: {
       product: product,
@@ -22,8 +21,9 @@ class Api::V1::ProductsController < Api::V1::BaseController
       product_variants: variant_data,
       rating_distribution: rating_distribution,
       review_stats: review_stats
-      }, status: :ok
+    }, status: :ok
   end
+
   
  
 end

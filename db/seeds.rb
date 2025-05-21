@@ -38,7 +38,7 @@
     username:"Ed", country: "US", postal_code:"07077")
 
     admin2 = User.create!(email:"pcraw1027@gmail.com", password:"Ptpass@2", role: 1, status: 0, 
-    username:"Ed", country: "US", postal_code:"07077")
+    username:"pcraw", country: "US", postal_code:"07077")
 
     csv_text = File.read(Rails.root.join('lib','seeds','6_digit_2022_Codes_2022_6_digit_industries.csv'))
     csv = CSV.parse(csv_text, :headers => true, :encoding => 'ISO-8859-1')
@@ -263,11 +263,13 @@ csv.each do |row|
             v.product_id = t.id
             v.save!
             if File.exist?(image_path)
+                p "File-Exists => #{row['Barcode']}"
                 v.media.create!(
                 file: File.open(image_path),
                 media_type: :image,
                 position: 0
             )
+            p "Media Created"
             else
                 puts "Image not found for #{row['Barcode']}: #{image_path}"
             end
