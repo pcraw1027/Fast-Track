@@ -38,7 +38,7 @@ def self.stats_for(record)
   ).first
 
   {
-    average: result["average"]&.round(2),
+    average: result["average"]&.round(2) || 0,
     total: result["total"],
     commented_count: result["commented_count"]
   }
@@ -66,9 +66,10 @@ def self.rating_distribution_for(record)
         COALESCE(ratings.count, 0) AS count,
         total.total_count,
         ROUND(
-          COALESCE(ratings.count::float / NULLIF(total.total_count, 0), 0) * 100, 
+          COALESCE((ratings.count::float / NULLIF(total.total_count, 0)) * 100, 0)::numeric,
           2
         ) AS percentage
+
       FROM full_scale
       LEFT JOIN ratings ON ratings.rating = full_scale.rating
       CROSS JOIN total
