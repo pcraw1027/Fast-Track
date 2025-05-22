@@ -2,7 +2,7 @@ class Review < ApplicationRecord
   belongs_to :reviewable, polymorphic: true
   belongs_to :user
 
-  validates :rating, presence: true, inclusion: { in: 1..5 }
+  validates :rating, presence: { message: "is required" }, inclusion: { in: 1..5, message: "must be between 1 and 5" }
 
   def self.load_data(per_page, page, record_id, class_name)
     page = page.to_i > 0 ? page : 1
@@ -10,14 +10,16 @@ class Review < ApplicationRecord
     offset   = (page - 1) * per_page
 
     base_query = Review.joins(:user)
-      .where(reviewable_type: class_name, reviewable_id: record_id)
+                   .where(reviewable_type: class_name, reviewable_id: record_id)
+                   .where.not(title: nil)
 
     total_count = base_query.count
 
     paginated_reviews = base_query
-      .select('reviews.*, users.username, users.country, users.photo')
+      .select('reviews.*, users.username, users.country')
       .limit(per_page)
       .offset(offset)
+      .order(created_at: :desc, rating: :desc)
     PaginatedResult.new(paginated_reviews, per_page, page, total_count)
 end
 
@@ -38,9 +40,9 @@ def self.stats_for(record)
   ).first
 
   {
-    average: result["average"]&.round(2) || 0,
-    total: result["total"],
-    commented_count: result["commented_count"]
+    average_ratings: result["average"]&.round(2) || 0,
+    total_ratings: result["total"],
+    total_reviews: result["commented_count"]
   }
 end
 

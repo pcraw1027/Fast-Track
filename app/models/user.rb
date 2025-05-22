@@ -24,6 +24,9 @@ class User < ApplicationRecord
   validates :username, :country, :email, :postal_code, presence: true
   default_scope -> { order(created_at: :desc) }
   
+  before_destroy :remove_photo_from_s3
+  before_destroy :remove_avatar_from_s3
+  
 
   def generate_password_token!
     token = generate_token.downcase
@@ -71,6 +74,22 @@ class User < ApplicationRecord
 
   def send_welcome_email
     UserMailer.welcome_email(self).deliver_later
+  end
+
+  def remove_avatar_from_s3
+    if avatar.present?
+      avatar.remove!
+      avatar.clear!
+      avatar.recreate_versions! 
+    end
+  end
+
+  def remove_photo_from_s3
+    if photo.present?
+      photo.remove!
+      photo.clear!
+      photo.recreate_versions! 
+    end
   end
 
 end

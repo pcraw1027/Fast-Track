@@ -10,4 +10,18 @@ class Medium < ApplicationRecord
 
   default_scope { order(:position) }
 
+  before_destroy :remove_file_from_s3
+
+  
+  private
+
+
+  def remove_file_from_s3
+    if file.present?
+      file.remove!
+      file.clear!
+      file.recreate_versions! 
+    end
+  end
+
 end

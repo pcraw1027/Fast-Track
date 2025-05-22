@@ -25,6 +25,9 @@ module ApiV1Routes
         post 'company_reviews', to: 'reviews#company_reviews'
         get 'product_reviews', to: 'reviews#get_product_reviews'
         get 'company_reviews', to: 'reviews#get_company_reviews'
+        get 'user_product_review', to: 'reviews#user_product_review'
+        get 'user_company_review', to: 'reviews#user_company_review'
+        
         get 'my_uploads', to: 'upload_records#my_uploads'
         
         resources :reviews, only: [:show, :update]
