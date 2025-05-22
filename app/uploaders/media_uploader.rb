@@ -37,6 +37,10 @@ class MediaUploader < CarrierWave::Uploader::Base
     ]
   end
 
+  def remove_previously_stored_files_after_update
+    true
+  end
+
   def image?(new_file)
     new_file.content_type.start_with?('image')
   end

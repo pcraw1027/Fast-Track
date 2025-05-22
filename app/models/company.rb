@@ -19,4 +19,18 @@ class Company < ApplicationRecord
   default_scope -> { order(created_at: :desc) }
   scope :find_by_mid, ->(mid) { where("mids @> ARRAY[?]::text[]", [mid]) }
 
+  before_destroy :remove_logo_from_s3
+
+  
+  private
+
+
+  def remove_logo_from_s3
+    if logo.present?
+      logo.remove!
+      logo.clear!
+      logo.recreate_versions! 
+    end
+  end
+
 end

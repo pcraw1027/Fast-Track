@@ -21,6 +21,7 @@ class Api::V1::ReviewsController < Api::V1::BaseController
   def company_reviews
     create_reviews("Company")
   end
+  
 
   def get_product_reviews
     render json: load(params[:product_id], "Product"), status: :ok
@@ -28,6 +29,14 @@ class Api::V1::ReviewsController < Api::V1::BaseController
 
   def get_company_reviews
     render json: load(params[:company_id], "Company"), status: :ok
+  end
+
+  def user_product_review
+    render json: load_user_review(params[:product_id], "Product"), status: :ok
+  end
+
+  def user_company_review
+    render json: load_user_review(params[:company_id], "Company"), status: :ok
   end
 
 
@@ -38,15 +47,23 @@ class Api::V1::ReviewsController < Api::V1::BaseController
     @review = Review.find(params[:id])
   end
 
+  def load_user_review(reviewable_id, reviewable_type)
+    Review.find_by(reviewable_id: reviewable_id, reviewable_type: reviewable_type, user_id: current_user.id)
+  end
+
+
   def create_reviews(reviewable_type)
+    attribute_key = ""
     error_msg = ""
     if review_params[:title].blank? && !review_params[:comment].blank?
-      error_msg = "Review title is required!"
+      error_msg = "review title is required"
+      attribute_key = "title"
     elsif !review_params[:title].blank? && review_params[:comment].blank?
-      error_msg = "Review comment is required!"
+      error_msg = "review comment is required"
+      attribute_key = "comment"
     end
 
-    render json: [error_msg], status: :unprocessable_entity and return if error_msg.length > 0
+    render json: { attribute_key => [error_msg]}, status: :unprocessable_entity and return if attribute_key.length > 0
 
     review = Review.new(review_params.except(:product_id, :company_id))
     review.user_id = current_user.id
@@ -64,7 +81,7 @@ class Api::V1::ReviewsController < Api::V1::BaseController
     page = params[:page] || 1
     per_page = params[:per_page] || 10
     per_page = 10 if per_page.to_i > 10
-    result_claims = Review.load_data(per_page, page, reviewable_id, reviewable_type)
+    Review.load_data(per_page, page, reviewable_id, reviewable_type)
   end
 
   def review_params
