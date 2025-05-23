@@ -19,7 +19,7 @@ class Review < ApplicationRecord
       .select('reviews.*, users.username, users.country')
       .limit(per_page)
       .offset(offset)
-      .order(created_at: :desc, rating: :desc)
+      .order(updated_at: :desc, rating: :desc)
     PaginatedResult.new(paginated_reviews, per_page, page, total_count)
 end
 

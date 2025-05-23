@@ -28,8 +28,6 @@ class Company < ApplicationRecord
   def remove_logo_from_s3
     if logo.present?
       logo.remove!
-      logo.clear!
-      logo.recreate_versions! 
     end
   end
 

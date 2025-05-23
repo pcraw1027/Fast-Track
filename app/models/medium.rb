@@ -18,9 +18,7 @@ class Medium < ApplicationRecord
 
   def remove_file_from_s3
     if file.present?
-      file.remove!
-      file.clear!
-      file.recreate_versions! 
+      file.remove! 
     end
   end
 

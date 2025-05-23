@@ -79,16 +79,12 @@ class User < ApplicationRecord
   def remove_avatar_from_s3
     if avatar.present?
       avatar.remove!
-      avatar.clear!
-      avatar.recreate_versions! 
     end
   end
 
   def remove_photo_from_s3
     if photo.present?
       photo.remove!
-      photo.clear!
-      photo.recreate_versions! 
     end
   end
 

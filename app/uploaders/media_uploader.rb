@@ -42,7 +42,11 @@ class MediaUploader < CarrierWave::Uploader::Base
   end
 
   def image?(new_file)
-    new_file.content_type.start_with?('image')
+    if new_file.content_type
+      new_file.content_type.start_with?('image')
+    else
+      false
+    end
   end
 
   process :resize_and_make_background_transparent => ['180x180'], if: :image?
