@@ -13,8 +13,6 @@ class CompanyContact < ApplicationRecord
   def remove_photo_from_s3
     if photo.present?
       photo.remove!
-      photo.clear!
-      photo.recreate_versions! 
     end
   end
 end

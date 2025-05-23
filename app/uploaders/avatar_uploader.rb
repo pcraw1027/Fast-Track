@@ -47,6 +47,10 @@ class AvatarUploader < CarrierWave::Uploader::Base
   def remove_previously_stored_files_after_update
     true
   end
+
+  def mini_magick
+    MiniMagick
+  end
   # Override the filename of the uploaded files:
   # Avoid using model.id or version_name here, see uploader/store.rb for details.
   # def filename

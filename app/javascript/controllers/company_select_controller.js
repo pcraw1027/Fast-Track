@@ -30,8 +30,7 @@ export default class extends Controller {
           document.getElementById('new_company_name').value = value;
         },
         onItemAdd: function(value, item) {
-          const existingOption = companySelect.querySelector(`option[value="${value}"]`);
-          if (existingOption) {
+          if (/^\d+$/.test(value)) {
             document.getElementById('new_company_name').value = "";
           }
         }
