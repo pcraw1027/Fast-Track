@@ -45,15 +45,10 @@ class ProductsController < ApplicationController
         
         respond_to do |format|
           if @product.save
-
-            variant_exist = ProductVariant.find_by(barcode: product_variant_params[:barcode])
           
-              ProductVariant.create!(
-                      barcode: product_variant_params[:barcode],
-                      image: product_variant_params[:image],
-                      product_id: @product.id
-                    )
-            
+              pv = ProductVariant.new(product_variant_params)
+              pv.product_id = @product.id
+              pv.save!
 
             CroupierCore::UpgradePitLevel.call!(barcode: product_variant_params[:barcode], 
                               product_id: @product.id, company_name: company_name, asin: params[:product][:asin],
@@ -121,11 +116,9 @@ class ProductsController < ApplicationController
             @product = Product.new(product_params)
             respond_to do |format|
               if @product.save
-                ProductVariant.create!(
-                  barcode: product_variant_params[:barcode],
-                  image: product_variant_params[:image],
-                  product_id: @product.id
-                )
+                pv = ProductVariant.new(product_variant_params)
+                pv.product_id = @product.id
+                pv.save!
                 format.html { redirect_to @product, notice: "Product successfully created" }
                 format.json { render :show, status: :created, location: @product }
               else
