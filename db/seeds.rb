@@ -69,47 +69,47 @@
 
 
     #Companies Seed
-    companies = []
-    csv_text = File.read(Rails.root.join('lib','seeds','Companies.csv'))
-    csv = CSV.parse(csv_text, :headers => true, :encoding => 'ISO-8859-1')
+    # companies = []
+    # csv_text = File.read(Rails.root.join('lib','seeds','Companies.csv'))
+    # csv = CSV.parse(csv_text, :headers => true, :encoding => 'ISO-8859-1')
 
-    csv.each do |row|
-        t = nil
-        i = 0
-        companies.find{|c| c.name == row['Company']}
-        companies.each.with_index do |c, ind| 
-            if c.name == row['Company']
-                t = c
-                i = ind
-                break
-            end
-        end
-        if t
-            mids = t.mids
-            mids << row['MID']
-            t.mids = mids
-            t.save
-            companies[i] = t
-        else
-            t = Company.new
-            t.mids = [row['MID']]
-            t.name = row['Company']
-            ind_type = IndustryCategoryType.find_by(category_code: row['Industry_NAICS_Code'])
-            t.industry_category_type_id = ind_type.id if ind_type
-            unless ind_type
-                p row['Industry_NAICS_Code']
-                next
-            end
-            t.website = row['Website']
-            begin
-                t.save!
-                companies << t
-            rescue => e
-                p e.message
-            end
-        end
+    # csv.each do |row|
+    #     t = nil
+    #     i = 0
+    #     companies.find{|c| c.name == row['Company']}
+    #     companies.each.with_index do |c, ind| 
+    #         if c.name == row['Company']
+    #             t = c
+    #             i = ind
+    #             break
+    #         end
+    #     end
+    #     if t
+    #         mids = t.mids
+    #         mids << row['MID']
+    #         t.mids = mids
+    #         t.save
+    #         companies[i] = t
+    #     else
+    #         t = Company.new
+    #         t.mids = [row['MID']]
+    #         t.name = row['Company']
+    #         ind_type = IndustryCategoryType.find_by(category_code: row['Industry_NAICS_Code'])
+    #         t.industry_category_type_id = ind_type.id if ind_type
+    #         unless ind_type
+    #             p row['Industry_NAICS_Code']
+    #             next
+    #         end
+    #         t.website = row['Website']
+    #         begin
+    #             t.save!
+    #             companies << t
+    #         rescue => e
+    #             p e.message
+    #         end
+    #     end
     
-    end
+    # end
 
 
 
@@ -227,61 +227,56 @@
 
 
 #Products Seed
-csv_text = File.read(Rails.root.join('lib','seeds','Products.csv'))
-csv = CSV.parse(csv_text, :headers => true, :encoding => 'ISO-8859-1')
-products = []
-csv.each do |row|
-    v = ProductVariant.find_by(barcode: row['Barcode'])
-    next if v
-    match = products.find{|p|p.name == row['Product_Name']}
-    image_path = Rails.root.join('lib','seeds', 'prod_images', "#{row['Barcode']}.jpg")
-    if match
-        v = ProductVariant.new
-        v.barcode = row['Barcode']
-        v.product_id = match.id
-        v.save!
-        if File.exist?(image_path)
-            v.media.create!(
-                file: File.open(image_path),
-                media_type: :image,
-                position: 0
-            )
+# csv_text = File.read(Rails.root.join('lib','seeds','Products.csv'))
+# csv = CSV.parse(csv_text, :headers => true, :encoding => 'ISO-8859-1')
+# products = []
+# csv.each do |row|
+#     v = ProductVariant.find_by(barcode: row['Barcode'])
+#     next if v
+#     match = products.find{|p|p.name == row['Product_Name']}
+#     image_path = Rails.root.join('lib','seeds', 'prod_images', "#{row['Barcode']}.jpg")
+#     if match
+#         v = ProductVariant.new
+#         v.barcode = row['Barcode']
+#         v.product_id = match.id
+#         v.save!
+#         if File.exist?(image_path)
+#             v.media.create!(
+#                 file: File.open(image_path),
+#                 media_type: :image,
+#                 position: 0
+#             )
 
-        else
-            puts "Image not found for #{row['Barcode']}: #{image_path}"
-        end
-    else
+#         else
+#             puts "Image not found for #{row['Barcode']}: #{image_path}"
+#         end
+#     else
 
-        t = Product.new
-        t.product_category_source_id = ProductCategorySource.find_by(code: 'AMZ').id 
-        t.name = row['Product_Name']
-        t.description = row['Product_Description']
-        t.size = row['Size']
-        if t.save
-            v = ProductVariant.new
-            v.barcode = row['Barcode']
-            v.product_id = t.id
-            v.save!
-            if File.exist?(image_path)
-                p "File-Exists => #{row['Barcode']}"
-                v.media.create!(
-                file: File.open(image_path),
-                media_type: :image,
-                position: 0
-            )
-            p "Media Created"
-            else
-                puts "Image not found for #{row['Barcode']}: #{image_path}"
-            end
-        end
-        products << t
-    end
-end
-
-
-
-
-
+#         t = Product.new
+#         t.product_category_source_id = ProductCategorySource.find_by(code: 'AMZ').id 
+#         t.name = row['Product_Name']
+#         t.description = row['Product_Description']
+#         t.size = row['Size']
+#         if t.save
+#             v = ProductVariant.new
+#             v.barcode = row['Barcode']
+#             v.product_id = t.id
+#             v.save!
+#             if File.exist?(image_path)
+#                 p "File-Exists => #{row['Barcode']}"
+#                 v.media.create!(
+#                 file: File.open(image_path),
+#                 media_type: :image,
+#                 position: 0
+#             )
+#             p "Media Created"
+#             else
+#                 puts "Image not found for #{row['Barcode']}: #{image_path}"
+#             end
+#         end
+#         products << t
+#     end
+# end
 
 
 csv_text = File.read(Rails.root.join('lib','seeds','AmazonCategoryCodesOutput.csv'))
