@@ -29,12 +29,12 @@ class ProductsController < ApplicationController
 
       @product = Product.new(product_params)
 
-      variant_exist = ProductVariant.find_by(barcode: product_variant_params[:barcode])
+      variant_exist = ProductVariant.find_by(barcode: product_variant_params[:barcode].strip)
       if variant_exist
         @product = variant_exist.product
         variant_exist.update(product_variant_params) unless product_variant_params.blank?
         if @product.update(product_params)
-          CroupierCore::UpgradePitLevel.call!(barcode: product_variant_params[:barcode], 
+          CroupierCore::UpgradePitLevel.call!(barcode: product_variant_params[:barcode].strip, 
           product_id: @product.id, company_name: company_name, 
           asin: params[:product][:asin], user_id: current_user.id)
           redirect_to pit_record_success_redirect_path(pit_record_id: params[:product][:pit_record_id]), notice: "Product was successfully updated." and return
@@ -47,10 +47,11 @@ class ProductsController < ApplicationController
           if @product.save
           
               pv = ProductVariant.new(product_variant_params)
+              pv.barcode = pv.barcode.strip
               pv.product_id = @product.id
               pv.save!
 
-            CroupierCore::UpgradePitLevel.call!(barcode: product_variant_params[:barcode], 
+            CroupierCore::UpgradePitLevel.call!(barcode: product_variant_params[:barcode].strip, 
                               product_id: @product.id, company_name: company_name, asin: params[:product][:asin],
                               user_id: current_user.id)
         
@@ -70,7 +71,7 @@ class ProductsController < ApplicationController
     @product = Product.find(params[:product_id])
     respond_to do |format|
       if @product.update(product_params)
-        CroupierCore::UpgradePitLevel.call!(barcode: product_variant_params[:barcode], 
+        CroupierCore::UpgradePitLevel.call!(barcode: product_variant_params[:barcode].strip, 
         product_id: @product.id, company_name: nil, asin: nil, user_id: current_user.id)
         format.html { redirect_to pit_record_success_redirect_path(pit_record_id: params[:product][:pit_record_id]), notice: "Product was successfully updated." }
         format.json { render :show, status: :ok, location: @product }
@@ -106,10 +107,10 @@ class ProductsController < ApplicationController
 
   # POST /products or /products.json
   def create
-    if product_variant_params[:barcode].length < 12
+    if product_variant_params[:barcode].strip.length < 12
       respond_to_invalid_entries("minimum barcode length is 12")  
     else
-        variant_exist = ProductVariant.find_by(barcode: product_variant_params[:barcode])
+        variant_exist = ProductVariant.find_by(barcode: product_variant_params[:barcode].strip)
         if variant_exist
             respond_to_invalid_entries("Product variant already exist.")
         else
@@ -117,6 +118,7 @@ class ProductsController < ApplicationController
             respond_to do |format|
               if @product.save
                 pv = ProductVariant.new(product_variant_params)
+                pv.barcode = pv.barcode.strip
                 pv.product_id = @product.id
                 pv.save!
                 format.html { redirect_to @product, notice: "Product successfully created" }

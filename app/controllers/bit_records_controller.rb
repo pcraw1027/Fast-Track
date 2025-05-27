@@ -26,7 +26,7 @@ class BitRecordsController < ApplicationController
   def insert_barcode
     begin
       if bit_record_params[:barcode].present?
-        @brc_intrf_claims = CroupierCore::BarcodeInterface.call!(barcode: bit_record_params[:barcode], 
+        @brc_intrf_claims = CroupierCore::BarcodeInterface.call!(barcode: bit_record_params[:barcode].strip, 
                                       source: "BIT Load", asin: nil, user_id: current_user.id)
         if @brc_intrf_claims && @brc_intrf_claims.success?
           render json: {bit_records: [@brc_intrf_claims.payload], error:""}
