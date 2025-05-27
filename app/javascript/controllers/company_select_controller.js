@@ -27,11 +27,15 @@ export default class extends Controller {
             .catch(() => callback())
         },
         onOptionAdd: function(value, data) {
-          document.getElementById('new_company_name').value = value;
+          if(document.getElementById('new_company_name')){
+            document.getElementById('new_company_name').value = value;
+          }
         },
         onItemAdd: function(value, item) {
           if (/^\d+$/.test(value)) {
-            document.getElementById('new_company_name').value = "";
+            if(document.getElementById('new_company_name')){
+              document.getElementById('new_company_name').value = "";
+            }
           }
         }
       })
