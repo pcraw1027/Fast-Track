@@ -8,7 +8,7 @@ class Medium < ApplicationRecord
   validates :media_type, presence: true
   validates :file, presence: true
 
-  default_scope { order(:position) }
+  #default_scope { order(:position) }
 
   before_destroy :remove_file_from_s3
 

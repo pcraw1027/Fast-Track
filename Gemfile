@@ -86,5 +86,8 @@ gem 'jsonapi-serializer'
 gem 'pundit'
 gem 'rack-attack'
 
+gem 'elasticsearch-model'
+gem 'elasticsearch-rails'
+
 
 gem 'dotenv-rails', groups: [:development, :test]

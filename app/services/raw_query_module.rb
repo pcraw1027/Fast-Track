@@ -33,27 +33,8 @@ module RawQueryModule
         end
 
         #load product_variants data
-        product_variants = ProductVariant.unscoped
-          .left_outer_joins(:media, product: [:company, :reviews])
-          .select(
-            'product_variants.*',
-            'products.id AS product_id',
-            'products.name AS product_name',
-            'products.description AS product_description',
-            'products.company_id AS product_company_id',
-            'companies.name AS company_name',
-            'AVG(reviews.rating) AS avrg_rating'
-          )
-           .where(barcode: recent_scans.map(&:barcode))
-          .group(
-            'products.id',
-            'products.name',
-            'products.description',
-            'products.company_id',
-            'product_variants.id',
-            'companies.name'
-          )
-
+        product_variants = self.unscoped_products_with_assoc("barcode", recent_scans.map(&:barcode))
+        
         count_query = <<-SQL
           SELECT COUNT(*) AS total_count FROM (
             SELECT DISTINCT ON (barcode) 1
@@ -130,26 +111,7 @@ module RawQueryModule
         end
 
         #load product_variants data
-        product_variants = ProductVariant.unscoped
-          .left_outer_joins(:media, product: [:company, :reviews])
-          .select(
-            'product_variants.*',
-            'products.id AS product_id',
-            'products.name AS product_name',
-            'products.description AS product_description',
-            'products.company_id AS product_company_id',
-            'companies.name AS company_name',
-            'AVG(reviews.rating) AS avrg_rating'
-          )
-          .where(product_id: product_ids)
-          .group(
-            'products.id',
-            'products.name',
-            'products.description',
-            'products.company_id',
-            'product_variants.id',
-            'companies.name'
-          )
+        product_variants = self.unscoped_products_with_assoc("product_id", product_ids)
 
           
       records = product_variants.map do |pv|
@@ -163,7 +125,34 @@ module RawQueryModule
       PaginatedResult.new(records, per_page, page, total_count)
     end
 
+    def self.unscoped_products_with_assoc(attribute_key, values)
+      order_clause = Arel.sql(
+        "CASE #{values.each_with_index.map { |v, i| "WHEN #{attribute_key} = #{ActiveRecord::Base.connection.quote(v)} THEN #{i}" }.join(' ')} ELSE #{values.length} END"
+      )
 
+      ProductVariant.unscoped
+        .includes(:media)
+          .left_outer_joins(:media, product: [:company, :reviews])
+          .select(
+            'product_variants.*',
+            'products.id AS product_id',
+            'products.name AS product_name',
+            'products.description AS product_description',
+            'products.company_id AS product_company_id',
+            'companies.name AS company_name',
+            'AVG(reviews.rating) AS avrg_rating'
+          )
+          .where("#{attribute_key}": values)
+          .group(
+            'products.id',
+            'products.name',
+            'products.description',
+            'products.company_id',
+            'product_variants.id',
+            'companies.name'
+          )
+          .order(order_clause)
+    end
 
   
 end
