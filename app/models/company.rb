@@ -1,4 +1,5 @@
 class Company < ApplicationRecord
+  include Searchable
   attr_accessor :mid, :photo, :email, :phone, :contact_name
   belongs_to :industry_category_type
   mount_uploader :logo, LogoUploader
@@ -22,6 +23,12 @@ class Company < ApplicationRecord
   before_destroy :remove_logo_from_s3
 
   
+  def self.searchable_fields
+    %i[name]
+  end
+
+  index_name "company_search_index"
+
   private
 
 

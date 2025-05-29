@@ -29,6 +29,8 @@ module ApiV1Routes
         get 'user_company_review', to: 'reviews#user_company_review'
         
         get 'my_uploads', to: 'upload_records#my_uploads'
+
+        get 'search', to: 'products#search'
         
         resources :reviews, only: [:show, :update]
         resources :upload_records, only: [:create]
