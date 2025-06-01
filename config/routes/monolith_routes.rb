@@ -45,9 +45,7 @@ module MonolithRoutes
       end
 
       resources :invitations
-      
       #get 'home/index'
-
       root to: "home#index"
       get 'home/about'
       # additional routes
@@ -60,9 +58,9 @@ module MonolithRoutes
       get '/families_by_segment', to: 'families#by_segment'
       get '/klasses_by_family', to: 'klasses#by_family'
       get '/bricks_by_klass', to: 'bricks#by_klass'
-
       post '/insert_product', to: 'products#insert_product'
       post '/insert_company', to: 'companies#insert_company'
+      delete '/destroy_media', to: 'product_variants#destroy_media'
    
     end
   end

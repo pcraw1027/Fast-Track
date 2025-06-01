@@ -23,21 +23,38 @@ class AvatarUploader < CarrierWave::Uploader::Base
   # end
 
   # Process files as they are uploaded:
-  process resize_to_fit: [180,180]
+  #process resize_to_fit: [180,180]
   # process scale: [200, 300]
   #
   # def scale(width, height)
   #   # do something
   # end
 
-  # Create different versions of your uploaded files:
-  version :thumb do
-    process resize_to_fit: [18, 18]
-  end
-  # version :thumb do
-  #   process resize_to_fit: [50, 50]
-  # end
 
+   process :resize_and_make_background_transparent => ['180x180']
+  
+
+  # Create different versions of your uploaded files:
+    version :thumb do
+      process :resize_and_make_background_transparent => ['18x18']
+    end
+
+
+    def resize_and_make_background_transparent(size)
+    manipulate! do |img|
+      img.format('png')
+      img.alpha('on') 
+
+      img.combine_options do |c|
+        c.fuzz '5%'  
+        c.transparent 'white'
+      end
+
+      img.resize(size)
+      img
+    end
+  end
+    
   # Add an allowlist of extensions which are allowed to be uploaded.
   # For images you might use something like this:
   def extension_allowlist

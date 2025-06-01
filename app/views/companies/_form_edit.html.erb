@@ -38,7 +38,7 @@
     <div class = "form-group col-md-6">
       <%= form.label :industry_category_type_id %>
 
-      <%= form.select :industry_category_type_id, [["#{@industry_category_type.category_code&.to_s} - #{@industry_category_type.title&.to_s}", @industry_category_type.id]], 
+      <%= form.select :industry_category_type_id, [["#{@industry_category_type&.category_code&.to_s} - #{@industry_category_type&.title&.to_s}", @industry_category_type&.id]], 
         {}, 
 
         data: { controller: "ind-cat-select" } 

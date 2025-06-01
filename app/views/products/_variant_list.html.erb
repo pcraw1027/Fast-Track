@@ -12,20 +12,20 @@
     <% variants.each do |product_variant| %>
       <tr>
         <td>
-          
-        <% product_variant.media.each do |media| %>
-            <% if media.image? %>
-              <%= image_tag media.file.thumb.url %>
-            <% elsif media.video? %>
+
+          <% product_variant.media.each do |media| %>
+            <% if media.image? && media.file.present? %>
+              <%= image_tag media.file.url %>
+            <% elsif media.video? && media.file.present? %>
               <video controls>
                 <source src="<%= media.file.url %>" type="video/mp4">
               </video>
-            <% else %>
-              <%= link_to 'Download file', media.file.url %>
+            <% elsif media.file.present? %>
+              <%= link_to 'download file', media.file.url %>
             <% end %>
-          <% end %>
-
-        
+            <%= button_to 'delete image', destroy_media_path(medium_id: media.id), method: :delete, class: "btn btn-outline-danger btn-sm" %>
+        <% end %>
+       
         
         
         </td>
