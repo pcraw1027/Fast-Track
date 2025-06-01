@@ -8,8 +8,7 @@ class CroupierCore::UploadTrigger < ApplicationService
                         asin: asin, user_id: user_id) 
       bit_rec.invoke_bit(barcode, source, asin, user_id, brand)
     end
-    p upload_params
-    p "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+
     upload = UploadRecord.new(upload_params)
     upload.barcode = barcode 
     upload.date = Date.today 

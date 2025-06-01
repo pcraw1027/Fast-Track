@@ -12,16 +12,12 @@
     </div>
   <% end %>
 
-
-
   <div class="form-group" id="media-fields">
   <label>Product Images</label>
     <%= form.fields_for :media do |mf| %>
     <div class="media-upload">
       <% if mf.object.file.present? %>
         <%= image_tag mf.object.file.url(:thumb) if mf.object.image? %>
-        <%= link_to 'Remove', '#', class: 'remove-media' %>
-        <%= mf.check_box :_destroy %>
       <% end %>
 
       <%= mf.label :file %>

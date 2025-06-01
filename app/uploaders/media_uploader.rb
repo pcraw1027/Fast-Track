@@ -49,23 +49,27 @@ class MediaUploader < CarrierWave::Uploader::Base
     end
   end
 
-  process :resize_and_make_background_transparent => ['180x180'], if: :image?
+  process :resize_and_make_background_transparent => ['522x522'], if: :image?
 
   version :thumb, if: :image? do
-    process :resize_and_make_background_transparent => ['58x58']
+    process :resize_and_make_background_transparent => ['180x180']
   end
 
   def resize_and_make_background_transparent(size)
     manipulate! do |img|
-      img.format('png') 
+      img.format('png')
+      img.alpha('on') 
+
       img.combine_options do |c|
-        c.fuzz '20%'
+        c.fuzz '5%'  
         c.transparent 'white'
       end
+
       img.resize(size)
       img
     end
   end
+
 
   def mini_magick
     MiniMagick

@@ -23,17 +23,37 @@ class LogoUploader < CarrierWave::Uploader::Base
   # end
 
   # Process files as they are uploaded:
-     process resize_to_fit: [144,144]
+   #  process resize_to_fit: [144,144]
      #process scale: [200, 300]
   #
   #  def scale(width, height)
   #    # do something
   #  end
 
+
+  process :resize_and_make_background_transparent => ['144x144']
+  
+
   # Create different versions of your uploaded files:
     version :thumb do
-      process resize_to_fit: [58, 58]
+      process :resize_and_make_background_transparent => ['58x58']
     end
+
+
+    def resize_and_make_background_transparent(size)
+    manipulate! do |img|
+      img.format('png')
+      img.alpha('on') 
+
+      img.combine_options do |c|
+        c.fuzz '5%'  
+        c.transparent 'white'
+      end
+
+      img.resize(size)
+      img
+    end
+  end
 
   # Add an allowlist of extensions which are allowed to be uploaded.
   # For images you might use something like this:

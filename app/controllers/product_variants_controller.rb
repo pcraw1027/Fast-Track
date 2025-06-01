@@ -4,6 +4,16 @@ class ProductVariantsController < ApplicationController
   # GET /product_variants/1/edit
   def edit
     @product = @product_variant.product
+    unless @product_variant.media.any?
+      image_path = Rails.root.join('lib','seeds', 'prod_images', "011111396487.jpg")
+      if File.exist?(image_path)
+                @product_variant.media.create!(
+                file: File.open(image_path),
+                media_type: :image,
+                position: 0
+            )
+      end
+    end
   end
   
   
@@ -27,6 +37,17 @@ class ProductVariantsController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to @product, status: :see_other, notice: "product variant was successfully destroyed." }
+      format.json { head :no_content }
+    end
+  end
+
+  def destroy_media
+    medium = Medium.find(params[:medium_id])
+    @product = medium.mediaable.product
+    medium.destroy
+
+    respond_to do |format|
+      format.html { redirect_to @product, status: :see_other, notice: "product image was successfully deleted." }
       format.json { head :no_content }
     end
   end
