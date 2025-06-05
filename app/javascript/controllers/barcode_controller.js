@@ -34,6 +34,15 @@ export default class extends Controller {
                 <td>${record.bit_rec.user_id}</td>
                 <td>${this.formatDate(record.bit_rec.created_at)}</td>
                 <td>${record.message}</td>
+                <td><a style="background-color: transparent;
+                              border: 1px solid #8cc63f;
+                              border-radius: 15px;
+                              padding: 5px 20px 5px 20px;
+                              text-decoration: none;"
+                              color: #333 !important;
+                              font-weight: 500;
+                  href=/product_capture_interface?barcode=${record.bit_rec.barcode} 
+                  target="_blank" >Add</a></td>
               </tr>
             `)
           })

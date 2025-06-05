@@ -1,0 +1,47 @@
+<div class="container-fluid">
+  <h3>Product Capture Interface</h3>
+
+
+        <%= form_for(@pit_record, url: invoke_bit_pit_triggers_path, html: { method: :post }) do |form| %>
+    <div class="row">
+
+        <div class = "col-4">
+            <div class = "form-group">
+                <%= form.label :barcode %>
+                <%= form.text_field :barcode, class: "form-control", required: true %>
+            </div>
+        </div>
+        
+        <div class = "col-4">
+            <div class = "form-group">
+                <%= form.label :product_id %>
+                <%= form.text_field :product_id, class: "form-control", readonly: true %>
+            </div>
+        </div>
+
+        <div class = "col-4">
+                <div class="actions">
+                    <br/>
+                    <%= form.submit "Submit", class: 'action-btn', style:"margin-top:10px;" %>
+                </div>
+    
+        </div>
+    </div>
+        <%end%>
+
+    <%if @pit_record.barcode.length > 1 %>
+        <%= render partial: 'pit_records/capture_tabs', locals: { 
+                                                    product: @product,
+                                                    pit_record: @pit_record,
+                                                    segments: @segments,
+                                                    product_category_sources: @product_category_sources
+        }%>
+    <%end%>
+
+
+
+
+</div>
+
+
+<br/><br/><br/>

@@ -18,55 +18,58 @@
     <%= form.hidden_field :pit_record_id, value: pit_record.id %>
 
   <div data-controller="product-classification">
-  <div class="form-group">
-    <%= form.label :segment_id %>
-    <%= form.select :segment_id,
-      segments.map { |segment| ["#{segment.code} #{segment.title}", segment.id] },
-      { include_blank: true },
-      {   
-        id: "segment_id",
-        data: { product_classification_target: "segment" }
-      } %>
-  </div>
+        <div class="form-group">
+            <%= form.label :segment_id %>
+            <%= form.select :segment_id,
+            @segments.map { |segment| ["#{segment.code} #{segment.title}", segment.id] },
+            { include_blank: true },
+            {
+                
+                id: "segment_id",
+                data: { product_classification_target: "segment" }
+            } %>
+        </div>
 
-  <div class="form-group">
-    <%= form.label :family_id %>
-    <%= form.select :family_id,
-      [],
-      { include_blank: true },
-      {
-        id: "family_id",
-        data: { product_classification_target: "family" }
-      } %>
-  </div>
+        <div class="form-group">
+            <%= form.label :family_id %>
+            <%= form.select :family_id,
+            [["#{@family&.code} #{@family&.title}", @family&.id]],
+            { include_blank: true },
+            {
+                
+                id: "family_id",
+                data: { product_classification_target: "family" }
+            } %>
+        </div>
 
-  <div class="form-group">
-    <%= form.label :klass_id %>
-    <%= form.select :klass_id,
-      [],
-      { include_blank: true },
-      {
-        
-        id: "klass_id",
-        data: { product_classification_target: "klass" }
-      } %>
-  </div>
+        <div class="form-group">
+            <%= form.label :klass_id %>
+            <%= form.select :klass_id,
+            [["#{@klass&.code} #{@klass&.title}", @klass&.id]],
+            { include_blank: true },
+            {
+                
+                id: "klass_id",
+                data: { product_classification_target: "klass" }
+            } %>
+        </div>
 
-  <div class="form-group">
-    <%= form.label :brick_id %>
-    <%= form.select :brick_id,
-      [],
-      { include_blank: true },
-      {
-        id: "brick_id",
-        data: { product_classification_target: "brick" }
-      } %>
-  </div>
+        <div class="form-group">
+            <%= form.label :brick_id %>
+            <%= form.select :brick_id,
+            [["#{@brick&.code} #{@brick&.title}", @brick&.id]],
+            { include_blank: true },
+            {
+                
+                id: "brick_id",
+                data: { product_classification_target: "brick" }
+            } %>
+        </div>
 </div>
 
 
-  <div class="actions">
-    <%= form.submit "Submit", class: 'btn btn-secondary' %>
+  <div class="actions text-center">
+    <%= form.submit "Update", class: 'btn btn-secondary' %>
   </div>
 <% end %>
 

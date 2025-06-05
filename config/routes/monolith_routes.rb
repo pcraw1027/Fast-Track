@@ -7,10 +7,7 @@ module MonolithRoutes
         get :company_capture_interface
         get :success_redirect
       end
-      resources :pit_records do
-        get :product_capture_interface
-        get :success_redirect
-      end
+      resources :pit_records
       resources :upload_records
       resources :bit_records
       resources :scans
@@ -49,6 +46,8 @@ module MonolithRoutes
       root to: "home#index"
       get 'home/about'
       # additional routes
+      get '/product_capture_interface', to: 'pit_records#product_capture'
+      post '/invoke_bit_pit_triggers', to: 'pit_records#invoke_bit_pit_triggers'
       get '/bit_interface', to: 'bit_records#bit_interface'
       get '/pit_interface', to: 'pit_records#pit_interface'
       get '/cit_interface', to: 'cit_records#cit_interface'

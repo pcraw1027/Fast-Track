@@ -6,7 +6,7 @@ class ProductsController < ApplicationController
 
   # GET /products or /products.json
   def index
-    @products = Product.all
+    @products = Product.includes(:company, :segment, :family, :klass, :brick).all
   end
 
   def insert_product
@@ -19,7 +19,7 @@ class ProductsController < ApplicationController
 
     
     if error.length > 0
-      respond_to_invalid_entries(error, pit_record_product_capture_interface_path(pit_record_id: params[:product][:pit_record_id]))  
+      respond_to_invalid_entries(error, product_capture_interface_path(barcode: product_variant_params[:barcode]))  
     else
       
       unless product_params[:company_id].blank?
@@ -37,7 +37,7 @@ class ProductsController < ApplicationController
           CroupierCore::UpgradePitLevel.call!(barcode: product_variant_params[:barcode].strip, 
           product_id: @product.id, company_name: company_name, 
           asin: params[:product][:asin], user_id: current_user.id)
-          redirect_to pit_record_success_redirect_path(pit_record_id: params[:product][:pit_record_id]), notice: "Product was successfully updated." and return
+          redirect_to product_capture_interface_path(barcode: product_variant_params[:barcode].strip), notice: "Product was successfully updated." and return
          
         end
 
@@ -45,7 +45,6 @@ class ProductsController < ApplicationController
         
         respond_to do |format|
           if @product.save
-          
               pv = ProductVariant.new(product_variant_params)
               pv.barcode = pv.barcode.strip
               pv.product_id = @product.id
@@ -55,7 +54,7 @@ class ProductsController < ApplicationController
                               product_id: @product.id, company_name: company_name, asin: params[:product][:asin],
                               user_id: current_user.id)
         
-            format.html { redirect_to pit_record_success_redirect_path(pit_record_id: params[:product][:pit_record_id]), notice: "Product successfully added" }
+            format.html { redirect_to product_capture_interface_path(barcode: product_variant_params[:barcode].strip), notice: "Product successfully added" }
             format.json { render :show, status: :created, location: @product }
           else
             format.html { render :new, status: :unprocessable_entity }
@@ -73,7 +72,7 @@ class ProductsController < ApplicationController
       if @product.update(product_params)
         CroupierCore::UpgradePitLevel.call!(barcode: product_variant_params[:barcode].strip, 
         product_id: @product.id, company_name: nil, asin: nil, user_id: current_user.id)
-        format.html { redirect_to pit_record_success_redirect_path(pit_record_id: params[:product][:pit_record_id]), notice: "Product was successfully updated." }
+        format.html { redirect_to product_capture_interface_path(barcode: product_variant_params[:barcode].strip), notice: "Product was successfully updated." }
         format.json { render :show, status: :ok, location: @product }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -90,6 +89,9 @@ class ProductsController < ApplicationController
   # GET /products/new
   def new
     @product = Product.new
+    product_variant = ProductVariant.new
+    product_variant.media.build
+    @product.media = product_variant.media
   end
 
   # GET /products/1/edit
@@ -100,9 +102,6 @@ class ProductsController < ApplicationController
     @klass = Klass.find(@product.klass_id) if @product.klass_id
     @brick = Brick.find(@product.brick_id) if @product.brick_id
 
-    @families = Family.all
-    @klasses = Klass.all
-    @bricks = Brick.all
   end
 
   # POST /products or /products.json
@@ -169,7 +168,7 @@ class ProductsController < ApplicationController
 
     def respond_to_invalid_entries(msg, path=new_product_path)
       respond_to do |format|
-        format.html { redirect_to path, notice: msg, status: :unprocessable_entity }
+        format.html { redirect_to path, alert: msg, status: :unprocessable_entity }
         format.json { render json: {errors: [{barcode: msg}]}, status: :unprocessable_entity }
       end
     end
@@ -177,10 +176,11 @@ class ProductsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def product_params
       params.require(:product).permit(:company_id, :name, :product_category_source_id, :description, 
-      :qrcode, :size, :segment_id, :family_id, :klass_id, :brick_id)
+      :qrcode, :size, :segment_id, :captured_product_category, :family_id, :klass_id, :brick_id)
     end
     
     def product_variant_params
       params.require(:product).permit(:barcode, media_attributes: [:id, :file, :_destroy])
     end
+
 end

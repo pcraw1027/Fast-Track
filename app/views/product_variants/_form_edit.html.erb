@@ -20,8 +20,8 @@
         <%= image_tag mf.object.file.url(:thumb) if mf.object.image? %>
       <% end %>
 
-      <%= mf.label :file %>
-      <%= mf.file_field :file %>
+      <%= mf.label :file, class:"form-label" %>
+      <%= mf.file_field :file, class: "form-control form-control-lg" %>
     </div>
   <% end %>
   </div>
