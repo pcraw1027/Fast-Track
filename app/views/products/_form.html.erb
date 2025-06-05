@@ -41,7 +41,6 @@
 
 
   <div class="form-group">
-  <label>Product Images</label>
     <%= form.fields_for :media do |mf| %>
     <div class="media-upload">
       <% if mf.object.file.present? %>
@@ -50,8 +49,12 @@
         <%= mf.check_box :_destroy %>
       <% end %>
 
-      <%= mf.label :file %>
-      <%= mf.file_field :file, class: "form-control-file" %>
+      <%= mf.label :file, "Product image", class:"form-label" %>
+      <%= mf.file_field :file, class: "form-control form-control-lg" %>
+
+  
+
+
     </div>
   <% end %>
   </div>
@@ -69,6 +72,10 @@
   <div class="form-group">
     <%= form.label :qrcode %>
     <%= form.text_field :qrcode, class: "form-control" %>
+  </div>
+  <div class="form-group">
+    <%= form.label :captured_product_category %>
+    <%= form.text_field :captured_product_category, class: "form-control" %>
   </div>
 
   <div class="form-group">

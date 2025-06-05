@@ -14,62 +14,52 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
 
+
+      <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+        Trigger Maintenance
+      </a>
+      <div class="dropdown-menu">
+        <%= link_to "BIT Record", bit_records_path, class: "nav-link" %>
+        <%= link_to "PIT Records", pit_records_path, class:"nav-link" %>
+        <%= link_to "CIT Records", cit_records_path, class:"nav-link" %>
+        <%= link_to "Scan Records", scans_path, class: "nav-link" %>
+        <%= link_to "Upload Record", upload_records_path, class:"nav-link" %>
+      </div>
+    </li>
+
+     <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+        Product
+      </a>
+      <div class="dropdown-menu">
+        <%= link_to "Product Maintenance", products_path, class: "nav-link" %>
+        <%= link_to "Product Capture Interface", product_capture_interface_path, class: "nav-link" %>
+        <%= link_to "Segment Codes", segments_path, class: "nav-link" %>
+        <%= link_to "Family Codes", families_path, class:"nav-link" %>
+        <%= link_to "Class Codes", klasses_path, class:"nav-link" %>
+        <%= link_to "Brick Codes", bricks_path, class:"nav-link" %>
+        <%= link_to "Attribute Codes", attribute_titles_path, class:"nav-link" %>
+        <%= link_to "Attribute Value", attribute_values_path, class:"nav-link" %>
+        <%= link_to "Category Source", product_category_sources_path, class:"nav-link" %>
+      </div>
+    </li>
+
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
           Company
         </a>
         <div class="dropdown-menu">
-          <%= link_to "Company", companies_path, class: "nav-link" %>
-          <div class="dropdown-divider"></div>
-          <%= link_to "Company Relationships", company_relationships_path, class: "nav-link" %>
-          <%= link_to "Company Contacts", company_contacts_path, class:"nav-link" %>
-          <%= link_to "Ethnicity Stats", company_ethnicity_stats_path, class:"nav-link" %>
-          <%= link_to "Gender Stats", company_gender_stats_path, class:"nav-link" %>
-          <%= link_to "Product Attributes", product_attributes_path, class:"nav-link" %>
+          <%= link_to "Company Maintenance", companies_path, class: "nav-link" %>
+          <%= link_to "Company Capture Interface", cit_interface_path, class:"nav-link" %>
+          <%= link_to "Industry Sector", industry_category_types_path, class: "nav-link" %>
+          <%= link_to "Relationship Types", company_relationship_types_path, class: "nav-link" %>
+          <%= link_to "Contact Types", company_contact_types_path, class:"nav-link" %>
+          <%= link_to "Ethnicity Types", ethnicity_types_path, class:"nav-link" %>
+          <%= link_to "Gender Types", gender_types_path, class:"nav-link" %>
+          <%= link_to "Employee Types", employee_types_path, class:"nav-link" %>
         </div>
       </li>
-
-      <li class="nav-item">
-        <a class="nav-link" href="/users">
-          Users
-        </a>
-     </li>
-     <li class="nav-item">
-        <a class="nav-link" href="/invitations">
-          Invitations
-        </a>
-     </li>
-
-      <li class="nav-item dropdown">
-      <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
-        Product
-      </a>
-      <div class="dropdown-menu">
-        <%= link_to "Product", products_path, class: "nav-link" %>
-        <div class="dropdown-divider"></div>
-        <%= link_to "Segment", segments_path, class: "nav-link" %>
-        <%= link_to "Family", families_path, class:"nav-link" %>
-        <%= link_to "Class", klasses_path, class:"nav-link" %>
-        <%= link_to "Brick", bricks_path, class:"nav-link" %>
-        <%= link_to "Attribute", attribute_titles_path, class:"nav-link" %>
-        <%= link_to "Attribute Value", attribute_values_path, class:"nav-link" %>
-      </div>
-    </li>
-
-
-    <li class="nav-item dropdown">
-      <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
-        Process Flow
-      </a>
-      <div class="dropdown-menu">
-        <%= link_to "Scan", scans_path, class: "nav-link" %>
-        <div class="dropdown-divider"></div>
-        <%= link_to "BIT Record", bit_records_path, class: "nav-link" %>
-        <%= link_to "PIT Records", pit_records_path, class:"nav-link" %>
-        <%= link_to "CIT Records", cit_records_path, class:"nav-link" %>
-        <%= link_to "Upload Record", upload_records_path, class:"nav-link" %>
-      </div>
-    </li>
 
     <li class="nav-item dropdown">
       <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
@@ -82,26 +72,31 @@
       </div>
     </li>
 
+
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+        Users
+      </a>
+      <div class="dropdown-menu">
+        <a class="nav-link" href="/users">
+          User Maintenance
+        </a>
+        <a class="nav-link" href="/invitations">
+          User Invitations
+        </a>
+        <a class="nav-link" href="#">
+          User Waitlist
+        </a>
+
+      </div>
+    </li>
+   
+
       <li class="nav-item">
         <%= link_to "About Us", home_about_path, class:"nav-link" %>
       </li>
 
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
-          Reference Data
-        </a>
-        <div class="dropdown-menu">
-          <%= link_to "Industry Sector", industry_category_types_path, class:"nav-link" %>
-          <%= link_to "Relationship Types", company_relationship_types_path, class:"nav-link" %>
-          <%= link_to "Contact Types", company_contact_types_path, class:"nav-link" %>
-          <%= link_to "Ethnicity Types", ethnicity_types_path, class:"nav-link" %>
-          <%= link_to "Gender Types", gender_types_path, class:"nav-link" %>
-          <%= link_to "Employee Types", employee_types_path, class:"nav-link" %>
-          <div class="dropdown-divider"></div>
-          <%= link_to "Product Category Source", product_category_sources_path, class:"nav-link" %>
-          <a class="dropdown-item" href="#">Product Segment</a>
-        </div>
-      </li>
+   
 
       <%if current_user %>
         <li class="nav-item dropdown">

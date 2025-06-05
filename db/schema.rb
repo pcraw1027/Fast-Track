@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_05_22_131903) do
+ActiveRecord::Schema.define(version: 2025_06_05_165119) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -279,6 +279,7 @@ ActiveRecord::Schema.define(version: 2025_05_22_131903) do
     t.string "mid"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["barcode"], name: "index_pit_records_on_barcode", unique: true
     t.index ["product_id"], name: "index_pit_records_on_product_id"
   end
 
@@ -328,6 +329,7 @@ ActiveRecord::Schema.define(version: 2025_05_22_131903) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "product_category_source_id", null: false
+    t.string "captured_product_category"
     t.index ["brick_id"], name: "index_products_on_brick_id"
     t.index ["company_id"], name: "index_products_on_company_id"
     t.index ["family_id"], name: "index_products_on_family_id"

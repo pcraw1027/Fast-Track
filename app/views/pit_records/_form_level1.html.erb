@@ -14,73 +14,90 @@
   <% end %>
 
 <%= form.hidden_field :barcode, value: pit_record.barcode %>
-   <div class="form-group">
-    <%= form.label :name %>
-    <%= form.text_field :name, class: "form-control", required: true %>
+<div class="row">
+  <div class="col-md-8">
+    <div class="form-group">
+      <%= form.label :name %>
+      <%= form.text_field :name, class: "form-control", required: true %>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="form-group">
+    <%= form.label :size %>
+    <%= form.text_field :size, class: "form-control" %>
+  </div>
+  </div>
+</div>
+   
+
+
+   <div class="row">
+    <div class="col-md-8">
+      <div class="form-group">
+      <%= form.label :asin %>
+      <%= form.text_field :asin, class: "form-control" %>
+    </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="form-group" id="media-fields">
+    <%= form.fields_for :media do |mf| %>
+      <div class="media-upload">
+        <% if mf.object.file.present? %>
+          <%= image_tag mf.object.file.url(:thumb) if mf.object.image? %>
+   
+        <% end %>
+
+        <%= mf.label :file, "Product image", class:"form-label" %>
+        <%= mf.file_field :file, class: "form-control form-control-lg" %>
+      </div>
+    <% end %>
+    </div>
+
+    <%= link_to 'Add another image', '#', id: 'add-media-field' %>
+    </div>
   </div>
 
 <div class="form-group">
   <%= form.label :description %>
   <%= form.text_area :description, class: "form-control", required: true, rows: 5 %>
 </div>
-
-
   
-   <div class="form-group">
-    <%= form.label :size %>
-    <%= form.text_field :size, class: "form-control" %>
-  </div>
-
-  <div class="form-group">
-    <%= form.label :asin %>
-    <%= form.text_field :asin, class: "form-control" %>
-  </div>
-
-
-    <div class = "form-group">
-      <%= form.label :product_category_source_id %><br>
-      <%= form.select :product_category_source_id, product_category_sources.map { |cat_source| ["#{cat_source.code&.to_s} #{cat_source.description&.to_s}", cat_source.id] },  class: "form-control", required: true  %>
-  </div>
 
   <%= form.hidden_field :pit_record_id, value: pit_record.id %>
 
+  
+
   <div class="form-group">
-    <%= form.label :company_id %>
-    <%= form.select :company_id, [], 
-      { prompt: "Search for a company" }, 
-      data: { controller: "company-select" } 
-    %>
-    <%= form.hidden_field :new_company_name, id: "new_company_name" %>
-  </div>
+        <%= form.label :captured_product_category %>
+        <%= form.text_field :captured_product_category, class: "form-control" %>
+      </div>
 
-  <div class="form-group" id="media-fields">
-     <label>Media</label>
-  <%= form.fields_for :media do |mf| %>
-    <div class="media-upload">
-      <% if mf.object.file.present? %>
-        <%= image_tag mf.object.file.url(:thumb) if mf.object.image? %>
-        <%= link_to 'Remove', '#', class: 'remove-media' %>
-        <%= mf.check_box :_destroy %>
-      <% end %>
-
-      <%= mf.label :file %>
-      <%= mf.file_field :file %>
+  
+  <div class="row">
+    <div class="col-md-8">
+       <div class="form-group">
+        <%= form.label :company_id, "Company Name", class:"form-label" %>
+        <%= form.select :company_id, [[@company&.name, @company&.id]], 
+          { prompt: "Search for a company" }, 
+          data: { controller: "company-select" } 
+        %>
+        <%= form.hidden_field :new_company_name, id: "new_company_name" %>
+      </div>
     </div>
-  <% end %>
+<%= form.hidden_field :product_category_source_id, value: product.product_category_source_id %>
+
+    <div class="col-md-4">
+      <div class = "form-group">
+      <%= form.label :company_id, "Company ID", class:"form-label" %><br>
+      <%= form.text_field :company_id, class: "form-control", readonly: true %>
+     </div>
+    </div>
   </div>
-
-  <%= link_to 'Add another image', '#', id: 'add-media-field' %>
-
- 
-  <div class="form-group">
-    <%= form.label :qrcode %>
-    <%= form.text_field :qrcode, class: "form-control" %>
-  </div>
-
  
 
-  <div class="actions">
-    <%= form.submit "Submit", class: 'btn btn-secondary' %>
+  <div class="actions text-center">
+    <%= form.submit "Update", class: 'btn btn-secondary' %>
   </div>
 <% end %>
 

@@ -1,34 +1,40 @@
 <div data-controller="barcode">
-  <h3>Barcode Interface</h3>
+  <h3 class="center" >Barcode Import Triger</h3>
 
   <%= form_for(@bit_record, url: insert_barcode_path, html: { method: :post }) do |f| %>
     <div class="row">
-      <div class="form-group col-md-6">
-        <%= f.label :barcode %><br />
-        <%= f.text_field :barcode, autofocus: true, id:"barcode", required: true, data: { barcode_target: "barcodeInput" } %>
+      <div class="col-md-6">
+        <div class="form-group">
+        <%= f.label :barcode, class:"form-label" %>
+        <%= f.text_field :barcode, autofocus: true, id:"barcode", required: true, data: { barcode_target: "barcodeInput" }, class: "form-control" %>
+      </div>
       </div>
     
-      <div class="form-group col-md-6">
+      <div class="col-md-6">
+        <div class="form-group">
         <br />
-        <%= f.submit "Add", data: { action: "click->barcode#submitAdd" }, class: "btn btn-primary" %>
+        <%= f.submit "Add", data: { action: "click->barcode#submitAdd" }, class: "action-btn", style:"margin-top:10px;" %>
+      </div>
       </div>
 
     </div>
   <% end %>
 
-<hr>
-
   <%= form_for(@bit_record, url: insert_barcode_path, html: { method: :post, multipart: true }) do |f| %>
     <div class="row">
     
-      <div class="form-group col-md-6">
-        <%= f.label :file %><br />
-        <%= f.file_field :file, id: "fileinput", required: true, data: { barcode_target: "fileInput" } %>
+      <div class="col-md-6">
+        <div class="form-group">
+        <%= f.label :file, class:"form-label" %>
+        <%= f.file_field :file, id: "fileinput", required: true, data: { barcode_target: "fileInput" }, class: "form-control form-control-lg" %>
+      </div>
       </div>
 
-      <div class="form-group col-md-6">
-        <br />
-        <%= f.submit "Load", data: { action: "click->barcode#handleLoad" }, class: "btn btn-primary" %>
+      <div class="col-md-6">
+        <div class="form-group">
+        <br>
+        <%= f.submit "Load", data: { action: "click->barcode#handleLoad" }, class: "action-btn", style:"margin-top:10px;" %>
+      </div>
       </div>
     </div>
   <% end %>
@@ -37,7 +43,7 @@
 
 
 <table class="table table-striped table-bordered table-hover table-sm container-fluid">
-  <thead class="thead-dark">
+  <thead class="thead-light">
     <tr>
       <th>Barcode</th>
       <th>Status</th>
@@ -45,6 +51,7 @@
       <th>User ID</th>
       <th>Date</th>
       <th>Message</th>
+      <th colspan="1"></th>
     </tr>
   </thead>
 

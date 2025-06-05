@@ -18,9 +18,9 @@
     </div>
 
     <div class = "form-group col-md-6">
-      <%= form.label :logo %>
+      <%= form.label :logo, class:"form-label" %>
       <%= image_tag company.logo_url,  width: 60, height: 50  if company.logo? %>
-      <%= form.file_field :logo, class: "form-control-file"  %>
+      <%= form.file_field :logo, class: "form-control form-control-lg"  %>
 
     <%= form.hidden_field :logo_cache %>
   
