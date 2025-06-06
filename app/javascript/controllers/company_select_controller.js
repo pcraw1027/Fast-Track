@@ -32,10 +32,12 @@ export default class extends Controller {
           }
         },
         onItemAdd: function(value, item) {
+          console.log({value, item})
           if (/^\d+$/.test(value)) {
             if(document.getElementById('new_company_name')){
               document.getElementById('new_company_name').value = "";
             }
+            
           }
         }
       })

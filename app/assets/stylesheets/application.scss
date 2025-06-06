@@ -15,24 +15,39 @@
  */
 
 // @import "tom-select/dist/css/tom-select.css";
+.bg-light-green {
+  background-color:#E7F5ED;
+}
 
+.theme-link {
+  color: #0B9444 !important;
+  font-weight: 500;
+}
+
+a {
+  color: #0B9444;
+}
+a:hover {
+  color: #DE9B18;
+  text-decoration-color: #DE9B18;
+}
 .action-btn {
-  background-color: #8cc63f;
+  background-color: #8CC63F;
   border: none;
   border-radius: 15px;
-  padding: 5px 20px 5px 20px;
+  padding: 8px 15px 8px 15px;
   text-decoration: none;
-  color: #333 !important;
+  color: #1F3635 !important;
   font-weight: 500;
 }
 
 .action-btn-outlined {
   background-color: transparent;
-  border: 1px solid #8cc63f;
+  border: 1px solid #8CC63F;
   border-radius: 15px;
   padding: 5px 20px 5px 20px;
   text-decoration: none;
-  color: #333 !important;
+  color: #1F3635 !important;
   font-weight: 500;
 }
 

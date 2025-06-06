@@ -83,21 +83,41 @@
           data: { controller: "company-select" } 
         %>
         <%= form.hidden_field :new_company_name, id: "new_company_name" %>
-      </div>
     </div>
-<%= form.hidden_field :product_category_source_id, value: product.product_category_source_id %>
+  </div>
 
     <div class="col-md-4">
       <div class = "form-group">
-      <%= form.label :company_id, "Company ID", class:"form-label" %><br>
-      <%= form.text_field :company_id, class: "form-control", readonly: true %>
+        <label class="form-label"> Company ID </label><br>
+        <input class="form-control" value="<%=product.company_id%>"  readonly="true"/>
      </div>
     </div>
   </div>
  
+<%= form.hidden_field :product_category_source_id, value: product.product_category_source_id %>
+
+<%if product.company_id.blank? && !product.name.blank? %>
+ <div class="row">
+    <div class="col-md-8">
+       <div class="form-group">
+        <label>Entered Company Name</label>
+
+        <input value="<%= @company_name %>" class="form-control" readonly="true"/>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class = "form-group">
+     </div>
+    </div>
+  </div>
+
+ <%end%>
+
+ 
 
   <div class="actions text-center">
-    <%= form.submit "Update", class: 'btn btn-secondary' %>
+    <%= form.submit "Update", class: 'action-btn' %>
   </div>
 <% end %>
 

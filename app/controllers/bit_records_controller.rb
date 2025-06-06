@@ -31,7 +31,7 @@ class BitRecordsController < ApplicationController
         if @brc_intrf_claims&.success?
           render json: {bit_records: [@brc_intrf_claims.payload], error:""}
         else
-          render json: {bit_records: [], error:@brc_intrf_claims.error}
+          render json: {bit_records: [], error: @brc_intrf_claims.error}
         end
       elsif bit_record_load_params[:file].present?
         bit_records = BitRecord.load_from_file(bit_record_load_params[:file].tempfile, current_user.id)

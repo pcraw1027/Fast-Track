@@ -34,25 +34,27 @@ class PitRecordsController < ApplicationController
     @family = Family.new
     @klass = Klass.new
     @brick = Brick.new
+    @company_name = ''
+    company_added = false
 
-
-    @product_category_sources = []
     @segments = []
 
     if params[:barcode]
       @pit_record = PitRecord.find_by(barcode: params[:barcode].strip)
 
       if @pit_record
-        @product_category_sources = ProductCategorySource.all
-        product_category_source_id = @product_category_sources.find{|p| p.code == 'AMZ'}&.id 
+        product_category_sources = ProductCategorySource.all
+        product_category_source_id = product_category_sources.find{|p| p.code == 'AMZ'}&.id 
+        @product.product_category_source_id = product_category_source_id
         @segments = Segment.where(product_category_source_id: product_category_source_id)
         product_variant = ProductVariant.new
         product_variant.media.build
         @product.media = product_variant.media
         if @pit_record&.product_id
-          
-          
+             
           @product = @pit_record.product
+          company_added = true if @product.company_id
+          @product.product_category_source_id = product_category_source_id
           @segment = Segment.find(@product.segment_id) if @product.segment_id 
           @family = Family.find(@product.family_id) if @product.family_id
           @klass = Klass.find(@product.klass_id) if @product.klass_id
@@ -65,7 +67,12 @@ class PitRecordsController < ApplicationController
           if variants
             @product.barcode = variants.barcode
             @product.media = variants.media
-          end      
+          end 
+          unless company_added
+            mid = CroupierCore::MidExtractor.call!(barcode: params[:barcode].strip).payload
+            cit_rec = CitRecord.find_by(mid: mid)
+            @company_name = cit_rec.company_name
+          end     
         end
       else
         @pit_record = PitRecord.new
@@ -74,8 +81,6 @@ class PitRecordsController < ApplicationController
 
     end
   end
-
-  
 
   def pit_interface
     @pit_records_0s = PitRecord.by_level(0)
