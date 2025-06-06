@@ -3,7 +3,6 @@ class ProductsController < ApplicationController
   before_action :set_dropdowns, only: %i[ new edit ]
   before_action :authenticate_user!, only: %i[ new edit update create destroy insert_product update_to_level_two]
 
-
   # GET /products or /products.json
   def index
     @products = Product.includes(:company, :segment, :family, :klass, :brick).all
@@ -16,31 +15,30 @@ class ProductsController < ApplicationController
     error += "description is required" if product_params[:description].blank?
 
     company_name = params[:product][:new_company_name]
-
     
     if error.length > 0
       respond_to_invalid_entries(error, product_capture_interface_path(barcode: product_variant_params[:barcode]))  
     else
+
+      serialized_params = product_params
       
-      unless product_params[:company_id].blank?
+      if product_params[:company_id]&.to_s.match?(/^\d+$/)
         company = Company.find(product_params[:company_id])
         company_name = company.name
+      elsif 
+        serialized_params = product_params.except(:company_id)
       end
-
-      @product = Product.new(product_params)
-
+      
+      @product = Product.new(serialized_params)
+      pit_record = PitRecord.find_by(barcode: product_variant_params[:barcode].strip)
       variant_exist = ProductVariant.find_by(barcode: product_variant_params[:barcode].strip)
       if variant_exist
         @product = variant_exist.product
         variant_exist.update(product_variant_params) unless product_variant_params.blank?
-        if @product.update(product_params)
-          CroupierCore::UpgradePitLevel.call!(barcode: product_variant_params[:barcode].strip, 
-          product_id: @product.id, company_name: company_name, 
-          asin: params[:product][:asin], user_id: current_user.id)
+        if @product.update(serialized_params)
+          upgrade_pit_to_level_1_or_update_cit(@product.id, pit_record.level, company_name)
           redirect_to product_capture_interface_path(barcode: product_variant_params[:barcode].strip), notice: "Product was successfully updated." and return
-         
         end
-
       end
         
         respond_to do |format|
@@ -49,15 +47,12 @@ class ProductsController < ApplicationController
               pv.barcode = pv.barcode.strip
               pv.product_id = @product.id
               pv.save!
-
-            CroupierCore::UpgradePitLevel.call!(barcode: product_variant_params[:barcode].strip, 
-                              product_id: @product.id, company_name: company_name, asin: params[:product][:asin],
-                              user_id: current_user.id)
-        
+              upgrade_pit_to_level_1_or_update_cit(@product.id, pit_record.level, company_name)
             format.html { redirect_to product_capture_interface_path(barcode: product_variant_params[:barcode].strip), notice: "Product successfully added" }
             format.json { render :show, status: :created, location: @product }
           else
-            format.html { render :new, status: :unprocessable_entity }
+            error = @product.errors.map{|k,v| "#{k.to_s} #{v}"}.join(", ")
+            format.html { redirect_to product_capture_interface_path(barcode: product_variant_params[:barcode].strip), alert: error, status: :unprocessable_entity }
             format.json { render json: @product.errors, status: :unprocessable_entity }
           end
         end
@@ -70,12 +65,14 @@ class ProductsController < ApplicationController
     @product = Product.find(params[:product_id])
     respond_to do |format|
       if @product.update(product_params)
+        pit_record = PitRecord.find_by(barcode: product_variant_params[:barcode].strip)
         CroupierCore::UpgradePitLevel.call!(barcode: product_variant_params[:barcode].strip, 
-        product_id: @product.id, company_name: nil, asin: nil, user_id: current_user.id)
+        product_id: @product.id, company_name: nil, asin: nil, user_id: current_user.id) if pit_record == 1
         format.html { redirect_to product_capture_interface_path(barcode: product_variant_params[:barcode].strip), notice: "Product was successfully updated." }
         format.json { render :show, status: :ok, location: @product }
       else
-        format.html { render :edit, status: :unprocessable_entity }
+        error = @product.errors.map{|k,v| v}.join(", ")
+            format.html { redirect_to product_capture_interface_path(barcode: product_variant_params[:barcode].strip), alert: error, status: :unprocessable_entity }
         format.json { render json: @product.errors, status: :unprocessable_entity }
       end
     end
@@ -162,8 +159,22 @@ class ProductsController < ApplicationController
 
     def set_dropdowns
       @product_category_sources = ProductCategorySource.all
-      product_category_source_id = @product_category_sources.find{|p| p.code == 'AMZ'}&.id 
+      product_category_source_id = @product_category_sources&.find{|p| p.code == 'AMZ'}&.id 
       @segments = Segment.where(product_category_source_id: product_category_source_id)
+    end
+
+    def upgrade_pit_to_level_1_or_update_cit(product_id, pit_level, company_name)
+      if pit_level == 0
+            CroupierCore::UpgradePitLevel.call!(barcode: product_variant_params[:barcode].strip, 
+                              product_id: product_id, company_name: company_name, asin: params[:product][:asin],
+                              user_id: current_user.id) 
+         elsif
+              unless product_params[:company_id].blank?
+                mid = CroupierCore::MidExtractor.call!(barcode: product_variant_params[:barcode].strip).payload
+                cit_rec = CitRecord.find_by(mid: mid)
+                cit_rec.update(company_name: company_name) if cit_rec.company_name != company_name
+              end
+          end
     end
 
     def respond_to_invalid_entries(msg, path=new_product_path)
