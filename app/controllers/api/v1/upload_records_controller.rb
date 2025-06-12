@@ -18,11 +18,11 @@ class Api::V1::UploadRecordsController < Api::V1::BaseController
                               brand: upload_record_params[:brand],
                               upload_params: upload_record_params.except(:brand)) unless upload_record_params.blank?
     
-      if upload_claims.payload
-        render json: {upload: upload_claims.payload, media: upload_claims.payload.media}, status: :ok
-      else
-        render json: upload_claims.error, status: :unprocessable_entity
-      end
+    if upload_claims.payload
+      render json: {upload: upload_claims.payload, media: upload_claims.payload.media}, status: :ok
+    else
+      render json: upload_claims.error, status: :unprocessable_entity
+    end
 
   end
 
@@ -34,8 +34,8 @@ class Api::V1::UploadRecordsController < Api::V1::BaseController
 
   def upload_record_params
     params.require(:upload_record).permit(:scan_id, :resolve_status, :date, :barcode, :product_name, 
-                    :company_name, :remarks, :asin, :brand,  
-                    media_attributes: [:id, :file, :media_type, :position, :_destroy])
+                              :company_name, :remarks, :asin, :brand,  
+                              media_attributes: [:id, :file, :media_type, :position, :_destroy])
   end
 
 

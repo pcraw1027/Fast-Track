@@ -1,5 +1,10 @@
 class Api::V1::ProductsController < Api::V1::BaseController
   before_action :authenticate_user!
+
+  def increment_search
+     Product.find(params[:id])&.increment!(:searches)
+     render json: { message: "increment success!" }, status: :ok
+  end
   
   def show
     product = Product.includes(:company, product_variants: [:media]).find(params[:id])

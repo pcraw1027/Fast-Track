@@ -1,6 +1,10 @@
 class Api::V1::CompaniesController < Api::V1::BaseController
   before_action :authenticate_user!
 
+  def increment_search
+     Company.find(params[:id])&.increment!(:searches)
+     render json: { message: "increment success!" }, status: :ok
+  end
 
   def show
     company = Company.includes(:industry_category_type,:company_contacts,

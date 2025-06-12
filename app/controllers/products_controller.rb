@@ -1,5 +1,5 @@
 class ProductsController < ApplicationController
-  before_action :set_product, only: %i[ show edit update destroy ]
+  before_action :set_product, only: %i[ show update destroy ]
   before_action :set_dropdowns, only: %i[ new edit ]
   before_action :authenticate_user!, only: %i[ new edit update create destroy insert_product update_to_level_two]
 
@@ -37,7 +37,7 @@ class ProductsController < ApplicationController
         variant_exist.update(product_variant_params) unless product_variant_params.blank?
         if @product.update(serialized_params)
           upgrade_pit_to_level_1_or_update_cit(@product.id, pit_record.level, company_name)
-          redirect_to product_capture_interface_path(barcode: product_variant_params[:barcode].strip), notice: "Product was successfully updated." and return
+          redirect_to product_capture_interface_path(barcode: product_variant_params[:barcode].strip, level: params[:level]), notice: "Product was successfully updated." and return
         end
       end
         
@@ -48,11 +48,11 @@ class ProductsController < ApplicationController
               pv.product_id = @product.id
               pv.save!
               upgrade_pit_to_level_1_or_update_cit(@product.id, pit_record.level, company_name)
-            format.html { redirect_to product_capture_interface_path(barcode: product_variant_params[:barcode].strip), notice: "Product successfully added" }
+            format.html { redirect_to product_capture_interface_path(barcode: product_variant_params[:barcode].strip, level: params[:level]), notice: "Product successfully added" }
             format.json { render :show, status: :created, location: @product }
           else
             error = @product.errors.map{|k,v| "#{k.to_s} #{v}"}.join(", ")
-            format.html { redirect_to product_capture_interface_path(barcode: product_variant_params[:barcode].strip), alert: error, status: :unprocessable_entity }
+            format.html { redirect_to product_capture_interface_path(barcode: product_variant_params[:barcode].strip, level: params[:level]), alert: error, status: :unprocessable_entity }
             format.json { render json: @product.errors, status: :unprocessable_entity }
           end
         end
@@ -68,11 +68,11 @@ class ProductsController < ApplicationController
         pit_record = PitRecord.find_by(barcode: product_variant_params[:barcode].strip)
         CroupierCore::UpgradePitLevel.call!(barcode: product_variant_params[:barcode].strip, 
         product_id: @product.id, company_name: nil, asin: nil, user_id: current_user.id) if pit_record == 1
-        format.html { redirect_to product_capture_interface_path(barcode: product_variant_params[:barcode].strip), notice: "Product was successfully updated." }
+        format.html { redirect_to product_capture_interface_path(barcode: product_variant_params[:barcode].strip, level: params[:level]), notice: "Product was successfully updated." }
         format.json { render :show, status: :ok, location: @product }
       else
         error = @product.errors.map{|k,v| v}.join(", ")
-            format.html { redirect_to product_capture_interface_path(barcode: product_variant_params[:barcode].strip), alert: error, status: :unprocessable_entity }
+            format.html { redirect_to product_capture_interface_path(barcode: product_variant_params[:barcode].strip, level: params[:level]), alert: error, status: :unprocessable_entity }
         format.json { render json: @product.errors, status: :unprocessable_entity }
       end
     end
@@ -93,11 +93,17 @@ class ProductsController < ApplicationController
 
   # GET /products/1/edit
   def edit
-    @company = Company.find(@product.company_id) if @product.company_id
-    @segment = Segment.find(@product.segment_id) if @product.segment_id
-    @family = Family.find(@product.family_id) if @product.family_id
-    @klass = Klass.find(@product.klass_id) if @product.klass_id
-    @brick = Brick.find(@product.brick_id) if @product.brick_id
+    variant = ProductVariant.find_by(product_id: params[:id])
+    if variant
+        redirect_to(product_capture_interface_path(barcode: variant.barcode, level: 0))
+    else
+      redirect_to(products_path, alert: "product has no variant! Simply delete this product and create a new one")
+    end
+    # @company = Company.find(@product.company_id) if @product.company_id
+    # @segment = Segment.find(@product.segment_id) if @product.segment_id
+    # @family = Family.find(@product.family_id) if @product.family_id
+    # @klass = Klass.find(@product.klass_id) if @product.klass_id
+    # @brick = Brick.find(@product.brick_id) if @product.brick_id
 
   end
 
@@ -172,7 +178,7 @@ class ProductsController < ApplicationController
               unless product_params[:company_id].blank?
                 mid = CroupierCore::MidExtractor.call!(barcode: product_variant_params[:barcode].strip).payload
                 cit_rec = CitRecord.find_by(mid: mid)
-                cit_rec.update(company_name: company_name) if cit_rec.company_name != company_name
+                cit_rec&.update(company_name: company_name) if cit_rec&.company_name != company_name
               end
           end
     end

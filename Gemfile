@@ -23,7 +23,7 @@ gem 'jbuilder', '~> 2.7'
 # gem 'bcrypt', '~> 3.1.7'
 gem 'ed25519', '~> 1.2'
 gem 'bcrypt_pbkdf', '~> 1.0'
-
+gem 'csv'
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 

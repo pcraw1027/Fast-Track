@@ -20,6 +20,7 @@ module ApiV1Routes
         get 'verify_invite_code', to: 'registrations#verify_invite_code'        
         post 'send_password_reset_instruction', to: 'passwords#send_password_reset_instruction'
         post 'reset_password', to: 'passwords#reset_password'
+        put 'update_password', to: 'passwords#update_password'
         
         post 'product_reviews', to: 'reviews#product_reviews'
         post 'company_reviews', to: 'reviews#company_reviews'
@@ -27,6 +28,7 @@ module ApiV1Routes
         get 'company_reviews', to: 'reviews#get_company_reviews'
         get 'user_product_review', to: 'reviews#user_product_review'
         get 'user_company_review', to: 'reviews#user_company_review'
+        put 'update_profile', to: 'users#update' 
         
         get 'my_uploads', to: 'upload_records#my_uploads'
 
@@ -35,8 +37,16 @@ module ApiV1Routes
         resources :reviews, only: [:show, :update]
         resources :upload_records, only: [:create]
         resources :scans, only: [:create]
-        resources :products, only: [:show]
-        resources :companies, only: [:show]
+        resources :products, only: [:show] do 
+          member do
+            put :increment_search
+          end
+        end
+        resources :companies, only: [:show] do 
+          member do
+            put :increment_search
+          end
+        end
 
       end
     end

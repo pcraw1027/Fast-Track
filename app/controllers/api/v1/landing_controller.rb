@@ -16,7 +16,7 @@ class Api::V1::LandingController < Api::V1::BaseController
   def open_activity_stats
     render json: {
       top_scans: top_scan_products(10, 1).records,
-      activity_stats: all_activity_stats
+      activity_stats: activity_stats
       }, status: :ok
   end
 
@@ -39,32 +39,6 @@ class Api::V1::LandingController < Api::V1::BaseController
   def top_scan_products(per_page, page)
     RawQueryModule.top_scan_products(per_page, page)
   end
-  
-  def all_activity_stats
-    total_scans = Scan.count
-    total_uploads = UploadRecord.count
-    total_products = Product.count
-    total_companies = Company.count
-    [
-      {
-        type:"scans",
-        overall: total_scans
-      },
-      {
-        type:"uploads",
-        overall: total_uploads
-      },
-      {
-        type:"products",
-        overall: total_products
-      },
-      {
-        type:"companies",
-        overall: total_companies
-      }
-    ]
-  end
-
 
   def activity_stats
     start_date = Time.current.beginning_of_month

@@ -47,6 +47,7 @@ module MonolithRoutes
       get 'home/about'
       # additional routes
       get '/product_capture_interface', to: 'pit_records#product_capture'
+      get '/next_pit_record', to: 'pit_records#next_pit_record'
       post '/invoke_bit_pit_triggers', to: 'pit_records#invoke_bit_pit_triggers'
       get '/bit_interface', to: 'bit_records#bit_interface'
       get '/pit_interface', to: 'pit_records#pit_interface'
