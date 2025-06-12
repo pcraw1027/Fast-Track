@@ -32,7 +32,6 @@ class CitRecordsController < ApplicationController
     @cit_records_2s = CitRecord.by_level(2)
     @cit_records_3s = CitRecord.by_level(3)
     @cit_records_4s = CitRecord.by_level(4)
-    @cit_records_5s = CitRecord.by_level(5)
   end
 
   # GET /cit_records/1 or /cit_records/1.json

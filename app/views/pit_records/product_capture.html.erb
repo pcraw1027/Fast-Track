@@ -37,7 +37,16 @@
         }%>
     <%end%>
 
+  <br/>
 
+  <div class="row">
+        <div class="col text-left">
+            <i class="fas fa-chevron-left" style="color: #0B9444;" ></i> <%= link_to 'Back', :back, class: "theme-link" %>
+        </div>
+        <div class="col text-right">
+            <%= link_to 'Next Product', next_pit_record_path(level: (params[:level].present? ? params[:level].to_i : 0)), class: "theme-link" %> <i class="fas fa-chevron-right" style="color: #0B9444;"></i>
+        </div>
+    </div>
 
 
 </div>

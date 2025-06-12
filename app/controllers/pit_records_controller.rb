@@ -7,13 +7,24 @@ class PitRecordsController < ApplicationController
     @pit_records = PitRecord.all
   end
 
+  def next_pit_record
+    pit_record = PitRecord.where(level: params[:level])
+                          .order(product_activity_count: :desc)
+                          .limit(1).first
+    if pit_record
+        redirect_to(product_capture_interface_path(barcode: pit_record.barcode, level: params[:level]))
+      else
+        redirect_to(pit_interface_path(), alert: "No more PIT Level #{params[:level]} records!")
+      end
+  end
+
   def invoke_bit_pit_triggers
     if (pit_record_params[:barcode].strip.length < 12 || pit_record_params[:barcode].strip.length > 13)
       redirect_to(product_capture_interface_path(barcode: pit_record_params[:barcode].strip), alert: "supported barcodes are between 12 and 13 digits") and return 
     end
     @pit_record = PitRecord.find_by(barcode: pit_record_params[:barcode].strip)
     if @pit_record
-      redirect_to(product_capture_interface_path(barcode: pit_record_params[:barcode].strip), alert: "Pit record already exist!")
+      redirect_to(product_capture_interface_path(barcode: pit_record_params[:barcode].strip, level: @pit_record.level), alert: "Pit record already exist!")
     else
       @brc_intrf_claims = CroupierCore::BarcodeInterface.call!(barcode: pit_record_params[:barcode].strip, 
                                         source: "PIT Capture", asin: nil, user_id: current_user.id)
@@ -71,7 +82,7 @@ class PitRecordsController < ApplicationController
           unless company_added
             mid = CroupierCore::MidExtractor.call!(barcode: params[:barcode].strip).payload
             cit_rec = CitRecord.find_by(mid: mid)
-            @company_name = cit_rec.company_name
+            @company_name = cit_rec&.company_name
           end     
         end
       else
@@ -88,7 +99,6 @@ class PitRecordsController < ApplicationController
     @pit_records_2s = PitRecord.by_level(2)
     @pit_records_3s = PitRecord.by_level(3)
     @pit_records_4s = PitRecord.by_level(4)
-    @pit_records_5s = PitRecord.by_level(5)
   end
 
   # GET /pit_records/1 or /pit_records/1.json

@@ -1,3 +1,6 @@
+require_relative './routes/api_v1_routes.rb'
+require_relative './routes/monolith_routes.rb'
+
 Rails.application.routes.draw do
   
   extend MonolithRoutes
@@ -7,5 +10,5 @@ Rails.application.routes.draw do
        extend ApiV1Routes
     end
   end
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+
 end

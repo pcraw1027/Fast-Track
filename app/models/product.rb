@@ -3,6 +3,7 @@ class Product < ApplicationRecord
 
   attr_accessor :media
   attr_accessor :barcode
+  attr_accessor :level
   attr_accessor :new_company_name
   attr_accessor :asin
   

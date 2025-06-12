@@ -138,6 +138,7 @@ module RawQueryModule
             'products.id AS product_id',
             'products.name AS product_name',
             'products.description AS product_description',
+            'products.searches AS searches',
             'products.company_id AS product_company_id',
             'companies.name AS company_name',
             'AVG(reviews.rating) AS avrg_rating'

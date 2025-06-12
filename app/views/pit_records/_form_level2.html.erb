@@ -16,6 +16,7 @@
 
     <%= form.hidden_field :barcode, value: pit_record.barcode %>
     <%= form.hidden_field :pit_record_id, value: pit_record.id %>
+    <%= form.hidden_field :level, value: params[:level] %>
 
   <div data-controller="product-classification">
         <div class="form-group">
@@ -69,7 +70,7 @@
 
 
   <div class="actions text-center">
-    <%= form.submit "Update", class: 'action-btn' %>
+    <%= form.submit "Update", class: 'action-btn', disabled: pit_record.level == 0 %>
   </div>
 <% end %>
 

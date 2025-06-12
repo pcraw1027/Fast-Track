@@ -1,6 +1,19 @@
 
 class Api::V1::PasswordsController < Api::V1::BaseController 
 
+  before_action :authenticate_user!, only: [:update_password]
+
+  def update_password
+    user = current_user
+    render json: { error: 'Current password is incorrect!' }, status: :unauthorized and return unless user&.valid_password?(params[:current_password])
+     
+    if user.update(password: params[:new_password])
+      render json: { message: 'Password updated successfully.' }, status: :ok
+    else
+      render json: { error: user.errors }, status: :unprocessable_entity
+    end
+  end
+
   def send_password_reset_instruction
     resource = User.find_by(email: params[:email])
     if resource.present?

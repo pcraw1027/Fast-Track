@@ -31,7 +31,11 @@ def record_not_found(exception)
 
   def server_error(exception)
     #render json: { error: "Internal server error" }, status: :internal_server_error
-    render json: { error: exception.message}, status: :internal_server_error 
+    if exception.message.include?("Couldn't find") && exception.message.include?("'id'=")
+       render json: { error: exception.message }, status: :not_found
+     else
+       render json: { error: exception.message}, status: :internal_server_error
+    end
   end
 
 
