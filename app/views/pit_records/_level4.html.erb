@@ -59,8 +59,8 @@
         <td>
            <table class="table mb-0 table-light table-hover table-sm">
           <tbody>
-            <tr><td><%= pit.pit_level_users[0].user.username %></td></tr>
-            <tr><td><%= pit.created_at.strftime("%d/%m/%Y") %></td></tr>
+            <tr><td><%= pit.pit_level_users.where(level: 4 )&.first&.user&.username %></td></tr>
+            <tr><td><%= pit.created_at.strftime("%m/%d/%Y") %></td></tr>
           </tbody>
         </table>
           

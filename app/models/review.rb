@@ -9,7 +9,7 @@ class Review < ApplicationRecord
     per_page = per_page.to_i > 0 ? per_page : 10
     offset   = (page - 1) * per_page
 
-    base_query = Review.joins(:user)
+    base_query = joins(:user)
                    .where(reviewable_type: class_name, reviewable_id: record_id)
                    .where.not(title: nil)
 

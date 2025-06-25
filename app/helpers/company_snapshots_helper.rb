@@ -1,0 +1,2 @@
+module CompanySnapshotsHelper
+end

@@ -31,7 +31,6 @@ module ApiV1Routes
         put 'update_profile', to: 'users#update' 
         
         get 'my_uploads', to: 'upload_records#my_uploads'
-
         get 'search', to: 'products#search'
         
         resources :reviews, only: [:show, :update]

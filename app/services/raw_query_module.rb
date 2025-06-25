@@ -10,15 +10,14 @@ module RawQueryModule
           SELECT DISTINCT ON (barcode) *
           FROM scans
           WHERE user_id = #{ActiveRecord::Base.connection.quote(current_user_id)}
-            AND product_exists = true
-          ORDER BY barcode, created_at DESC
+          ORDER BY created_at DESC
           LIMIT #{per_page} OFFSET #{offset}
         SQL
 
-        recent_scans = Scan.find_by_sql(recent_scans_sql)
+        recent_scan_data = Scan.find_by_sql(recent_scans_sql)
 
         #count product scans on matched products
-        product_ids = recent_scans.map(&:product_id).compact
+        product_ids = recent_scan_data.map(&:product_id).compact
         product_scan_counts = {}
         if product_ids.any?
           scan_counts_query = <<-SQL
@@ -33,15 +32,14 @@ module RawQueryModule
         end
 
         #load product_variants data
-        product_variants = self.unscoped_products_with_assoc("barcode", recent_scans.map(&:barcode))
+        product_variants = self.unscoped_products_with_assoc("barcode", recent_scan_data.map(&:barcode))
         
         count_query = <<-SQL
           SELECT COUNT(*) AS total_count FROM (
             SELECT DISTINCT ON (barcode) 1
             FROM scans
             WHERE user_id = #{ActiveRecord::Base.connection.quote(current_user_id)}
-              AND product_exists = true
-            ORDER BY barcode, created_at DESC
+            ORDER BY created_at DESC
           ) AS recent_scans
         SQL
 
@@ -49,16 +47,24 @@ module RawQueryModule
         total_count = total_count_result.first["total_count"]
 
         #scan_map = recent_scans.index_by(&:barcode)
-        records = product_variants.map do |pv|
+        barcode_hash = {} 
+        product_variants.each do |pv|
+            barcode_hash[pv.barcode] = {
+              scan_count: product_scan_counts[pv.product_id] || 0,
+              product_variant: pv,
+              media: pv.media
+            }
+        end
+
+        record = recent_scan_data.map do |scn|
           {
-            scan_count: product_scan_counts[pv.product_id] || 0,
-            product_variant: pv,
-            media: pv.media
+            scan: scn,
+            product_data: barcode_hash[scn.barcode]
           }
         end
 
         PaginatedResult.new(records, per_page, page, total_count)
-      end
+    end
 
 
 

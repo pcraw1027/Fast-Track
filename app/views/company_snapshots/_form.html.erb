@@ -1,0 +1,37 @@
+<%= form_with(model: company_snapshot) do |form| %>
+  <% if company_snapshot.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(company_snapshot.errors.count, "error") %> prohibited this company_snapshot from being saved:</h2>
+
+      <ul>
+        <% company_snapshot.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :company_id %>
+    <%= form.text_field :company_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :data_transparency %>
+    <%= form.number_field :data_transparency %>
+  </div>
+
+  <div class="field">
+    <%= form.label :internal_culture %>
+    <%= form.number_field :internal_culture %>
+  </div>
+
+  <div class="field">
+    <%= form.label :mgmt_composition %>
+    <%= form.number_field :mgmt_composition %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

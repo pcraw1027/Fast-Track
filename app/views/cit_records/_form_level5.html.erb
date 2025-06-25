@@ -1,1 +1,41 @@
-<h2>Level 5 form</h2>
+
+<%= form_for(company, url: company_update_to_level_five_path(company_id: company.id), html: { method: :put }) do |form| %>
+
+  <% if company.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(company.errors.count, "error") %> prohibited this company from being saved:</h2>
+
+      <ul>
+        <% company.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= form.hidden_field :cit_record_id, value: cit_record.id %>
+  <%= form.hidden_field :mid, value: cit_record.mid %>
+
+
+  <div class="row">
+    <div class = "col-md-8">
+        <div id="company_snapshot">
+            <%= form.fields_for :company_snapshot do |company_snapshot_form| %>
+
+                    <%= render 'company_snapshot_fields', f: company_snapshot_form %>
+
+            <% end %>
+        </div>
+    </div>
+
+    <div class = "col-md-4">
+    </div>
+    
+  </div>
+
+<div class="actions text-center">
+    <%= form.submit "Update", class: 'action-btn' %>
+  </div>
+
+<% end %>
+

@@ -1,0 +1,66 @@
+<div class="nested-fields p-3 mb-3">
+  <h5>Contact</h5>
+<div class="row">
+     <div class = "col-md-4">
+  <div class="form-group">
+    <%= f.label :company_contact_type_id, "Contact Type" %>
+    <%= f.collection_select :company_contact_type_id, @company_contact_types, :id, :role, {}, class: "form-control" %>
+  </div>
+  </div>
+<div class = "col-md-4">
+  <div class="form-group">
+    <%= f.label :name %>
+    <%= f.text_field :name, class: "form-control" %>
+  </div>
+ </div>
+<div class = "col-md-4">
+  <div class="form-group">
+    <%= f.label :job_title %>
+    <%= f.text_field :job_title, class: "form-control" %>
+  </div>
+  </div>
+  </div>
+
+<div class="row">
+     <div class = "col-md-4">
+  <div class="form-group">
+    <%= f.label :email %>
+    <%= f.email_field :email, class: "form-control" %>
+  </div>
+ </div>
+<div class = "col-md-4">
+  <div class="form-group">
+    <%= f.label :phone %>
+    <%= f.telephone_field :phone, class: "form-control" %>
+  </div>
+ </div>
+<div class = "col-md-4">
+  <div class="form-group">
+    <%= f.label :photo %>
+    <%= image_tag f.object&.photo_url,  width: 60, height: 50  if f.object&.photo? %>
+    <%= f.file_field :photo, class: "form-control" %>
+  </div>
+  </div>
+ </div>
+
+
+  <div class="mt-3">
+    <div class="row">
+    <div class = "col-md-12">
+        <div id="person">
+          <h6>Person Details</h6>
+          <%= f.fields_for :person do |person_form| %>
+            <%= render 'person_fields', f: person_form %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+<div class="row">
+    <div class = "col-md-12">
+        <i class="fas fa-plus" style="color: #0B9444;" ></i><%= link_to_add_association 'add person', f, :person, class:"theme-link" %>
+    </div>
+  </div>
+
+  <i class="fas fa-trash" style="color: #ff0000;"></i><%= link_to_remove_association "Remove Contact", f, class: "btn btn-sm btn-danger mt-2" %>
+</div>

@@ -1,0 +1,92 @@
+<div class="nested-fields bg-light p-2 rounded">
+  
+  <div data-controller="person">
+    
+    <label class="form-label">Search Person</label>
+   <%= f.select :id, [], 
+              { prompt: "Search for a person" }, 
+              data: { controller: "person-select" } 
+            %>
+ 
+<div class="row">
+     <div class = "col-md-4">
+    <div class="form-group">
+      <%= f.label :first_name %>
+      <%= f.text_field :first_name, class: "form-control", data: { person_target: "firstName" } %>
+    </div>
+ </div>
+ <div class = "col-md-4">
+    <div class="form-group">
+      <%= f.label :middle_name %>
+      <%= f.text_field :middle_name, class: "form-control", data: { person_target: "middleName" } %>
+    </div>
+ </div>
+<div class = "col-md-4">
+    <div class="form-group">
+      <%= f.label :last_name %>
+      <%= f.text_field :last_name, class: "form-control", data: { person_target: "lastName" } %>
+    </div>
+ </div>
+
+</div>
+
+
+<div class="row">
+  <div class = "col-md-4">
+    <div class="form-group">
+      <%= f.label :email %>
+      <%= f.email_field :email, class: "form-control", data: { person_target: "email" } %>
+    </div>
+ </div>
+     <div class = "col-md-4">
+    <div class="form-group">
+      <%= f.label :website %>
+      <%= f.text_field :website, class: "form-control", data: { person_target: "website" } %>
+    </div>
+</div>
+<div class = "col-md-4">
+    <div class="form-group">
+      <%= f.label :gender_type_id %>
+      <%= f.select :gender_type_id, @gender_types.collect { |g| [g.gender, g.id] }, {}, class: "form-control", data: { person_target: "genderType" } %>
+    </div>
+</div>
+</div>
+
+<div class="row">
+     <div class = "col-md-4">
+    <div class="form-group">
+      <%= f.label :country_reference_id, "Country" %>
+      <%= f.select :country_reference_id, @country_references.collect { |c| [c.country, c.id] }, {}, class: "form-control", data: { person_target: "countryReference" } %>
+    </div>
+</div>
+
+
+<div class = "col-md-4">
+    <div class="form-group">
+      <%= f.label :picture %>
+      <%= image_tag f.object&.picture_url,  width: 60, height: 50  if f.object&.picture? %>
+      <%= f.hidden_field :picture, data: { person_target: "picture" } %>
+      <%= f.file_field :picture, class: "form-control" %>
+
+      <img src="" alt="Photo preview" class="img-thumbnail mt-2 d-none" width="100"
+          data-person-target="photoPreview" />
+    </div>
+  </div>
+
+
+  <div class = "col-md-4">
+    <div class="form-group">
+      <%= f.label :ethnicity_type_id %>
+      <%= f.select :ethnicity_type_id, @ethinicity_types.collect { |e| [e.ethnicity, e.id] }, {}, class: "form-control", data: { person_target: "ethnicityType" } %>
+    </div>
+ </div>
+
+  </div>
+
+
+
+    <div class = "form-group">
+           <i class="fas fa-trash" style="color: #f0000;"></i> <%= link_to_remove_association "Remove Person", f, class: "btn btn-outline-danger btn-sm" %>
+    </div>
+  
+</div>

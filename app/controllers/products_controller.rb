@@ -14,48 +14,93 @@ class ProductsController < ApplicationController
     error += "product name is required, " if product_params[:name].blank?
     error += "description is required" if product_params[:description].blank?
 
+    barcode = product_variant_params[:barcode]&.strip
+
     company_name = params[:product][:new_company_name]
     
     if error.length > 0
-      respond_to_invalid_entries(error, product_capture_interface_path(barcode: product_variant_params[:barcode]))  
+      respond_to_invalid_entries(error, product_capture_interface_path(barcode: barcode))  
     else
 
       serialized_params = product_params
-      
+      company_id = nil
+      mid = CroupierCore::MidExtractor.call!(barcode: barcode).payload
+
       if product_params[:company_id]&.to_s.match?(/^\d+$/)
-        company = Company.find(product_params[:company_id])
-        company_name = company.name
-      elsif 
-        serialized_params = product_params.except(:company_id)
+            company = Company.find(product_params[:company_id])
+            company_name = company.name
+            company_id = company.id
+
+            #update mid if it was previously system generated
+            cit_rec = CitRecord.find_by(mid: mid)
+            unless cit_rec
+                  sys_gen_mid = CitRecord.generate_mid(company.id)
+                  cit_rec = CitRecord.find_by(mid: sys_gen_mid)
+                  if cit_rec
+                    cit_rec.company_name = company_name if cit_rec&.company_name != company_name
+                    cit_rec.mid = mid
+                    cit_rec.company_id = company.id
+                    cit_rec.save!
+                  else
+                    cit_rec = CitRecordHandler.update_or_create(nil, mid: mid, source: "Product Import", 
+                                  user_id: current_user.id, company_id: company.id, brand: nil)
+                  end
+            else
+                  cit_rec.update(company_id: company.id)
+            end
+        
+      else
+          begin
+            company = Company.create!(name: company_name, mids: [mid])
+            company_id = company.id
+            serialized_params[:company_id] = company.id
+
+            cit_rec = CitRecord.find_by(mid: mid)
+            unless cit_rec
+              cit_rec = CitRecordHandler.update_or_create(nil, mid: mid, source: "Product Import", 
+                              user_id: current_user.id, company_id: company.id, brand: nil)
+              
+            else
+              cit_rec.update(company_id: company.id)
+            end
+          rescue => e
+         
+               redirect_to(product_capture_interface_path(barcode: barcode), alert: e.message ) and return
+            
+            end
+
+
       end
       
       @product = Product.new(serialized_params)
-      pit_record = PitRecord.find_by(barcode: product_variant_params[:barcode].strip)
-      variant_exist = ProductVariant.find_by(barcode: product_variant_params[:barcode].strip)
+      pit_record = PitRecord.find_by(barcode: barcode)
+      variant_exist = ProductVariant.find_by(barcode: barcode)
       if variant_exist
         @product = variant_exist.product
         variant_exist.update(product_variant_params) unless product_variant_params.blank?
         if @product.update(serialized_params)
-          upgrade_pit_to_level_1_or_update_cit(@product.id, pit_record.level, company_name)
-          redirect_to product_capture_interface_path(barcode: product_variant_params[:barcode].strip, level: params[:level]), notice: "Product was successfully updated." and return
+          upgrade_pit_to_level_1(@product.id, pit_record.level, company_name, company_id)
+          redirect_to product_capture_interface_path(barcode: barcode, level: params[:level]), notice: "Product was successfully updated." and return
         end
       end
         
-        respond_to do |format|
-          if @product.save
-              pv = ProductVariant.new(product_variant_params)
-              pv.barcode = pv.barcode.strip
-              pv.product_id = @product.id
-              pv.save!
-              upgrade_pit_to_level_1_or_update_cit(@product.id, pit_record.level, company_name)
-            format.html { redirect_to product_capture_interface_path(barcode: product_variant_params[:barcode].strip, level: params[:level]), notice: "Product successfully added" }
-            format.json { render :show, status: :created, location: @product }
-          else
-            error = @product.errors.map{|k,v| "#{k.to_s} #{v}"}.join(", ")
-            format.html { redirect_to product_capture_interface_path(barcode: product_variant_params[:barcode].strip, level: params[:level]), alert: error, status: :unprocessable_entity }
-            format.json { render json: @product.errors, status: :unprocessable_entity }
-          end
+      respond_to do |format|
+        if @product.save
+            pv = ProductVariant.new(product_variant_params)
+            pv.barcode = pv.barcode.strip
+            pv.product_id = @product.id
+            pv.save!
+            upgrade_pit_to_level_1(@product.id, pit_record.level, company_name, company_id)
+            Scan.resolve(barcode, @product.id)
+            UploadRecord.resolve(barcode)
+          format.html { redirect_to product_capture_interface_path(barcode: barcode, level: params[:level]), notice: "Product successfully added" }
+          format.json { render :show, status: :created, location: @product }
+        else
+          error = @product.errors.map{|k,v| "#{k.to_s} #{v}"}.join(", ")
+          format.html { redirect_to product_capture_interface_path(barcode: barcode, level: params[:level]), alert: error, status: :unprocessable_entity }
+          format.json { render json: @product.errors, status: :unprocessable_entity }
         end
+      end
         
     end
   end
@@ -63,16 +108,17 @@ class ProductsController < ApplicationController
 
   def update_to_level_two
     @product = Product.find(params[:product_id])
+    barcode = product_variant_params[:barcode]&.strip
     respond_to do |format|
       if @product.update(product_params)
-        pit_record = PitRecord.find_by(barcode: product_variant_params[:barcode].strip)
-        CroupierCore::UpgradePitLevel.call!(barcode: product_variant_params[:barcode].strip, 
-        product_id: @product.id, company_name: nil, asin: nil, user_id: current_user.id) if pit_record == 1
-        format.html { redirect_to product_capture_interface_path(barcode: product_variant_params[:barcode].strip, level: params[:level]), notice: "Product was successfully updated." }
+        pit_record = PitRecord.find_by(barcode: barcode)
+        CroupierCore::UpgradePitLevel.call!(barcode: barcode, 
+        product_id: @product.id, company_name: nil, asin: nil, user_id: current_user.id, level: 2) 
+        format.html { redirect_to product_capture_interface_path(barcode: barcode, level: params[:level]), notice: "Product was successfully updated." }
         format.json { render :show, status: :ok, location: @product }
       else
         error = @product.errors.map{|k,v| v}.join(", ")
-            format.html { redirect_to product_capture_interface_path(barcode: product_variant_params[:barcode].strip, level: params[:level]), alert: error, status: :unprocessable_entity }
+            format.html { redirect_to product_capture_interface_path(barcode: barcode, level: params[:level]), alert: error, status: :unprocessable_entity }
         format.json { render json: @product.errors, status: :unprocessable_entity }
       end
     end
@@ -169,17 +215,12 @@ class ProductsController < ApplicationController
       @segments = Segment.where(product_category_source_id: product_category_source_id)
     end
 
-    def upgrade_pit_to_level_1_or_update_cit(product_id, pit_level, company_name)
+    def upgrade_pit_to_level_1(product_id, pit_level, company_name, company_id)
       if pit_level == 0
             CroupierCore::UpgradePitLevel.call!(barcode: product_variant_params[:barcode].strip, 
-                              product_id: product_id, company_name: company_name, asin: params[:product][:asin],
-                              user_id: current_user.id) 
-         elsif
-              unless product_params[:company_id].blank?
-                mid = CroupierCore::MidExtractor.call!(barcode: product_variant_params[:barcode].strip).payload
-                cit_rec = CitRecord.find_by(mid: mid)
-                cit_rec&.update(company_name: company_name) if cit_rec&.company_name != company_name
-              end
+                              product_id: product_id, company_name: company_name, 
+                              asin: params[:product][:asin],
+                              user_id: current_user.id, company_id: company_id, level: 1)    
           end
     end
 

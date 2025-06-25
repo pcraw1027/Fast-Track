@@ -1,0 +1,49 @@
+<div class="container-fluid">
+  <h3>Company Capture Interface</h3>
+
+        <div class="row">
+            <!--<div class = "col-4">
+                <div class = "form-group">
+                    <label> Company name: </label>
+                    <input value="<%= @cit_record.company_name%>" class="form-control" readonly />
+                </div>
+            </div>-->
+            
+            <div class = "col-6">
+                <div class = "form-group">
+                    <label> Company MID: </label>
+                    <input value="<%= @cit_record.mid%>" class="form-control" readonly />
+                </div>
+            </div>
+
+            <div class = "col-6">
+                <label> Company ID: </label>
+                <input value="<%= @cit_record.company_id%>" class="form-control" readonly />
+            </div>
+        </div>
+  
+        <%= render partial: 'cit_records/capture_tabs', locals: { 
+                                                company: @company,
+                                                cit_record: @cit_record,
+                                                company_contact: @company_contact,
+                                                industry_category_types: @industry_category_types,
+                                                industry_category_type: @industry_category_type,
+                                                company_relationship_types: @company_relationship_types
+        }%>
+ 
+
+
+
+  <div class="row">
+        <div class="col text-left mx-5">
+            <i class="fas fa-chevron-left" style="color: #0B9444;" ></i> <%= link_to 'Back', :back, class: "theme-link" %>
+        </div>
+        <div class="col text-right mx-5">
+            <%= link_to 'Next', next_cit_record_path(level: (params[:level].present? ? params[:level].to_i : 0)), class: "theme-link" %> <i class="fas fa-chevron-right" style="color: #0B9444;"></i>
+        </div>
+    </div>
+
+<br/><br/><br/>
+
+</div>
+

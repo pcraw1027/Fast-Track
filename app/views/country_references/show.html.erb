@@ -1,0 +1,14 @@
+
+
+<p>
+  <strong>Country code:</strong>
+  <%= @country_reference.country_code %>
+</p>
+
+<p>
+  <strong>Country:</strong>
+  <%= @country_reference.country %>
+</p>
+
+<%= link_to 'Edit', edit_country_reference_path(@country_reference) %> |
+<%= link_to 'Back', country_references_path %>

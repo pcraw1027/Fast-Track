@@ -1,0 +1,2 @@
+class SocialSite < ApplicationRecord
+end

@@ -14,65 +14,97 @@
    <%= form.hidden_field :cit_record_id, value: cit_record.id %>
 <%= form.hidden_field :mid, value: cit_record.mid %>
 
-   <div class="form-row">
-      
-    <div class = "form-group col-md-12">
-      <%= form.label :name %>
-      <%= form.text_field :name, class: "form-control", required: true %>
-    </div>
+  <div class="row">
+    <%if params[:from_edit]%>
+      <div class="col-md-8">
+        <div class="form-group">
+          <%= form.label :name, "Company Name", class:"form-label" %>
+          <%= form.text_field :name, class: "form-control"  %>
+         
+        </div>
+      </div>
+    <%else%>
+      <div class="col-md-8">
+          <div class="form-group">
+            <%= form.label :id, "Company Name", class:"form-label" %>
+            <%= form.select :id, [[company&.name, company&.id]], 
+              { prompt: "Search for a company" }, 
+              data: { controller: "company-select" } 
+            %>
+            <%= form.hidden_field :new_company_name, id: "new_company_name" %>
+        </div>
+      </div>
+    <%end%>
 
+    <div class="col-md-4">
+       <div class="form-group">
+          <%= form.label :logo, class:"form-label" %>
+          <%= image_tag company.logo_url,  width: 60, height: 50  if company.logo? %>
+          <%= form.file_field :logo, class: "form-control-file"  %>
+          <%= form.hidden_field :logo_cache %>
+       </div>
+    </div>
+    
   </div>
 
 
-  <div class="form-row">
-    <div class = "form-group col-md-6">
-      <%= form.label :logo %>
-      <%= image_tag company.logo_url,  width: 60, height: 50  if company.logo? %>
-      <%= form.file_field :logo, class: "form-control-file"  %>
 
-    <%= form.hidden_field :logo_cache %>
 
-    </div>
+  <div class="row">
 
-     <div class = "form-group col-md-6">
-      <%= form.label :sector, "Captured Company Sector" %>
-      <%= form.text_field :sector, class: "form-control"  %>
-    </div>
-
-  </div>
-  </br>
-
-  
-
-  <div class="form-row">
-
-    <div class="form-group col-md-12">
+    <div class="form-group col-md-8">
       <%= form.label :industry_category_type_id %>
 
-      <%= form.select :industry_category_type_id, [], 
+      <%= form.select :industry_category_type_id, [["#{industry_category_type&.category_code&.to_s} - #{industry_category_type&.title&.to_s}", industry_category_type&.id]], 
         { prompt: "Search for an industry categiry" }, 
 
         data: { controller: "ind-cat-select" } 
       %>
    </div>
 
+      <div class = "form-group col-md-4">
+      <%= form.label :website %><br>
+      <%= form.text_field :website, class: "form-control" %>
+    </div>
+
   </div>
-  </br>  
+
  
   <div class="form-row">
-    <div class = "form-group col-md-6">
+    
+
+    <div class = "form-group col-md-8">
+      <%= form.label :sector, "Display Industry Category" %>
+      <%= form.text_field :sector, class: "form-control"  %>
+    </div>
+
+    <div class = "form-group col-md-4">
       <%= form.label :established %><br>
       <%= form.date_select :established, discard_day: true, discard_month: true, start_year: 1900, end_year: Date.today.year, class: "form-control" %>
     </div>
 
-    <div class = "form-group col-md-6">
-      <%= form.label :website %><br>
-      <%= form.text_field :website, class: "form-control" %>
-    </div>
   </div>
 
 
-  <div class="actions">
-    <%= form.submit "Submit", class: 'action-btn' %>
+  <div class="form-row">
+    
+
+    <div class = "form-group col-md-4">
+      <%= form.label :black_owned %>
+      <%= form.select :black_owned, [['True', true], ['False', false]], { prompt: "Choose one" }, class: "form-control" %>
+    </div>
+
+    <div class = "form-group col-md-4">
+      <%= form.label :female_owned %>
+      <%= form.select :female_owned, [['True', true], ['False', false]], { prompt: "Choose one" }, class: "form-control" %>
+    </div>
+    <div class = "form-group col-md-4">
+    </div>
+
+  </div>
+
+
+  <div class="actions text-center">
+    <%= form.submit "Update", class: 'action-btn' %>
   </div>
 <% end %>

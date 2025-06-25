@@ -1,0 +1,30 @@
+<div class="nested-fields">
+
+    <div class="row">
+     <div class = "col-md-12">
+        <div class="form-group">
+            <%= f.label :data_transparency %>
+            <%= f.select :data_transparency, CompanySnapshot.data_transparencies.keys.map { |k| [k.titleize, k] }, {}, class: "form-control" %>
+        </div>
+    </div>
+  </div>
+
+    <div class="row">
+         <div class = "col-md-12">
+            <div class="form-group">
+                <%= f.label :internal_culture %>
+                <%= f.select :internal_culture, CompanySnapshot.internal_cultures.keys.map { |k| [k.titleize, k] }, {}, class: "form-control" %>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class = "col-md-12">
+            <div class="form-group">
+                <%= f.label :mgmt_composition, "Management Composition" %>
+                <%= f.select :mgmt_composition, CompanySnapshot.mgmt_compositions.keys.map { |k| [k.titleize, k] }, {}, class: "form-control" %>
+            </div>
+        </div>
+    </div>
+
+    </div>

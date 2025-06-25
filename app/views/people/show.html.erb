@@ -1,0 +1,55 @@
+
+<p>
+  <strong>Title:</strong>
+  <%= @person.title %>
+</p>
+
+<p>
+  <strong>First name:</strong>
+  <%= @person.first_name %>
+</p>
+
+<p>
+  <strong>Middle name:</strong>
+  <%= @person.middle_name %>
+</p>
+
+<p>
+  <strong>Last name:</strong>
+  <%= @person.last_name %>
+</p>
+
+<p>
+  <strong>Letters:</strong>
+  <%= @person.letters %>
+</p>
+
+<p>
+  <strong>Gender type:</strong>
+  <%= @person.gender_type_id %>
+</p>
+
+<p>
+  <strong>Ethnicity type:</strong>
+  <%= @person.ethnicity_type_id %>
+</p>
+
+<p>
+  <strong>Country reference:</strong>
+  <%= @person.country_reference_id %>
+</p>
+
+
+
+<p>
+  <strong>Email:</strong>
+  <%= @person.email %>
+</p>
+
+<p>
+  <strong>Website:</strong>
+  <%= @person.website %>
+</p>
+
+<%= link_to 'Edit', edit_person_path(@person) %> |
+<%= link_to 'Back', people_path %>
