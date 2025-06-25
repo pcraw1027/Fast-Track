@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Company:</strong>
+  <%= @company_snapshot.company_id %>
+</p>
+
+<p>
+  <strong>Data transparency:</strong>
+  <%= @company_snapshot.data_transparency %>
+</p>
+
+<p>
+  <strong>Internal culture:</strong>
+  <%= @company_snapshot.internal_culture %>
+</p>
+
+<p>
+  <strong>Mgmt composition:</strong>
+  <%= @company_snapshot.mgmt_composition %>
+</p>
+
+<%= link_to 'Edit', edit_company_snapshot_path(@company_snapshot) %> |
+<%= link_to 'Back', company_snapshots_path %>

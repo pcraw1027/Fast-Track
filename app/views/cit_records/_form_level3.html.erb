@@ -1,1 +1,65 @@
-<h2>Level 3 form</h2>
+
+<%= form_for(company, url: company_update_to_level_three_path(company_id: company.id), html: { method: :put }) do |form| %>
+
+  <% if company.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(company.errors.count, "error") %> prohibited this company from being saved:</h2>
+
+      <ul>
+        <% company.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+
+  <%= form.hidden_field :mid, value: cit_record.mid %>
+
+<h5>Parent Company </h5>
+  <div class="row">
+    <div class = "col-md-12">
+        <div id="parent_relationships">
+            <%= form.fields_for :parent_relationships do |parent_company_form| %>
+
+                    <%= render 'parent_relationship_fields', f: parent_company_form %>
+                    <hr>
+            <% end %>
+        </div>
+    </div>
+     </div>
+
+<div class="row">
+    <div class = "col-md-12">
+        <i class="fas fa-plus" style="color: #0B9444;" ></i><%= link_to_add_association 'add parent', form, :parent_relationships, class:"theme-link" %>
+    </div>
+  </div>
+<hr>
+
+
+<h5>Subsidiaries / Brands </h5>
+  <div class="row">
+    <div class = "col-md-12">
+        <div id="child_relationships">
+            <%= form.fields_for :child_relationships do |child_company_form| %>
+
+                    <%= render 'child_relationship_fields', f: child_company_form %>
+                    <hr>
+            <% end %>
+        </div>
+    </div>
+ </div>
+
+<div class="row">
+    <div class = "col-md-12">
+        <i class="fas fa-plus" style="color: #0B9444;" ></i><%= link_to_add_association 'add subsidiary', form, :child_relationships, class:"theme-link" %>
+    </div>
+  </div>
+
+
+  <div class="actions text-center">
+    <%= form.submit "Update", class: 'action-btn' %>
+  </div>
+
+<% end %>
+

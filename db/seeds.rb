@@ -200,6 +200,43 @@
         {gender: "Other", definition: ""}]
     )
 
+    CountryReference.create(
+        [{country_code: "CAN", country: "Canada"},
+        {country_code: "GBR", country: "United Kingdom and Northern Ireland"},
+        {country_code: "USA", country: "United States of America"},
+        {country_code: "OTH", country: "Other"} ]
+    )
+
+    SocialSite.create(
+        [
+            {site_code: "X", site: "X (formerly Twitter)"},
+            {site_code: "LinkedIn", site: "LinkedIn"},
+            {site_code: "TikTok", site: "TikTok"},
+            {site_code: "YouTube", site: "YouTube"},
+            {site_code: "Instagram", site: "Instagram"},
+            {site_code: "FB", site: "FaceBook"},
+            {site_code: "Bluesky", site: "Bluesky"},
+            {site_code: "Discord", site: "Discord"},
+            {site_code: "Slack", site: "Slack"},
+            {site_code: "Threads", site: "Threads"},
+            {site_code: "Pinterest", site: "Pinterest"},
+            {site_code: "OTH", site: "Other"},
+        
+        ]
+        )
+
+AddressType.create(
+        [
+            {name: "Main Address (Corporate HQ)", is_person_address: false},
+            {name: "Country HQ", is_person_address: false},
+            {name: "Regional HQ", is_person_address: false},
+            {name: "Manufacturing Facility", is_person_address: false},
+            {name: "Distribution Facility", is_person_address: false},
+            {name: "Storage Facility (Warehouse)", is_person_address: false},
+            {name: "Registered Office (UK)", is_person_address: false},
+            {name: "Trading Office (UK)", is_person_address: false}
+     ])
+
     EmployeeType.create(
         [{employee: "Management", definition: "A type of employee classification that can include top-level, mid-level, and first-line management."},
         {employee: "Exempt", definition: "Employees who are paid a salary of at least $684 per week and work in an exempt profession. Exempt employees are not subject to the same tracking requirements as non-exempt employees, such as tracking hours, overtime, and meal periods."},

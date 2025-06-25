@@ -3,7 +3,9 @@
     <tr>
       <th>MID</th>
       <th>Count</th>
-      <th>Source</th>
+      <th>Company ID</th>
+      <th>Company Name</th>
+      <th>User</th>
       <th>Date</th>
       <th colspan="1"></th>
     </tr>
@@ -14,10 +16,12 @@
       <tr>
         <td><%= cit.mid %></td>
         <td><%= cit.product_activity_count %></td>
-        <td><%= cit.source %></td>
-        <td><%= cit.created_at.strftime("%d/%m/%Y") %></td>
+        <td><%= cit.company_id %></td>
+        <td><%= cit.company_name %></td>
+        <td><%= cit.cit_level_users.where(level: 3 )&.first&.user&.username %></td>
+        <td><%= cit.created_at.strftime("%m/%d/%Y") %></td>
       
-        <td><%= link_to 'Add', cit_record_company_capture_interface_path(cit_record_id: cit.id) %></td>
+        <td><%= link_to 'Add', company_capture_interface_path(mid: cit.mid) %></td>
      </tr>
     <% end %>
   </tbody>

@@ -1,5 +1,5 @@
 
-<%= form_for(company, url: company_update_to_level_two_path(company_id: company.id || 1), html: { method: :put }) do |form| %>
+<%= form_for(company, url: company_update_to_level_two_path(company_id: company.id), html: { method: :put }) do |form| %>
 
   <% if company.errors.any? %>
     <div id="error_explanation">
@@ -16,101 +16,35 @@
   <%= form.hidden_field :cit_record_id, value: cit_record.id %>
   <%= form.hidden_field :mid, value: cit_record.mid %>
 
-  <div class="form-row">
-    <div class = "form-group col-md-6">
-      <%= form.label :address_1 %>
-      <%= form.text_field :address_1, class: "form-control", required: true  %>
-    </div>
 
-    <div class = "form-group col-md-6">
-      <%= form.label :address_2 %>
-      <%= form.text_field :address_2, class: "form-control"  %>
-    </div>
-  </div>
+  <div class="row">
+    <div class = "col-md-12">
 
-  <div class="form-row">
-    <div class = "form-group col-md-3">
-      <%= form.label :city %>
-      <%= form.text_field :city, class: "form-control", required: true  %>
-    </div>
+      <div class="container mt-5">
 
-    <div class = "form-group col-md-3">
-      <%= form.label :state %>
-      <%= form.text_field :state, class: "form-control", required: true  %>
-    </div>
-
-    <div class = "form-group col-md-3">
-      <%= form.label :postal_code %>
-      <%= form.text_field :postal_code, class: "form-control"  %>
-    </div>
-
-    <div class = "form-group col-md-3">
-      <%= form.label :country %>
-      <%= form.text_field :country, class: "form-control", required: true  %>
-    </div>
-  </div>
- 
-  <div class="form-row">
-  
-    <div class = "form-group col-md-4">
-      <%= form.label :diversity_report, "Diversity snapshot" %>
-      <%= form.text_field :diversity_report, class: "form-control"  %>
-    </div>
-
-    <div class = "form-group col-md-4">
-      <%= form.label :diversity_score %>
-      <%= form.number_field :diversity_score, class: "form-control"  %>
-    </div>
-
-    <div class = "form-group col-md-4">
-      <%= form.label :total_employees %>
-      <%= form.number_field :total_employees, class: "form-control"  %>
-    </div>
-
-  </div>
-
-
-<h2>Company contact details</h2>
-  <div class="form-row">
-    <div class = "form-group col-md-4">
-    <%= form.label :company_contact_type_id, "Management Position" %>
-    <%= form.text_field :company_contact_type_id, value: "CEO", class: "form-control", readonly: true  %>
-  </div>
-
-  <div class = "form-group col-md-4">
-    <%= form.label :contact_name %>
-    <%= form.text_field :contact_name %>
-  </div>
-
-  <div class = "form-group col-md-4">
-    <%= form.label :photo %>
-
+            <div id="addresses">
+              <%= form.fields_for :addresses do |address_form| %>
+                
+                      <%= render 'address_fields', f: address_form  %>
+                 <hr>
+              <% end %>
+            </div>
    
-    <%= form.file_field :photo, class: "form-control-file"  %>
 
-  </div>
-</div>
-
-<div class="form-row">
-  <div class = "form-group col-md-4">
-    <%= form.label :job_title %>
-    <%= form.text_field :job_title, value: "CEO", readonly: true %>
+      </div>
+    </div>
   </div>
 
-  <div class = "form-group col-md-4">
-    <%= form.label :email, "Contact email" %>
-    <%= form.email_field :email %>
-  </div>
-
-  <div class = "form-group col-md-4">
-    <%= form.label :phone, "Contact phone" %>
-    <%= form.text_field :phone %>
+<div class="row">
+    <div class = "col-md-12">
+      <i class="fas fa-plus" style="color: #0B9444;" ></i> <%= link_to_add_association 'add address', form, :addresses, class:"theme-link" %>
+    </div>
   </div>
 </div>
 
 
-  <div class="actions">
-    <%= form.submit "Submit", class: 'action-btn' %>
+<div class="actions text-center">
+    <%= form.submit "Update", class: 'action-btn' %>
   </div>
 <% end %>
 

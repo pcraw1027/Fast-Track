@@ -62,7 +62,7 @@ class MediaUploader < CarrierWave::Uploader::Base
 
       img.combine_options do |c|
         c.fuzz '5%'  
-        c.transparent 'white'
+        c.transparent '#F7F7F7'
       end
 
       img.resize(size)

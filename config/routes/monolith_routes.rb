@@ -3,10 +3,7 @@ module MonolithRoutes
     router.instance_exec do
       devise_for :users#, controllers: { registrations: 'registrations' }
 
-      resources :cit_records do 
-        get :company_capture_interface
-        get :success_redirect
-      end
+      resources :cit_records 
       resources :pit_records
       resources :upload_records
       resources :bit_records
@@ -38,22 +35,36 @@ module MonolithRoutes
       #resources :companies
       resources :companies do
         put :update_to_level_two
+        put :update_to_level_three
+        put :update_to_level_four
+        put :update_to_level_five
         resources :products
       end
 
       resources :invitations
+
+      resources :company_snapshots
+      resources :people
+      resources :addresses
+      resources :address_types
+      resources :country_references
+      resources :social_sites
+
       #get 'home/index'
       root to: "home#index"
       get 'home/about'
       # additional routes
       get '/product_capture_interface', to: 'pit_records#product_capture'
+      get '/company_capture_interface', to: 'cit_records#company_capture'
       get '/next_pit_record', to: 'pit_records#next_pit_record'
+      get '/next_cit_record', to: 'cit_records#next_cit_record'
       post '/invoke_bit_pit_triggers', to: 'pit_records#invoke_bit_pit_triggers'
       get '/bit_interface', to: 'bit_records#bit_interface'
       get '/pit_interface', to: 'pit_records#pit_interface'
       get '/cit_interface', to: 'cit_records#cit_interface'
       post '/insert_barcode', to: 'bit_records#insert_barcode' 
       get '/companies_search', to: 'companies#search'
+      get '/people_search', to: 'people#search'
       get '/industry_categories_search', to: 'industry_category_types#search'
       get '/families_by_segment', to: 'families#by_segment'
       get '/klasses_by_family', to: 'klasses#by_family'

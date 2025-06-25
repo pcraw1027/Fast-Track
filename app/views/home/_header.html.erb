@@ -61,6 +61,10 @@
         </div>
       </li>
 
+ 
+
+
+
     <li class="nav-item dropdown">
       <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
         Import Triggers
@@ -90,7 +94,21 @@
 
       </div>
     </li>
+
+
    
+        <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+          Reference Tables
+        </a>
+        <div class="dropdown-menu bg-light-green">
+          <a class="nav-link" href="/people">People</a>
+          <%= link_to "Addresses", addresses_path, class:"nav-link" %>
+          <%= link_to "Address Types", address_types_path, class: "nav-link" %>
+          <%= link_to "Country References", country_references_path, class: "nav-link" %>
+          <%= link_to "Social Sites", social_sites_path, class:"nav-link" %>
+        </div>
+      </li>
 
       <li class="nav-item">
         <%= link_to "About Us", home_about_path, class:"nav-link" %>

@@ -88,6 +88,6 @@ gem 'rack-attack'
 
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails'
-
+gem 'cocoon'
 
 gem 'dotenv-rails', groups: [:development, :test]

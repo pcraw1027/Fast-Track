@@ -6,7 +6,7 @@ module CitRecordHandler
     cit_rec
   end
 
-  def self.update_or_create(cit_rec, mid:, source:, user_id:, brand:)
+  def self.update_or_create(cit_rec, mid:, source:, user_id:, brand:, company_id:)
     if cit_rec
       self.update_existing(cit_rec)
     else
@@ -15,8 +15,10 @@ module CitRecordHandler
         source: source,
         brand: brand,
         product_activity_count: 1,
-        product_orphan_count: 1
+        product_orphan_count: 1,
+        company_id: company_id
       )
+    
       CitLevelUser.create!(
         user_id: user_id,
         cit_record_id: cit_rec.id,

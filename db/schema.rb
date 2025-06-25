@@ -10,10 +10,35 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_06_12_074435) do
+ActiveRecord::Schema.define(version: 2025_06_24_060124) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "address_types", force: :cascade do |t|
+    t.string "name"
+    t.boolean "is_person_address", default: false, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "addresses", force: :cascade do |t|
+    t.bigint "address_type_id", null: false
+    t.string "addressable_type", null: false
+    t.bigint "addressable_id", null: false
+    t.bigint "country_reference_id", null: false
+    t.string "address1"
+    t.string "address2"
+    t.string "city"
+    t.string "state"
+    t.string "postal_code"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["address_type_id"], name: "index_addresses_on_address_type_id"
+    t.index ["addressable_type", "addressable_id"], name: "index_addresses_on_addressable"
+    t.index ["addressable_type", "addressable_id"], name: "index_addresses_on_addressable_type_and_addressable_id"
+    t.index ["country_reference_id"], name: "index_addresses_on_country_reference_id"
+  end
 
   create_table "allowlisted_jwts", force: :cascade do |t|
     t.string "jti", null: false
@@ -94,7 +119,7 @@ ActiveRecord::Schema.define(version: 2025_06_12_074435) do
   create_table "companies", force: :cascade do |t|
     t.string "name"
     t.string "logo"
-    t.bigint "industry_category_type_id", null: false
+    t.bigint "industry_category_type_id"
     t.string "address_1"
     t.string "address_2"
     t.string "city"
@@ -111,6 +136,8 @@ ActiveRecord::Schema.define(version: 2025_06_12_074435) do
     t.string "sector", default: ""
     t.string "postal_code"
     t.bigint "searches", default: 0, null: false
+    t.boolean "black_owned", default: false, null: false
+    t.boolean "female_owned", default: false, null: false
     t.index ["industry_category_type_id"], name: "index_companies_on_industry_category_type_id"
     t.index ["mids"], name: "index_companies_on_mids", using: :gin
   end
@@ -132,8 +159,10 @@ ActiveRecord::Schema.define(version: 2025_06_12_074435) do
     t.string "photo"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "person_id", null: false
     t.index ["company_contact_type_id"], name: "index_company_contacts_on_company_contact_type_id"
     t.index ["company_id"], name: "index_company_contacts_on_company_id"
+    t.index ["person_id"], name: "index_company_contacts_on_person_id"
   end
 
   create_table "company_ethnicity_stats", force: :cascade do |t|
@@ -178,6 +207,23 @@ ActiveRecord::Schema.define(version: 2025_06_12_074435) do
     t.index ["child_company_id"], name: "index_company_relationships_on_child_company_id"
     t.index ["company_relationship_type_id"], name: "index_company_relationships_on_company_relationship_type_id"
     t.index ["parent_company_id"], name: "index_company_relationships_on_parent_company_id"
+  end
+
+  create_table "company_snapshots", force: :cascade do |t|
+    t.bigint "company_id", null: false
+    t.integer "data_transparency"
+    t.integer "internal_culture"
+    t.integer "mgmt_composition"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["company_id"], name: "index_company_snapshots_on_company_id"
+  end
+
+  create_table "country_references", force: :cascade do |t|
+    t.string "country_code"
+    t.string "country"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "employee_types", force: :cascade do |t|
@@ -258,6 +304,25 @@ ActiveRecord::Schema.define(version: 2025_06_12_074435) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["mediaable_type", "mediaable_id"], name: "index_media_on_mediaable"
+  end
+
+  create_table "people", force: :cascade do |t|
+    t.string "title"
+    t.string "first_name"
+    t.string "middle_name"
+    t.string "last_name"
+    t.string "letters"
+    t.bigint "gender_type_id", null: false
+    t.bigint "ethnicity_type_id", null: false
+    t.bigint "country_reference_id", null: false
+    t.string "picture"
+    t.string "email"
+    t.string "website"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["country_reference_id"], name: "index_people_on_country_reference_id"
+    t.index ["ethnicity_type_id"], name: "index_people_on_ethnicity_type_id"
+    t.index ["gender_type_id"], name: "index_people_on_gender_type_id"
   end
 
   create_table "pit_level_users", force: :cascade do |t|
@@ -350,7 +415,7 @@ ActiveRecord::Schema.define(version: 2025_06_12_074435) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["rating"], name: "index_reviews_on_rating"
     t.index ["reviewable_id", "reviewable_type", "rating"], name: "index_reviews_on_reviewable_and_rating"
-    t.index ["reviewable_id", "reviewable_type", "user_id"], name: "index_reviews_on_reviewable_and_user"
+    t.index ["reviewable_id", "reviewable_type", "user_id"], name: "index_reviews_on_reviewable_and_user", unique: true
     t.index ["reviewable_type", "reviewable_id"], name: "index_reviews_on_reviewable"
     t.index ["reviewable_type", "reviewable_id"], name: "index_reviews_on_reviewable_type_and_reviewable_id"
     t.index ["user_id"], name: "index_reviews_on_user_id"
@@ -378,6 +443,13 @@ ActiveRecord::Schema.define(version: 2025_06_12_074435) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["product_category_source_id"], name: "index_segments_on_product_category_source_id"
+  end
+
+  create_table "social_sites", force: :cascade do |t|
+    t.string "site_code"
+    t.string "site"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "upload_records", force: :cascade do |t|
@@ -425,6 +497,8 @@ ActiveRecord::Schema.define(version: 2025_06_12_074435) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
+  add_foreign_key "addresses", "address_types"
+  add_foreign_key "addresses", "country_references"
   add_foreign_key "allowlisted_jwts", "users", on_delete: :cascade
   add_foreign_key "attribute_titles", "product_category_sources"
   add_foreign_key "attribute_values", "product_category_sources"
@@ -436,6 +510,7 @@ ActiveRecord::Schema.define(version: 2025_06_12_074435) do
   add_foreign_key "companies", "industry_category_types"
   add_foreign_key "company_contacts", "companies"
   add_foreign_key "company_contacts", "company_contact_types"
+  add_foreign_key "company_contacts", "people"
   add_foreign_key "company_ethnicity_stats", "companies"
   add_foreign_key "company_ethnicity_stats", "employee_types"
   add_foreign_key "company_ethnicity_stats", "ethnicity_types"
@@ -445,11 +520,15 @@ ActiveRecord::Schema.define(version: 2025_06_12_074435) do
   add_foreign_key "company_relationships", "companies", column: "child_company_id"
   add_foreign_key "company_relationships", "companies", column: "parent_company_id"
   add_foreign_key "company_relationships", "company_relationship_types"
+  add_foreign_key "company_snapshots", "companies"
   add_foreign_key "families", "product_category_sources"
   add_foreign_key "families", "segments"
   add_foreign_key "invitations", "users", column: "invited_by_id"
   add_foreign_key "klasses", "families"
   add_foreign_key "klasses", "product_category_sources"
+  add_foreign_key "people", "country_references"
+  add_foreign_key "people", "ethnicity_types"
+  add_foreign_key "people", "gender_types"
   add_foreign_key "pit_level_users", "pit_records"
   add_foreign_key "pit_level_users", "users"
   add_foreign_key "pit_records", "products"

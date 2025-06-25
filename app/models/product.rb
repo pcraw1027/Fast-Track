@@ -33,6 +33,26 @@ class Product < ApplicationRecord
 
   index_name "product_search_index"
 
+  def level_1_flag
+    !self.name.blank? && !self.description.blank? && !self.company_id.blank?
+  end
+
+  def level_2_flag
+    !self.segment_id.blank? && !self.family_id.blank? && !self.klass_id.blank? && !self.brick_id.blank?
+  end
+
+  def level_3_flag
+    false
+  end
+
+  def level_4_flag
+    false
+  end
+
+  def level_5_flag
+    false
+  end
+
 end
 
 

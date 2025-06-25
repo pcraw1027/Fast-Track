@@ -24,12 +24,12 @@ class PitRecordsController < ApplicationController
     end
     @pit_record = PitRecord.find_by(barcode: pit_record_params[:barcode].strip)
     if @pit_record
-      redirect_to(product_capture_interface_path(barcode: pit_record_params[:barcode].strip, level: @pit_record.level), alert: "Pit record already exist!")
+      redirect_to(product_capture_interface_path(barcode: pit_record_params[:barcode].strip, level: @pit_record.level), alert: "Barcode already exists. Please enter New Product information.")
     else
       @brc_intrf_claims = CroupierCore::BarcodeInterface.call!(barcode: pit_record_params[:barcode].strip, 
                                         source: "PIT Capture", asin: nil, user_id: current_user.id)
       if @brc_intrf_claims&.success?
-        redirect_to(product_capture_interface_path(barcode: pit_record_params[:barcode].strip), notice: @brc_intrf_claims.payload[:message])
+        redirect_to(product_capture_interface_path(barcode: pit_record_params[:barcode].strip), notice: (@brc_intrf_claims.payload[:message] + " - Please enter New Product Information."))
       else
         redirect_to(product_capture_interface_path(barcode: pit_record_params[:barcode].strip), alert: @brc_intrf_claims.error.message)
       end
@@ -94,11 +94,27 @@ class PitRecordsController < ApplicationController
   end
 
   def pit_interface
-    @pit_records_0s = PitRecord.by_level(0)
-    @pit_records_1s = PitRecord.by_level(1)
-    @pit_records_2s = PitRecord.by_level(2)
-    @pit_records_3s = PitRecord.by_level(3)
-    @pit_records_4s = PitRecord.by_level(4)
+    pits = PitRecord.includes(:product, :pit_level_users)
+    @pit_records_0s = []
+    @pit_records_1s = []
+    @pit_records_2s = []
+    @pit_records_3s = []
+    @pit_records_4s = []
+
+    pits.each do |pit|
+      if !pit.product&.level_1_flag || pit.product_id.blank?
+        @pit_records_0s.push(pit) 
+      elsif !pit.product&.level_2_flag 
+        @pit_records_1s.push(pit) 
+      elsif !pit.product&.level_3_flag 
+        @pit_records_2s.push(pit) 
+      elsif !pit.product&.level_4_flag
+         @pit_records_3s.push(pit) 
+      elsif !pit.product&.level_5_flag 
+        @pit_records_4s.push(pit) 
+      end
+    end
+
   end
 
   # GET /pit_records/1 or /pit_records/1.json

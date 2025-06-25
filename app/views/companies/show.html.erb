@@ -10,7 +10,7 @@
         <%= @company.created_at.strftime("%Y") %>
       </p>
       <p class="lead">
-        <%= @company.industry_category_type.title %>
+        <%= @company.industry_category_type&.title %>
       </p>
     </div>
     <div class="col">
@@ -43,7 +43,7 @@
       </p>
       
       <p>
-        <strong>Captured Company Sector:</strong>
+        <strong>Display Industry Category:</strong>
         <%= @company.sector %>
       </p>
 
@@ -56,6 +56,16 @@
         <strong>Diversity report:</strong>
         <%= link_to @company.diversity_report %>
       </p>
+      <div>
+        <p><strong>Company Snapshot:</strong></p>
+      
+        <small><strong>Data transparency:</strong> <%= @company.company_snapshot&.data_transparency&.titleize %></small>
+        <br>
+        <small><strong>Internal culture:</strong> <%= @company.company_snapshot&.internal_culture&.titleize %></small>
+        <br>
+        <small><strong>Ggmt Composition:</strong> <%= @company.company_snapshot&.mgmt_composition&.titleize %></small>
+        
+      </div>
 
     </div>
   </div>

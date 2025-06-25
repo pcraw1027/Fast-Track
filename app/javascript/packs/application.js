@@ -9,7 +9,16 @@ import * as ActiveStorage from "@rails/activestorage"
 import "channels"
 import "../controllers"
 
+import $ from "jquery";
+import jQuery from "jquery";
+
+window.$ = $;
+window.jQuery = jQuery;
+
+import "@nathanvda/cocoon";
+
 
 Rails.start()
 Turbolinks.start()
 ActiveStorage.start()
+
