@@ -96,8 +96,8 @@ class ProductsController < ApplicationController
           format.html { redirect_to product_capture_interface_path(barcode: barcode, level: params[:level]), notice: "Product successfully added" }
           format.json { render :show, status: :created, location: @product }
         else
-          error = @product.errors.map{|k,v| "#{k.to_s} #{v}"}.join(", ")
-          format.html { redirect_to product_capture_interface_path(barcode: barcode, level: params[:level]), alert: error, status: :unprocessable_entity }
+          error = @product.errors.map{|er| "#{er.attribute} #{er.message}"}.join(", ")
+          format.html { redirect_to product_capture_interface_path(barcode: barcode, level: params[:level]), alert: error }
           format.json { render json: @product.errors, status: :unprocessable_entity }
         end
       end
@@ -117,8 +117,8 @@ class ProductsController < ApplicationController
         format.html { redirect_to product_capture_interface_path(barcode: barcode, level: params[:level]), notice: "Product was successfully updated." }
         format.json { render :show, status: :ok, location: @product }
       else
-        error = @product.errors.map{|k,v| v}.join(", ")
-            format.html { redirect_to product_capture_interface_path(barcode: barcode, level: params[:level]), alert: error, status: :unprocessable_entity }
+        error = @product.errors.map{|er| "#{er.attribute} #{er.message}"}.join(", ")
+            format.html { redirect_to product_capture_interface_path(barcode: barcode, level: params[:level]), alert: error }
         format.json { render json: @product.errors, status: :unprocessable_entity }
       end
     end
@@ -226,7 +226,7 @@ class ProductsController < ApplicationController
 
     def respond_to_invalid_entries(msg, path=new_product_path)
       respond_to do |format|
-        format.html { redirect_to path, alert: msg, status: :unprocessable_entity }
+        format.html { redirect_to path, alert: msg }
         format.json { render json: {errors: [{barcode: msg}]}, status: :unprocessable_entity }
       end
     end

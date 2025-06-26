@@ -12,7 +12,7 @@ class Api::V1::ProductsController < Api::V1::BaseController
     company_name = company.name if company
     rating_distribution = Review.rating_distribution_for(product)
     review_stats = Review.stats_for(product)
-    scans: Scan.where(product_id: product.id).count
+    scans = Scan.where(product_id: product.id).count
     
     variant_data = product.product_variants&.map do |v|
       {
@@ -108,19 +108,23 @@ class Api::V1::ProductsController < Api::V1::BaseController
     companies = Company.unscoped.where('id IN (?)', company_ids)
 
     mapped_companies = companies.map{|c|{details: {
-      id: c.id, name: c.name, description: truncate_highlighted_snippet(c.description), logo: c.logo,
-      searches: c.searches }, matches: matches["Company-#{c.id}"]}}
+      id: c.id, name: c.name, logo: c.logo,
+      searches: c.searches }
+      #matches: matches["Company-#{c.id}"]
+      }
+    }
 
     product_with_variants = RawQueryModule.unscoped_products_with_assoc("product_id", product_ids)
             
     products = product_with_variants.map do |pv|
-        {
+      product = pv.product
+       return  {
           product_variant: {
-            id: pv.id, name: pv.name, description: truncate_highlighted_snippet(pv.description), 
+            id: pv.id, name: product.name, description: truncate_highlighted_snippet(product.description), 
             searches: pv.searches, product_company_id: pv.product_company_id, company_name: pv.company_name 
           },
-          media: pv.media.map{|m| {media_type: m.media_type, file: m.file}},
-          matches: matches["Product-#{pv.product_id}"]
+          media: pv.media.map{|m| {media_type: m.media_type, file: m.file}}
+         # matches: matches["Product-#{pv.product_id}"]
         }
     end
     {companies: mapped_companies, products: products} 
