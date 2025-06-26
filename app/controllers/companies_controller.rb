@@ -11,9 +11,9 @@ class CompaniesController < ApplicationController
   def insert_company
     if company_params[:industry_category_type_id].blank? 
         respond_to_invalid_entries("industry category type is required", company_capture_interface_path(mid: company_params[:mid]))  
-    elsif (params[:company][:new_company_name].blank? && params[:company][:id].blank?  && !params[:company][:company_id]&.to_s&.match?(/^\d+$/))
+    elsif (params[:company][:new_company_name].blank? && params[:company][:name].blank? && params[:company][:id].blank?  && !params[:company][:company_id]&.to_s&.match?(/^\d+$/))
       respond_to_invalid_entries("company name is required", company_capture_interface_path(mid: company_params[:mid])) 
-    elsif !params[:company][:company_id].blank? && params[:company][:company_id]&.to_s&.match?(/^\d+$/) || (!params[:company][:id].blank?  && params[:company][:id]&.to_s&.match?(/^\d+$/))
+    elsif !params[:company][:company_id].blank? && params[:company][:company_id]&.to_s&.match?(/^\d+$/) || (!params[:company][:id].blank?  && params[:company][:id]&.to_s&.match?(/^\d+$/)) || !params[:company][:name].blank?
        update_company
      else
           @company = Company.new(company_params.except(:mid))
@@ -35,8 +35,8 @@ class CompaniesController < ApplicationController
               format.html { redirect_to company_capture_interface_path(mid: mid), notice: "Company was successfully created." }
               format.json { render :show, status: :created, location: @company }
             else
-              msg = @company.errors.map(&:attribute).map(&:to_s).join(" ") + " already exists"
-              format.html { redirect_to company_capture_interface_path(mid: mid), alert: msg, status: :unprocessable_entity }
+              msg = @company.errors.map{|er| "#{er.attribute} #{er.message}"}.join(", ")
+              format.html { redirect_to company_capture_interface_path(mid: mid), alert: msg }
               format.json { render json: @company.errors, status: :unprocessable_entity }
             end
           end
@@ -53,7 +53,7 @@ class CompaniesController < ApplicationController
         format.html { redirect_to company_capture_interface_path(mid: company_params[:mid]), notice: "company was successfully updated." }
         format.json { render :show, status: :ok, location: @company }
       rescue => e
-        format.html { redirect_to company_capture_interface_path(mid: company_params[:mid]), alert: e.message, status: :unprocessable_entity }
+        format.html { redirect_to company_capture_interface_path(mid: company_params[:mid]), alert: e.message }
         format.json { render json: @company.errors, status: :unprocessable_entity }
       end
     end
@@ -69,7 +69,7 @@ class CompaniesController < ApplicationController
         format.html { redirect_to(company_capture_interface_path(mid: company_params[:mid]), notice: "Company was successfully updated.") and return }
         format.json { render :show, status: :created, location: @company }
       rescue => e
-        format.html { redirect_to company_capture_interface_path(mid: company_params[:mid]), alert: e.message, status: :unprocessable_entity }
+        format.html { redirect_to company_capture_interface_path(mid: company_params[:mid]), alert: e.message }
         format.json { render json: @company.errors, status: :unprocessable_entity }
       end
     end
@@ -84,7 +84,7 @@ class CompaniesController < ApplicationController
         format.html { redirect_to company_capture_interface_path(mid: company_params[:mid]), notice: "Company was successfully updated." }
         format.json { render :show, status: :created, location: @company }
       rescue => e
-        format.html { redirect_to company_capture_interface_path(mid: company_params[:mid]), alert: e.message, status: :unprocessable_entity }
+        format.html { redirect_to company_capture_interface_path(mid: company_params[:mid]), alert: e.message }
         format.json { render json: @company.errors, status: :unprocessable_entity }
       end
     end
@@ -100,7 +100,7 @@ class CompaniesController < ApplicationController
         format.html { redirect_to company_capture_interface_path(mid: company_params[:mid]), notice: "Company was successfully updated." }
         format.json { render :show, status: :created, location: @company }
       rescue => e
-        format.html { redirect_to company_capture_interface_path(mid: company_params[:mid]), alert: e.message, status: :unprocessable_entity }
+        format.html { redirect_to company_capture_interface_path(mid: company_params[:mid]), alert: e.message }
         format.json { render json: @company.errors, status: :unprocessable_entity }
       end
     end
@@ -198,7 +198,7 @@ end
         company_name: company_params[:name], user_id: current_user.id, level: 1)
   
     respond_to do |format|
-      format.html { redirect_to company_capture_interface_path(mid: company_params[:mid]), notice: "company was successfully updated.", status: :ok  and return  }
+      format.html { redirect_to edit_company_path(company), notice: "company was successfully updated."  and return  }
       format.json { render json: {errors: [{barcode: msg}]}, status: :unprocessable_entity and return }
     end
 
@@ -207,7 +207,7 @@ end
 
   def respond_to_invalid_entries(msg, path=new_product_path)
     respond_to do |format|
-      format.html { redirect_to path, notice: msg, status: :unprocessable_entity and return  }
+      format.html { redirect_to path, notice: msg and return  }
       format.json { render json: {errors: [{barcode: msg}]}, status: :unprocessable_entity and return }
     end
   end
@@ -252,7 +252,7 @@ end
 
 
   def company_params
-        params.require(:company).permit(:name, :sector, :logo, :mid, 
+        params.require(:company).permit(:id, :name, :sector, :logo, :mid, 
             :industry_category_type_id,  
             :black_owned, :female_owned, :established, :website, :diversity_report, 
             :diversity_score, :total_employees,

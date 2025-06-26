@@ -10,7 +10,7 @@ module RawQueryModule
           SELECT DISTINCT ON (barcode) *
           FROM scans
           WHERE user_id = #{ActiveRecord::Base.connection.quote(current_user_id)}
-          ORDER BY created_at DESC
+          ORDER BY barcode, created_at DESC
           LIMIT #{per_page} OFFSET #{offset}
         SQL
 
@@ -39,7 +39,7 @@ module RawQueryModule
             SELECT DISTINCT ON (barcode) 1
             FROM scans
             WHERE user_id = #{ActiveRecord::Base.connection.quote(current_user_id)}
-            ORDER BY created_at DESC
+            ORDER BY barcode, created_at DESC
           ) AS recent_scans
         SQL
 
@@ -56,7 +56,7 @@ module RawQueryModule
             }
         end
 
-        record = recent_scan_data.map do |scn|
+        records = recent_scan_data.map do |scn|
           {
             scan: scn,
             product_data: barcode_hash[scn.barcode]
