@@ -15,16 +15,9 @@
       <th>Name</th>
       <th>MIDs</th>
       <th>Logo</th>
-      <th>Address 1</th>
-      <th>Address 2</th>
-      <th>City</th>
-      <th>State</th>
-      <th>Country</th>
-      <th>Established</th>
       <th>Website</th>
       <th>Diversity Report</th>
       <th>Diversity Score</th>
-      <th>Total Employees</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -35,19 +28,12 @@
         <td><%= company.name %></td>
         <td><%= company.mids %></td>
         <td><%= image_tag company.logo.thumb.url if company.logo? %></td>
-        <td><%= company.address_1 %></td>
-        <td><%= company.address_2 %></td>
-        <td><%= company.city %></td>
-        <td><%= company.state %></td>
-        <td><%= company.country %></td>
-        <td><%= company.established.to_s(:rfc822) if company.established %></td>
-        <td><%= link_to company.website %></td>
-        <td><%= link_to company.diversity_report %></td>
+        <td><%= link_to company.website if company.website %></td>
+        <td><%= link_to company.diversity_report if company.diversity_report %></td>
         <td><%= company.diversity_score %></td>
-        <td><%= company.total_employees %></td>
         <td><%= link_to 'View', company %></td>
         <td><%= link_to 'Edit', edit_company_path(company) %></td>
-        <td><%= button_to 'Delete', company, data: {confirm: 'Are you sure?' }, method: :delete, class: "btn btn-outline-danger btn-sm" %></td>
+        <!--<td><%= button_to 'Delete', company, data: {confirm: 'Are you sure?' }, method: :delete, class: "btn btn-outline-danger btn-sm" %></td>-->
       </tr>
     <% end %>
   </tbody>

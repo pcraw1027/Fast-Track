@@ -93,12 +93,12 @@ class Api::V1::ProductsController < Api::V1::BaseController
        if hit['highlight']
        
         m = {}
-        hit['highlight'].each do |field, matches|
+        hit['highlight'].each do |field, in_matches|
   
           if m[field]
-            m[field] << [matches.join(' ... ')]
+            next #m[field] << [in_matches.join(' ... ')]
           else
-            m[field] = [matches.join(' ... ')]
+            m[field] = [in_matches.join(' ... ')]
           end
         end
         matches["#{hit['_source']['type']}-#{hit['_id']}"] = m
@@ -107,26 +107,33 @@ class Api::V1::ProductsController < Api::V1::BaseController
    
     companies = Company.unscoped.where('id IN (?)', company_ids)
 
-    mapped_companies = companies.map{|c|{details: {
-      id: c.id, name: c.name, logo: c.logo,
-      searches: c.searches }
-      #matches: matches["Company-#{c.id}"]
+    mapped_companies = companies.map{|c| { 
+          id: c.id, 
+          name: (matches["Company-#{c.id}"]["name"] ? matches["Company-#{c.id}"]["name"][0] : c.name), 
+          logo: c.logo&.url,
+          searches: c.searches 
       }
+      
     }
+
 
     product_with_variants = RawQueryModule.unscoped_products_with_assoc("product_id", product_ids)
             
     products = product_with_variants.map do |pv|
       product = pv.product
-       return  {
-          product_variant: {
-            id: pv.id, name: product.name, description: truncate_highlighted_snippet(product.description), 
-            searches: pv.searches, product_company_id: pv.product_company_id, company_name: pv.company_name 
-          },
-          media: pv.media.map{|m| {media_type: m.media_type, file: m.file}}
-         # matches: matches["Product-#{pv.product_id}"]
-        }
+      {
+          id: pv.id,
+          name: product.name,
+          description: (matches["Product-#{pv.product_id}"]["description"]&.length > 0 ? truncate_highlighted(matches["Product-#{pv.product_id}"]["description"][0]) : truncate_highlighted_snippet(product.description)),
+          searches: pv.searches,
+          product_company_id: pv.product_company_id,
+          company_name: pv.company_name,
+          media: pv.media&.map { |m| { file: m.file&.url } }
+      
+      }
     end
+
+
     {companies: mapped_companies, products: products} 
   end
 
@@ -146,6 +153,11 @@ class Api::V1::ProductsController < Api::V1::BaseController
     else
       words.first(word_limit).join(" ") + "..."
     end
+  end
+
+  def truncate_highlighted(snippet)
+    return "" if snippet.blank?
+    snippet.split(' ... ')[0]
   end
 
 

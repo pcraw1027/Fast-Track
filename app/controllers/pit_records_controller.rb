@@ -103,17 +103,11 @@ class PitRecordsController < ApplicationController
     @pit_records_4s = []
 
     pits.each do |pit|
-      if !pit.product&.level_1_flag || pit.product_id.blank?
-        @pit_records_0s.push(pit) 
-      elsif !pit.product&.level_2_flag 
-        @pit_records_1s.push(pit) 
-      elsif !pit.product&.level_3_flag 
-        @pit_records_2s.push(pit) 
-      elsif !pit.product&.level_4_flag
-         @pit_records_3s.push(pit) 
-      elsif !pit.product&.level_5_flag 
-        @pit_records_4s.push(pit) 
-      end
+      @pit_records_0s.push(pit) if !pit.product&.level_1_flag || pit.product_id.blank?
+      @pit_records_1s.push(pit) if !pit.product&.level_2_flag && pit.product&.level_1_flag
+      @pit_records_2s.push(pit) if !pit.product&.level_3_flag && pit.product&.level_1_flag
+      @pit_records_3s.push(pit) if !pit.product&.level_4_flag && pit.product&.level_1_flag
+      @pit_records_4s.push(pit) if !pit.product&.level_5_flag && pit.product&.level_1_flag
     end
 
   end

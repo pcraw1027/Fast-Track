@@ -80,7 +80,7 @@ class CompaniesController < ApplicationController
      respond_to do |format|
       begin
         @company.update(company_params.except(:mid))
-        CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, company_name: @company.name, user_id: current_user.id, level: 3)
+        CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, company_name: @company.name, user_id: current_user.id, level: 4)
         format.html { redirect_to company_capture_interface_path(mid: company_params[:mid]), notice: "Company was successfully updated." }
         format.json { render :show, status: :created, location: @company }
       rescue => e
@@ -247,6 +247,7 @@ end
     cit_rec = CitRecordHandler.update_or_create(nil, mid: mid, source: "Company Import", 
                   user_id: current_user.id, company_id: company.id, brand: nil)
     company.update(mids: [cit_rec.mid])
+    CitLevelUser.find_or_create_by!(level: 3, user_id: current_user.id, cit_record_id: cit_rec.id ) if cit_rec
     return company.id
   end
 

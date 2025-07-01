@@ -4,6 +4,18 @@ class CompanyRelationship < ApplicationRecord
   belongs_to :parent_company, class_name: "Company"
   belongs_to :child_company, class_name: "Company"
 
+  scope :parents, ->(company_id) {
+                        joins(:parent_company)
+                          .where(child_company_id: company_id)
+                          .select('companies.*, company_relationships.*')
+                    }
+
+  scope :children, ->(company_id) {
+                        joins(:child_company)
+                          .where(parent_company_id: company_id)
+                          .select('companies.*, company_relationships.*')
+                    }
+
   validate :parent_and_child_cannot_be_same
 
   def parent_and_child_cannot_be_same
