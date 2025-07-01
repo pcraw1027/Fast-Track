@@ -5,7 +5,7 @@ class ProductsController < ApplicationController
 
   # GET /products or /products.json
   def index
-    @products = Product.includes(:company, :segment, :family, :klass, :brick).all
+    @products = Product.includes(:company, :segment, :family, :klass, :brick, :product_variants).all
   end
 
   def insert_product

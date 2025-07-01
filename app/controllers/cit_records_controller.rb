@@ -69,18 +69,13 @@ class CitRecordsController < ApplicationController
     @cit_records_4s = []
 
     cits.each do |cit|
-      if !cit.company&.level_1_flag || cit.company_id.blank?
-        @cit_records_0s.push(cit) 
-      elsif !cit.company&.level_2_flag 
-        @cit_records_1s.push(cit) 
-      elsif !cit.company&.level_3_flag 
-        @cit_records_2s.push(cit) 
-      elsif !cit.company&.level_4_flag
-         @cit_records_3s.push(cit) 
-      elsif !cit.company&.level_5_flag 
-        @cit_records_4s.push(cit) 
-      end
+        @cit_records_0s.push(cit) if !cit.company&.level_1_flag || cit.company_id.blank?
+        @cit_records_1s.push(cit) if !cit.company&.level_2_flag && cit.company&.level_1_flag
+        @cit_records_2s.push(cit) if !cit.company&.level_3_flag && cit.company&.level_1_flag
+        @cit_records_3s.push(cit) if !cit.company&.level_4_flag && cit.company&.level_1_flag
+        @cit_records_4s.push(cit) if !cit.company&.level_5_flag && cit.company&.level_1_flag
     end
+    
   end
 
   # GET /cit_records/1 or /cit_records/1.json

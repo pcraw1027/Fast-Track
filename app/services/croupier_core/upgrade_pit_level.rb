@@ -10,8 +10,7 @@ class CroupierCore::UpgradePitLevel < ApplicationService
       pit_rec.save!
     end
     
-    PitLevelUser.first_or_create!(level: level, user_id: user_id, pit_record_id: pit_rec.id ) if pit_rec
-    
+    PitLevelUser.find_or_create_by!(level: level, user_id: user_id, pit_record_id: pit_rec.id ) if pit_rec
     serv_req = CroupierCore::MidExtractor.call!(barcode: barcode)
 
     if serv_req.success?

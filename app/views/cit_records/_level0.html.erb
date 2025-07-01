@@ -17,12 +17,11 @@
         <td><%= cit.mid %></td>
         <td><%= cit.product_activity_count %></td>
         <td><%= cit.company_id %></td>
-        <td><%= cit.company_name %></td>
-        <td><%= cit.company_name %></td>
+        <td><%= cit.company&.name %></td>
         <td><%= cit.cit_level_users.where(level: 0 )&.first&.user&.username %></td>
         <td><%= cit.created_at.strftime("%m/%d/%Y") %></td>
       
-        <td><%= link_to 'Add', company_capture_interface_path(mid: cit.mid), class:"action-btn-outlined" %></td>
+        <td><%= link_to 'Add', company_capture_interface_path(mid: cit.mid, level: 1), class:"action-btn-outlined" %></td>
      </tr>
     <% end %>
   </tbody>

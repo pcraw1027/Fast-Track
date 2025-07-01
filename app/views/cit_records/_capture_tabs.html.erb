@@ -6,10 +6,10 @@
             <div class="card-header" id="headingOne">
                 <h5 class="mb-0">
                 <button
-                    class="btn theme-link btn-block text-left m-0 p-3 font-weight-bold"
+                    class="btn theme-link btn-block collapsed text-left m-0 p-3 font-weight-bold"
                     data-toggle="collapse"
                     data-target="#collapseOne"
-                    aria-expanded="true"
+                    aria-expanded="<%= params[:level] == '1' ? 'true' : 'false' %>"
                     aria-controls="collapseOne"
                 >
                     Level 1 (Base Data) <%= 'True' if company.level_1_flag %> <%= 'False' if !company.level_1_flag %>
@@ -19,6 +19,7 @@
 
             <div
                 id="collapseOne"
+                class="<%= params[:level] == '1' ? '' : 'collapse' %>"
                 aria-labelledby="headingOne"
                 data-parent="#accordion"
             >
@@ -39,7 +40,7 @@
                     class="btn theme-link btn-block collapsed text-left m-0 p-3 font-weight-bold"
                     data-toggle="collapse"
                     data-target="#collapseTwo"
-                    aria-expanded="false"
+                    aria-expanded="<%= params[:level] == '2' ? 'true' : 'false' %>"
                     aria-controls="collapseTwo"
                 >
                     Level 2 (company Addresses) <%= 'True' if company.level_2_flag %> <%= 'False' if !company.level_2_flag %>
@@ -49,15 +50,14 @@
 
             <div
                 id="collapseTwo"
-                class="collapse"
+                class="<%= params[:level] == '2' ? '' : 'collapse' %>"
                 aria-labelledby="headingTwo"
                 data-parent="#accordion"
             >
                 <div class="card-body">
                     <%if company.level_1_flag %>
                         <%= render partial: "cit_records/form_level2", 
-                        locals: {company: company, company_contact: company_contact, 
-                        cit_record: cit_record  } %>
+                        locals: {company: company, cit_record: cit_record  } %>
                     <%else%>
                         <h5>Level 1 data is required!</h5>
                     <%end%>
@@ -73,7 +73,7 @@
                     class="btn theme-link btn-block collapsed text-left m-0 p-3 font-weight-bold"
                     data-toggle="collapse"
                     data-target="#collapseThree"
-                    aria-expanded="false"
+                    aria-expanded="<%= params[:level] == '3' ? 'true' : 'false' %>"
                     aria-controls="collapseThree"
                 >
                     Level 3 (Parents, Subsidiaries, & Brands) <%= 'True' if company.level_3_flag %> <%= 'False' if !company.level_3_flag %>
@@ -83,7 +83,7 @@
 
             <div
                 id="collapseThree"
-                class="collapse"
+                class="<%= params[:level] == '3' ? '' : 'collapse' %>"
                 aria-labelledby="headingThree"
                 data-parent="#accordion"
             >
@@ -108,7 +108,7 @@
                     class="btn theme-link btn-block collapsed text-left m-0 p-3 font-weight-bold"
                     data-toggle="collapse"
                     data-target="#collapseFour"
-                    aria-expanded="false"
+                    aria-expanded="<%= params[:level] == '4' ? 'true' : 'false' %>"
                     aria-controls="collapseFour"
                 >
                     Level 4 (Company Contacts) <%= 'True' if company.level_4_flag %> <%= 'False' if !company.level_4_flag %>
@@ -118,7 +118,7 @@
 
             <div
                 id="collapseFour"
-                class="collapse"
+                class="<%= params[:level] == '4' ? '' : 'collapse' %>"
                 aria-labelledby="headingFour"
                 data-parent="#accordion"
             >
@@ -141,7 +141,7 @@
                     class="btn theme-link btn-block collapsed text-left m-0 p-3 font-weight-bold"
                     data-toggle="collapse"
                     data-target="#collapseFive"
-                    aria-expanded="false"
+                    aria-expanded="<%= params[:level] == '5' ? 'true' : 'false' %>"
                     aria-controls="collapseFive"
                 >
                     Level 5 (Diversity Snapshot) <%= 'True' if company.level_5_flag %> <%= 'False' if !company.level_5_flag %>
@@ -151,7 +151,7 @@
 
             <div
                 id="collapseFive"
-                class="collapse"
+                class="<%= params[:level] == '5' ? '' : 'collapse' %>"
                 aria-labelledby="headingFive"
                 data-parent="#accordion"
             >
