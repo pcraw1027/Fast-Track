@@ -15,7 +15,7 @@ class Api::V1::CompaniesController < Api::V1::BaseController
 
       subsidiary_data = {title: "Subsidiaries/Brands", subsidiaries_companies: subsidiaries_companies}
       if subsidiaries_companies.blank? && parent_company.present?
-         subsidiaries_companies = CompanyRelationship.children(parent_company.parent_company_id)
+         subsidiaries_companies = CompanyRelationship.children(parent_company[:details].parent_company_id)
          subsidiary_data = {title: "Sister Subsidiaries/Brands", subsidiaries_companies: subsidiaries_companies} if subsidiaries_companies.any?
       end
       

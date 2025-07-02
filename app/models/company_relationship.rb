@@ -5,15 +5,13 @@ class CompanyRelationship < ApplicationRecord
   belongs_to :child_company, class_name: "Company"
 
   scope :parents, ->(company_id) {
-                        joins(:parent_company)
-                          .where(child_company_id: company_id)
-                          .select('companies.*, company_relationships.*')
+                        includes(:parent_company)
+                          .where(child_company_id: company_id)&.map{|cr| {details: cr, parent_company: cr.parent_company}}
                     }
 
   scope :children, ->(company_id) {
-                        joins(:child_company)
-                          .where(parent_company_id: company_id)
-                          .select('companies.*, company_relationships.*')
+                        includes(:child_company)
+                          .where(parent_company_id: company_id)&.map{|cr| {details: cr, child_company: cr.child_company}}
                     }
 
   validate :parent_and_child_cannot_be_same
