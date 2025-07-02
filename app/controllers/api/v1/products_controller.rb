@@ -25,6 +25,7 @@ class Api::V1::ProductsController < Api::V1::BaseController
       product: product,
       scans: scans,
       company_name: company_name,
+      company_snapshot: company&.company_snapshot,
       product_variants: variant_data,
       rating_distribution: rating_distribution,
       review_stats: review_stats
