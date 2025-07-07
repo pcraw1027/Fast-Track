@@ -1,0 +1,12 @@
+<div class="nested-fields p-3 mb-3">
+    <%= f.label :social_site_id, "Social Site" %>
+    <%= f.collection_select :social_site_id, @social_sites, :id, :site %>
+
+    <%= f.label :profile_link %>
+    <%= f.text_field :profile_link, class: "form-control" %>
+
+
+    <div class = "form-group mx-2">
+           <i class="fas fa-trash" style="color: #ff0000;"></i> <%= link_to_remove_association "remove", f, class: "btn btn-outline-danger btn-sm" %>
+    </div>
+</div>

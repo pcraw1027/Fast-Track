@@ -1,0 +1,32 @@
+<%= form_with(model: person_social_site) do |form| %>
+  <% if person_social_site.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(person_social_site.errors.count, "error") %> prohibited this person_social_site from being saved:</h2>
+
+      <ul>
+        <% person_social_site.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :person_id %>
+    <%= form.text_field :person_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :profile_link %>
+    <%= form.text_field :profile_link %>
+  </div>
+
+  <div class="field">
+    <%= form.label :social_site_id %>
+    <%= form.text_field :social_site_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

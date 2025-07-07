@@ -13,10 +13,11 @@ class UploadRecord < ApplicationRecord
     page = page.to_i
     offset = (page - 1) * per_page
     total_count = where(user_id: user_id).count
-    uploads = includes(:media).where(user_id: user_id).limit(per_page).offset(offset)
+    uploads = includes(:scan, :media).where(user_id: user_id).limit(per_page).offset(offset)
     mapped = uploads.map do |up|
       h = {}
       h["upload"] = up
+      h["scan"] = up.scan
       h["media"] = up.media
       h
     end

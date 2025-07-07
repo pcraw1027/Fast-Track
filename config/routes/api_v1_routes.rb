@@ -35,7 +35,7 @@ module ApiV1Routes
         
         resources :reviews, only: [:show, :update]
         resources :upload_records, only: [:create]
-        resources :scans, only: [:create]
+        resources :scans, only: [:show, :create]
         resources :products, only: [:show] do 
           member do
             put :increment_search

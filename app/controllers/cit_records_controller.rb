@@ -1,10 +1,10 @@
 class CitRecordsController < ApplicationController
-  before_action :set_cit_record, only: %i[ show edit update destroy ]
+  before_action :set_cit_record, only: %i[ edit update destroy ]
   before_action :authenticate_user!, only: %i[ new edit update create destroy cit_interface]
 
   # GET /cit_records or /cit_records.json
   def index
-    @cit_records = CitRecord.all
+    @cit_records = CitRecord.includes(:company).all
   end
 
   def next_cit_record
@@ -23,7 +23,8 @@ class CitRecordsController < ApplicationController
     @company = Company.new
     @cit_record = CitRecord.new
     @company_contact = CompanyContact.new
-   
+
+
     if params[:mid]
       @cit_record = CitRecord.find_by(mid: params[:mid].strip)
       if @cit_record
@@ -42,13 +43,11 @@ class CitRecordsController < ApplicationController
     end
 
     if @company.company_contacts.blank?
+
       contact = @company.company_contacts.build
-      contact.build_person
-    else
-      @company.company_contacts.each do |contact|
-        contact.build_person if contact.person.blank?
-      end
+
     end
+
 
     @gender_types = GenderType.all
     @ethinicity_types = EthnicityType.all
@@ -80,7 +79,8 @@ class CitRecordsController < ApplicationController
 
   # GET /cit_records/1 or /cit_records/1.json
   def show
-    @level_users = CitLevelUser.includes(:user).where(cit_record_id: params[:id])
+    @cit_record = CitRecord.includes(:company, :cit_level_users).find(params[:id])
+    @level_users = @cit_record.cit_level_users
   end
 
   # GET /cit_records/new
@@ -143,6 +143,6 @@ class CitRecordsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def cit_record_params
-      params.require(:cit_record).permit(:product_activity_count, :mid, :company_name, :level, :product_orphan_count, :source, :company_id)
+      params.require(:cit_record).permit(:product_activity_count, :mid, :level, :product_orphan_count, :source, :company_id)
     end
 end

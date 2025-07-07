@@ -5,10 +5,11 @@ class CreatePeople < ActiveRecord::Migration[6.1]
       t.string :first_name
       t.string :middle_name
       t.string :last_name
+      t.string :phone
       t.string :letters
-      t.references :gender_type, null: false, foreign_key: true
-      t.references :ethnicity_type, null: false, foreign_key: true
-      t.references :country_reference, null: false, foreign_key: true
+      t.references :gender_type, null: true, foreign_key: true
+      t.references :ethnicity_type, null: true, foreign_key: true
+      t.references :country_reference, null: true, foreign_key: true
       t.string :picture
       t.string :email
       t.string :website

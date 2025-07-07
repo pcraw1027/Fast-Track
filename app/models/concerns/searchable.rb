@@ -9,20 +9,21 @@ module Searchable
       max_ngram_diff: 18,
       analysis: {
         analyzer: {
-          ngram_analyzer: {
-            tokenizer: 'ngram_tokenizer',
+          edge_ngram_analyzer: {
+            tokenizer: 'edge_ngram_tokenizer',
             filter: ['lowercase']
           },
-          ngram_search_analyzer: {
-            tokenizer: 'lowercase'
+          search_analyzer: {
+            tokenizer: 'standard',
+            filter: ['lowercase']
           }
         },
         tokenizer: {
-          ngram_tokenizer: {
-            type: 'ngram',
-            min_gram: 2,
+          edge_ngram_tokenizer: {
+            type: 'edge_ngram',
+            min_gram: 1,
             max_gram: 20,
-            token_chars: ['letter', 'digit', 'whitespace']
+            token_chars: ['letter', 'digit']
           }
         }
       }
@@ -41,7 +42,8 @@ module Searchable
       model_class = self 
       mappings dynamic: false do
         model_class.searchable_fields.each do |field|
-          indexes field, type: :text, analyzer: 'ngram_analyzer', search_analyzer: 'ngram_search_analyzer'
+          indexes field, type: :text, analyzer: 'edge_ngram_analyzer', search_analyzer: 'search_analyzer'
+
         end
       end
     end

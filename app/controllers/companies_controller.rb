@@ -31,7 +31,7 @@ class CompaniesController < ApplicationController
               end
 
               @company.update(mids: [cit_rec.mid])
-              CroupierCore::UpgradeCitLevel.call!(mid: mid, company_id: @company.id, company_name: @company.name, user_id: current_user.id, level: 1)
+              CroupierCore::UpgradeCitLevel.call!(mid: mid, company_id: @company.id, user_id: current_user.id, level: 1)
               format.html { redirect_to company_capture_interface_path(mid: mid), notice: "Company was successfully created." }
               format.json { render :show, status: :created, location: @company }
             else
@@ -49,7 +49,7 @@ class CompaniesController < ApplicationController
       begin
         @company.update(company_params.except(:mid))
         CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, 
-        company_name: @company.name, user_id: current_user.id, level: 2)
+        user_id: current_user.id, level: 2)
         format.html { redirect_to company_capture_interface_path(mid: company_params[:mid]), notice: "company was successfully updated." }
         format.json { render :show, status: :ok, location: @company }
       rescue => e
@@ -65,7 +65,7 @@ class CompaniesController < ApplicationController
       begin
         convert_child_params
         convert_parent_params
-        CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, company_name: @company.name, user_id: current_user.id, level: 3)
+        CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, user_id: current_user.id, level: 3)
         format.html { redirect_to(company_capture_interface_path(mid: company_params[:mid]), notice: "Company was successfully updated.") and return }
         format.json { render :show, status: :created, location: @company }
       rescue => e
@@ -76,11 +76,12 @@ class CompaniesController < ApplicationController
   end
 
   def update_to_level_four
-     @company = Company.find(params[:company_id])
+    @company = Company.find(params[:company_id])
+
      respond_to do |format|
       begin
-        @company.update(company_params.except(:mid))
-        CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, company_name: @company.name, user_id: current_user.id, level: 4)
+        convert_company_contact_params
+        CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, user_id: current_user.id, level: 4)
         format.html { redirect_to company_capture_interface_path(mid: company_params[:mid]), notice: "Company was successfully updated." }
         format.json { render :show, status: :created, location: @company }
       rescue => e
@@ -96,7 +97,7 @@ class CompaniesController < ApplicationController
      respond_to do |format|
       begin
         @company.update(company_snapshot_params)
-        CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, company_name: @company.name, user_id: current_user.id, level: 5)
+        CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, user_id: current_user.id, level: 5)
         format.html { redirect_to company_capture_interface_path(mid: company_params[:mid]), notice: "Company was successfully updated." }
         format.json { render :show, status: :created, location: @company }
       rescue => e
@@ -177,7 +178,6 @@ end
   end
 
 
-
   private
 
 
@@ -195,7 +195,7 @@ end
     company = Company.find(company_id)
     if company.update(company_params.except(:mid))
       CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: company.id, 
-        company_name: company_params[:name], user_id: current_user.id, level: 1)
+        user_id: current_user.id, level: 1)
   
     respond_to do |format|
       format.html { redirect_to edit_company_path(company), notice: "company was successfully updated."  and return  }
@@ -210,16 +210,64 @@ end
       format.html { redirect_to path, notice: msg and return  }
       format.json { render json: {errors: [{barcode: msg}]}, status: :unprocessable_entity and return }
     end
+  end  
+
+
+  def convert_company_contact_params
+
+    unless company_contact_params[:company_contacts_attributes].blank?
+      company_contact_params[:company_contacts_attributes].each do |key, contact_attributes|
+        if contact_attributes[:_destroy] && contact_attributes[:_destroy] != "false"
+          cr = CompanyContact.find(contact_attributes[:id])
+          cr.destroy if cr
+        elsif !contact_attributes[:id].blank?
+          person_id = spawned_person_id(contact_attributes)
+          cp = CompanyContact.find(contact_attributes[:id])
+          cp.update(
+            company_contact_type_id: contact_attributes[:company_contact_type_id], 
+            job_title: contact_attributes[:job_title], 
+            person_id: person_id, 
+            email: contact_attributes[:email],
+            phone: contact_attributes[:phone], 
+            photo: contact_attributes[:photo]
+          ) if cp && person_id
+        else
+          person_id = spawned_person_id(contact_attributes)
+          CompanyContact.create!(
+            company_contact_type_id: contact_attributes[:company_contact_type_id], 
+            job_title: contact_attributes[:job_title], 
+            person_id: person_id, 
+            email: contact_attributes[:email],
+            phone: contact_attributes[:phone], 
+            photo: contact_attributes[:photo],
+            company_id: @company.id
+            ) if person_id
+        end
+
+      end
+    end
   end
+
 
   def convert_child_params
     unless company_relationship_params[:child_relationships_attributes].blank?
       company_relationship_params[:child_relationships_attributes].each do |key, child_attributes|
-        child_company_id = child_attributes[:child_company_id]
-        child_company_id = spawned_company_id(child_attributes, child_attributes[:child_company_id]) if !child_company_id&.to_s&.match?(/^\d+$/)
-        CompanyRelationship.create!(
-          company_relationship_type_id: child_attributes[:company_relationship_type_id], 
-          parent_company_id: @company.id, child_company_id: child_company_id)
+        if child_attributes[:_destroy] && child_attributes[:_destroy] != "false"
+          cr = CompanyRelationship.find(child_attributes[:id])
+          cr.destroy if cr
+        elsif child_attributes[:id]
+          cp = Company.find(child_attributes[:child_company_id])
+          cp&.update(
+            logo: child_attributes[:logo]
+          ) if child_attributes[:logo]
+        else
+          child_company_id = child_attributes[:child_company_id]
+          child_company_id = spawned_company_id(child_attributes, child_attributes[:child_company_id]) if !child_company_id&.to_s&.match?(/^\d+$/)
+          CompanyRelationship.create!(
+            company_relationship_type_id: child_attributes[:company_relationship_type_id], 
+            parent_company_id: @company.id, child_company_id: child_company_id)
+        end
+
       end
     end
   end
@@ -227,14 +275,37 @@ end
   def convert_parent_params
     unless company_relationship_params[:parent_relationships_attributes].blank?
       company_relationship_params[:parent_relationships_attributes].each do |key, parent_attributes|
-        parent_company_id = parent_attributes[:parent_company_id]
-        parent_company_id = spawned_company_id(parent_attributes, parent_attributes[:parent_company_id]) if !parent_company_id&.to_s&.match?(/^\d+$/)
-        CompanyRelationship.create!(
-          company_relationship_type_id: parent_attributes[:company_relationship_type_id], 
-          parent_company_id: parent_company_id, child_company_id: @company.id
-        )
+        if parent_attributes[:_destroy] && parent_attributes[:_destroy] != "false"
+          cr = CompanyRelationship.find(parent_attributes[:id])
+          cr.destroy if cr
+        elsif parent_attributes[:id]
+          cp = Company.find(parent_attributes[:parent_company_id])
+          cp&.update(
+            logo: parent_attributes[:logo]
+          ) if parent_attributes[:logo]
+        else
+          parent_company_id = parent_attributes[:parent_company_id]
+          parent_company_id = spawned_company_id(parent_attributes, parent_attributes[:parent_company_id]) if !parent_company_id&.to_s&.match?(/^\d+$/)
+          CompanyRelationship.create!(
+            company_relationship_type_id: parent_attributes[:company_relationship_type_id], 
+            parent_company_id: parent_company_id, child_company_id: @company.id
+          )
+        end
       end
     end
+  end
+
+  def spawned_person_id(contact_attributes)
+    person_id = contact_attributes[:person_id]
+    if person_id.blank?
+      person = Person.create(
+        first_name: contact_attributes[:first_name],
+        last_name: contact_attributes[:last_name],
+        middle_name: contact_attributes[:middle_name]
+      )
+      person_id = person.id
+    end
+    person_id
   end
 
   def spawned_company_id(attributes, new_company_name)
@@ -258,14 +329,16 @@ end
             :black_owned, :female_owned, :established, :website, :diversity_report, 
             :diversity_score, :total_employees,
             addresses_attributes: [:id, :address_type_id, :addressable_id, :address1, :address2, :city, 
-                  :state, :postal_code, :country_reference_id, :_destroy],
+                                   :state, :postal_code, :country_reference_id, :_destroy]
+            
+        )
+  end
+
+  def company_contact_params
+        params.require(:company).permit(
             company_contacts_attributes: [
-                  :id, :company_contact_type_id, :name, :job_title, :email, :phone, :photo, :_destroy,
-                  person_attributes: [
-                    :id, :title, :first_name, :middle_name, :last_name, :letters,
-                    :gender_type_id, :ethnicity_type_id, :country_reference_id,
-                    :picture, :email, :website
-                  ]
+                  :id, :company_contact_type_id, :job_title, :person_id, :phone, :first_name, 
+                  :last_name, :middle_name, :email, :phone, :photo, :_destroy
                 ]
             )
   end
@@ -281,15 +354,12 @@ end
 
   def company_snapshot_params
         params.require(:company).permit(
-            company_snapshot_attributes: [:id, :data_transparency, :internal_culture,
-                    :mgmt_composition,  :_destroy]
+            company_snapshot_attributes: [:id, :employee_demographics_transparency, 
+            :employee_demographics_performance, :projected_culture_and_identity, 
+            :mgmt_composition_transparency, :mgmt_composition_performance,  :_destroy]
             )
   end
 
-
-  def company_contact_params
-    params.require(:company).permit(:company_contact_type_id, :contact_name, :job_title, :email, :phone, :photo)
-  end
 
 end
 

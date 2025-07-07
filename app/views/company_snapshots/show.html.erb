@@ -2,23 +2,33 @@
 
 <p>
   <strong>Company:</strong>
-  <%= @company_snapshot.company_id %>
+  <%= @company_snapshot.company&.name %>
 </p>
 
 <p>
-  <strong>Data transparency:</strong>
-  <%= @company_snapshot.data_transparency %>
+  <strong>Employee demographics transparency:</strong>
+  <%= @company_snapshot.employee_demographics_transparency %>
 </p>
 
 <p>
-  <strong>Internal culture:</strong>
-  <%= @company_snapshot.internal_culture %>
+  <strong>Employee demographics performance:</strong>
+  <%= @company_snapshot.employee_demographics_performance %>
 </p>
 
 <p>
-  <strong>Mgmt composition:</strong>
-  <%= @company_snapshot.mgmt_composition %>
+  <strong>Projected culture & identity:</strong>
+  <%= @company_snapshot.projected_culture_and_identity %>
+</p>
+
+<p>
+  <strong>Mgmt/Board composition transparency:</strong>
+  <%= @company_snapshot.mgmt_composition_transparency %>
+</p>
+<p>
+  <strong>Mgmt/Board composition performance:</strong>
+  <%= @company_snapshot.mgmt_composition_performance %>
 </p>
 
 <%= link_to 'Edit', edit_company_snapshot_path(@company_snapshot) %> |
 <%= link_to 'Back', company_snapshots_path %>
+

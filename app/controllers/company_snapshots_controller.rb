@@ -3,7 +3,7 @@ class CompanySnapshotsController < ApplicationController
 
   # GET /company_snapshots or /company_snapshots.json
   def index
-    @company_snapshots = CompanySnapshot.all
+    @company_snapshots = CompanySnapshot.includes(:company).all
   end
 
   # GET /company_snapshots/1 or /company_snapshots/1.json
@@ -65,6 +65,6 @@ class CompanySnapshotsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def company_snapshot_params
-      params.require(:company_snapshot).permit(:company_id, :data_transparency, :internal_culture, :mgmt_composition)
+      params.require(:company_snapshot).permit(:company_id, :employee_demographics_transparency, :employee_demographics_performance, :projected_culture_and_identity, :mgmt_composition_transparency, :mgmt_composition_performance)
     end
 end

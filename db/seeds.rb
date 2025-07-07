@@ -107,64 +107,64 @@
 
 
     #BIT Record Seed
-    csv_text = File.read(Rails.root.join('lib','seeds','BIT.csv'))
-    csv = CSV.parse(csv_text, :headers => true, :encoding => 'ISO-8859-1')
+    # csv_text = File.read(Rails.root.join('lib','seeds','BIT.csv'))
+    # csv = CSV.parse(csv_text, :headers => true, :encoding => 'ISO-8859-1')
 
-    csv.each do |row|
-        t = BitRecord.new
-        t.barcode = row['Barcode']
-        t.source = row['Source']
-        t.status = row['Status'].downcase == "open" ? 0 : 1
-        t.user_id = admin.id
-        t.save!
+    # csv.each do |row|
+    #     t = BitRecord.new
+    #     t.barcode = row['Barcode']
+    #     t.source = row['Source']
+    #     t.status = row['Status'].downcase == "open" ? 0 : 1
+    #     t.user_id = admin.id
+    #     t.save!
     
-    end
+    # end
 
     #PIT Record Seed
-    csv_text = File.read(Rails.root.join('lib','seeds','PIT.csv'))
-    csv = CSV.parse(csv_text, :headers => true, :encoding => 'ISO-8859-1')
+    # csv_text = File.read(Rails.root.join('lib','seeds','PIT.csv'))
+    # csv = CSV.parse(csv_text, :headers => true, :encoding => 'ISO-8859-1')
 
-    csv.each do |row|
-        t = PitRecord.new
-        t.barcode = row['Barcode']
-        t.level = row['Level'].to_i
-        t.product_activity_count = row['Product_Activity_Count'].to_i
-        t.source = row['Source']
-        t.mid = row['Company_MID']
-        t.product_id = row['Product_ID']
-        begin
-            t.save!
-            PitLevelUser.create!(user_id: admin.id, pit_record_id: t.id, level: t.level)
-        rescue => e
-            puts "Error: #{e.message} - barcode: #{t.barcode}"
-            puts "Skipping the row..."
-        end
+    # csv.each do |row|
+    #     t = PitRecord.new
+    #     t.barcode = row['Barcode']
+    #     t.level = row['Level'].to_i
+    #     t.product_activity_count = row['Product_Activity_Count'].to_i
+    #     t.source = row['Source']
+    #     t.mid = row['Company_MID']
+    #     t.product_id = row['Product_ID']
+    #     begin
+    #         t.save!
+    #         PitLevelUser.create!(user_id: admin.id, pit_record_id: t.id, level: t.level)
+    #     rescue => e
+    #         puts "Error: #{e.message} - barcode: #{t.barcode}"
+    #         puts "Skipping the row..."
+    #     end
         
-    end
+    # end
 
     #CIT Record Seed
-    csv_text = File.read(Rails.root.join('lib','seeds','CIT.csv'))
-    csv = CSV.parse(csv_text, :headers => true, :encoding => 'ISO-8859-1')
+    # csv_text = File.read(Rails.root.join('lib','seeds','CIT.csv'))
+    # csv = CSV.parse(csv_text, :headers => true, :encoding => 'ISO-8859-1')
 
-    csv.each do |row|
-        t = CitRecord.new
-        t.level = row['Level'].to_i
-        t.product_activity_count = row['Product_Activity_Count'].to_i
-        t.product_orphan_count = row['Product_Orphan_Count'].to_i
-        t.source = row['Source']
-        t.brand = row['Brand_Name']
-        t.company_name = row['Company']
-        t.company_id = row['Company_ID']
-        t.mid = row['MID']
-        begin
-            t.save!
+    # csv.each do |row|
+    #     t = CitRecord.new
+    #     t.level = row['Level'].to_i
+    #     t.product_activity_count = row['Product_Activity_Count'].to_i
+    #     t.product_orphan_count = row['Product_Orphan_Count'].to_i
+    #     t.source = row['Source']
+    #     t.brand = row['Brand_Name']
+    #     t.company_name = row['Company']
+    #     t.company_id = row['Company_ID']
+    #     t.mid = row['MID']
+    #     begin
+    #         t.save!
 
-            CitLevelUser.create!(user_id: admin.id, cit_record_id: t.id, level: t.level)
-        rescue => e
-            puts "Error: #{e.message} - mid: #{t.mid}"
-            puts "Skipping the row..."
-        end
-    end
+    #         CitLevelUser.create!(user_id: admin.id, cit_record_id: t.id, level: t.level)
+    #     rescue => e
+    #         puts "Error: #{e.message} - mid: #{t.mid}"
+    #         puts "Skipping the row..."
+    #     end
+    # end
 
 
 
@@ -432,214 +432,119 @@ end
 
 csv_text = File.read(Rails.root.join('lib','seeds','GPC_May_2024_Schema.csv'))
 csv = CSV.parse(csv_text, :headers => true, :encoding => 'ISO-8859-1')
-last_segment_code = ""
-last_family_code = ""
-last_class_code = ""
-last_brick_code = ""
+last_segment_title = ""
+last_family_title = ""
+last_class_title = ""
+last_brick_title = ""
 gpc_rows = 1
 
 csv.each do |row|
     p "GPC - #{gpc_rows} " + +  row['SegmentTitle']
     gpc_rows += 1
-    if row['SegmentCode'] != last_segment_code
+    if row['SegmentTitle']&.strip != last_segment_title
         t = Segment.new
         t.code = row['SegmentCode']
-        t.title = row['SegmentTitle']
+        last_segment_title = row['SegmentTitle'].strip
+        t.title = last_segment_title
         t.description = row['SegmentDefinition']
         t.product_category_source_id = ProductCategorySource.find_by(code: 'GPC').id 
         t.save
 
-        last_segment_code = row['SegmentCode']
-
-        s = Family.new
-        s.segment_id = Segment.find_by(code: last_segment_code).id
-        s.code = row['FamilyCode']
-        s.title = row['FamilyTitle']
-        s.description = row['FamilyDefinition']
-        s.product_category_source_id = ProductCategorySource.find_by(code: 'GPC').id 
-        s.save
-
-        last_family_code = row['FamilyCode']
-
-        r = Klass.new
-        r.family_id = Family.find_by(code: last_family_code).id
-        r.code = row['ClassCode']
-        r.title = row['ClassTitle']
-        r.description = row['ClassDefinition']
-        r.product_category_source_id = ProductCategorySource.find_by(code: 'GPC').id 
-        r.save
-
-        last_class_code = row['ClassCode']
-
-        q = Brick.new
-        q.klass_id = Klass.find_by(code: last_class_code).id
-        q.code = row['BrickCode']
-        q.title = row['BrickTitle']
-        q.description = row['BrickDefinition']
-        q.product_category_source_id = ProductCategorySource.find_by(code: 'GPC').id 
-        q.save
-
-        last_brick_code = row['BrickCode']
-
-    elsif row['FamilyCode'] != last_family_code
-        s = Family.new
-        s.segment_id = Segment.find_by(code: last_segment_code).id
-        s.code = row['FamilyCode']
-        s.title = row['FamilyTitle']
-        s.description = row['FamilyDefinition']
-        s.product_category_source_id = ProductCategorySource.find_by(code: 'GPC').id 
-        s.save
-
-        last_family_code = row['FamilyCode']
-
-        r = Klass.new
-        r.family_id = Family.find_by(code: last_family_code).id
-        r.code = row['ClassCode']
-        r.title = row['ClassTitle']
-        r.description = row['ClassDefinition']
-        r.product_category_source_id = ProductCategorySource.find_by(code: 'GPC').id 
-        r.save
-
-        last_class_code = row['ClassCode']
-
-        q = Brick.new
-        q.klass_id = Klass.find_by(code: last_class_code).id
-        q.code = row['BrickCode']
-        q.title = row['BrickTitle']
-        q.description = row['BrickDefinition']
-        q.product_category_source_id = ProductCategorySource.find_by(code: 'GPC').id 
-        q.save
-
-        last_brick_code = row['BrickCode']
-                
-    
-    elsif row['ClassCode'] != last_class_code
-
-        r = Klass.new
-        r.family_id = Family.find_by(code: last_family_code).id
-        r.code = row['ClassCode']
-        r.title = row['ClassTitle']
-        r.description = row['ClassDefinition']
-        r.product_category_source_id = ProductCategorySource.find_by(code: 'GPC').id 
-        r.save
-
-        last_class_code = row['ClassCode']
-
-        q = Brick.new
-        q.klass_id = Klass.find_by(code: last_class_code).id
-        q.code = row['BrickCode']
-        q.title = row['BrickTitle']
-        q.description = row['BrickDefinition']
-        q.product_category_source_id = ProductCategorySource.find_by(code: 'GPC').id 
-        q.save
-
-        last_brick_code = row['BrickCode']
-                    
-    elsif row['BrickCode'] != last_brick_code 
-
-        q = Brick.new
-        q.klass_id = Klass.find_by(code: last_class_code).id
-        q.code = row['BrickCode']
-        q.title = row['BrickTitle']
-        q.description = row['BrickDefinition']
-        q.product_category_source_id = ProductCategorySource.find_by(code: 'GPC').id 
-        q.save
-
-        last_brick_code = row['BrickCode']       
-              
-    else
-    
-    end
-    
-end
-
-
-
-=begin
-csv_text = File.read(Rails.root.join('lib','seeds','GPC as of May 2024 v20240603 GB.xlsx - Schema.csv'))
-csv = CSV.parse(csv_text, :headers => true, :encoding => 'ISO-8859-1')
-
-csv.each do |row|
-    If row|segmentcode| = last_segment_title
-        If row|familycode| = last _familly_code
         
-            If row|classcode| = last _class_code
-                If row|brickcode| = last _brick_code
+        s = Family.new
+        s.segment_id = Segment.find_by(title: last_segment_title)&.id
+        s.code = row['FamilyCode']
+        last_family_title = row['FamilyTitle'].strip
+        s.title = last_family_title
+        s.description = row['FamilyDefinition']
+        s.product_category_source_id = ProductCategorySource.find_by(code: 'GPC').id 
+        s.save
+        
+        
+        r = Klass.new
+        r.family_id = Family.find_by(title: last_family_title)&.id
+        r.code = row['ClassCode']
+        last_class_title = row['ClassTitle'].strip
+        r.title = last_class_title
+        r.description = row['ClassDefinition']
+        r.product_category_source_id = ProductCategorySource.find_by(code: 'GPC').id 
+        r.save
+        
+        q = Brick.new
+        q.klass_id = Klass.find_by(title: last_class_title)&.id
+        q.code = row['BrickCode']
+        last_brick_title = row['BrickTitle'].strip
+        q.title = last_brick_title
+        q.description = row['BrickDefinition']
+        q.product_category_source_id = ProductCategorySource.find_by(code: 'GPC').id 
+        q.save
+        
+
+    elsif row['FamilyTitle']&.strip != last_family_title
+        s = Family.new
+        s.segment_id = Segment.find_by(title: last_segment_title)&.id
+        s.code = row['FamilyCode']
+        last_family_title = row['FamilyTitle'].strip
+        s.title = last_family_title
+        s.description = row['FamilyDefinition']
+        s.product_category_source_id = ProductCategorySource.find_by(code: 'GPC').id 
+        s.save
+
+        r = Klass.new
+        r.family_id = Family.find_by(title: last_family_title)&.id
+        r.code = row['ClassCode']
+        last_class_title = row['ClassTitle'].strip
+        r.title = last_class_title
+        r.description = row['ClassDefinition']
+        r.product_category_source_id = ProductCategorySource.find_by(code: 'GPC').id 
+        r.save
+
+        q = Brick.new
+        q.klass_id = Klass.find_by(title: last_class_title)&.id
+        q.code = row['BrickCode']
+        last_brick_title = row['BrickTitle'].strip
+        q.title = last_brick_title
+        q.description = row['BrickDefinition']
+        q.product_category_source_id = ProductCategorySource.find_by(code: 'GPC').id 
+        q.save             
+    
+    elsif row['ClassTitle']&.strip != last_class_title
+
+        r = Klass.new
+        r.family_id = Family.find_by(title: last_family_title)&.id
+        r.code = row['ClassCode']
+        last_class_title = row['ClassTitle'].strip
+        r.title = last_class_title
+        r.description = row['ClassDefinition']
+        r.product_category_source_id = ProductCategorySource.find_by(code: 'GPC').id 
+        r.save
+
+
+        q = Brick.new
+        q.klass_id = Klass.find_by(title: last_class_title)&.id
+        q.code = row['BrickCode']
+        last_brick_title = row['BrickTitle'].strip
+        q.title = last_brick_title
+        q.description = row['BrickDefinition']
+        q.product_category_source_id = ProductCategorySource.find_by(code: 'GPC').id 
+        q.save
                     
-                else
-                    q = Brick.new
-                    q.segment_id = Klass.where(code: last_class_title).id
-                    q.code = row|brickcode|
-                    q.title = row|bricktitle|
-                    q.description = row|brickdefinition|
-                    q.product_catergory_source_id = ProductCategorySource.id.where(code: “GPC”). 
-                    q.save
-    
-                    last_brick_title = row|brickcode|
-                end
+    elsif row['BrickTitle']&.strip != last_brick_title 
 
-            else
-                r = Klass.new
-                r.segment_id = Family.id.where(code: last_family_title)
-                r.code = row|classcode|
-                r.title = row|classtitle|
-                r.description = row|classdefinition|
-                r.product_catergory_source_id = ProductCategorySource.id.where(code: “GPC”). 
-                r.save
-    
-                last_class_title = row|classcode|
-            end
-            
+        q = Brick.new
+        q.klass_id = Klass.find_by(title: last_class_title)&.id
+        q.code = row['BrickCode'] 
+        last_brick_title = row['BrickTitle'].strip     
+        q.title = last_brick_title
+        q.description = row['BrickDefinition']
+        q.product_category_source_id = ProductCategorySource.find_by(code: 'GPC').id 
+        q.save
 
-        else
-            s = Family.new
-            s.segment_id = Segment.id.where(code: last_segment_title)
-            s.code = row|familycode|
-            s.title = row|familytitle|
-            s.description = row|familydefinition|
-            s.product_catergory_source_id = ProductCategorySource.id.where(code: “GPC”). 
-            s.save
-    
-            last_family_title = row|familycode|
-
-        end
     else
-        t = Segment.new
-        t.code = row|segmentcode|
-        t.title = row|segmenttitle|
-        t.description = row|segmentdefinition|
-        t.product_catergory_source_id = ProductCategorySource_id.where(code: “GPC”). 
-        t.save
     
-        last_segment_title = row|segmentcode|
     end
-
     
 end
-=end
 
 
-=begin
-IndustryCategoryType.create(
-    [{type: "11", definition: "Agriculture, Forestry, Fishing and Hunting"},
-    {type: "21", definition: "Mining, Quarrying, Oil and Gas Extraction"},
-    {type: "22", definition: "Utilities"},
-    {type: "23", definition: "Construction"},
-    {type: "31-33", definition: "Manufacturing"},
-    {type: "42", definition: "Wholesale Trade"},
-    {type: "44-45", definition: "Retail Trade"},
-    {type: "48-49", definition: "Transportation and Warehousing"}]
-)
 
- If row|attributecode| = last _attribute_code
-                        If row|attributevaluecode| = last _attribute_value_code
-
-                        else
-
-                        end
-
-                    else
-
-                    end
-
-=end
