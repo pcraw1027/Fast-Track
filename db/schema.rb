@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_06_24_060124) do
+ActiveRecord::Schema.define(version: 2025_07_05_183233) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -325,6 +325,17 @@ ActiveRecord::Schema.define(version: 2025_06_24_060124) do
     t.index ["gender_type_id"], name: "index_people_on_gender_type_id"
   end
 
+  create_table "person_social_sites", force: :cascade do |t|
+    t.bigint "person_id", null: false
+    t.bigint "social_site_id", null: false
+    t.string "profile_link", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["person_id", "social_site_id"], name: "index_person_social_sites_on_person_id_and_social_site_id", unique: true
+    t.index ["person_id"], name: "index_person_social_sites_on_person_id"
+    t.index ["social_site_id"], name: "index_person_social_sites_on_social_site_id"
+  end
+
   create_table "pit_level_users", force: :cascade do |t|
     t.integer "level", default: 0, null: false
     t.bigint "user_id"
@@ -529,6 +540,8 @@ ActiveRecord::Schema.define(version: 2025_06_24_060124) do
   add_foreign_key "people", "country_references"
   add_foreign_key "people", "ethnicity_types"
   add_foreign_key "people", "gender_types"
+  add_foreign_key "person_social_sites", "people"
+  add_foreign_key "person_social_sites", "social_sites"
   add_foreign_key "pit_level_users", "pit_records"
   add_foreign_key "pit_level_users", "users"
   add_foreign_key "pit_records", "products"

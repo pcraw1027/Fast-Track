@@ -16,7 +16,7 @@ class Api::V1::CompaniesController < Api::V1::BaseController
       subsidiary_data = {title: "Subsidiaries/Brands", subsidiaries_companies: subsidiaries_companies}
       if subsidiaries_companies.blank? && parent_company.present?
          subsidiaries_companies = CompanyRelationship.children(parent_company[:details].parent_company_id)
-         subsidiary_data = {title: "Sister Subsidiaries/Brands", subsidiaries_companies: subsidiaries_companies} if subsidiaries_companies.any?
+         subsidiary_data = {title: "Sister Subsidiaries/Brands", subsidiaries_companies: subsidiaries_companies.select{|c| c.child_company.id != company.id} } if subsidiaries_companies.any?
       end
       
     company_ceo = CompanyContact.company_ceo(params[:id])
@@ -24,6 +24,7 @@ class Api::V1::CompaniesController < Api::V1::BaseController
     rating_distribution = Review.rating_distribution_for(company)
     review_stats = Review.stats_for(company)
     render json: {
+        level_1_flag: company.level_1_flag,
         company: company,
         industry_category_type: company.industry_category_type,
         parent_company: parent_company,

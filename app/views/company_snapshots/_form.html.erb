@@ -17,21 +17,33 @@
   </div>
 
   <div class="field">
-    <%= form.label :data_transparency %>
-    <%= form.number_field :data_transparency %>
+    <%= form.label :employee_demographics_transparency %>
+    <%= form.number_field :employee_demographics_transparency %>
   </div>
 
   <div class="field">
-    <%= form.label :internal_culture %>
-    <%= form.number_field :internal_culture %>
+    <%= form.label :employee_demographics_performance %>
+    <%= form.number_field :employee_demographics_performance %>
   </div>
 
   <div class="field">
-    <%= form.label :mgmt_composition %>
-    <%= form.number_field :mgmt_composition %>
+    <%= form.label :projected_culture_and_identity %>
+    <%= form.number_field :projected_culture_and_identity %>
   </div>
+
+  <div class="field">
+    <%= form.label :mgmt_composition_transparency, "Mgmt/Board Composition - Transparency" %>
+    <%= form.number_field :mgmt_composition_transparency %>
+  </div>
+
+  <div class="field">
+    <%= form.label :mgmt_composition_performance, "Mgmt/Board Composition - Performance" %>
+    <%= form.number_field :mgmt_composition_performance %>
+  </div>
+
 
   <div class="actions">
     <%= form.submit %>
   </div>
 <% end %>
+

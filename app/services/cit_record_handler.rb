@@ -6,7 +6,7 @@ module CitRecordHandler
     cit_rec
   end
 
-  def self.update_or_create(cit_rec, mid:, source:, user_id:, brand:, company_id:)
+  def self.update_or_create(cit_rec, mid:, source:, user_id:, brand:, company_id: nil)
     if cit_rec
       self.update_existing(cit_rec)
     else

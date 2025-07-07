@@ -6,9 +6,11 @@
   <thead class="thead-dark">
     <tr>
       <th>Company</th>
-      <th>Data transparency</th>
-      <th>Internal culture</th>
-      <th>Mgmt composition</th>
+      <th>Employee Demographics - Transparency</th>
+      <th>Employee Demographics - Performance</th>
+      <th>Projected Culture & Identity</th>
+      <th>Mgmt/Board Composition - Transparency</th>
+      <th>Mgmt/Board Composition - Performance</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -16,10 +18,12 @@
   <tbody>
     <% @company_snapshots.each do |company_snapshot| %>
       <tr>
-        <td><%= company_snapshot.company_id %></td>
-        <td><%= company_snapshot.data_transparency %></td>
-        <td><%= company_snapshot.internal_culture %></td>
-        <td><%= company_snapshot.mgmt_composition %></td>
+        <td><%= company_snapshot.company&.name %></td>
+        <td><%= company_snapshot.employee_demographics_transparency %></td>
+        <td><%= company_snapshot.employee_demographics_performance %></td>
+        <td><%= company_snapshot.projected_culture_and_identity %></td>
+        <td><%= company_snapshot.mgmt_composition_transparency %></td>
+        <td><%= company_snapshot.mgmt_composition_performance %></td>
         <td><%= link_to 'Show', company_snapshot %></td>
         <td><%= link_to 'Edit', edit_company_snapshot_path(company_snapshot) %></td>
         <td><%= link_to 'Destroy', company_snapshot, method: :delete, data: { confirm: 'Are you sure?' } %></td>

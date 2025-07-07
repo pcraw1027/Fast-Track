@@ -19,7 +19,7 @@ export default class extends Controller {
           headers: {
             "Accept": "application/json"
           }
-        })
+        });
   
         const data = await response.json();
   

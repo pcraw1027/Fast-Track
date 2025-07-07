@@ -1,5 +1,5 @@
 class PeopleController < ApplicationController
-  before_action :set_person, only: %i[ show edit update destroy ]
+  before_action :set_person, only: %i[ edit update destroy ]
 
   # GET /people or /people.json
   def index
@@ -8,11 +8,21 @@ class PeopleController < ApplicationController
 
   # GET /people/1 or /people/1.json
   def show
+    @person = Person.includes(:gender_type,
+                              :ethnicity_type,
+                              :country_reference,
+                              person_social_sites: [:social_site]
+                              ).find(params[:id])
   end
 
   # GET /people_search?q=...
   def search
-    people = Person.where("first_name ILIKE ? OR last_name ILIKE ? OR email ILIKE ?", *["%#{params[:q]}%"] * 3)
+    if params[:q].present?
+      query = "%#{params[:q]}%"
+      people = Person.where("first_name ILIKE ? OR last_name ILIKE ? OR email ILIKE ?", query, query, query).limit(20)
+    else
+      people = Person.none
+    end
     render json: people.as_json(only: [:id, :first_name, :last_name, :middle_name, :letters, :email, :website, 
                       :gender_type_id, :ethnicity_type_id, :country_reference_id, :picture])
   end
@@ -21,10 +31,18 @@ class PeopleController < ApplicationController
   # GET /people/new
   def new
     @person = Person.new
+    @social_sites = SocialSite.all
+    @gender_types = GenderType.all
+    @ethinicity_types = EthnicityType.all
+    @country_references = CountryReference.all
   end
 
   # GET /people/1/edit
   def edit
+    @social_sites = SocialSite.all
+    @gender_types = GenderType.all
+    @ethinicity_types = EthnicityType.all
+    @country_references = CountryReference.all
   end
 
   # POST /people or /people.json
@@ -73,6 +91,8 @@ class PeopleController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def person_params
-      params.require(:person).permit(:title, :first_name, :middle_name, :last_name, :letters, :gender_type_id, :ethnicity_type_id, :country_reference_id, :picture, :email, :website)
+      params.require(:person).permit(:title, :phone, :first_name, :middle_name, :last_name, 
+      :letters, :gender_type_id, :ethnicity_type_id, :country_reference_id, :picture, 
+      :email, :website, person_social_sites_attributes: [:id, :social_site_id, :profile_link, :_destroy])
     end
 end

@@ -11,62 +11,111 @@
     </div>
   <% end %>
 
-  <div class="field">
+  <div class="form-group">
     <%= form.label :title %>
-    <%= form.text_field :title %>
+    <%= form.text_field :title, class: "form-control" %>
   </div>
 
-  <div class="field">
+  <div class="form-group">
     <%= form.label :first_name %>
-    <%= form.text_field :first_name %>
+    <%= form.text_field :first_name, class: "form-control" %>
   </div>
 
-  <div class="field">
+  <div class="form-group">
+    <%= form.label :phone %>
+    <%= form.text_field :phone, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
     <%= form.label :middle_name %>
-    <%= form.text_field :middle_name %>
+    <%= form.text_field :middle_name, class: "form-control" %>
   </div>
 
-  <div class="field">
+  <div class="form-group">
     <%= form.label :last_name %>
-    <%= form.text_field :last_name %>
+    <%= form.text_field :last_name, class: "form-control" %>
   </div>
 
-  <div class="field">
+  <div class="form-group">
     <%= form.label :letters %>
-    <%= form.text_field :letters %>
+    <%= form.text_field :letters, class: "form-control" %>
   </div>
 
-  <div class="field">
-    <%= form.label :gender_type_id %>
-    <%= form.text_field :gender_type_id %>
+
+  <div class="form-group">
+    <%= form.label :picture, class:"form-label" %>
+      <%= image_tag person.picture_url,  width: 60, height: 50  if person.picture? %>
+      <%= form.file_field :picture, class: "form-control form-control-lg"  %>
   </div>
 
-  <div class="field">
-    <%= form.label :ethnicity_type_id %>
-    <%= form.text_field :ethnicity_type_id %>
-  </div>
-
-  <div class="field">
-    <%= form.label :country_reference_id %>
-    <%= form.text_field :country_reference_id %>
-  </div>
-
-  <div class="field">
-    <%= form.label :photo %>
-    <%= form.text_field :photo %>
-  </div>
-
-  <div class="field">
+  <div class="form-group">
     <%= form.label :email %>
-    <%= form.text_field :email %>
+    <%= form.text_field :email, class: "form-control" %>
   </div>
 
-  <div class="field">
+  <div class="form-group">
     <%= form.label :website %>
-    <%= form.text_field :website %>
+    <%= form.text_field :website, class: "form-control" %>
   </div>
+
+
+
+ 
+
+
+<div class="row">
+
+  <div class = "col-md-4">
+       <div class="form-group">
+      <%= form.label :gender_type_id %>
+      <%= form.select :gender_type_id, @gender_types.collect { |g| [g.gender, g.id] }, {}, class: "form-control", id: "person_gender_type_id" %>
+    </div>
+ </div>
+
+     <div class = "col-md-4">
+    <div class="form-group">
+      <%= form.label :country_reference_id, "Country" %>
+      <%= form.select :country_reference_id, @country_references.collect { |c| [c.country, c.id] }, {}, class: "form-control", id: "person_country_reference_id" %>
+    </div>
+</div>
+
+
+  <div class = "col-md-4">
+    <div class="form-group">
+      <%= form.label :ethnicity_type_id %>
+      <%= form.select :ethnicity_type_id, @ethinicity_types.collect { |e| [e.ethnicity, e.id] }, {}, class: "form-control", id: "person_ethnicity_type_id" %>
+    </div>
+ </div>
+ </div>
+
+
+
+
+<div class="row">
+    <div class = "col-md-12">
+
+      <div class="container mt-5">
+
+            <div id="social-sites">
+                <%= form.fields_for :person_social_sites do |pss_form| %>
+                    <%= render 'person_social_site_fields', f: pss_form %>
+                  
+                <% end %>
+            </div>
+      </div>
+    </div>
+  </div>
+
+<div class="row">
+    <div class = "col-md-12">
+      <i class="fas fa-plus" style="color: #0B9444;" ></i> <%= link_to_add_association 'Add Social Site', form, :person_social_sites, class:"theme-link" %>
+    </div>
+  </div>
+</div>
+
+
 
   <div class="actions">
-    <%= form.submit %>
+    <%= form.submit class: 'action-btn' %>
   </div>
 <% end %>

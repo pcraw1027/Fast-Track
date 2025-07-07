@@ -1,6 +1,13 @@
 class Api::V1::ScansController < Api::V1::BaseController
   before_action :authenticate_user!
 
+  def show
+    scan = Scan.includes(:product).find(params[:id])
+    render json: {
+                  scan: scan,
+                  product: scan.product
+                }, status: :ok
+  end
 
   def my_scans
     page = params[:page] || 1

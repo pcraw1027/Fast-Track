@@ -59,11 +59,15 @@
       <div>
         <p><strong>Company Snapshot:</strong></p>
       
-        <small><strong>Data transparency:</strong> <%= @company.company_snapshot&.data_transparency&.titleize %></small>
+        <small><strong>Employee Demographics - Transparency:</strong> <%= @company.company_snapshot&.employee_demographics_transparency&.titleize %></small>
         <br>
-        <small><strong>Internal culture:</strong> <%= @company.company_snapshot&.internal_culture&.titleize %></small>
+        <small><strong>Employee Demographics - Performance:</strong> <%= @company.company_snapshot&.employee_demographics_performance&.titleize %></small>
         <br>
-        <small><strong>Ggmt Composition:</strong> <%= @company.company_snapshot&.mgmt_composition&.titleize %></small>
+        <small><strong>Projected Culture & Identity:</strong> <%= @company.company_snapshot&.projected_culture_and_identity&.titleize %></small>
+        <br>
+        <small><strong>Mgmt/Board Composition - Transparency:</strong> <%= @company.company_snapshot&.mgmt_composition_transparency&.titleize %></small>
+        <br>
+        <small><strong>Mgmt/Board Composition - Performance:</strong> <%= @company.company_snapshot&.mgmt_composition_performance&.titleize %></small>
         
       </div>
 

@@ -33,12 +33,12 @@ class Api::V1::ProductsController < Api::V1::BaseController
     
   end
 
+
+
   def search
     query = params[:q].to_s.strip
     page = params[:page].to_i > 0 ? params[:page].to_i : 1
-    per_page = params[:per_page].to_i || 10
-    per_page = 10 if per_page > 10
-
+    per_page = (params[:per_page]&.to_i > 0 && params[:per_page]&.to_i <= 10) ? params[:per_page]&.to_i : 10
     from = (page - 1) * per_page
 
     if query.blank?
@@ -46,17 +46,13 @@ class Api::V1::ProductsController < Api::V1::BaseController
       return
     end
 
-     search_results = Elasticsearch::Model.search({
-        from: from,
-        size: per_page,
-        query: {
-          multi_match: {
-            query: query,
-            fields: %w[name description],
-            fuzziness: 'AUTO'
-          }
-        },
-        highlight: {
+    query_length = query.length
+
+    elastic_query = {
+      from: from,
+      size: per_page,
+      query: { bool: { should: [], minimum_should_match: 1 } },
+      highlight: {
         pre_tags: ['*'],
         post_tags: ['*'],
         fields: {
@@ -64,19 +60,49 @@ class Api::V1::ProductsController < Api::V1::BaseController
           description: {}
         }
       }
-      }, [Product, Company])
+    }
 
-      total_hits = search_results.response['hits']['total']['value']
-      total_pages = (total_hits.to_f / per_page).ceil
+    # Always attempt exact matches first
+    elastic_query[:query][:bool][:should] << {
+      match_phrase_prefix: { "name": { query: query, boost: 5 } }
+    }
 
-      records = parse_multimodel_response(search_results)
-  
-      render json: {
-        results: records,
-        current_page: page,
-        total_pages: total_pages
-      }
+    # logic based on character count
+    if query_length == 1
+      elastic_query[:query][:bool][:should] += [
+        { match_phrase_prefix: { "name": { query: query, boost: 5 } } }
+      ]
+    elsif query_length == 2
+      elastic_query[:query][:bool][:should] += [
+        { match_phrase_prefix: { "name": { query: query, boost: 5 } } }
+      ]
+    elsif query_length == 3
+      elastic_query[:query][:bool][:should] += [
+        { match_phrase_prefix: { "name": { query: query, boost: 5 } } },
+        { match_phrase_prefix: { "description": { query: query, boost: 4 } } },
+        { wildcard: { "name": "*#{query}*" } }
+      ]
+    elsif query_length >= 4
+      elastic_query[:query][:bool][:should] += [
+        { match_phrase_prefix: { "name": { query: query, boost: 5 } } },
+        { match_phrase_prefix: { "description": { query: query, boost: 4 } } },
+        { wildcard: { "name": "*#{query}*" } }
+      ]
+    end
 
+    # Exec search
+    search_results = Elasticsearch::Model.search(elastic_query, [Product, Company])
+
+    total_hits = search_results.response['hits']['total']['value']
+    total_pages = (total_hits.to_f / per_page).ceil
+
+    records = parse_multimodel_response(search_results)
+
+    render json: {
+      results: records,
+      current_page: page,
+      total_pages: total_pages
+    }
   end
 
 
@@ -125,7 +151,7 @@ class Api::V1::ProductsController < Api::V1::BaseController
       {
           id: pv.id,
           name: product.name,
-          description: (matches["Product-#{pv.product_id}"]["description"]&.length > 0 ? truncate_highlighted(matches["Product-#{pv.product_id}"]["description"][0]) : truncate_highlighted_snippet(product.description)),
+          description: (matches["Product-#{pv.product_id}"]["description"] && matches["Product-#{pv.product_id}"]["description"].length > 0 ? truncate_highlighted(matches["Product-#{pv.product_id}"]["description"][0]) : truncate_highlighted_snippet(product.description)),
           searches: pv.searches,
           product_company_id: pv.product_company_id,
           company_name: pv.company_name,

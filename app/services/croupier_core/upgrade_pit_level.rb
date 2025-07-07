@@ -1,6 +1,6 @@
 class CroupierCore::UpgradePitLevel < ApplicationService
 
-  def call(barcode:, product_id:, company_name:, asin:, user_id:, company_id:, level:)
+  def call(barcode:, product_id:, asin:, user_id:, company_id:, level:)
     pit_rec = PitRecord.find_by(barcode: barcode)
     if pit_rec && pit_rec.level < level
       pit_rec.product_activity_count = pit_rec.product_activity_count + 1
@@ -20,8 +20,6 @@ class CroupierCore::UpgradePitLevel < ApplicationService
             product_activity_count: record.product_activity_count + 1,
             product_orphan_count: record.product_orphan_count + (record.company_id.nil? ? 1 : 0)
           }
-
-          updates[:company_name] = company_name if company_name.present?
           updates[:company_id] = company_id if company_id.present?
         
           record.update(updates)

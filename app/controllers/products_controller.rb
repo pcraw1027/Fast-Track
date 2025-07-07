@@ -28,7 +28,6 @@ class ProductsController < ApplicationController
 
       if product_params[:company_id]&.to_s.match?(/^\d+$/)
             company = Company.find(product_params[:company_id])
-            company_name = company.name
             company_id = company.id
 
             #update mid if it was previously system generated
@@ -37,7 +36,6 @@ class ProductsController < ApplicationController
                   sys_gen_mid = CitRecord.generate_mid(company.id)
                   cit_rec = CitRecord.find_by(mid: sys_gen_mid)
                   if cit_rec
-                    cit_rec.company_name = company_name if cit_rec&.company_name != company_name
                     cit_rec.mid = mid
                     cit_rec.company_id = company.id
                     cit_rec.save!
@@ -79,7 +77,7 @@ class ProductsController < ApplicationController
         @product = variant_exist.product
         variant_exist.update(product_variant_params) unless product_variant_params.blank?
         if @product.update(serialized_params)
-          upgrade_pit_to_level_1(@product.id, pit_record.level, company_name, company_id)
+          upgrade_pit_to_level_1(@product.id, pit_record.level, company_id)
           redirect_to product_capture_interface_path(barcode: barcode, level: params[:level]), notice: "Product was successfully updated." and return
         end
       end
@@ -90,7 +88,7 @@ class ProductsController < ApplicationController
             pv.barcode = pv.barcode.strip
             pv.product_id = @product.id
             pv.save!
-            upgrade_pit_to_level_1(@product.id, pit_record.level, company_name, company_id)
+            upgrade_pit_to_level_1(@product.id, pit_record.level, company_id)
             Scan.resolve(barcode, @product.id)
             UploadRecord.resolve(barcode)
           format.html { redirect_to product_capture_interface_path(barcode: barcode, level: params[:level]), notice: "Product successfully added" }
@@ -113,7 +111,7 @@ class ProductsController < ApplicationController
       if @product.update(product_params)
         pit_record = PitRecord.find_by(barcode: barcode)
         CroupierCore::UpgradePitLevel.call!(barcode: barcode, 
-        product_id: @product.id, company_name: nil, asin: nil, user_id: current_user.id, level: 2) 
+        product_id: @product.id, asin: nil, user_id: current_user.id, level: 2) 
         format.html { redirect_to product_capture_interface_path(barcode: barcode, level: params[:level]), notice: "Product was successfully updated." }
         format.json { render :show, status: :ok, location: @product }
       else
@@ -215,10 +213,10 @@ class ProductsController < ApplicationController
       @segments = Segment.where(product_category_source_id: product_category_source_id)
     end
 
-    def upgrade_pit_to_level_1(product_id, pit_level, company_name, company_id)
+    def upgrade_pit_to_level_1(product_id, pit_level, company_id)
       if pit_level == 0
             CroupierCore::UpgradePitLevel.call!(barcode: product_variant_params[:barcode].strip, 
-                              product_id: product_id, company_name: company_name, 
+                              product_id: product_id, 
                               asin: params[:product][:asin],
                               user_id: current_user.id, company_id: company_id, level: 1)    
           end

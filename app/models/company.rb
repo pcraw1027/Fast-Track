@@ -17,9 +17,9 @@ class Company < ApplicationRecord
   has_one :company_snapshot, dependent: :destroy
   
   accepts_nested_attributes_for :addresses, reject_if: :all_blank, allow_destroy: true
-  accepts_nested_attributes_for :parent_relationships, reject_if: :all_blank, allow_destroy: true
-  accepts_nested_attributes_for :child_relationships, reject_if: :all_blank, allow_destroy: true
-  accepts_nested_attributes_for :company_contacts, reject_if: :all_blank, allow_destroy: true
+  accepts_nested_attributes_for :parent_relationships, reject_if: :all_blank
+  accepts_nested_attributes_for :child_relationships, reject_if: :all_blank
+  accepts_nested_attributes_for :company_contacts, reject_if: :all_blank
   accepts_nested_attributes_for :company_snapshot, reject_if: :all_blank
 
   validates :name, presence: true
@@ -49,14 +49,15 @@ class Company < ApplicationRecord
     parent_relationships.compact.any? || child_relationships.compact.any? 
   end
 
-
   def level_4_flag
     company_contacts.any? && !company_contacts.first.person_id.blank?
   end
 
   def level_5_flag
     return false unless company_snapshot
-    !company_snapshot.slice(:data_transparency, :internal_culture, :mgmt_composition)
+    !company_snapshot.slice(:employee_demographics_transparency, 
+            :employee_demographics_performance, :projected_culture_and_identity, 
+            :mgmt_composition_transparency, :mgmt_composition_performance)
         .values.all? { |v| v == "none" }
   end
 
@@ -72,7 +73,9 @@ class Company < ApplicationRecord
 
   def create_snapshot
     CompanySnapshot.create!(company_id: self.id,
-    data_transparency: 0, internal_culture: 0, mgmt_composition: 0)
+    employee_demographics_transparency: 0, 
+            employee_demographics_performance: 0, projected_culture_and_identity: 0, 
+            mgmt_composition_transparency: 0, mgmt_composition_performance: 0)
   end
 
 end
