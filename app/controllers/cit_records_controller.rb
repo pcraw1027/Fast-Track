@@ -39,7 +39,7 @@ class CitRecordsController < ApplicationController
       @company = Company.includes(:cit_records).find(params[:company_id])
       @company.mid = "saved!"
       @industry_category_type = @company.industry_category_type if @company.industry_category_type_id
-      @cit_record = @company.cit_records if @company.cit_records.any?
+      @cit_record = @company.cit_records.first if @company.cit_records.any?
     end
 
     if @company.company_contacts.blank?

@@ -1,6 +1,6 @@
 class CroupierCore::UpgradePitLevel < ApplicationService
 
-  def call(barcode:, product_id:, asin:, user_id:, company_id:, level:)
+  def call(barcode:, product_id:, asin:, user_id:, level:, company_id: nil)
     pit_rec = PitRecord.find_by(barcode: barcode)
     if pit_rec && pit_rec.level < level
       pit_rec.product_activity_count = pit_rec.product_activity_count + 1
