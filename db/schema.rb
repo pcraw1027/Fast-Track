@@ -105,7 +105,6 @@ ActiveRecord::Schema.define(version: 2025_07_05_183233) do
   create_table "cit_records", force: :cascade do |t|
     t.bigint "product_activity_count", default: 0, null: false
     t.string "mid", default: "", null: false
-    t.string "company_name"
     t.integer "level", default: 0, null: false
     t.bigint "product_orphan_count", default: 0, null: false
     t.string "source"
@@ -211,9 +210,11 @@ ActiveRecord::Schema.define(version: 2025_07_05_183233) do
 
   create_table "company_snapshots", force: :cascade do |t|
     t.bigint "company_id", null: false
-    t.integer "data_transparency"
-    t.integer "internal_culture"
-    t.integer "mgmt_composition"
+    t.integer "employee_demographics_transparency"
+    t.integer "employee_demographics_performance"
+    t.integer "projected_culture_and_identity"
+    t.integer "mgmt_composition_transparency"
+    t.integer "mgmt_composition_performance"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["company_id"], name: "index_company_snapshots_on_company_id"
@@ -311,10 +312,11 @@ ActiveRecord::Schema.define(version: 2025_07_05_183233) do
     t.string "first_name"
     t.string "middle_name"
     t.string "last_name"
+    t.string "phone"
     t.string "letters"
-    t.bigint "gender_type_id", null: false
-    t.bigint "ethnicity_type_id", null: false
-    t.bigint "country_reference_id", null: false
+    t.bigint "gender_type_id"
+    t.bigint "ethnicity_type_id"
+    t.bigint "country_reference_id"
     t.string "picture"
     t.string "email"
     t.string "website"
