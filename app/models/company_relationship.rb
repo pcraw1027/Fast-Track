@@ -6,12 +6,12 @@ class CompanyRelationship < ApplicationRecord
 
   scope :parents, ->(company_id) {
                         includes(:parent_company)
-                          .where(child_company_id: company_id)&.map{|cr| {details: cr, parent_company: cr.parent_company}}
+                          .where(child_company_id: company_id)
                     }
 
   scope :children, ->(company_id) {
                         includes(:child_company)
-                          .where(parent_company_id: company_id)&.map{|cr| {details: cr, child_company: cr.child_company}}
+                          .where(parent_company_id: company_id)
                     }
 
   validate :parent_and_child_cannot_be_same

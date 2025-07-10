@@ -3,15 +3,21 @@
 
         <div class="row">
           
-            
-            <div class = "col-6">
+            <div class = "col-4">
+                <div class = "form-group">
+                    <label> Company Name: </label>
+                    <input value="<%= @company.name%>" class="form-control" readonly />
+                </div>
+            </div>
+
+            <div class = "col-4">
                 <div class = "form-group">
                     <label> Company MID: </label>
                     <input value="<%= @cit_record.mid%>" class="form-control" readonly />
                 </div>
             </div>
 
-            <div class = "col-6">
+            <div class = "col-4">
                 <label> Company ID: </label>
                 <input value="<%= @cit_record.company_id%>" class="form-control" readonly />
             </div>

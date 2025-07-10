@@ -2,10 +2,12 @@
   <div class="row">
     <div class="col">
 
-<p>
-  <strong>Product:</strong>
-  <%= @scan.product_id %>
-</p>
+<%if @scan.product_id%>
+   <p>
+    <strong>Product:</strong>
+    <a href="/products/<%= @scan.product_id %>"><%= @scan.product&.name %> </a>
+   </p>
+<%end%>
 
 <p>
   <strong>User:</strong>

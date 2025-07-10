@@ -322,9 +322,8 @@ end
     return company.id
   end
 
-
   def company_params
-        params.require(:company).permit(:id, :name, :sector, :logo, :mid, 
+        prm = params.require(:company).permit(:id, :name, :sector, :logo, :mid, 
             :industry_category_type_id,  
             :black_owned, :female_owned, :established, :website, :diversity_report, 
             :diversity_score, :total_employees,
@@ -332,6 +331,12 @@ end
                                    :state, :postal_code, :country_reference_id, :_destroy]
             
         )
+      if prm[:established].present? && prm[:established].match?(/\A\d{4}\z/)
+         prm[:established] = Date.new(prm[:established].to_i)
+      else
+         prm[:established] = nil
+      end
+      prm
   end
 
   def company_contact_params

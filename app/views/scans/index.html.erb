@@ -17,7 +17,7 @@
     <% @scans.each do |scan| %>
       <tr>
         <td><%= scan.product_id %></td>
-        <td><%= scan.user_id %></td>
+        <td><%= scan.user.username if scan.user%></td>
         <td><%= scan.scan_date %></td>
         <td><%= scan.barcode %></td>
         <td><%= scan.product_exists %></td>

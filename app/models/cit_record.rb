@@ -7,7 +7,16 @@ class CitRecord < ApplicationRecord
 
 
   def self.generate_mid(company_id)
-    "C#{company_id}".ljust(8, '0')
+    base_mid = "C#{company_id}".ljust(8, '0')
+    mid = base_mid
+    suffix = 1
+
+    while CitRecord.exists?(mid: mid)
+      mid = "#{base_mid}#{suffix}"
+      suffix += 1
+    end
+
+    mid
   end
   
 end

@@ -18,6 +18,13 @@
     <%= form.hidden_field :pit_record_id, value: pit_record.id %>
     <%= form.hidden_field :level, value: params[:level] %>
 
+
+<div class="form-group">
+        <%= form.label :captured_product_category %>
+        <%= form.text_field :captured_product_category, class: "form-control" %>
+      </div>
+
+      
   <div data-controller="product-classification">
         <div class="form-group">
             <%= form.label :segment_id %>
