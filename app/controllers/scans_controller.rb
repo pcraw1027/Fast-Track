@@ -1,14 +1,15 @@
 class ScansController < ApplicationController
-  before_action :set_scan, only: %i[ show edit update destroy ]
+  before_action :set_scan, only: %i[ edit update destroy ]
   before_action :authenticate_user!, only: %i[ new edit update create destroy ]
 
   # GET /scans or /scans.json
   def index
-    @scans = Scan.all
+    @scans = Scan.includes(:user).all
   end
 
   # GET /scans/1 or /scans/1.json
   def show
+    @scan = Scan.includes(:user, :product).find(params[:id])
   end
 
   # GET /scans/new

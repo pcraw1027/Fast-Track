@@ -20,8 +20,8 @@
   <tbody>
     <% @upload_records.each do |upload_record| %>
       <tr>
-        <td><%= upload_record.scan_id %></td>
-        <td><%= upload_record.user_id %></td>
+        <td><%= upload_record.scan.barcode if upload_record.scan %></td>
+        <td><%= upload_record.user.username if upload_record.user %></td>
         <td><%= upload_record.resolve_status %></td>
         <td><%= upload_record.date %></td>
         <td><%= upload_record.barcode %></td>

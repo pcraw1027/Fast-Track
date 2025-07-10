@@ -1,14 +1,15 @@
 class UploadRecordsController < ApplicationController
-  before_action :set_upload_record, only: %i[ show edit update destroy ]
+  before_action :set_upload_record, only: %i[ edit update destroy ]
   before_action :authenticate_user!, only: %i[ new edit update create destroy ]
 
   # GET /upload_records or /upload_records.json
   def index
-    @upload_records = UploadRecord.all
+    @upload_records = UploadRecord.includes(:user, :scan).all
   end
 
   # GET /upload_records/1 or /upload_records/1.json
   def show
+    @upload_record = UploadRecord.includes(:user, :scan).find(params[:id])
   end
 
   # GET /upload_records/new
