@@ -63,24 +63,26 @@ class CitRecordsController < ApplicationController
   end
 
 
+
   def cit_interface
     cits = []
-    if params[:sort_by] == "parent"
-
-    elsif params[:sort_by] == "subsidiary"
-
-    elsif params[:sort_by] == "all"
+    if params[:filter_by] == "parent"
+      cits = CitRecord.for_parent_companies
+    elsif params[:filter_by] == "subsidiary"
+      cits = CitRecord.for_child_only_companies
+    elsif params[:filter_by] == "all"
       cits = CitRecord.includes(:company, :cit_level_users)
     else
-
+      cits = CitRecord.for_companies_with_products
     end
     
-
     @cit_records_0s = []
     @cit_records_1s = []
     @cit_records_2s = []
     @cit_records_3s = []
     @cit_records_4s = []
+
+    logger.info "#{cits.inspect} ---------------->"
 
     cits.each do |cit|
         @cit_records_0s.push(cit) if !cit.company&.level_1_flag || cit.company_id.blank?
