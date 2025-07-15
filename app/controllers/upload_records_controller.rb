@@ -4,7 +4,7 @@ class UploadRecordsController < ApplicationController
 
   # GET /upload_records or /upload_records.json
   def index
-    @upload_records = UploadRecord.includes(:user, :scan).all
+    @upload_records = UploadRecord.includes(:user, :scan).all.paginate(page: params[:page], per_page: 12).order(created_at: :desc, id: :desc)
   end
 
   # GET /upload_records/1 or /upload_records/1.json

@@ -12,6 +12,7 @@ class Person < ApplicationRecord
   validates :first_name, :last_name, presence: true
   before_destroy :remove_photo_from_s3
   
+  default_scope -> { order(updated_at: :desc) }
   
   private
 

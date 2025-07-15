@@ -25,7 +25,7 @@ class Company < ApplicationRecord
   validates :name, presence: true
   #validates :mids, uniqueness: true
 
-  default_scope -> { order(created_at: :desc) }
+  default_scope -> { order(name: :asc) }
   scope :find_by_mid, ->(mid) { where("mids @> ARRAY[?]::text[]", [mid]) }
   
   before_destroy :remove_logo_from_s3
@@ -38,7 +38,7 @@ class Company < ApplicationRecord
   index_name "company_search_index"
 
   def level_1_flag
-    !name.blank? && !industry_category_type_id.blank? && !established.blank?
+    !name.blank? && !industry_category_type_id.blank? #&& !established.blank?
   end
 
   def level_2_flag

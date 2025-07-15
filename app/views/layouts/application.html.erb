@@ -40,8 +40,6 @@
         </div>
       <% end %>
 
-    
-      <br/>
       <%= yield %>
     </div>
 
@@ -53,18 +51,29 @@
 -->
     <!-- Option 2: Separate Popper and Bootstrap JS -->
 
-   <script>
-    document.addEventListener("turbolinks:load", function() {
-      // Initialize all Bootstrap dropdowns
-      $('.dropdown-toggle').dropdown();
-    });
-  </script>
+<script>
+  function handleSearch() {
+    const query = document.getElementById('search-input').value.trim();
+    const path = window.location.pathname;
+
+    let target = '/products';
+    if (path.startsWith('/companies')) {
+      target = '/companies';
+    }
+
+    if (query) {
+      // Redirect with query string
+      window.location.href = `${target}?page=1&q=${encodeURIComponent(query)}`;
+    }
+  }
+</script>
+
 
   <script>
       document.addEventListener('DOMContentLoaded', function () {
         const addBtn = document.getElementById('add-media-field');
         const mediaFields = document.getElementById('media-fields');
-        const mediaUpload = mediaFields.querySelector('.media-upload');
+        const mediaUpload = mediaFields && mediaFields.querySelector('.media-upload');
 
         if (addBtn && mediaFields && mediaUpload) {
           addBtn.addEventListener('click', function (e) {

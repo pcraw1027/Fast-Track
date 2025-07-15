@@ -4,7 +4,7 @@ class PitRecordsController < ApplicationController
 
   # GET /pit_records or /pit_records.json
   def index
-    @pit_records = PitRecord.all
+    @pit_records = PitRecord.all.paginate(page: params[:page], per_page: 12).order(created_at: :desc, id: :desc)
   end
 
   def next_pit_record

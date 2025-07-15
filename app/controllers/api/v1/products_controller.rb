@@ -151,7 +151,7 @@ class Api::V1::ProductsController < Api::V1::BaseController
       {
           id: pv.id,
           name: product.name,
-          description: (matches["Product-#{pv.product_id}"]["description"] && matches["Product-#{pv.product_id}"]["description"].length > 0 ? truncate_highlighted(matches["Product-#{pv.product_id}"]["description"][0]) : truncate_highlighted_snippet(product.description)),
+          description: (matches["Product-#{pv.product_id}"]["description"] && matches["Product-#{pv.product_id}"]["description"].length > 0 ? truncate_highlighted(matches["Product-#{pv.product_id}"]["description"][0]) : truncate_snippet(product.description)),
           searches: pv.searches,
           product_company_id: pv.product_company_id,
           company_name: pv.company_name,
@@ -159,35 +159,20 @@ class Api::V1::ProductsController < Api::V1::BaseController
       
       }
     end
-
-
     {companies: mapped_companies, products: products} 
   end
 
 
-  def truncate_highlighted_snippet(snippet, word_limit = 15)
+  def truncate_snippet(snippet, word_limit = 15)
     return "" if snippet.blank?
-
     words = snippet.split(/\s+/)
     return snippet if words.size <= word_limit
-
-    match_index = words.find_index { |w| w.include?('*') }
-
-    if match_index
-      start = [match_index - word_limit / 2, 0].max
-      stop = [start + word_limit - 1, words.length - 1].min
-      words[start..stop].join(" ") + "..."
-    else
-      words.first(word_limit).join(" ") + "..."
-    end
+    words.first(word_limit).join(" ") + "..."
   end
 
   def truncate_highlighted(snippet)
     return "" if snippet.blank?
     snippet.split(' ... ')[0]
   end
-
-
-  
  
 end

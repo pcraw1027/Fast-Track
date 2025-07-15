@@ -1,5 +1,3 @@
-
-
 <h3>Segments</h3>
 
 <table class="table table-striped table-bordered table-hover table-sm container-fluid">
@@ -8,7 +6,7 @@
       <th>Code</th>
       <th>Title</th>
       <th>Description</th>
-      <th>Product category source</th>
+      <th>Source</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -29,5 +27,8 @@
 </table>
 
 <br>
-
+<nav aria-label="Page navigation">
+  <%= will_paginate @segments, renderer: BootstrapPagination::Rails,
+      class: 'pagination justify-content-center' %>
+</nav>
 <%= link_to 'New Segment', new_segment_path, class: "action-btn" %>

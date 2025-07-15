@@ -3,13 +3,13 @@
 
 <div class="row">
      <div class = "col-md-6">
-      <div class = "form-group">
-          <%= f.label :child_company_id, "Subsidiary", class:"form-label" %>
-            <%= f.select :child_company_id, [[f.object.child_company&.name, f.object.child_company&.id]], 
-              { prompt: "Search for a company" }, 
-              data: { controller: "company-select" } 
-            %>
-    </div>
+        <div class = "form-group">
+            <%= f.label :child_company_id, "Subsidiary", class:"form-label" %>
+                <%= f.select :child_company_id, [[f.object.child_company&.name, f.object.child_company&.id]], 
+                { prompt: "Search for a company" }, 
+                data: { controller: "company-select" } 
+                %>
+        </div>
     </div>
 
  
@@ -19,20 +19,20 @@
             <%= f.text_field :id, value: f.object.child_company&.id, disabled: true, class:"form-control" %>
         </div>
     </div>
+
     <div class = "col-md-4">
         <div class = "form-group">
             <%= f.label :mids, "MIDs", class:"form-label" %>
             <%= f.text_field :mids, value: f.object.child_company&.mids, disabled: true, class:"form-control" %>
         </div>
     </div>
-
    </div>
 
     <div class = "row">
     <div class = "col-md-4">
         <div class = "form-group">
             <%= f.label :company_relationship_type_id, "Relationship", class:"form-label" %>
-            <%= f.select :company_relationship_type_id, @company_relationship_types.collect { |c| [c.relationship, c.id] }, {}, class: "form-control" %>
+            <%= f.select :company_relationship_type_id, @company_relationship_types_subsidiaries.collect { |c| [c.relationship, c.id] }, {}, class: "form-control" %>
    
         </div>
     </div>

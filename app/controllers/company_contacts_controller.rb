@@ -4,7 +4,7 @@ class CompanyContactsController < ApplicationController
 
   # GET /company_contacts or /company_contacts.json
   def index
-    @company_contacts = CompanyContact.all
+    @company_contacts = CompanyContact.all.paginate(page: params[:page], per_page: 12).order(created_at: :desc, id: :desc)
   end
 
   # GET /company_contacts/1 or /company_contacts/1.json

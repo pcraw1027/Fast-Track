@@ -1,7 +1,4 @@
-
-
 <h3>Company Relationships</h3>
-
 <table class="table table-striped table-bordered table-hover table-sm container-fluid">
   <thead class="thead-dark">
     <tr>
@@ -27,5 +24,8 @@
 </table>
 
 <br>
-
+<nav aria-label="Page navigation">
+  <%= will_paginate @company_relationships, renderer: BootstrapPagination::Rails,
+      class: 'pagination justify-content-center' %>
+</nav>
 <%= link_to 'New Company Relationship', new_company_relationship_path %>

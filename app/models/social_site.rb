@@ -1,7 +1,7 @@
 class SocialSite < ApplicationRecord
   has_many :person_social_sites
   has_many :people, through: :person_social_sites
-
+  default_scope -> { order(updated_at: :desc) }
   scope :grouped_people_count, -> () {
                             joins(:people).group(:id, :site).count
                           }

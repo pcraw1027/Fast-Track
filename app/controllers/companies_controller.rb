@@ -5,7 +5,12 @@ class CompaniesController < ApplicationController
 
   # GET /companies or /companies.json
   def index
-    @companies = Company.all
+    @companies = if params[:q].present?
+                Company.where("name ILIKE ?", "%#{params[:q]}%").paginate(page: params[:page], per_page: 12).order(created_at: :desc, id: :desc)
+              else
+                Company.all.paginate(page: params[:page], per_page: 12).order(created_at: :desc, id: :desc)
+              end
+    
   end
 
   def insert_company
@@ -16,7 +21,7 @@ class CompaniesController < ApplicationController
     elsif !params[:company][:company_id].blank? && params[:company][:company_id]&.to_s&.match?(/^\d+$/) || (!params[:company][:id].blank?  && params[:company][:id]&.to_s&.match?(/^\d+$/)) || !params[:company][:name].blank?
        update_company
      else
-          @company = Company.new(company_params.except(:mid))
+          @company = Company.new(company_params.except(:mid, :id))
           @company.name = params[:company][:new_company_name]
           mid = company_params[:mid]
           respond_to do |format|

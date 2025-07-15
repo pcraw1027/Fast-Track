@@ -1,4 +1,5 @@
 class PitRecord < ApplicationRecord
+  attr_accessor :name
   belongs_to :product, optional: true
   has_many :pit_level_users, dependent: :destroy
   validates :barcode, length: {minimum: 12, maximum: 13}, allow_blank: false, uniqueness: true

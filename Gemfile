@@ -89,5 +89,6 @@ gem 'rack-attack'
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails'
 gem 'cocoon'
+gem 'will_paginate-bootstrap'
 
 gem 'dotenv-rails', groups: [:development, :test]
