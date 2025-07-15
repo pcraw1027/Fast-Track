@@ -4,7 +4,7 @@ class CitRecordsController < ApplicationController
 
   # GET /cit_records or /cit_records.json
   def index
-    @cit_records = CitRecord.includes(:company).all
+    @cit_records = CitRecord.includes(:company).all.paginate(page: params[:page], per_page: 12).order(created_at: :desc, id: :desc)
   end
 
   def next_cit_record
@@ -55,12 +55,27 @@ class CitRecordsController < ApplicationController
     @address_types = AddressType.all
     @company_contact_types = CompanyContactType.all
     @company_relationship_types = CompanyRelationshipType.all
+    parent_sub = @company_relationship_types.find{|r| r.relationship == "Parent/Brand"}
+    filtered = @company_relationship_types.select{|r| r.relationship != "Parent/Brand"}
+    filtered.unshift(parent_sub)
+    @company_relationship_types_subsidiaries = filtered
 
   end
 
 
   def cit_interface
-    cits = CitRecord.includes(:company, :cit_level_users)
+    cits = []
+    if params[:sort_by] == "parent"
+
+    elsif params[:sort_by] == "subsidiary"
+
+    elsif params[:sort_by] == "all"
+      cits = CitRecord.includes(:company, :cit_level_users)
+    else
+
+    end
+    
+
     @cit_records_0s = []
     @cit_records_1s = []
     @cit_records_2s = []
@@ -90,10 +105,6 @@ class CitRecordsController < ApplicationController
 
   # GET /cit_records/1/edit
   def edit
-    @industry_category_type = IndustryCategoryType.new
-    if @company.industry_category_type_id 
-      @industry_category_type = @company.industry_category_type
-    end
   end
 
   # POST /cit_records or /cit_records.json

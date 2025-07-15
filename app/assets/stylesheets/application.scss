@@ -15,6 +15,15 @@
  */
 
 // @import "tom-select/dist/css/tom-select.css";
+
+.pagination li {
+  margin-right: 0.5rem;
+}
+
+.pagination li:last-child {
+  margin-right: 0;
+}
+
 .bg-light-green {
   background-color:#E7F5ED;
 }

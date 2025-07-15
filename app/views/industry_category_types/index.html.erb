@@ -1,13 +1,4 @@
-
-
 <h3>Industry Category Types</h3>
-
-</br>
-
-<%= link_to 'New Industry Category Type', new_industry_category_type_path, class: "action-btn" %>
-
-</br></br>
-
 <table class="table table-striped table-bordered table-hover table-sm">
   <thead class="thead-dark">
     <tr>
@@ -32,6 +23,10 @@
   </tbody>
 </table>
 
-</br>
+<br>
+<nav aria-label="Page navigation">
+  <%= will_paginate @industry_category_types, renderer: BootstrapPagination::Rails,
+      class: 'pagination justify-content-center' %>
+</nav>
 
 <%= link_to 'New Industry Category Type', new_industry_category_type_path, class: "action-btn" %>

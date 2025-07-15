@@ -23,7 +23,8 @@ class Product < ApplicationRecord
   has_many :product_attributes, dependent: :destroy
   has_many :product_variants, dependent: :destroy
   has_many :pit_records, dependent: :destroy
-  default_scope -> { order(updated_at: :desc) }
+  
+  default_scope -> { order(name: :asc) }
 
   def self.searchable_fields
     %i[name description]

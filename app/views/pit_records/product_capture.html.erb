@@ -5,21 +5,29 @@
         <%= form_for(@pit_record, url: invoke_bit_pit_triggers_path, html: { method: :post }) do |form| %>
     <div class="row">
 
-        <div class = "col-4">
+        <div class = "col-2">
             <div class = "form-group">
                 <%= form.label :barcode %>
                 <%= form.text_field :barcode, class: "form-control", required: true %>
             </div>
         </div>
-        
-        <div class = "col-4">
+
+        <div class = "col-7">
             <div class = "form-group">
-                <%= form.label :product_id %>
+                <%= form.label :name, "Name" %>
+                <%= form.text_field :name, value: @product.name, class: "form-control", readonly: true %>
+            </div>
+        </div>
+        
+        <div class = "col-1">
+            <div class = "form-group">
+                <%= form.label :product_id, "ID" %>
                 <%= form.text_field :product_id, class: "form-control", readonly: true %>
             </div>
         </div>
+        
 
-        <div class = "col-4">
+        <div class = "col-2">
                 <div class="actions">
                     <br/>
                     <%= form.submit "Submit", class: 'action-btn', style:"margin-top:10px;" %>

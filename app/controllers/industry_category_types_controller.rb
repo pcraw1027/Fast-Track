@@ -3,7 +3,7 @@ class IndustryCategoryTypesController < ApplicationController
 
   # GET /industry_category_types or /industry_category_types.json
   def index
-    @industry_category_types = IndustryCategoryType.all
+    @industry_category_types = IndustryCategoryType.all.paginate(page: params[:page], per_page: 12).order(created_at: :desc, id: :desc)
   end
 
   # GET /industry_category_types/1 or /industry_category_types/1.json

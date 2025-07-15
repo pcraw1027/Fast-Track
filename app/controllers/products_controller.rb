@@ -5,7 +5,18 @@ class ProductsController < ApplicationController
 
   # GET /products or /products.json
   def index
-    @products = Product.includes(:company, :segment, :family, :klass, :brick, :product_variants).all
+    @products = if params[:q].present?
+                Product.includes(:company, :segment, :family, :klass, :brick, :product_variants)
+                        .where("name ILIKE ?", "%#{params[:q]}%")
+                        .paginate(page: params[:page], per_page: 12)
+                        .order(created_at: :desc, id: :desc)
+              else
+                Product.includes(:company, :segment, :family, :klass, :brick, :product_variants)
+                                  .all
+                                  .paginate(page: params[:page], per_page: 12)
+                                  .order(created_at: :desc, id: :desc)
+              end
+     
   end
 
   def insert_product
