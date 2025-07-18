@@ -62,10 +62,21 @@
     }
 
     if (query) {
-      // Redirect with query string
       window.location.href = `${target}?page=1&q=${encodeURIComponent(query)}`;
     }
   }
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const filterVal = urlParams.get("filter_by");
+  if (filterVal) {
+    const citSelectInp = document.getElementById("filter_by-select-inp")
+    if(citSelectInp){
+        citSelectInp.value = filterVal;
+    }
+  }
+
+
+  
 </script>
 
 

@@ -5,6 +5,7 @@
       <th>Invited by</th>
       <th>Invite code</th>
       <th>Email</th>
+      <th>Full Name</th>
       <th>Status</th>
       <th colspan="3"></th>
     </tr>
@@ -13,9 +14,10 @@
   <tbody>
     <% @invitations.each do |invitation| %>
       <tr>
-        <td><%= invitation.invited_by_id %></td>
+        <td><a href="/users/<%= invitation.invited_by_id %>"><%= invitation.invited_by.username %></a></td>
         <td><%= invitation.invite_code %></td>
         <td><%= invitation.email %></td>
+        <td><%= invitation.first_name + " " + invitation.last_name %></td>
         <td><%= invitation.status %></td>
         <td><%= link_to 'Show', invitation %></td>
         <td><%= link_to 'Edit', edit_invitation_path(invitation) %></td>

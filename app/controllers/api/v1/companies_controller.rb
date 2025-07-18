@@ -40,6 +40,11 @@ class Api::V1::CompaniesController < Api::V1::BaseController
 
     rating_distribution = Review.rating_distribution_for(company)
     review_stats = Review.stats_for(company)
+    
+    
+    company.sector = company.industry_category_type.title if company.sector.blank? && !company.industry_category_type_id.blank?
+
+
     render json: {
         level_1_flag: company.level_1_flag,
         company: company,
