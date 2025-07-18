@@ -17,7 +17,7 @@ class BitRecord < ApplicationRecord
     result = []
     CSV.foreach(file.path, headers: true, encoding: 'iso-8859-1:utf-8') do |row|
         barcode = row['Barcode'] || row['barcode']
-        raise Exception.new("invalid csv file, Barcode column must exist!") unless barcode
+        next unless barcode
         @brc_intrf_claims = CroupierCore::BarcodeInterface.call!(barcode: barcode, 
                                         source: "BIT Load", asin: nil, user_id: current_user_id)
         

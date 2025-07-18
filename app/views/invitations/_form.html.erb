@@ -19,6 +19,21 @@
     </div>
       </div>
 
+
+      <div class="form-row">
+    <div class = "form-group">
+    <%= form.label :first_name %>
+    <%= form.text_field :first_name, class: "form-control", required: true %>
+  </div>
+  </div>
+
+<div class="form-row">
+    <div class = "form-group">
+      <%= form.label :last_name %>
+      <%= form.text_field :last_name, class: "form-control" %>
+   </div>
+  </div>
+
       <div class="actions">
         <br>
         <%= form.submit class: 'action-btn' %>

@@ -334,7 +334,6 @@ end
             :diversity_score, :total_employees,
             addresses_attributes: [:id, :address_type_id, :addressable_id, :address1, :address2, :city, 
                                    :state, :postal_code, :country_reference_id, :_destroy]
-            
         )
       if prm[:established].present? && prm[:established].match?(/\A\d{4}\z/)
          prm[:established] = Date.new(prm[:established].to_i)

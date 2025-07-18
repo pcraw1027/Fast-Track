@@ -4,7 +4,7 @@ class InvitationsController < ApplicationController
 
   # GET /invitations or /invitations.json
   def index
-    @invitations = Invitation.all.paginate(page: params[:page], per_page: 12).order(created_at: :desc, id: :desc)
+    @invitations = Invitation.includes(:invited_by).all.paginate(page: params[:page], per_page: 12).order(created_at: :desc, id: :desc)
   end
 
   # GET /invitations/1 or /invitations/1.json
@@ -59,7 +59,10 @@ class InvitationsController < ApplicationController
     end
   end
 
+
   private
+
+
     # Use callbacks to share common setup or constraints between actions.
     def set_invitation
       @invitation = Invitation.find(params[:id])
@@ -67,6 +70,6 @@ class InvitationsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def invitation_params
-      params.require(:invitation).permit(:email, :invited_by_id, :invite_code, :status)
+      params.require(:invitation).permit(:email, :first_name, :last_name, :invited_by_id, :invite_code, :status)
     end
 end
