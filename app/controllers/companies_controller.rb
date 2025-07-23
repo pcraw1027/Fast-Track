@@ -13,6 +13,7 @@ class CompaniesController < ApplicationController
     
   end
 
+
   def insert_company
     if company_params[:industry_category_type_id].blank? 
         respond_to_invalid_entries("industry category type is required", company_capture_interface_path(mid: company_params[:mid]))  
@@ -37,11 +38,11 @@ class CompaniesController < ApplicationController
 
               @company.update(mids: [cit_rec.mid])
               CroupierCore::UpgradeCitLevel.call!(mid: mid, company_id: @company.id, user_id: current_user.id, level: 1)
-              format.html { redirect_to company_capture_interface_path(mid: mid), notice: "Company was successfully created." }
+              format.html { redirect_to company_capture_interface_path(mid: mid, filter_by: params[:company][:filter_by]), notice: "Company was successfully created." }
               format.json { render :show, status: :created, location: @company }
             else
               msg = @company.errors.map{|er| "#{er.attribute} #{er.message}"}.join(", ")
-              format.html { redirect_to company_capture_interface_path(mid: mid), alert: msg }
+              format.html { redirect_to company_capture_interface_path(mid: mid, filter_by: params[:company][:filter_by]), alert: msg }
               format.json { render json: @company.errors, status: :unprocessable_entity }
             end
           end
@@ -55,10 +56,10 @@ class CompaniesController < ApplicationController
         @company.update(company_params.except(:mid))
         CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, 
         user_id: current_user.id, level: 2)
-        format.html { redirect_to company_capture_interface_path(mid: company_params[:mid]), notice: "company was successfully updated." }
+        format.html { redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:company][:filter_by]), notice: "company was successfully updated." }
         format.json { render :show, status: :ok, location: @company }
       rescue => e
-        format.html { redirect_to company_capture_interface_path(mid: company_params[:mid]), alert: e.message }
+        format.html { redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:company][:filter_by]), alert: e.message }
         format.json { render json: @company.errors, status: :unprocessable_entity }
       end
     end
@@ -71,10 +72,10 @@ class CompaniesController < ApplicationController
         convert_child_params
         convert_parent_params
         CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, user_id: current_user.id, level: 3)
-        format.html { redirect_to(company_capture_interface_path(mid: company_params[:mid]), notice: "Company was successfully updated.") and return }
+        format.html { redirect_to(company_capture_interface_path(mid: company_params[:mid], filter_by: params[:company][:filter_by]), notice: "Company was successfully updated.") and return }
         format.json { render :show, status: :created, location: @company }
       rescue => e
-        format.html { redirect_to company_capture_interface_path(mid: company_params[:mid]), alert: e.message }
+        format.html { redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:company][:filter_by]), alert: e.message }
         format.json { render json: @company.errors, status: :unprocessable_entity }
       end
     end
@@ -87,10 +88,10 @@ class CompaniesController < ApplicationController
       begin
         convert_company_contact_params
         CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, user_id: current_user.id, level: 4)
-        format.html { redirect_to company_capture_interface_path(mid: company_params[:mid]), notice: "Company was successfully updated." }
+        format.html { redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:company][:filter_by]), notice: "Company was successfully updated." }
         format.json { render :show, status: :created, location: @company }
       rescue => e
-        format.html { redirect_to company_capture_interface_path(mid: company_params[:mid]), alert: e.message }
+        format.html { redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:company][:filter_by]), alert: e.message }
         format.json { render json: @company.errors, status: :unprocessable_entity }
       end
     end
@@ -103,10 +104,10 @@ class CompaniesController < ApplicationController
       begin
         @company.update(company_snapshot_params)
         CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, user_id: current_user.id, level: 5)
-        format.html { redirect_to company_capture_interface_path(mid: company_params[:mid]), notice: "Company was successfully updated." }
+        format.html { redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:company][:filter_by]), notice: "Company was successfully updated." }
         format.json { render :show, status: :created, location: @company }
       rescue => e
-        format.html { redirect_to company_capture_interface_path(mid: company_params[:mid]), alert: e.message }
+        format.html { redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:company][:filter_by]), alert: e.message }
         format.json { render json: @company.errors, status: :unprocessable_entity }
       end
     end
@@ -141,7 +142,7 @@ end
 
 
   def edit
-    redirect_to(company_capture_interface_path(company_id: params[:id], level: 0, from_edit: true))
+    redirect_to(company_capture_interface_path(company_id: params[:id], level: params[:level], from_edit: true, filter_by: params[:filter_by]))
   end
 
 
@@ -203,7 +204,7 @@ end
         user_id: current_user.id, level: 1)
   
     respond_to do |format|
-      format.html { redirect_to edit_company_path(company), notice: "company was successfully updated."  and return  }
+      format.html { redirect_to edit_company_path(id: company.id, level: params[:company][:level], filter_by: params[:company][:filter_by]), notice: "company was successfully updated."  and return  }
       format.json { render json: {errors: [{barcode: msg}]}, status: :unprocessable_entity and return }
     end
 
