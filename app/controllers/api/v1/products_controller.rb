@@ -37,8 +37,8 @@ class Api::V1::ProductsController < Api::V1::BaseController
 
   def search
     query = params[:q].to_s.strip
-    page = params[:page].to_i > 0 ? params[:page].to_i : 1
-    per_page = (params[:per_page]&.to_i > 0 && params[:per_page]&.to_i <= 10) ? params[:per_page]&.to_i : 10
+    page = (params[:page] && params[:page].to_i > 0) ? params[:page].to_i : 1
+    per_page = (params[:per_page] && params[:per_page].to_i > 0 && params[:per_page].to_i <= 10) ? params[:per_page]&.to_i : 10
     from = (page - 1) * per_page
 
     if query.blank?
@@ -79,7 +79,7 @@ class Api::V1::ProductsController < Api::V1::BaseController
     elsif query_length == 3
       elastic_query[:query][:bool][:should] += [
         { match_phrase_prefix: { "name": { query: query, boost: 5 } } },
-        { match_phrase_prefix: { "description": { query: query, boost: 4 } } },
+       { match_phrase_prefix: { "description": { query: query, boost: 4 } } },
         { wildcard: { "name": "*#{query}*" } }
       ]
     elsif query_length >= 4
