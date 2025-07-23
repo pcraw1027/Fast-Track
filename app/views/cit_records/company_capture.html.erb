@@ -40,7 +40,8 @@
             <i class="fas fa-chevron-left" style="color: #0B9444;" ></i> <%= link_to 'Back', :back, class: "theme-link" %>
         </div>
         <div class="col text-right mx-5">
-            <%= link_to 'Next', next_cit_record_path(level: (params[:level].present? ? params[:level].to_i : 0)), class: "theme-link" %> <i class="fas fa-chevron-right" style="color: #0B9444;"></i>
+            <%= link_to 'Next', next_cit_record_path(level: (params[:level].present? ? params[:level].to_i : 0), filter_by: params[:filter_by], previous_rec_id: @cit_record.id), class: "theme-link" %> 
+            <i class="fas fa-chevron-right" style="color: #0B9444;"></i>
         </div>
     </div>
 

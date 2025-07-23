@@ -8,11 +8,40 @@ class CitRecordsController < ApplicationController
   end
 
   def next_cit_record
-    cit_record = CitRecord.where(level: params[:level])
-                          .order(product_activity_count: :desc)
-                          .limit(1).first
+    classify_cit_records
+    cits = []
+    case (params[:level].to_i - 1)
+    when 0
+      cits = @cit_records_0s
+    when 1
+      cits = @cit_records_1s
+    when 2
+      cits = @cit_records_2s
+    when 3
+      cits = @cit_records_3s
+    when 4
+      cits = @cit_records_4s
+    else
+      cits = @cit_records_0s
+    end
+
+    cit_record = nil
+
+    if params[:previous_rec_id]
+      index = cits.index { |cit_rec| cit_rec.id == params[:previous_rec_id].to_i }
+      if index && cits.length > index + 1
+        cit_record = cits[index + 1]
+      elsif index
+        cit_record = cits[index]
+      else
+        cit_record = cits[0]
+      end
+    else
+      cit_record = cits[0]
+    end
+
     if cit_record
-      redirect_to(company_capture_interface_path(mid: cit_record.mid, level: params[:level]))
+      redirect_to(company_capture_interface_path(mid: cit_record.mid, level: params[:level], filter_by: params[:filter_by]))
     else
       redirect_to(cit_interface_path(), alert: "No more CIT Level #{params[:level]} records!")
     end
@@ -65,33 +94,7 @@ class CitRecordsController < ApplicationController
 
 
   def cit_interface
-    cits = []
-    if params[:filter_by] == "parent"
-      cits = CitRecord.for_parent_companies
-    elsif params[:filter_by] == "subsidiary"
-      cits = CitRecord.for_child_only_companies
-    elsif params[:filter_by] == "all"
-      cits = CitRecord.includes(:company, :cit_level_users)
-    else
-      cits = CitRecord.for_companies_with_products
-    end
-    
-    @cit_records_0s = []
-    @cit_records_1s = []
-    @cit_records_2s = []
-    @cit_records_3s = []
-    @cit_records_4s = []
-
-    logger.info "#{cits.inspect} ---------------->"
-
-    cits.each do |cit|
-        @cit_records_0s.push(cit) if !cit.company&.level_1_flag || cit.company_id.blank?
-        @cit_records_1s.push(cit) if !cit.company&.level_2_flag && cit.company&.level_1_flag
-        @cit_records_2s.push(cit) if !cit.company&.level_3_flag && cit.company&.level_1_flag
-        @cit_records_3s.push(cit) if !cit.company&.level_4_flag && cit.company&.level_1_flag
-        @cit_records_4s.push(cit) if !cit.company&.level_5_flag && cit.company&.level_1_flag
-    end
-    
+    classify_cit_records
   end
 
   # GET /cit_records/1 or /cit_records/1.json
@@ -148,6 +151,35 @@ class CitRecordsController < ApplicationController
 
   private
 
+
+  def classify_cit_records
+    cits = []
+    if params[:filter_by] == "parent"
+      cits = CitRecord.for_parent_companies
+    elsif params[:filter_by] == "subsidiary"
+      cits = CitRecord.for_child_only_companies
+    elsif params[:filter_by] == "all"
+      cits = CitRecord.includes(:company, :cit_level_users)
+    else
+      cits = CitRecord.for_companies_with_products
+    end
+    
+    @cit_records_0s = []
+    @cit_records_1s = []
+    @cit_records_2s = []
+    @cit_records_3s = []
+    @cit_records_4s = []
+
+
+    cits.each do |cit|
+        @cit_records_0s.push(cit) if !cit.company&.level_1_flag || cit.company_id.blank?
+        @cit_records_1s.push(cit) if !cit.company&.level_2_flag && cit.company&.level_1_flag
+        @cit_records_2s.push(cit) if !cit.company&.level_3_flag && cit.company&.level_1_flag
+        @cit_records_3s.push(cit) if !cit.company&.level_4_flag && cit.company&.level_1_flag
+        @cit_records_4s.push(cit) if !cit.company&.level_5_flag && cit.company&.level_1_flag
+    end
+    
+  end
 
     # Use callbacks to share common setup or constraints between actions.
     def set_cit_record

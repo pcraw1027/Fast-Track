@@ -21,7 +21,7 @@
         <td><%= cit.cit_level_users.where(level: 3 )&.first&.user&.username %></td>
         <td><%= cit.created_at.strftime("%m/%d/%Y") %></td>
       
-        <td><%= link_to 'Add', company_capture_interface_path(mid: cit.mid, level: 4) %></td>
+        <td><%= link_to 'Add', company_capture_interface_path(mid: cit.mid, level: 4, filter_by: params[:filter_by]) %></td>
      </tr>
     <% end %>
   </tbody>
