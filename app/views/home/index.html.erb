@@ -1,2 +1,9 @@
-<h3>Home#index</h3>
-<p>Find me in app/views/home/index.html.erb</p>
+
+
+ <%if current_user%>
+     <h3>Hello, <%= current_user.username%></h3>
+<%else%>
+    <h3>Landing</h3>
+  <%end%>
+
+<p>Welcome to fast track!</p>
