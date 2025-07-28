@@ -16,3 +16,8 @@ Things you may want to cover:
 
 - Production 
 `bundle exec cap production deploy`
+
+- Production 
+`bundle exec cap staging deploy`
+
+

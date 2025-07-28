@@ -2,7 +2,6 @@
 lock "~> 3.19.2"
 
 
-
 set :application, "fast_track"
 set :repo_url, "git@github.com:pcraw1027/Fast-Track.git"
 
