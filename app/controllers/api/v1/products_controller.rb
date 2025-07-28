@@ -38,7 +38,7 @@ class Api::V1::ProductsController < Api::V1::BaseController
   def search
     query = params[:q].to_s.strip
     page = (params[:page] && params[:page].to_i > 0) ? params[:page].to_i : 1
-    per_page = (params[:per_page] && params[:per_page].to_i > 0 && params[:per_page].to_i <= 10) ? params[:per_page]&.to_i : 10
+    per_page = (params[:per_page] && params[:per_page].to_i > 0 && params[:per_page].to_i <= 10) ? params[:per_page]&.to_i : 50
     from = (page - 1) * per_page
 
     if query.blank?
@@ -91,7 +91,7 @@ class Api::V1::ProductsController < Api::V1::BaseController
     end
 
     # Exec search
-    search_results = Elasticsearch::Model.search(elastic_query, [Product, Company])
+    search_results = Elasticsearch::Model.search(elastic_query, [Company, Product])
 
     total_hits = search_results.response['hits']['total']['value']
     total_pages = (total_hits.to_f / per_page).ceil

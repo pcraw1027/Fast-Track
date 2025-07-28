@@ -6,8 +6,13 @@
 # server "example.com", user: "deploy", roles: %w{app db web}, my_property: :my_value
 # server "example.com", user: "deploy", roles: %w{app web}, other_property: :other_value
 # server "db.example.com", user: "deploy", roles: %w{db}
+set :rails_env, 'staging'
+set :puma_env, fetch(:rack_env, fetch(:rails_env, 'staging'))
+server '51.21.139.162', user: 'deploy', roles: %w{app db web}, primary: true
 
 
+set :stage, :staging
+set :branch, "staging" # or "main", depending on what branch you want to deploy
 
 # role-based syntax
 # ==================
@@ -32,7 +37,6 @@
 # Feel free to add new variables to customise your setup.
 
 
-
 # Custom SSH Options
 # ==================
 # You may pass any option but keep in mind that net/ssh understands a
@@ -41,11 +45,11 @@
 #
 # Global options
 # --------------
-#  set :ssh_options, {
-#    keys: %w(/home/user_name/.ssh/id_rsa),
-#    forward_agent: false,
-#    auth_methods: %w(password)
-#  }
+  set :ssh_options, {
+    keys: %w(~/fast-track-staging.pem),
+    forward_agent: false,
+    auth_methods: %w(publickey password)
+  }
 #
 # The server-based syntax can be used to override options:
 # ------------------------------------
