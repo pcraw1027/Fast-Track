@@ -15,9 +15,14 @@
 # property set. Specify the username and a domain or IP for the server.
 # Don't use `:all`, it's a meta role.
 
-server '13.61.251.1', user: 'deploy', roles: %w{app web} 
+#server '13.61.251.1', user: 'deploy', roles: %w{app web} 
+set :rails_env, 'production'
+set :puma_env, fetch(:rack_env, fetch(:rails_env, 'production'))
+server "13.61.251.1", user: "deploy", roles: %w{app db web}, primary: true
 
 
+set :stage, :production
+set :branch, "main" # or "main", depending on what branch you want to deploy
 # Configuration
 # =============
 # You can set any configuration variable like in config/deploy.rb
