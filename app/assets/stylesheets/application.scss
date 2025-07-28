@@ -16,6 +16,24 @@
 
 // @import "tom-select/dist/css/tom-select.css";
 
+.staging-brand {
+  border: #303030;
+  background-color: #efd901;
+  color: black;
+  padding: 20px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  font-weight: 600;
+  font-size: 18px;
+  margin-right: 20px;
+}
+
+.staging-brand:hover {
+  color: rgb(9, 51, 105);
+}
+
+
+
 .pagination li {
   margin-right: 0.5rem;
 }
