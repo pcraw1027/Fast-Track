@@ -26,6 +26,7 @@ set :branch, "staging" # or "main", depending on what branch you want to deploy
 # role :web, %w{user1@primary.com user2@additional.com}, other_property: :other_value
 # role :db,  %w{deploy@example.com}
 
+append :linked_files, "config/credentials/staging.key", "config/secrets.yml", "config/database.yml", "config/master.key"
 
 
 # Configuration
