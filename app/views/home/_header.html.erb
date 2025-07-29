@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light-green sticky-top">
   
-  <%if @is_staging_env%>
+  <%if Rails.env.staging?%>
      <a class="staging-brand" href="#"> Staging... </a>
   <%end%>
   
