@@ -6,11 +6,6 @@ class ApplicationController < ActionController::Base
  
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
-  @is_staging_env = false
-  
-  if Rails.env.staging?
-    @is_staging_env = true
-  end
 
   protected
 
