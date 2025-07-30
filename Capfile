@@ -29,9 +29,6 @@ install_plugin Capistrano::SCM::Git
 
 # require "capistrano/chruby"
 
-if fetch(:stage, nil) == :staging
-  require 'capistrano/rvm'
-end
 require "capistrano/bundler"
 require "capistrano/rails/assets"
 require "capistrano/rails/migrations"
