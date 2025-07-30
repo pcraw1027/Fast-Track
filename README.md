@@ -15,8 +15,8 @@ Things you may want to cover:
 `rails db:migrate`
 
 - Production 
-`bundle exec cap production deploy`
+`STAGE=staging bundle exec cap production deploy`
 
 - Production 
-`bundle exec cap staging deploy`
+`STAGE=staging bundle exec cap staging deploy`
 

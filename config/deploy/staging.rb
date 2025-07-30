@@ -64,13 +64,3 @@ append :linked_files, "config/credentials/staging.key", "config/secrets.yml", "c
 #     auth_methods: %w(publickey password)
 #     # password: "please use keys"
 #   }
-
-after 'load:defaults', 'load:rvm'
-
-task 'load:rvm' do
-  require 'capistrano/rvm'
-
-  # Now you can safely configure RVM
-  set :rvm_type, :user
-  set :rvm_ruby_version, '3.2.3'
-end
