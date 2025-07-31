@@ -77,7 +77,7 @@ Rails.application.configure do
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     :address => Rails.application.credentials.smtp_address,
-    :port => 465,
+    :port => Rails.application.credentials.smtp_port,
     :domain => 'fast.track.croupier147.com',
     :user_name => Rails.application.credentials.email_user,
     :password => Rails.application.credentials.email_pass,
