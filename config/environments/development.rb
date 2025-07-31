@@ -82,7 +82,9 @@ Rails.application.configure do
     :user_name => Rails.application.credentials.email_user,
     :password => Rails.application.credentials.email_pass,
     :authentication => :plain,
-    :enable_starttls_auto => true
+    :enable_starttls_auto => true,
+    :open_timeout         => 30,
+    :read_timeout         => 60
   }
 
   config.action_mailer.raise_delivery_errors = true
