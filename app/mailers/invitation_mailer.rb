@@ -4,7 +4,7 @@ class InvitationMailer < ApplicationMailer
 	def invitation_email(invitation)
     @url = "#"
   	@invitation = invitation
-  	mail(to: @invitation.email, subject: 'Welcome to Croupier147')
+  	mail(to: @invitation.email, subject: 'Invitation to Croupier147')
   end
 
 end

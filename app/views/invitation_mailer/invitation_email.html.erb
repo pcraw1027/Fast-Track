@@ -13,7 +13,7 @@
         }
         .container {
             width: 100%;
-            max-width: 600px;
+            max-width: 800px;
             margin: 20px auto;
             background: #ffffff;
             padding: 20px;
@@ -56,11 +56,11 @@
         <div class="logo">
             <img src="https://app-assets-bkt.s3.eu-north-1.amazonaws.com/logo.jpg" alt="Logo" />
         </div>
-     
+        <h3>Welcome to Croupier147</h3>
         <p>Hello <%= @invitation.first_name %>,</p>
         <p>And a warm welcome to the Croupier147 movement.</p>
 
-        <p>Your invitation code is: <%= @invitation.invite_code %></p>
+        <p>Your invitation code is: <strong><%= @invitation.invite_code %></strong></p>
         <p>You'll need this when you sign up for the app for the first time.</p>
      
         <p>We're happy to have you with us.</p>
