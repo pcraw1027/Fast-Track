@@ -99,19 +99,18 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   config.action_mailer.default_url_options = { 
-    host: 'ec2-13-61-251-1.eu-north-1.compute.amazonaws.com', 
+    host: 'fast.track.croupier147.com', 
     protocol: 'http',
     port: 3000 
   }
   
-
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    :address => 'smtp.gmail.com',
-    :port => 587,
-    :domain => 'ec2-13-61-251-1.eu-north-1.compute.amazonaws.com',
-    :user_name => Rails.application.credentials.gmail_user,
-    :password => Rails.application.credentials.gmail_pass,
+    :address => 's115.servername.online',
+    :port => 465,
+    :domain => 'fast.track.croupier147.com',
+    :user_name => Rails.application.credentials.email_user,
+    :password => Rails.application.credentials.email_pass,
     :authentication => :plain,
     :enable_starttls_auto => true
   }
