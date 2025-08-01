@@ -2,10 +2,11 @@ class Api::V1::RegistrationsController < Api::V1::BaseController
 
   # Create action for user registration
   def create
-    user = User.new(user_params.except(:invite_code))
+    user = User.new(user_params.except(:invite_code, :username))
+    user.username = user_params[:username].downcase if user_params[:username]
     if user.save
       invitation = Invitation.find_by(invite_code: user_params[:invite_code])
-      invitation.update(username: user_params[:username], country: user_params[:country], 
+      invitation.update(username: user_params[:username].downcase, country: user_params[:country], 
       postal_code: user_params[:postal_code], status: 1) if invitation
       respond_with(user)
     else
@@ -21,6 +22,17 @@ class Api::V1::RegistrationsController < Api::V1::BaseController
       render json: {
         message: "Invalid invitation code #{params[:invite_code]}!"
       }, status: 401
+    end
+  end
+
+  def verify_username
+    user = User.find_by(username: params[:username].downcase) if params[:username]
+    if user
+      render json: {
+        message: "username is already taken"
+      }, status: 401
+    else
+      render json: { message:"username is available" }, status: 200
     end
   end
 

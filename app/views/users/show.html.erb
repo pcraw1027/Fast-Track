@@ -1,4 +1,10 @@
-
+<br>
+<%if current_user.admin?%>
+  <p>
+    <strong>status:</strong>
+    <span class="<%= @user.active? ? 'status-active' : @user.suspended? ? 'status-suspended' : 'status-deleted' %>"><%= @user.status %></span>
+  </p>
+<%end%>
 
 <p>
   <strong>Username:</strong>

@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_user, only: %i[ show destroy ]
+  before_action :set_user, only: %i[ show destroy edit update ]
   #before_action :authorize_user
 
   
@@ -13,10 +13,25 @@ class UsersController < ApplicationController
   def show
   end
 
+  def edit
+  end
+
+  def update
+    respond_to do |format|
+      if @user.update(user_params)
+        format.html { redirect_to @user, notice: "User was successfully updated." }
+        format.json { render :show, status: :ok, location: @user }
+      else
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: @user.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
 
   # DELETE /users/1 or /users/1.json
   def destroy
-    @user.destroy
+    @user.update(status: 2)
 
     respond_to do |format|
       format.html { redirect_to users_path, status: :see_other, notice: "user was successfully destroyed." }
@@ -24,11 +39,17 @@ class UsersController < ApplicationController
     end
   end
 
+
   private
+
 
     def set_user
       @user = User.find(params[:id])
     end
+
+    def user_params
+    params.require(:user).permit(:first_name, :last_name, :role, :status, :country, :postal_code)
+  end
 
 
 end

@@ -9,7 +9,7 @@ module MonolithRoutes
       resources :bit_records
       resources :scans
 
-      resources :users, only: [:show, :index, :destroy]
+      resources :users
       resources :product_variants, only: [:edit, :update, :destroy]
       resources :attribute_titles
       resources :product_attributes

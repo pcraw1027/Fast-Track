@@ -1,5 +1,5 @@
 class InvitationMailer < ApplicationMailer
-	default from: 'Croupier147 <info@croupier147.com>'
+	default from: 'Croupier147 <welcome@croupier147.com>'
 
 	def invitation_email(invitation)
     @url = "#"
