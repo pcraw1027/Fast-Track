@@ -4,8 +4,9 @@ class Invitation < ApplicationRecord
   before_create :generate_invite_code
   enum status: { pending: 0, resolved: 1, deleted: 2 }
 
-  validates :email, :first_name, presence: true
-
+  validates :first_name, presence: true
+  validates :email, uniqueness: { case_sensitive: false }, presence: true
+  
   after_create :send_invitation_email
 
   def generate_invite_code

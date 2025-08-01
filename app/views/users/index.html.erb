@@ -6,6 +6,7 @@
       <th>Username</th>
       <th>Email</th>
       <th>Role</th>
+      <th>Status</th>
       <th>Country</th>
       <th>Postal Code</th>
       
@@ -19,11 +20,13 @@
         <td><%= user.username %></td>
         <td><%= user.email %></td>
         <td><%= user.role %></td>
+        <td class="<%= user.active? ? 'status-active' : user.suspended? ? 'status-suspended' : 'status-deleted' %>"><%= user.status %></td>
         <td><%= user.country %></td>
         <td><%= user.postal_code %></td>
       
         <td><%= link_to 'View', user %></td>
-        <td><%= button_to 'Delete', user, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-outline-danger btn-sm" %></td>
+        <td><%= link_to 'Edit', edit_user_path(user) if current_user.admin? %></td>
+        <td><%= button_to 'Delete', user, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-outline-danger btn-sm" if current_user.admin? %></td>
       </tr>
     <% end %>
   </tbody>

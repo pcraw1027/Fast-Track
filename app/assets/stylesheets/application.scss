@@ -16,6 +16,20 @@
 
 // @import "tom-select/dist/css/tom-select.css";
 
+.status-active {
+  color: #0B9444;
+  font-weight: 500;
+}
+
+.status-suspended {
+  color: orange;
+  font-weight: 500;
+}
+.status-delete {
+  color: red;
+  font-weight: 500;
+
+}
 .staging-brand {
   border: #303030;
   background-color: #efd901;

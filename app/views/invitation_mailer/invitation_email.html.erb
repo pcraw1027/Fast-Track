@@ -37,7 +37,7 @@
         }
         .logo img {
             max-width: 200px;
-            height: 60px;
+            height: 120px;
         }
         .button {
             display: inline-block;
@@ -54,21 +54,25 @@
 <body>
     <div class="container">
         <div class="logo">
-            <img src="https://app-assets-bkt.s3.eu-north-1.amazonaws.com/logo.jpg" alt="Logo" />
+            <img src="https://app-assets-bkt.s3.eu-north-1.amazonaws.com/CR147-Logo.webp" 
+            alt="Logo" 
+            style="max-width: 200px; width: 100%; max-height: 200px; height: 100%;"
+            
+            />
         </div>
         <h3>Welcome to Croupier147</h3>
         <p>Hello <%= @invitation.first_name %>,</p>
+        
         <p>And a warm welcome to the Croupier147 movement.</p>
-
+     <br>
         <p>Your invitation code is: <strong><%= @invitation.invite_code %></strong></p>
         <p>You'll need this when you sign up for the app for the first time.</p>
      
+     <br>
         <p>We're happy to have you with us.</p>
-
+     <br>
         <p>If you have any questions, feel free to reach out to us.</p>
-
-
-        <small>Explore our website for more information and resources. <a href="<%= @url %>">Visit Our Website</a></small>
+     <br>
 
         
         <div class="footer">
