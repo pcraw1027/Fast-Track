@@ -1,8 +1,9 @@
 class HomeController < ApplicationController
   def index
-    unless current_user.active?
+    if current_user && !current_user.active?
+      user_status = current_user.status
       sign_out(current_user)
-      redirect_to new_user_session_path, notice: "Your account has been #{current_user.status}. Please contact support." and return
+      redirect_to new_user_session_path, alert: "Your account has been #{user_status}. Please contact support." and return
     end
   end
 
