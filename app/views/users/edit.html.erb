@@ -19,6 +19,11 @@
 
 
     <div class="form-group">
+        <%= form.label :username %>
+        <%= form.text_field :username, class: "form-control", readonly: true %>
+    </div>
+
+    <div class="form-group">
         <%= form.label :first_name %>
         <%= form.text_field :first_name, class: "form-control" %>
     </div>

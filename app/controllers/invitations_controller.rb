@@ -23,6 +23,7 @@ class InvitationsController < ApplicationController
   # POST /invitations or /invitations.json
   def create
     @invitation = Invitation.new(invitation_params)
+    @invitation.email = invitation_params[:email].downcase if invitation_params[:email]
     @invitation.invited_by_id = current_user.id
     @invitation.status = 0
     respond_to do |format|
