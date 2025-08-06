@@ -22,6 +22,8 @@ class User < ApplicationRecord
   
   after_create :send_welcome_email
   validates :username, :country, :email, :postal_code, presence: true
+  validates :username, uniqueness: { case_sensitive: true }
+
   default_scope -> { order(created_at: :desc) }
   
   before_destroy :remove_photo_from_s3
