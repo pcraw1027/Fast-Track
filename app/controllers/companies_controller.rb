@@ -200,8 +200,22 @@ end
     company_id = params[:company][:company_id].blank? ? params[:company][:id] : params[:company][:company_id]
     company = Company.find(company_id)
     if company.update(company_params.except(:mid))
-      CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: company.id, 
+      if !company_params[:mid].blank?
+        CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: company.id, 
         user_id: current_user.id, level: 1)
+      else
+
+        sys_gen_mid = CitRecord.generate_mid(company.id)
+
+        cit_rec = CitRecordHandler.update_or_create(nil, mid: sys_gen_mid, source: "Company Import", 
+                        user_id: current_user.id, company_id: company.id, brand: nil)
+
+        company.update(mids: [sys_gen_mid])
+
+        CroupierCore::UpgradeCitLevel.call!(mid: sys_gen_mid, company_id: company.id, 
+                      user_id: current_user.id, level: 1)
+
+      end
   
     respond_to do |format|
       format.html { redirect_to edit_company_path(id: company.id, level: params[:company][:level], filter_by: params[:company][:filter_by]), notice: "company was successfully updated."  and return  }

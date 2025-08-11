@@ -6,6 +6,9 @@ class UploadRecord < ApplicationRecord
 
   validates :product_name, presence: true
   validates :company_name, presence: true
+  validates :barcode, presence: true, uniqueness: true
+  validate :barcode_length_allowed
+  
   default_scope -> { order(created_at: :desc) }
 
   def self.user_uploads(page, per_page, user_id)
@@ -26,6 +29,17 @@ class UploadRecord < ApplicationRecord
 
   def self.resolve(barcode)
     where(barcode: barcode, resolve_status: false).update_all(resolve_status: true)
+  end
+
+
+  private
+
+
+  def barcode_length_allowed
+    allowed_lengths = [6, 8, 12, 13]
+    unless barcode.present? && allowed_lengths.include?(barcode.length)
+      errors.add(:barcode, "must be 6, 8, 12, or 13 characters long, symbology UPC-E, EAN-8, UPC-A, or EAN-13")
+    end
   end
 
 end
