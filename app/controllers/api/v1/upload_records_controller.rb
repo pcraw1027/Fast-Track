@@ -10,12 +10,15 @@ class Api::V1::UploadRecordsController < Api::V1::BaseController
   end
 
   def create
-    upload_claims = CroupierCore::UploadTrigger.call!(barcode: upload_record_params[:barcode], 
+    upload_claims = CroupierCore::UploadTrigger.call!(
+                              barcode: upload_record_params[:barcode], 
                               scan_id: upload_record_params[:scan_id], 
                               user_id: current_user.id, 
                               asin: upload_record_params[:asin],
                               brand: upload_record_params[:brand],
-                              upload_params: upload_record_params.except(:brand)) unless upload_record_params.blank?
+                              upload_params: upload_record_params.except(:brand),
+                              symbology: params[:upload_record][:symbology]
+                              ) unless upload_record_params.blank?
     
     if upload_claims.payload
       render json: {upload: upload_claims.payload, media: upload_claims.payload.media}, status: :ok

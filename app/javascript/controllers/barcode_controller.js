@@ -9,7 +9,7 @@ export default class extends Controller {
     const barcode = inp.value;
    
     if (!barcode) return this.showError("Please enter barcode.");
-    if (barcode.length < 12 || barcode.length > 13) return this.showError("barcode minimum and maximum length is 12 and 13 respectively.");
+    if (![6, 8, 12, 13].includes(barcode.length)) return this.showError("barcode must be 6, 8, 12, or 13 characters long, symbology UPC-E, EAN-8, UPC-A, or EAN-13.");
     const formData = new FormData();
     formData.append("bit_record[barcode]", barcode)
     try {

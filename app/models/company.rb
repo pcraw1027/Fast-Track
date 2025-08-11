@@ -23,7 +23,7 @@ class Company < ApplicationRecord
   accepts_nested_attributes_for :company_snapshot, reject_if: :all_blank
 
   validates :name, presence: true
-  #validates :mids, uniqueness: true
+  validates :mids, uniqueness: true
 
   default_scope -> { order(name: :asc) }
   scope :find_by_mid, ->(mid) { where("mids @> ARRAY[?]::text[]", [mid]) }

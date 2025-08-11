@@ -30,13 +30,16 @@ class Api::V1::ScansController < Api::V1::BaseController
         
       if @scan.id
             @brc_intrf_claims = CroupierCore::BarcodeInterface.call!(barcode: scan_params[:barcode], 
-                            source: "Scan", asin: scan_params[:asin], user_id: current_user.id)
+                            source: "Scan", asin: scan_params[:asin], 
+                            user_id: current_user.id, symbology: params[:scan][:symbology])
             CroupierCore::UploadTrigger.call!(barcode: scan_params[:barcode], 
                 scan_id: @scan.id, 
                 user_id: current_user.id, 
                 asin: scan_params[:asin],
                 brand: upload_record_params[:brand],
-                upload_params: scan_params[:uploads].except(:brand)) unless scan_params[:uploads].blank? 
+                upload_params: scan_params[:uploads].except(:brand),
+                symbology: params[:scan][:symbology]
+                ) unless scan_params[:uploads].blank? 
       end
       
     end

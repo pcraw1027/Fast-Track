@@ -19,6 +19,7 @@ class ProductsController < ApplicationController
      
   end
 
+  
   def insert_product
     error = ""
     #error += "company is required, " if product_params[:company_id].blank?
@@ -60,11 +61,27 @@ class ProductsController < ApplicationController
         
       else
           begin
+            cit_rec = CitRecord.find_by(mid: mid)
+
+            if cit_rec
+              old_company = cit_rec.company
+              if old_company && old_company.name != company_name
+                  sys_gen_mid = CitRecord.generate_mid(old_company.id)
+                  cit_rec = CitRecordHandler.update_or_create(nil, mid: sys_gen_mid, 
+                      source: "Product Import", 
+                      user_id: current_user.id, 
+                      company_id: old_company.id, 
+                      brand: nil
+                  )
+                 old_company.update(mids: [sys_gen_mid])
+              end                           
+            end
+
             company = Company.create!(name: company_name, mids: [mid])
             company_id = company.id
+
             serialized_params[:company_id] = company.id
 
-            cit_rec = CitRecord.find_by(mid: mid)
             unless cit_rec
               cit_rec = CitRecordHandler.update_or_create(nil, mid: mid, source: "Product Import", 
                               user_id: current_user.id, company_id: company.id, brand: nil)
