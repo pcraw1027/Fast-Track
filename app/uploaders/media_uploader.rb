@@ -1,5 +1,8 @@
 require 'mini_magick'
 class MediaUploader < CarrierWave::Uploader::Base
+
+  include ::CarrierWave::Backgrounder::Delay
+
   include CarrierWave::MiniMagick
 
   def store_dir

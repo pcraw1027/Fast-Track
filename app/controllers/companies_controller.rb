@@ -219,7 +219,7 @@ end
   
     respond_to do |format|
       format.html { redirect_to edit_company_path(id: company.id, level: params[:company][:level], filter_by: params[:company][:filter_by]), notice: "company was successfully updated."  and return  }
-      format.json { render json: {errors: [{barcode: msg}]}, status: :unprocessable_entity and return }
+      format.json { render json: company, status: :ok and return }
     end
 
     end
@@ -227,7 +227,7 @@ end
 
   def respond_to_invalid_entries(msg, path=new_product_path)
     respond_to do |format|
-      format.html { redirect_to path, notice: msg and return  }
+      format.html { redirect_to path, alert: msg and return  }
       format.json { render json: {errors: [{barcode: msg}]}, status: :unprocessable_entity and return }
     end
   end  
