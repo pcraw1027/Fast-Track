@@ -21,6 +21,34 @@ class BricksController < ApplicationController
     render json: bricks.select(:id, :code, :title)
   end
 
+  def by_title_search
+      search_result = if params[:q].present?
+              Brick.where("title ILIKE ?", "%#{params[:q]}%").limit(20)
+            else
+              Brick.none
+            end
+      brick_h = search_result&.group_by(&:klass_id)
+      klasses = Klass.includes(family: [:segment]).where('id in (?)', search_result&.map(&:klass_id))
+      result = []
+
+      klasses.each do |klass|  
+        brick_h[klass.id].each do |brick|   
+          family = klass.family
+          segment = family.segment
+          result << {
+            id: brick.id,
+            code: brick.code,
+            title: brick.title,
+            klass: {id: klass.id, code: klass.code, title: klass.title },              
+            family: {id: family.id, code: family.code, title: family.title},
+            segment: {id: segment.id, code: segment.code, title: segment.title }
+          }  
+        end     
+      end
+
+    render json: result
+end
+
   # GET /bricks/new
   def new
     @brick = Brick.new

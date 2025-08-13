@@ -1,11 +1,7 @@
 class Product < ApplicationRecord
   include Searchable
 
-  attr_accessor :media
-  attr_accessor :barcode
-  attr_accessor :level
-  attr_accessor :new_company_name
-  attr_accessor :asin
+  attr_accessor :media, :barcode, :level, :new_company_name, :asin, :brick_search
   
   belongs_to :company, optional: true
   belongs_to :segment, optional: true

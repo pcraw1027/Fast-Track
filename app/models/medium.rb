@@ -2,6 +2,7 @@ class Medium < ApplicationRecord
   belongs_to :mediaable, polymorphic: true
 
   mount_uploader :file, MediaUploader 
+  #store_in_background :file, StoreAssetJob 
 
   enum media_type: { image: 0, video: 1, file: 2 }
 

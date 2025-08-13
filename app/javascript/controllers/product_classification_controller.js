@@ -2,19 +2,84 @@ import { Controller } from "stimulus"
 import TomSelect from "tom-select"
 
 export default class extends Controller {
-  static targets = ["segment", "family", "klass", "brick"]
+  static targets = ["brickSearch", "segment", "family", "klass", "brick"]
 
   connect() {
     if (document.readyState === "loading") {
       document.addEventListener("DOMContentLoaded", () => this.initialize())
     } else {
-      this.initialize()
+      this.initialize();
     }
   }
   
   initialize() {
-    console.log("Initializing...")
-  
+    if (!this.hasBrickTarget) return;
+
+    if (!this.brickSearchSelect && this.hasBrickSearchTarget) {
+      this.brickSearchSelect = new TomSelect(this.brickSearchTarget, {
+        placeholder: "Search a brick title",
+         valueField: 'id',
+          labelField: 'title',
+          searchField: 'title',
+          maxOptions: 10,
+          loadThrottle: 300,
+          create: false,
+          hideSelected: true,
+          placeholder: 'Search for a brick by title',
+    
+          load: (query, callback) => {
+      
+            if (!query.length) return callback()
+            fetch(`/bricks_by_title_search?q=${encodeURIComponent(query)}`)
+              .then(response => response.json())
+              .then(json => {
+                this.brickCache = {} 
+                json.forEach(brick => this.brickCache[brick.id] = brick)
+                return json.map((brick) => ({
+                  id: brick.id,
+                  title: `${brick.code} ${brick.title}`
+                }))
+              })
+              .then(res => callback(res))
+              .catch(() => callback())
+          },
+    
+          onItemAdd: (value) => {
+            const brick = this.brickCache?.[value]
+            if (!brick) return
+           
+            // Populate other select fields
+            this.brickSelect.addOption({
+              value: brick.id,
+              text: `${brick.code} ${brick.title}`,
+            });
+            this.brickSelect.setValue(brick.id, true);
+            this.brickSelect.refreshOptions(false)
+
+            this.klassSelect.addOption({
+              value: brick.klass.id,
+              text: `${brick.klass.code} ${brick.klass.title}`,
+            });
+            this.klassSelect.setValue(brick.klass.id, true);
+            this.brickSelect.refreshOptions(false)
+
+            this.familySelect.addOption({
+              value: brick.family.id,
+              text: `${brick.family.code} ${brick.family.title}`,
+            });
+            this.familySelect.setValue(brick.family.id, true);
+            this.familySelect.refreshOptions(false)
+
+            this.segmentSelect.addOption({
+              value: brick.segment.id,
+              text: `${brick.segment.code} ${brick.segment.title}`,
+            });
+            this.segmentSelect.setValue(brick.segment.id, true);
+            this.segmentSelect.refreshOptions(false)
+          }
+      })
+    }
+
     if (!this.segmentSelect && this.hasSegmentTarget) {
       this.segmentSelect = new TomSelect(this.segmentTarget, {
         placeholder: "Select a segment",
@@ -42,7 +107,6 @@ export default class extends Controller {
       })
     }
   }
-  
 
   async updateFamilies() {
     console.log("updating family...");
