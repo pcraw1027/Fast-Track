@@ -23,7 +23,7 @@ class BricksController < ApplicationController
 
   def by_title_search
       search_result = if params[:q].present?
-              Brick.where("title ILIKE ?", "%#{params[:q]}%").limit(20)
+              Brick.where("title ILIKE ?", "%#{params[:q]}%")
             else
               Brick.none
             end

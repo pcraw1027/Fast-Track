@@ -34,6 +34,7 @@ export default class extends Controller {
               .then(response => response.json())
               .then(json => {
                 this.brickCache = {} 
+                json.sort((a, b) => a.title.localeCompare(b.title));
                 json.forEach(brick => this.brickCache[brick.id] = brick)
                 return json.map((brick) => ({
                   id: brick.id,
@@ -176,7 +177,7 @@ export default class extends Controller {
       const bricks = await response.json()
 
       this.brickSelect.clearOptions()
-
+      bricks.sort((a, b) => a.title.localeCompare(b.title));
       bricks.forEach((brick) => {
         this.brickSelect.addOption({
           value: brick.id,
