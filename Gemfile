@@ -92,7 +92,6 @@ gem 'elasticsearch-rails'
 gem 'cocoon'
 gem 'will_paginate-bootstrap'
 gem 'sidekiq'
-gem 'carrierwave_backgrounder'
 gem 'delayed_job_active_record'
 
 gem 'dotenv-rails', groups: [:development, :test]
