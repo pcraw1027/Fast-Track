@@ -53,8 +53,8 @@
 
 <script>
   function handleSearch() {
-    const query = document.getElementById('search-input').value.trim();
-    const path = window.location.pathname;
+    let query = document.getElementById('search-input').value.trim();
+    let path = window.location.pathname;
 
     let target = '/products';
     if (path.startsWith('/companies')) {
@@ -66,10 +66,10 @@
     }
   }
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const filterVal = urlParams.get("filter_by");
+  let urlParams = new URLSearchParams(window.location.search);
+  let filterVal = urlParams.get("filter_by");
   if (filterVal) {
-    const citSelectInp = document.getElementById("filter_by-select-inp")
+    let citSelectInp = document.getElementById("filter_by-select-inp")
     if(citSelectInp){
         citSelectInp.value = filterVal;
     }
@@ -82,16 +82,16 @@
 
   <script>
       document.addEventListener('DOMContentLoaded', function () {
-        const addBtn = document.getElementById('add-media-field');
-        const mediaFields = document.getElementById('media-fields');
-        const mediaUpload = mediaFields && mediaFields.querySelector('.media-upload');
+        let addBtn = document.getElementById('add-media-field');
+        let mediaFields = document.getElementById('media-fields');
+        let mediaUpload = mediaFields && mediaFields.querySelector('.media-upload');
 
         if (addBtn && mediaFields && mediaUpload) {
           addBtn.addEventListener('click', function (e) {
             e.preventDefault();
 
-            const newField = mediaUpload.cloneNode(true);
-            const fileInput = newField.querySelector('input[type="file"]');
+            let newField = mediaUpload.cloneNode(true);
+            let fileInput = newField.querySelector('input[type="file"]');
 
             if (fileInput) fileInput.value = ''; 
             mediaFields.appendChild(newField);
@@ -104,7 +104,7 @@
 
         function updateAddressIndexes() {
           document.querySelectorAll("#addresses .nested-fields").forEach((el, i) => {
-            const indexSpan = el.querySelector(".address-index");
+            let indexSpan = el.querySelector(".address-index");
             if (indexSpan) indexSpan.textContent = `#${i + 1}`;
           });
         }
