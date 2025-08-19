@@ -50,16 +50,12 @@ class MediaUploader < CarrierWave::Uploader::Base
     end
   end
 
-  process :resize_and_make_background_transparent => ['522x522'], if: :image?
-
-  version :thumb, if: :image? do
-    process :resize_and_make_background_transparent => ['180x180']
-  end
-
+  # process :resize_and_make_background_transparent => ['522x522'], if: :image?
+ 
   def resize_and_make_background_transparent(size)
     manipulate! do |img|
       img.format('png')
-      img.alpha('on') 
+      img.alpha('on')
 
       img.combine_options do |c|
         c.fuzz '5%'  
@@ -71,10 +67,28 @@ class MediaUploader < CarrierWave::Uploader::Base
     end
   end
 
+  def process_full!
+    cache_stored_file! if !cached?
+    resize_and_make_background_transparent("522x522")
+    restore_versions!
+  end
+
+  def restore_versions!
+    versions.each_value(&:store!)
+  end
+
+  version :thumb, if: :image? do
+    process :resize_and_make_background_transparent => ['180x180'], if: :process_thumb?
+  end
+
+  def process_thumb?(_file)
+    false # prevent running on initial save
+  end
 
   def mini_magick
     MiniMagick
   end
+
 
 end
 

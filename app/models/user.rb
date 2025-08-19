@@ -58,10 +58,10 @@ class User < ApplicationRecord
 
     def generate_token
       token = String.random(6, ['0'..'9','A'..'Z'] )
-      user = find_by(reset_password_token: token.downcase)
+      user = User.find_by(reset_password_token: token.downcase)
       while user.present? 
         token = String.random(6, ['0'..'9','A'..'Z'] )
-        user = find_by(reset_password_token: token.downcase)
+        user = User.find_by(reset_password_token: token.downcase)
       end
       token
     end

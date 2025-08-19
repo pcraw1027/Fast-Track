@@ -8,7 +8,6 @@ class UploadRecord < ApplicationRecord
   validates :product_name, presence: true
   validates :company_name, presence: true
 
-  
   default_scope -> { order(created_at: :desc) }
 
   def self.user_uploads(page, per_page, user_id)
