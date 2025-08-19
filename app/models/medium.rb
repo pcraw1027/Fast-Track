@@ -2,7 +2,6 @@ class Medium < ApplicationRecord
   belongs_to :mediaable, polymorphic: true
 
   mount_uploader :file, MediaUploader 
-  #store_in_background :file, StoreAssetJob 
 
   enum media_type: { image: 0, video: 1, file: 2 }
 
@@ -13,8 +12,15 @@ class Medium < ApplicationRecord
 
   before_destroy :remove_file_from_s3
 
-  
+
+  after_create :process_in_background
+
+
   private
+
+  def process_in_background
+    ProcessMediumJob.perform_later(id)
+  end
 
 
   def remove_file_from_s3
