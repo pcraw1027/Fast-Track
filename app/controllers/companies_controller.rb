@@ -26,7 +26,7 @@ class CompaniesController < ApplicationController
           @company.name = params[:company][:new_company_name]
           mid = company_params[:mid]
           respond_to do |format|
-            if @company.save
+             if @company.save
               cit_rec = nil
               if company_params[:mid].blank?
                 mid = CitRecord.generate_mid(@company.id)
@@ -45,8 +45,10 @@ class CompaniesController < ApplicationController
               format.html { redirect_to company_capture_interface_path(mid: mid, filter_by: params[:company][:filter_by]), alert: msg }
               format.json { render json: @company.errors, status: :unprocessable_entity }
             end
+
           end
-        end
+
+      end
   end
 
   def update_to_level_two
@@ -199,33 +201,39 @@ end
   def update_company
     company_id = params[:company][:company_id].blank? ? params[:company][:id] : params[:company][:company_id]
     company = Company.find(company_id)
-    if company.update(company_params.except(:mid))
-      if !company_params[:mid].blank?
-        CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: company.id, 
-        user_id: current_user.id, level: 1)
-      else
 
-        sys_gen_mid = CitRecord.generate_mid(company.id)
-
-        cit_rec = CitRecordHandler.update_or_create(nil, mid: sys_gen_mid, source: "Company Import", 
-                        user_id: current_user.id, company_id: company.id, brand: nil)
-
-        company.update(mids: [sys_gen_mid])
-
-        CroupierCore::UpgradeCitLevel.call!(mid: sys_gen_mid, company_id: company.id, 
-                      user_id: current_user.id, level: 1)
-
-      end
-  
     respond_to do |format|
-      format.html { redirect_to edit_company_path(id: company.id, level: params[:company][:level], filter_by: params[:company][:filter_by]), notice: "company was successfully updated."  and return  }
-      format.json { render json: company, status: :ok and return }
-    end
+      begin
+        company.update(company_params.except(:mid))
+         if !company_params[:mid].blank?
+            CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: company.id, 
+            user_id: current_user.id, level: 1)
+          else
 
+            sys_gen_mid = CitRecord.generate_mid(company.id)
+
+            cit_rec = CitRecordHandler.update_or_create(nil, mid: sys_gen_mid, source: "Company Import", 
+                            user_id: current_user.id, company_id: company.id, brand: nil)
+
+            company.update(mids: [sys_gen_mid])
+
+            CroupierCore::UpgradeCitLevel.call!(mid: sys_gen_mid, company_id: company.id, 
+                          user_id: current_user.id, level: 1)
+
+          end
+        
+        format.html { redirect_to edit_company_path(id: company.id, level: params[:company][:level], filter_by: params[:company][:filter_by]), notice: "company was successfully updated."  and return  }
+        format.json { render json: company, status: :ok and return }
+      rescue => e
+        format.html { redirect_to company_capture_interface_path(mid: company_params[:mid], level: params[:company][:level], filter_by: params[:company][:filter_by]), alert: e.message and return }
+        format.json { render json: company.errors, status: :unprocessable_entity and return }
+      end
     end
   end
 
-  def respond_to_invalid_entries(msg, path=new_product_path)
+
+
+  def respond_to_invalid_entries(msg, path=new_company_path)
     respond_to do |format|
       format.html { redirect_to path, alert: msg and return  }
       format.json { render json: {errors: [{barcode: msg}]}, status: :unprocessable_entity and return }

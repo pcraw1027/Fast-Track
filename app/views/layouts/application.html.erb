@@ -53,10 +53,10 @@
 
 <script>
   function handleSearch() {
-    let query = document.getElementById('search-input').value.trim();
-    let path = window.location.pathname;
+    var query = document.getElementById('search-input').value.trim();
+    var path = window.location.pathname;
 
-    let target = '/products';
+    var target = '/products';
     if (path.startsWith('/companies')) {
       target = '/companies';
     }
@@ -66,10 +66,11 @@
     }
   }
 
-  let urlParams = new URLSearchParams(window.location.search);
-  let filterVal = urlParams.get("filter_by");
+  
+  var urlParams = new URLSearchParams(window.location.search);
+  var filterVal = urlParams.get("filter_by");
   if (filterVal) {
-    let citSelectInp = document.getElementById("filter_by-select-inp")
+    var citSelectInp = document.getElementById("filter_by-select-inp")
     if(citSelectInp){
         citSelectInp.value = filterVal;
     }
