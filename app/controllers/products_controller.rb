@@ -22,112 +22,104 @@ class ProductsController < ApplicationController
   
   def insert_product
     error = ""
-    #error += "company is required, " if product_params[:company_id].blank?
     error += "product name is required, " if product_params[:name].blank?
     error += "description is required" if product_params[:description].blank?
 
     barcode = product_variant_params[:barcode]&.strip
-
     company_name = params[:product][:new_company_name]
-    
-    if error.length > 0
-      respond_to_invalid_entries(error, product_capture_interface_path(barcode: barcode))  
-    else
 
-      serialized_params = product_params
-      company_id = nil
-      mid = CroupierCore::MidExtractor.call!(barcode: barcode).payload
+    if error.present?
+      respond_to_invalid_entries(error, product_capture_interface_path(barcode: barcode))
+      return
+    end
 
-      if product_params[:company_id]&.to_s.match?(/^\d+$/)
-            company = Company.find(product_params[:company_id])
-            company_id = company.id
+    serialized_params = product_params.dup
+    company_id = nil
+    mid = CroupierCore::MidExtractor.call!(barcode: barcode).payload
 
-            #update mid if it was previously system generated
-            cit_rec = CitRecord.find_by(mid: mid)
-            unless cit_rec
-                  sys_gen_mid = CitRecord.generate_mid(company.id)
-                  cit_rec = CitRecord.find_by(mid: sys_gen_mid)
-                  if cit_rec
-                    cit_rec.mid = mid
-                    cit_rec.company_id = company.id
-                    cit_rec.save!
-                  else
-                    cit_rec = CitRecordHandler.update_or_create(nil, mid: mid, source: "Product Import", 
-                                  user_id: current_user.id, company_id: company.id, brand: nil)
-                  end
-            else
-                  cit_rec.update(company_id: company.id)
-            end
-        
-      else
-          begin
-            cit_rec = CitRecord.find_by(mid: mid)
+    company = nil
+    cit_rec = CitRecord.find_by(mid: mid)
 
-            if cit_rec
-              old_company = cit_rec.company
-              if old_company && old_company.name != company_name
-                  sys_gen_mid = CitRecord.generate_mid(old_company.id)
-                  cit_rec = CitRecordHandler.update_or_create(nil, mid: sys_gen_mid, 
-                      source: "Product Import", 
-                      user_id: current_user.id, 
-                      company_id: old_company.id, 
-                      brand: nil
-                  )
-                 old_company.update(mids: [sys_gen_mid])
-              end                           
-            end
-
-            company = Company.create!(name: company_name, mids: [mid])
-            company_id = company.id
-
-            serialized_params[:company_id] = company.id
-
-            unless cit_rec
-              cit_rec = CitRecordHandler.update_or_create(nil, mid: mid, source: "Product Import", 
-                              user_id: current_user.id, company_id: company.id, brand: nil)
-              
-            else
-              cit_rec.update(company_id: company.id)
-            end
-          rescue => e
-         
-               redirect_to(product_capture_interface_path(barcode: barcode), alert: e.message ) and return
-            
-            end
-
-
+    if product_params[:company_id]&.to_s.match?(/^\d+$/)
+      company = Company.find_by(id: product_params[:company_id])
+      unless company
+        respond_to_invalid_entries("Company not found", product_capture_interface_path(barcode: barcode))
+        return
       end
-      
-      @product = Product.new(serialized_params)
-      pit_record = PitRecord.find_by(barcode: barcode)
-      variant_exist = ProductVariant.find_by(barcode: barcode)
-      if variant_exist
-        @product = variant_exist.product
-        variant_exist.update(product_variant_params) unless product_variant_params.blank?
-        if @product.update(serialized_params)
-          upgrade_pit_to_level_1(@product.id, pit_record.level, company_id)
-          redirect_to product_capture_interface_path(barcode: barcode, level: params[:level]), notice: "Product was successfully updated." and return
-        end
-      end
-        
-      respond_to do |format|
-        if @product.save
-            pv = ProductVariant.new(product_variant_params)
-            pv.barcode = pv.barcode.strip
-            pv.product_id = @product.id
-            pv.save!
-            upgrade_pit_to_level_1(@product.id, pit_record.level, company_id)
-            Scan.resolve(barcode, @product.id)
-            UploadRecord.resolve(barcode)
-          format.html { redirect_to product_capture_interface_path(barcode: barcode, level: params[:level]), notice: "Product successfully added" }
-          format.json { render :show, status: :created, location: @product }
+      company_id = company.id
+
+      unless cit_rec
+        sys_gen_mid = CitRecord.generate_mid(company.id)
+        cit_rec = CitRecord.find_by(mid: sys_gen_mid)
+        if cit_rec
+          cit_rec.update(mid: mid, company_id: company.id)
         else
-          error = @product.errors.map{|er| "#{er.attribute} #{er.message}"}.join(", ")
-          format.html { redirect_to product_capture_interface_path(barcode: barcode, level: params[:level]), alert: error }
-          format.json { render json: @product.errors, status: :unprocessable_entity }
+          cit_rec = CitRecordHandler.update_or_create(nil, mid: mid, source: "Product Import",
+                                                     user_id: current_user.id, company_id: company.id, brand: nil)
         end
+      else
+        cit_rec.update(company_id: company.id) if cit_rec.company_id != company.id
       end
-        
+
+    else
+      begin
+        if cit_rec
+          old_company = cit_rec.company
+          if old_company && old_company.name != company_name
+            sys_gen_mid = CitRecord.generate_mid(old_company.id)
+            CitRecordHandler.update_or_create(nil, mid: sys_gen_mid, source: "Product Import",
+                                              user_id: current_user.id, company_id: old_company.id, brand: nil)
+            old_company.update(mids: [sys_gen_mid])
+          end
+        end
+
+        company = Company.create!(name: company_name, mids: [mid])
+        company_id = company.id
+        serialized_params[:company_id] = company.id
+
+        if cit_rec
+          cit_rec.update(company_id: company.id) if cit_rec.company_id != company.id
+        else
+          CitRecordHandler.update_or_create(nil, mid: mid, source: "Product Import",
+                                            user_id: current_user.id, company_id: company.id, brand: nil)
+        end
+      rescue => e
+        redirect_to(product_capture_interface_path(barcode: barcode), alert: e.message)
+        return
+      end
+    end
+
+    pit_record = PitRecord.find_by(barcode: barcode)
+    variant_exist = ProductVariant.includes(:product).find_by(barcode: barcode)
+
+    if variant_exist
+      @product = variant_exist.product
+      variant_exist.update(product_variant_params) unless product_variant_params.blank?
+      if @product.update(serialized_params)
+        upgrade_pit_to_level_1(@product.id, pit_record&.level, company_id)
+        redirect_to product_capture_interface_path(barcode: barcode, level: params[:level]), notice: "Product was successfully updated."
+        return
+      end
+    else
+      @product = Product.new(serialized_params)
+    end
+
+    respond_to do |format|
+      if @product.save
+        pv = ProductVariant.new(product_variant_params)
+        pv.barcode = pv.barcode.strip
+        pv.product_id = @product.id
+        pv.save!
+        upgrade_pit_to_level_1(@product.id, pit_record&.level, company_id)
+        Scan.resolve(barcode, @product.id)
+        UploadRecord.resolve(barcode)
+        format.html { redirect_to product_capture_interface_path(barcode: barcode, level: params[:level]), notice: "Product successfully added" }
+        format.json { render :show, status: :created, location: @product }
+      else
+        error = @product.errors.map { |er| "#{er.attribute} #{er.message}" }.join(", ")
+        format.html { redirect_to product_capture_interface_path(barcode: barcode, level: params[:level]), alert: error }
+        format.json { render json: @product.errors, status: :unprocessable_entity }
+      end
     end
   end
 

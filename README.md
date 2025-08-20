@@ -17,6 +17,6 @@ Things you may want to cover:
 - Production 
 `STAGE=production bundle exec cap production deploy`
 
-- Production 
+- Staging 
 `STAGE=staging bundle exec cap staging deploy`
 

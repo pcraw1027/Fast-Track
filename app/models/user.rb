@@ -89,5 +89,6 @@ class User < ApplicationRecord
       photo.remove!
     end
   end
+  
 
 end
