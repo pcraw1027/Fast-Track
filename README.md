@@ -34,6 +34,26 @@ Fast-Track is a Ruby on Rails application designed to streamline core Croupier L
   ```
 - Access the application at `http://localhost:3000`.
 
+- **Start Elasticsearch service (required for search features):**
+  ```sh
+  # If installed via Homebrew (macOS)
+  brew services start elasticsearch
+
+  # Or using systemctl (Linux)
+  sudo systemctl start elasticsearch
+  ```
+
+- **Run Elasticsearch index rake task:**
+  ```sh
+  bundle exec rake elasticsearch
+  ```
+
+- **Start Delayed::Job worker:**
+  ```sh
+  # for development
+  bundle exec rake jobs:work
+  ```
+
 ## Features
 
 - Easy setup for development and production environments
@@ -45,6 +65,10 @@ Fast-Track is a Ruby on Rails application designed to streamline core Croupier L
 
 - Environment variables can be set in `.env` or via your deployment system.
 - Edit `config/database.yml` and `config/secrets.yml` as needed for your environment.
+- **Elasticsearch:**  
+  Ensure Elasticsearch is installed and running. Configure connection settings in `config/elasticsearch.yml` if needed.
+- **Delayed::Job:**  
+  Configure queue settings in `config/initializers/delayed_job_config.rb` or as needed.
 
 ## Deployment
 
@@ -56,4 +80,6 @@ Fast-Track is a Ruby on Rails application designed to streamline core Croupier L
   ```sh
   STAGE=staging bundle exec cap staging deploy
   ```
+
+
 
