@@ -128,7 +128,7 @@ class ProductsController < ApplicationController
     @product = Product.find(params[:product_id])
     barcode = product_variant_params[:barcode]&.strip
     respond_to do |format|
-      if @product.update(product_params)
+      if @product.update!(product_params)
         pit_record = PitRecord.find_by(barcode: barcode)
         CroupierCore::UpgradePitLevel.call!(barcode: barcode, 
         product_id: @product.id, asin: nil, user_id: current_user.id, level: 2) 

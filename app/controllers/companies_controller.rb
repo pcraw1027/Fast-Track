@@ -55,7 +55,7 @@ class CompaniesController < ApplicationController
     @company = Company.find(params[:company_id])
     respond_to do |format|
       begin
-        @company.update(company_params.except(:mid))
+        @company.update!(company_params.except(:mid))
         CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, 
         user_id: current_user.id, level: 2)
         format.html { redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:company][:filter_by]), notice: "company was successfully updated." }
@@ -104,7 +104,7 @@ class CompaniesController < ApplicationController
      @company = Company.find(params[:company_id])
      respond_to do |format|
       begin
-        @company.update(company_snapshot_params)
+        @company.update!(company_snapshot_params)
         CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, user_id: current_user.id, level: 5)
         format.html { redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:company][:filter_by]), notice: "Company was successfully updated." }
         format.json { render :show, status: :created, location: @company }
@@ -204,7 +204,7 @@ end
 
     respond_to do |format|
       begin
-        company.update(company_params.except(:mid))
+        company.update!(company_params.except(:mid))
          if !company_params[:mid].blank?
             CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: company.id, 
             user_id: current_user.id, level: 1)
