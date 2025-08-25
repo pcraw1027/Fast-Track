@@ -171,7 +171,7 @@ class ProductsController < ApplicationController
     def respond_to_invalid_entries(msg, path = new_product_path)
       respond_to do |format|
         format.html { redirect_to path, alert: msg }
-        format.json { render json: { errors: [{ barcode: msg }] }, status: :unprocessable_entity and return }
+        format.json { render json: { errors: [{ barcode: msg }] }, status: :unprocessable_entity }
       end
     end
 
@@ -230,7 +230,8 @@ class ProductsController < ApplicationController
       variant_exist.update(product_variant_params) unless product_variant_params.blank?
       if @product.update(product_params.merge(company_id: company_id))
         upgrade_pit_to_level_1(@product.id, pit_record&.level, company_id)
-        redirect_to product_capture_interface_path(barcode: barcode, level: params[:level]), notice: "Product was successfully updated." and return
+        redirect_to product_capture_interface_path(barcode: barcode, level: params[:level]), notice: "Product was successfully updated."
+        return
       end
     end
 
@@ -245,12 +246,12 @@ class ProductsController < ApplicationController
           upgrade_pit_to_level_1(@product.id, pit_record&.level, company_id)
           Scan.resolve(barcode, @product.id)
           UploadRecord.resolve(barcode)
-          format.html { redirect_to product_capture_interface_path(barcode: barcode, level: params[:level]), notice: "Product successfully added" and return }
-          format.json { render :show, status: :created, location: @product and return }
+          format.html { redirect_to product_capture_interface_path(barcode: barcode, level: params[:level]), notice: "Product successfully added" }
+          format.json { render :show, status: :created, location: @product }
         else
           error = @product.errors.map { |er| "#{er.attribute} #{er.message}" }.join(", ")
-          format.html { redirect_to product_capture_interface_path(barcode: barcode, level: params[:level]), alert: error and return }
-          format.json { render json: @product.errors, status: :unprocessable_entity and return }
+          format.html { redirect_to product_capture_interface_path(barcode: barcode, level: params[:level]), alert: error }
+          format.json { render json: @product.errors, status: :unprocessable_entity }
         end
       end
     end
