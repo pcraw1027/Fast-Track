@@ -22,16 +22,14 @@ class ProductsController < ApplicationController
     company_name = params[:product][:new_company_name]
 
     if error.present?
-      respond_to_invalid_entries(error, product_capture_interface_path(barcode: barcode))
-      return
+      respond_to_invalid_entries(error, product_capture_interface_path(barcode: barcode)) and return
     end
 
     mid = CroupierCore::MidExtractor.call!(barcode: barcode).payload
     company, cit_rec = resolve_company_and_cit_record(mid, company_name)
 
     unless company
-      respond_to_invalid_entries("Company not found", product_capture_interface_path(barcode: barcode))
-      return
+      respond_to_invalid_entries("Company not found", product_capture_interface_path(barcode: barcode)) and return
     end
 
     update_cit_record_company(cit_rec, company, mid)
@@ -40,8 +38,7 @@ class ProductsController < ApplicationController
     variant_exist = ProductVariant.includes(:product).find_by(barcode: barcode)
 
     if variant_exist
-      update_existing_product_and_variant(variant_exist, company.id, pit_record, barcode)
-      return
+      update_existing_product_and_variant(variant_exist, company.id, pit_record, barcode) 
     end
 
     create_new_product_and_variant(company.id, pit_record, barcode)
@@ -202,8 +199,7 @@ class ProductsController < ApplicationController
           company = Company.create!(name: company_name, mids: [mid])
         rescue => e
           puts e.message
-          redirect_to(product_capture_interface_path(barcode: product_variant_params[:barcode]&.strip), alert: e.message)
-          return [nil, nil]
+          redirect_to(product_capture_interface_path(barcode: product_variant_params[:barcode]&.strip), alert: e.message) and return
         end
       end
       [company, cit_rec]
@@ -230,8 +226,7 @@ class ProductsController < ApplicationController
       variant_exist.update(product_variant_params) unless product_variant_params.blank?
       if @product.update(product_params.merge(company_id: company_id))
         upgrade_pit_to_level_1(@product.id, pit_record&.level, company_id)
-        redirect_to product_capture_interface_path(barcode: barcode, level: params[:level]), notice: "Product was successfully updated."
-        return
+        redirect_to product_capture_interface_path(barcode: barcode, level: params[:level]), notice: "Product was successfully updated." and return
       end
     end
 
