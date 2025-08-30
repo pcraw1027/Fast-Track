@@ -5,8 +5,8 @@ class Review < ApplicationRecord
   validates :rating, presence: { message: "is required" }, inclusion: { in: 1..5, message: "must be between 1 and 5" }
 
   def self.load_data(per_page, page, record_id, class_name)
-    page = page.to_i > 0 ? page : 1
-    per_page = per_page.to_i > 0 ? per_page : 10
+    page = 1 unless page.to_i > 0
+    per_page = 10 unless per_page.to_i > 0
     offset   = (page - 1) * per_page
 
     base_query = joins(:user)
@@ -24,7 +24,7 @@ class Review < ApplicationRecord
 end
 
 def self.stats_for(record)
-  sql = <<-SQL
+  sql = <<-SQL.squish
     SELECT 
       AVG(rating)::float AS average,
       COUNT(*) AS total,
@@ -48,7 +48,7 @@ end
 
 
 def self.rating_distribution_for(record)
-    sql = <<-SQL
+    sql = <<-SQL.squish
       WITH ratings AS (
         SELECT rating, COUNT(*) AS count
         FROM reviews

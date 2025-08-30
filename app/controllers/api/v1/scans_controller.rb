@@ -22,11 +22,11 @@ class Api::V1::ScansController < Api::V1::BaseController
     finder_claims = CroupierCore::ProductFinder.call!(barcode: scan_params[:barcode])
     if finder_claims.payload
       @scan = Scan.create!(user_id: current_user.id, product_id: finder_claims.payload.id, 
-      scan_date: Date.today, barcode: scan_params[:barcode], product_exists: true)
+      scan_date: Time.zone.today, barcode: scan_params[:barcode], product_exists: true)
       CroupierCore::IncrPitCitProdCount.call!(barcode: scan_params[:barcode])
     else
       @scan = Scan.create!(user_id: current_user.id, 
-      scan_date: Date.today, barcode: scan_params[:barcode], product_exists: false)
+      scan_date: Time.zone.today, barcode: scan_params[:barcode], product_exists: false)
         
       if @scan.id
             @brc_intrf_claims = CroupierCore::BarcodeInterface.call!(barcode: scan_params[:barcode], 
@@ -39,7 +39,7 @@ class Api::V1::ScansController < Api::V1::BaseController
                 brand: upload_record_params[:brand],
                 upload_params: scan_params[:uploads].except(:brand),
                 symbology: params[:scan][:symbology]
-                ) unless scan_params[:uploads].blank? 
+                ) if scan_params[:uploads].present? 
       end
       
     end

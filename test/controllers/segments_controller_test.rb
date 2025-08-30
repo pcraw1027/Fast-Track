@@ -17,7 +17,9 @@ class SegmentsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create segment" do
     assert_difference('Segment.count') do
-      post segments_url, params: { segment: { code: @segment.code, description: @segment.description, product_category_source_id: @segment.product_category_source_id, title: @segment.title } }
+      post segments_url, 
+params: { segment: { code: @segment.code, description: @segment.description, 
+product_category_source_id: @segment.product_category_source_id, title: @segment.title } }
     end
 
     assert_redirected_to segment_url(Segment.last)
@@ -34,7 +36,9 @@ class SegmentsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update segment" do
-    patch segment_url(@segment), params: { segment: { code: @segment.code, description: @segment.description, product_category_source_id: @segment.product_category_source_id, title: @segment.title } }
+    patch segment_url(@segment), 
+params: { segment: { code: @segment.code, description: @segment.description, 
+product_category_source_id: @segment.product_category_source_id, title: @segment.title } }
     assert_redirected_to segment_url(@segment)
   end
 

@@ -52,7 +52,9 @@ class CompanyGenderStatsController < ApplicationController
     @company_gender_stat.destroy
 
     respond_to do |format|
-      format.html { redirect_to company_gender_stats_path, status: :see_other, notice: "Company gender stat was successfully destroyed." }
+      format.html do
+ redirect_to company_gender_stats_path, status: :see_other, notice: "Company gender stat was successfully destroyed."
+      end
       format.json { head :no_content }
     end
   end

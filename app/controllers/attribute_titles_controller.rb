@@ -54,7 +54,9 @@ class AttributeTitlesController < ApplicationController
     @attribute_title.destroy
 
     respond_to do |format|
-      format.html { redirect_to attribute_titles_path, status: :see_other, notice: "Attribute title was successfully destroyed." }
+      format.html do
+ redirect_to attribute_titles_path, status: :see_other, notice: "Attribute title was successfully destroyed."
+      end
       format.json { head :no_content }
     end
   end

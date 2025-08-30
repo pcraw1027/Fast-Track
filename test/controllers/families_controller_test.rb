@@ -17,7 +17,9 @@ class FamiliesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create family" do
     assert_difference('Family.count') do
-      post families_url, params: { family: { code: @family.code, description: @family.description, product_category_source_id: @family.product_category_source_id, segment_id: @family.segment_id, title: @family.title } }
+      post families_url, 
+params: { family: { code: @family.code, description: @family.description, 
+product_category_source_id: @family.product_category_source_id, segment_id: @family.segment_id, title: @family.title } }
     end
 
     assert_redirected_to family_url(Family.last)
@@ -34,7 +36,9 @@ class FamiliesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update family" do
-    patch family_url(@family), params: { family: { code: @family.code, description: @family.description, product_category_source_id: @family.product_category_source_id, segment_id: @family.segment_id, title: @family.title } }
+    patch family_url(@family), 
+params: { family: { code: @family.code, description: @family.description, 
+product_category_source_id: @family.product_category_source_id, segment_id: @family.segment_id, title: @family.title } }
     assert_redirected_to family_url(@family)
   end
 

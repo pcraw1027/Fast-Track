@@ -7,7 +7,6 @@ class CroupierCore::MidExtractor < ApplicationService
     13 => ->(barcode) { barcode[2..6] }
   }.freeze
 
-
   def call(barcode:)
     extractor = STRATEGIES[barcode.length]
 

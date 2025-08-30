@@ -52,7 +52,9 @@ class EmployeeTypesController < ApplicationController
     @employee_type.destroy
 
     respond_to do |format|
-      format.html { redirect_to employee_types_path, status: :see_other, notice: "Employee type was successfully destroyed." }
+      format.html do
+ redirect_to employee_types_path, status: :see_other, notice: "Employee type was successfully destroyed."
+      end
       format.json { head :no_content }
     end
   end

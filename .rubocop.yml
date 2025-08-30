@@ -1,0 +1,53 @@
+inherit_from: .rubocop_todo.yml
+plugins:
+  - rubocop-rails
+  - rubocop-rspec
+
+AllCops:
+  TargetRubyVersion: 3.2
+  SuggestExtensions: false
+  NewCops: enable
+  Exclude:
+    - 'db/schema.rb'
+    - 'bin/**/*'
+    - 'node_modules/**/*'
+
+Rails:
+  Enabled: true
+
+Layout/LineLength:
+  Max: 520
+Naming/PredicateMethod:
+  Enabled: false
+Rails/HasManyOrHasOneDependent:
+  Enabled: false
+Rails/SkipsModelValidations:
+  Enabled: false
+Rails/I18nLocaleTexts:
+  Enabled: false
+Rails/UniqueValidationWithoutIndex:
+  Enabled: false
+Rails/NotNullColumn:
+  Enabled: false
+Rails/ThreeStateBooleanColumn:
+  Enabled: false
+Rails/CreateTableWithTimestamps:
+  Enabled: false
+Rails/BulkChangeTable:
+  Enabled: false
+Rails/UnknownEnv:
+  Enabled: false
+Rails/LexicallyScopedActionFilter:
+  Enabled: false
+Rails/OutputSafety:
+  Enabled: false
+Rails/InverseOf:
+  Enabled: false
+Lint/DuplicateBranch:
+  Enabled: false
+Metrics/ClassLength:
+  Enabled: false
+Metrics/MethodLength:
+  Enabled: false
+Metrics/ModuleLength:
+  Enabled: false

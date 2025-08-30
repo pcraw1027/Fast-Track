@@ -6,7 +6,7 @@ module RawQueryModule
         offset = (page - 1) * per_page
 
          #select and paginate scans
-        recent_scans_sql = <<-SQL
+        recent_scans_sql = <<-SQL.squish
           SELECT DISTINCT ON (barcode) *
           FROM scans
           WHERE user_id = #{ActiveRecord::Base.connection.quote(current_user_id)}
@@ -20,8 +20,9 @@ module RawQueryModule
         #count product scans on matched products
         product_ids = recent_scan_data.map(&:product_id).compact
         product_scan_counts = {}
+
         if product_ids.any?
-          scan_counts_query = <<-SQL
+          scan_counts_query = <<-SQL.squish
             SELECT product_id, COUNT(*) AS scan_count
             FROM scans
             WHERE product_id IN (#{product_ids.join(',')})
@@ -35,7 +36,7 @@ module RawQueryModule
         #load product_variants data
         product_variants = self.unscoped_products_with_assoc("barcode", recent_scan_data.map(&:barcode))
         
-        count_query = <<-SQL
+        count_query = <<-SQL.squish
           SELECT COUNT(*) AS total_count FROM (
             SELECT DISTINCT ON (barcode) 1
             FROM scans
@@ -76,7 +77,7 @@ module RawQueryModule
       offset = (page - 1) * per_page
 
       # 1. Get product IDs sorted by scan count, with pagination
-      product_ids_query = <<-SQL
+      product_ids_query = <<-SQL.squish
         SELECT 
           products.id
         FROM 
@@ -93,7 +94,7 @@ module RawQueryModule
       product_ids = ActiveRecord::Base.connection.select_values(product_ids_query)
 
       # 2. Total count of unique products with scans
-      count_query = <<-SQL
+      count_query = <<-SQL.squish
         SELECT COUNT(*) FROM (
           SELECT products.id
           FROM scans
@@ -106,7 +107,7 @@ module RawQueryModule
 
         product_scan_counts = {}
         if product_ids.any?
-          scan_counts_query = <<-SQL
+          scan_counts_query = <<-SQL.squish
             SELECT product_id, COUNT(*) AS scan_count
             FROM scans
             WHERE product_id IN (#{product_ids.join(',')})
@@ -135,7 +136,9 @@ module RawQueryModule
 
     def self.unscoped_products_with_assoc(attribute_key, values)
       order_clause = Arel.sql(
-        "CASE #{values.each_with_index.map { |v, i| "WHEN #{attribute_key} = #{ActiveRecord::Base.connection.quote(v)} THEN #{i}" }.join(' ')} ELSE #{values.length} END"
+        "CASE #{values.each_with_index.map do |v, i|
+ "WHEN #{attribute_key} = #{ActiveRecord::Base.connection.quote(v)} THEN #{i}"
+        end.join(' ')} ELSE #{values.length} END"
       )
 
       ProductVariant.unscoped

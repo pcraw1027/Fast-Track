@@ -52,7 +52,9 @@ class SocialSitesController < ApplicationController
     @social_site.destroy
 
     respond_to do |format|
-      format.html { redirect_to social_sites_path, status: :see_other, notice: "Social site was successfully destroyed." }
+      format.html do
+ redirect_to social_sites_path, status: :see_other, notice: "Social site was successfully destroyed."
+      end
       format.json { head :no_content }
     end
   end

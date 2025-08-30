@@ -17,7 +17,9 @@ class KlassesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create klass" do
     assert_difference('Klass.count') do
-      post klasses_url, params: { klass: { code: @klass.code, description: @klass.description, family_id: @klass.family_id, product_category_source_id: @klass.product_category_source_id, title: @klass.title } }
+      post klasses_url, 
+params: { klass: { code: @klass.code, description: @klass.description, family_id: @klass.family_id, 
+product_category_source_id: @klass.product_category_source_id, title: @klass.title } }
     end
 
     assert_redirected_to klass_url(Klass.last)
@@ -34,7 +36,9 @@ class KlassesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update klass" do
-    patch klass_url(@klass), params: { klass: { code: @klass.code, description: @klass.description, family_id: @klass.family_id, product_category_source_id: @klass.product_category_source_id, title: @klass.title } }
+    patch klass_url(@klass), 
+params: { klass: { code: @klass.code, description: @klass.description, family_id: @klass.family_id, 
+product_category_source_id: @klass.product_category_source_id, title: @klass.title } }
     assert_redirected_to klass_url(@klass)
   end
 

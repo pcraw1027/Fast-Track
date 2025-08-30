@@ -1,5 +1,6 @@
 class UploadRecord < ApplicationRecord
   include BarcodeValidations
+
   belongs_to :scan
   belongs_to :user
   has_many :media, as: :mediaable, dependent: :destroy

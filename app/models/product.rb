@@ -31,11 +31,11 @@ class Product < ApplicationRecord
   index_name "product_search_index"
 
   def level_1_flag
-    !self.name.blank? && !self.description.blank? && !self.company_id.blank?
+    self.name.present? && self.description.present? && self.company_id.present?
   end
 
   def level_2_flag
-    !self.segment_id.blank? && !self.family_id.blank? && !self.klass_id.blank? && !self.brick_id.blank?
+    self.segment_id.present? && self.family_id.present? && self.klass_id.present? && self.brick_id.present?
   end
 
   def level_3_flag

@@ -17,7 +17,8 @@ class BitRecordsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create bit_record" do
     assert_difference('BitRecord.count') do
-      post bit_records_url, params: { bit_record: { barcode: @bit_record.barcode, source: @bit_record.source, status: @bit_record.status } }
+      post bit_records_url, 
+params: { bit_record: { barcode: @bit_record.barcode, source: @bit_record.source, status: @bit_record.status } }
     end
 
     assert_redirected_to bit_record_url(BitRecord.last)
@@ -34,7 +35,8 @@ class BitRecordsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update bit_record" do
-    patch bit_record_url(@bit_record), params: { bit_record: { barcode: @bit_record.barcode, source: @bit_record.source, status: @bit_record.status } }
+    patch bit_record_url(@bit_record), 
+params: { bit_record: { barcode: @bit_record.barcode, source: @bit_record.source, status: @bit_record.status } }
     assert_redirected_to bit_record_url(@bit_record)
   end
 

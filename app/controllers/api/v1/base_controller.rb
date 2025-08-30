@@ -40,7 +40,7 @@ def record_not_found(exception)
 
 
   def authenticate_user!
-    token = request.headers['Authorization']&.split(' ')&.last 
+    token = request.headers['Authorization']&.split&.last 
     
     if token.blank?
       render json: { error: 'Authorization token not provided' }, status: :unauthorized

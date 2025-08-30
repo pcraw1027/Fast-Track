@@ -29,7 +29,7 @@ module Searchable
       }
     }
 
-    def as_indexed_json(options = {})
+    def as_indexed_json(_options = {})
       self.as_json(only: self.class.searchable_fields).merge(type: self.class.name)
     end
 

@@ -17,7 +17,9 @@ class CompanySnapshotsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create company_snapshot" do
     assert_difference('CompanySnapshot.count') do
-      post company_snapshots_url, params: { company_snapshot: { company_id: @company_snapshot.company_id, data_transparency: @company_snapshot.data_transparency, internal_culture: @company_snapshot.internal_culture, mgmt_composition: @company_snapshot.mgmt_composition } }
+      post company_snapshots_url, 
+params: { company_snapshot: { company_id: @company_snapshot.company_id, 
+data_transparency: @company_snapshot.data_transparency, internal_culture: @company_snapshot.internal_culture, mgmt_composition: @company_snapshot.mgmt_composition } }
     end
 
     assert_redirected_to company_snapshot_url(CompanySnapshot.last)
@@ -34,7 +36,9 @@ class CompanySnapshotsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update company_snapshot" do
-    patch company_snapshot_url(@company_snapshot), params: { company_snapshot: { company_id: @company_snapshot.company_id, data_transparency: @company_snapshot.data_transparency, internal_culture: @company_snapshot.internal_culture, mgmt_composition: @company_snapshot.mgmt_composition } }
+    patch company_snapshot_url(@company_snapshot), 
+params: { company_snapshot: { company_id: @company_snapshot.company_id, 
+data_transparency: @company_snapshot.data_transparency, internal_culture: @company_snapshot.internal_culture, mgmt_composition: @company_snapshot.mgmt_composition } }
     assert_redirected_to company_snapshot_url(@company_snapshot)
   end
 

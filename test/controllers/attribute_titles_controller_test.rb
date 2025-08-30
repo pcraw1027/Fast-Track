@@ -17,7 +17,9 @@ class AttributeTitlesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create attribute_title" do
     assert_difference('AttributeTitle.count') do
-      post attribute_titles_url, params: { attribute_title: { code: @attribute_title.code, description: @attribute_title.description, product_category_source_id: @attribute_title.product_category_source_id, title: @attribute_title.title } }
+      post attribute_titles_url, 
+params: { attribute_title: { code: @attribute_title.code, description: @attribute_title.description, 
+product_category_source_id: @attribute_title.product_category_source_id, title: @attribute_title.title } }
     end
 
     assert_redirected_to attribute_title_url(AttributeTitle.last)
@@ -34,7 +36,9 @@ class AttributeTitlesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update attribute_title" do
-    patch attribute_title_url(@attribute_title), params: { attribute_title: { code: @attribute_title.code, description: @attribute_title.description, product_category_source_id: @attribute_title.product_category_source_id, title: @attribute_title.title } }
+    patch attribute_title_url(@attribute_title), 
+params: { attribute_title: { code: @attribute_title.code, description: @attribute_title.description, 
+product_category_source_id: @attribute_title.product_category_source_id, title: @attribute_title.title } }
     assert_redirected_to attribute_title_url(@attribute_title)
   end
 

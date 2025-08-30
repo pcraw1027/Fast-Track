@@ -17,7 +17,9 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create product" do
     assert_difference('Product.count') do
-      post products_url, params: { product: { barcode: @product.barcode, brick_id: @product.brick_id, company_id: @product.company_id, description: @product.description, family_id: @product.family_id, image: @product.image, klass_id: @product.klass_id, name: @product.name, qrcode: @product.qrcode, segment_id: @product.segment_id, size: @product.size } }
+      post products_url, 
+params: { product: { barcode: @product.barcode, brick_id: @product.brick_id, company_id: @product.company_id, 
+description: @product.description, family_id: @product.family_id, image: @product.image, klass_id: @product.klass_id, name: @product.name, qrcode: @product.qrcode, segment_id: @product.segment_id, size: @product.size } }
     end
 
     assert_redirected_to product_url(Product.last)
@@ -34,7 +36,9 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update product" do
-    patch product_url(@product), params: { product: { barcode: @product.barcode, brick_id: @product.brick_id, company_id: @product.company_id, description: @product.description, family_id: @product.family_id, image: @product.image, klass_id: @product.klass_id, name: @product.name, qrcode: @product.qrcode, segment_id: @product.segment_id, size: @product.size } }
+    patch product_url(@product), 
+params: { product: { barcode: @product.barcode, brick_id: @product.brick_id, company_id: @product.company_id, 
+description: @product.description, family_id: @product.family_id, image: @product.image, klass_id: @product.klass_id, name: @product.name, qrcode: @product.qrcode, segment_id: @product.segment_id, size: @product.size } }
     assert_redirected_to product_url(@product)
   end
 

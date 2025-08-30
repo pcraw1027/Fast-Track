@@ -17,7 +17,9 @@ class InvitationsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create invitation" do
     assert_difference('Invitation.count') do
-      post invitations_url, params: { invitation: { email: @invitation.email, invite_code: @invitation.invite_code, status: @invitation.status, user_id: @invitation.user_id } }
+      post invitations_url, 
+params: { invitation: { email: @invitation.email, invite_code: @invitation.invite_code, status: @invitation.status, 
+user_id: @invitation.user_id } }
     end
 
     assert_redirected_to invitation_url(Invitation.last)
@@ -34,7 +36,9 @@ class InvitationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update invitation" do
-    patch invitation_url(@invitation), params: { invitation: { email: @invitation.email, invite_code: @invitation.invite_code, status: @invitation.status, user_id: @invitation.user_id } }
+    patch invitation_url(@invitation), 
+params: { invitation: { email: @invitation.email, invite_code: @invitation.invite_code, status: @invitation.status, 
+user_id: @invitation.user_id } }
     assert_redirected_to invitation_url(@invitation)
   end
 

@@ -1,5 +1,6 @@
 class ProductVariant < ApplicationRecord
   include BarcodeValidations
+
   belongs_to :product
   has_many :media, as: :mediaable, dependent: :destroy
 

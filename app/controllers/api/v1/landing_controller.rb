@@ -2,7 +2,7 @@ class Api::V1::LandingController < Api::V1::BaseController
   before_action :authenticate_user!, only: [:landing_metrics]
   
   def live
-    render json: { message: 'FastTrack is live!' }, status: 200
+    render json: { message: 'FastTrack is live!' }, status: :ok
   end
 
   def top_scans

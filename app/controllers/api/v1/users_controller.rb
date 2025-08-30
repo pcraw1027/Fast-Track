@@ -4,10 +4,11 @@ class Api::V1::UsersController < Api::V1::BaseController
 
   def update
     user = current_user
-    filtered_params = user_params.reject { |_, value| value.blank? }
+    filtered_params = user_params.compact_blank
 
     if user.update(filtered_params)
-        render json: { user_profile: Api::V1::UserSerializer.new(user).serializable_hash[:data][:attributes] }, status: :ok
+        render json: { user_profile: Api::V1::UserSerializer.new(user).serializable_hash[:data][:attributes] }, 
+status: :ok
       else
         render json: { error: user.errors }, status: :unprocessable_entity 
       end

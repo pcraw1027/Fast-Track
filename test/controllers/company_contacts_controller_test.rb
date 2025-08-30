@@ -17,7 +17,9 @@ class CompanyContactsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create company_contact" do
     assert_difference('CompanyContact.count') do
-      post company_contacts_url, params: { company_contact: { company_contact_type_id: @company_contact.company_contact_type_id, company_id: @company_contact.company_id, email: @company_contact.email, job_title: @company_contact.job_title, name: @company_contact.name, phone: @company_contact.phone, photo: @company_contact.photo } }
+      post company_contacts_url, 
+params: { company_contact: { company_contact_type_id: @company_contact.company_contact_type_id, 
+company_id: @company_contact.company_id, email: @company_contact.email, job_title: @company_contact.job_title, name: @company_contact.name, phone: @company_contact.phone, photo: @company_contact.photo } }
     end
 
     assert_redirected_to company_contact_url(CompanyContact.last)
@@ -34,7 +36,9 @@ class CompanyContactsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update company_contact" do
-    patch company_contact_url(@company_contact), params: { company_contact: { company_contact_type_id: @company_contact.company_contact_type_id, company_id: @company_contact.company_id, email: @company_contact.email, job_title: @company_contact.job_title, name: @company_contact.name, phone: @company_contact.phone, photo: @company_contact.photo } }
+    patch company_contact_url(@company_contact), 
+params: { company_contact: { company_contact_type_id: @company_contact.company_contact_type_id, 
+company_id: @company_contact.company_id, email: @company_contact.email, job_title: @company_contact.job_title, name: @company_contact.name, phone: @company_contact.phone, photo: @company_contact.photo } }
     assert_redirected_to company_contact_url(@company_contact)
   end
 

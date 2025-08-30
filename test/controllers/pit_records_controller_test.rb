@@ -17,7 +17,9 @@ class PitRecordsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create pit_record" do
     assert_difference('PitRecord.count') do
-      post pit_records_url, params: { pit_record: { barcode: @pit_record.barcode, level: @pit_record.level, mid: @pit_record.mid, product_activity_count: @pit_record.product_activity_count, product_id: @pit_record.product_id, source: @pit_record.source } }
+      post pit_records_url, 
+params: { pit_record: { barcode: @pit_record.barcode, level: @pit_record.level, mid: @pit_record.mid, 
+product_activity_count: @pit_record.product_activity_count, product_id: @pit_record.product_id, source: @pit_record.source } }
     end
 
     assert_redirected_to pit_record_url(PitRecord.last)
@@ -34,7 +36,9 @@ class PitRecordsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update pit_record" do
-    patch pit_record_url(@pit_record), params: { pit_record: { barcode: @pit_record.barcode, level: @pit_record.level, mid: @pit_record.mid, product_activity_count: @pit_record.product_activity_count, product_id: @pit_record.product_id, source: @pit_record.source } }
+    patch pit_record_url(@pit_record), 
+params: { pit_record: { barcode: @pit_record.barcode, level: @pit_record.level, mid: @pit_record.mid, 
+product_activity_count: @pit_record.product_activity_count, product_id: @pit_record.product_id, source: @pit_record.source } }
     assert_redirected_to pit_record_url(@pit_record)
   end
 

@@ -17,7 +17,8 @@ class CompanyContactTypesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create company_contact_type" do
     assert_difference('CompanyContactType.count') do
-      post company_contact_types_url, params: { company_contact_type: { definition: @company_contact_type.definition, role: @company_contact_type.role } }
+      post company_contact_types_url, 
+params: { company_contact_type: { definition: @company_contact_type.definition, role: @company_contact_type.role } }
     end
 
     assert_redirected_to company_contact_type_url(CompanyContactType.last)
@@ -34,7 +35,8 @@ class CompanyContactTypesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update company_contact_type" do
-    patch company_contact_type_url(@company_contact_type), params: { company_contact_type: { definition: @company_contact_type.definition, role: @company_contact_type.role } }
+    patch company_contact_type_url(@company_contact_type), 
+params: { company_contact_type: { definition: @company_contact_type.definition, role: @company_contact_type.role } }
     assert_redirected_to company_contact_type_url(@company_contact_type)
   end
 

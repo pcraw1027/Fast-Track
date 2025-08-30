@@ -16,7 +16,7 @@ Rails.application.configure do
 
   # Enable/disable caching. By default caching is disabled.
   # Run rails dev:cache to toggle caching.
-  if Rails.root.join('tmp', 'caching-dev.txt').exist?
+  if Rails.root.join("tmp/caching-dev.txt").exist?
     config.action_controller.perform_caching = true
     config.action_controller.enable_fragment_cache_logging = true
 
@@ -89,6 +89,11 @@ Rails.application.configure do
 
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.perform_deliveries = true
+
+  config.generators.after_generate do |files|
+    parsable_files = files.filter { |file| file.end_with?('.rb') }
+    system("bundle exec rubocop -A --fail-level=E #{parsable_files.shelljoin}", exception: true) unless parsable_files.empty?
+  end
 
 end
 

@@ -2,6 +2,7 @@ require 'csv'
 
 class BitRecord < ApplicationRecord
   include BarcodeValidations
+
  attr_accessor :message
   belongs_to :user
   enum status: { open: 0, close: 1 }

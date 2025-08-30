@@ -17,7 +17,9 @@ class ProductAttributesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create product_attribute" do
     assert_difference('ProductAttribute.count') do
-      post product_attributes_url, params: { product_attribute: { attribute_id: @product_attribute.attribute_id, attribute_value_id: @product_attribute.attribute_value_id, brick_id: @product_attribute.brick_id, company_id: @product_attribute.company_id, product_category_source_id: @product_attribute.product_category_source_id, product_id: @product_attribute.product_id } }
+      post product_attributes_url, 
+params: { product_attribute: { attribute_id: @product_attribute.attribute_id, 
+attribute_value_id: @product_attribute.attribute_value_id, brick_id: @product_attribute.brick_id, company_id: @product_attribute.company_id, product_category_source_id: @product_attribute.product_category_source_id, product_id: @product_attribute.product_id } }
     end
 
     assert_redirected_to product_attribute_url(ProductAttribute.last)
@@ -34,7 +36,9 @@ class ProductAttributesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update product_attribute" do
-    patch product_attribute_url(@product_attribute), params: { product_attribute: { attribute_id: @product_attribute.attribute_id, attribute_value_id: @product_attribute.attribute_value_id, brick_id: @product_attribute.brick_id, company_id: @product_attribute.company_id, product_category_source_id: @product_attribute.product_category_source_id, product_id: @product_attribute.product_id } }
+    patch product_attribute_url(@product_attribute), 
+params: { product_attribute: { attribute_id: @product_attribute.attribute_id, 
+attribute_value_id: @product_attribute.attribute_value_id, brick_id: @product_attribute.brick_id, company_id: @product_attribute.company_id, product_category_source_id: @product_attribute.product_category_source_id, product_id: @product_attribute.product_id } }
     assert_redirected_to product_attribute_url(@product_attribute)
   end
 

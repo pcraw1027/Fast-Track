@@ -17,7 +17,9 @@ class PersonSocialSitesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create person_social_site" do
     assert_difference('PersonSocialSite.count') do
-      post person_social_sites_url, params: { person_social_site: { person_id: @person_social_site.person_id, social_site_id: @person_social_site.social_site_id } }
+      post person_social_sites_url, 
+params: { person_social_site: { person_id: @person_social_site.person_id, 
+social_site_id: @person_social_site.social_site_id } }
     end
 
     assert_redirected_to person_social_site_url(PersonSocialSite.last)
@@ -34,7 +36,9 @@ class PersonSocialSitesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update person_social_site" do
-    patch person_social_site_url(@person_social_site), params: { person_social_site: { person_id: @person_social_site.person_id, social_site_id: @person_social_site.social_site_id } }
+    patch person_social_site_url(@person_social_site), 
+params: { person_social_site: { person_id: @person_social_site.person_id, 
+social_site_id: @person_social_site.social_site_id } }
     assert_redirected_to person_social_site_url(@person_social_site)
   end
 

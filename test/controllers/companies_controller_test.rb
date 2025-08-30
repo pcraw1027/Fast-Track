@@ -17,7 +17,9 @@ class CompaniesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create company" do
     assert_difference('Company.count') do
-      post companies_url, params: { company: { address_1: @company.address_1, address_2: @company.address_2, city: @company.city, country: @company.country, diversity_report: @company.diversity_report, diversity_score: @company.diversity_score, established: @company.established, industry_category_type_id: @company.industry_category_type_id, logo: @company.logo, name: @company.name, state: @company.state, total_employees: @company.total_employees, website: @company.website } }
+      post companies_url, 
+params: { company: { address_1: @company.address_1, address_2: @company.address_2, city: @company.city, 
+country: @company.country, diversity_report: @company.diversity_report, diversity_score: @company.diversity_score, established: @company.established, industry_category_type_id: @company.industry_category_type_id, logo: @company.logo, name: @company.name, state: @company.state, total_employees: @company.total_employees, website: @company.website } }
     end
 
     assert_redirected_to company_url(Company.last)
@@ -34,7 +36,9 @@ class CompaniesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update company" do
-    patch company_url(@company), params: { company: { address_1: @company.address_1, address_2: @company.address_2, city: @company.city, country: @company.country, diversity_report: @company.diversity_report, diversity_score: @company.diversity_score, established: @company.established, industry_category_type_id: @company.industry_category_type_id, logo: @company.logo, name: @company.name, state: @company.state, total_employees: @company.total_employees, website: @company.website } }
+    patch company_url(@company), 
+params: { company: { address_1: @company.address_1, address_2: @company.address_2, city: @company.city, 
+country: @company.country, diversity_report: @company.diversity_report, diversity_score: @company.diversity_score, established: @company.established, industry_category_type_id: @company.industry_category_type_id, logo: @company.logo, name: @company.name, state: @company.state, total_employees: @company.total_employees, website: @company.website } }
     assert_redirected_to company_url(@company)
   end
 

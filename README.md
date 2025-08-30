@@ -34,6 +34,27 @@ Fast-Track is a Ruby on Rails application designed to streamline core Croupier L
   ```
 - Access the application at `http://localhost:3000`.
 
+
+- **Code Quality and Security Compliance:**
+  ```sh
+  # Brakeman 
+  bundle exec brakeman -o brakeman-report.json
+
+  # Rubocop
+  bundle exec rubocop
+  # Rubocop with safe auto-correction
+
+  bundle exec rubocop -a
+  # Rubocop with unsafe auto-correction
+  bundle exec rubocop -A
+
+  # Reek detects code smells in Ruby/Rails project
+  bundle exec reek
+
+  # bundler-audit checks Gemfile.lock for vulnerable gems
+  bundle exec bundler-audit check --update
+  ```
+
 - **Start Elasticsearch service (required for search features):**
   ```sh
   # If installed via Homebrew (macOS)

@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   include Devise::JWT::RevocationStrategies::Allowlist
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable, :trackable,
@@ -70,7 +71,8 @@ class User < ApplicationRecord
     return if password.blank?
 
     unless password.match?(/\A(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])[\S]{8,}\z/)
-      errors.add :password, "must be at least 8 characters and include at least one lowercase letter, one uppercase letter, one number, and one special character"
+      errors.add :password, 
+"must be at least 8 characters and include at least one lowercase letter, one uppercase letter, one number, and one special character"
     end
   end
 

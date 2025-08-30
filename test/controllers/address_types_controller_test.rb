@@ -17,7 +17,8 @@ class AddressTypesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create address_type" do
     assert_difference('AddressType.count') do
-      post address_types_url, params: { address_type: { is_person_address: @address_type.is_person_address, name: @address_type.name } }
+      post address_types_url, 
+params: { address_type: { is_person_address: @address_type.is_person_address, name: @address_type.name } }
     end
 
     assert_redirected_to address_type_url(AddressType.last)
@@ -34,7 +35,8 @@ class AddressTypesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update address_type" do
-    patch address_type_url(@address_type), params: { address_type: { is_person_address: @address_type.is_person_address, name: @address_type.name } }
+    patch address_type_url(@address_type), 
+params: { address_type: { is_person_address: @address_type.is_person_address, name: @address_type.name } }
     assert_redirected_to address_type_url(@address_type)
   end
 

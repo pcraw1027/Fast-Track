@@ -1,5 +1,6 @@
 class Company < ApplicationRecord
   include Searchable
+
   attr_accessor :mid, :photo, :email, :phone, :contact_name, :new_company_name, :company_id
   belongs_to :industry_category_type, optional: true
   mount_uploader :logo, LogoUploader
@@ -28,8 +29,8 @@ class Company < ApplicationRecord
   default_scope -> { order(name: :asc) }
   scope :find_by_mid, ->(mid) { where("mids @> ARRAY[?]::text[]", [mid]) }
   
-  before_destroy :remove_logo_from_s3
   after_create :create_snapshot
+  before_destroy :remove_logo_from_s3
 
   def self.searchable_fields
     %i[name]
@@ -38,7 +39,7 @@ class Company < ApplicationRecord
   index_name "company_search_index"
 
   def level_1_flag
-    !name.blank? && !industry_category_type_id.blank? #&& !established.blank?
+    name.present? && industry_category_type_id.present? #&& !established.blank?
   end
 
   def level_2_flag
@@ -50,7 +51,7 @@ class Company < ApplicationRecord
   end
 
   def level_4_flag
-    company_contacts.any? && !company_contacts.first.person_id.blank?
+    company_contacts.any? && company_contacts.first.person_id.present?
   end
 
   def level_5_flag

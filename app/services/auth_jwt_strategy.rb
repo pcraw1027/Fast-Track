@@ -1,7 +1,7 @@
 class AuthJwtStrategy
 
-  def initialize(u)
-    @user = u
+  def initialize(user)
+    @user = user
   end
 
   def authenticate_user
