@@ -13,13 +13,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.2.3' 
-          bundler-cache: true
-
+      
       - name: Install system dependencies
         run: |
           sudo apt-get update
@@ -28,6 +22,12 @@ jobs:
             libxml2-dev \
             libxslt1-dev \
             build-essential
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2.3' 
+          bundler-cache: true
 
       - name: Install dependencies
         run: |
