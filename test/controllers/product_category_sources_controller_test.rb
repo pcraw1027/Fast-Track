@@ -17,7 +17,9 @@ class ProductCategorySourcesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create product_category_source" do
     assert_difference('ProductCategorySource.count') do
-      post product_category_sources_url, params: { product_category_source: { code: @product_category_source.code, description: @product_category_source.description } }
+      post product_category_sources_url, 
+params: { product_category_source: { code: @product_category_source.code, 
+description: @product_category_source.description } }
     end
 
     assert_redirected_to product_category_source_url(ProductCategorySource.last)
@@ -34,7 +36,9 @@ class ProductCategorySourcesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update product_category_source" do
-    patch product_category_source_url(@product_category_source), params: { product_category_source: { code: @product_category_source.code, description: @product_category_source.description } }
+    patch product_category_source_url(@product_category_source), 
+params: { product_category_source: { code: @product_category_source.code, 
+description: @product_category_source.description } }
     assert_redirected_to product_category_source_url(@product_category_source)
   end
 

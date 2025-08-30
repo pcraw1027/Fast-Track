@@ -34,7 +34,8 @@ class SocialSitesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update social_site" do
-    patch social_site_url(@social_site), params: { social_site: { site: @social_site.site, site_code: @social_site.site_code } }
+    patch social_site_url(@social_site), 
+params: { social_site: { site: @social_site.site, site_code: @social_site.site_code } }
     assert_redirected_to social_site_url(@social_site)
   end
 

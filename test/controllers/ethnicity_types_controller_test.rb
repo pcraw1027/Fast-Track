@@ -17,7 +17,9 @@ class EthnicityTypesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create ethnicity_type" do
     assert_difference('EthnicityType.count') do
-      post ethnicity_types_url, params: { ethnicity_type: { definition: @ethnicity_type.definition, ethnicity: @ethnicity_type.ethnicity, source: @ethnicity_type.source } }
+      post ethnicity_types_url, 
+params: { ethnicity_type: { definition: @ethnicity_type.definition, ethnicity: @ethnicity_type.ethnicity, 
+source: @ethnicity_type.source } }
     end
 
     assert_redirected_to ethnicity_type_url(EthnicityType.last)
@@ -34,7 +36,9 @@ class EthnicityTypesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update ethnicity_type" do
-    patch ethnicity_type_url(@ethnicity_type), params: { ethnicity_type: { definition: @ethnicity_type.definition, ethnicity: @ethnicity_type.ethnicity, source: @ethnicity_type.source } }
+    patch ethnicity_type_url(@ethnicity_type), 
+params: { ethnicity_type: { definition: @ethnicity_type.definition, ethnicity: @ethnicity_type.ethnicity, 
+source: @ethnicity_type.source } }
     assert_redirected_to ethnicity_type_url(@ethnicity_type)
   end
 

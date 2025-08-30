@@ -25,7 +25,9 @@ class CompanyRelationshipTypesController < ApplicationController
 
     respond_to do |format|
       if @company_relationship_type.save
-        format.html { redirect_to @company_relationship_type, notice: "Company relationship type was successfully created." }
+        format.html do
+ redirect_to @company_relationship_type, notice: "Company relationship type was successfully created."
+        end
         format.json { render :show, status: :created, location: @company_relationship_type }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -38,7 +40,9 @@ class CompanyRelationshipTypesController < ApplicationController
   def update
     respond_to do |format|
       if @company_relationship_type.update(company_relationship_type_params)
-        format.html { redirect_to @company_relationship_type, notice: "Company relationship type was successfully updated." }
+        format.html do
+ redirect_to @company_relationship_type, notice: "Company relationship type was successfully updated."
+        end
         format.json { render :show, status: :ok, location: @company_relationship_type }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -52,7 +56,10 @@ class CompanyRelationshipTypesController < ApplicationController
     @company_relationship_type.destroy
 
     respond_to do |format|
-      format.html { redirect_to company_relationship_types_path, status: :see_other, notice: "Company relationship type was successfully destroyed." }
+      format.html do
+ redirect_to company_relationship_types_path, status: :see_other, 
+notice: "Company relationship type was successfully destroyed."
+      end
       format.json { head :no_content }
     end
   end

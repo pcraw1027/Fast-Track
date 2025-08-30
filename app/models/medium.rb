@@ -10,10 +10,10 @@ class Medium < ApplicationRecord
 
   #default_scope { order(:position) }
 
+  after_create :process_in_background
   before_destroy :remove_file_from_s3
 
 
-  after_create :process_in_background
 
 
   private

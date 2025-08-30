@@ -18,7 +18,7 @@ class CroupierCore::UploadTrigger < ApplicationService
 
     upload = UploadRecord.new(upload_params)
     upload.barcode = barcode 
-    upload.date = Date.today 
+    upload.date = Time.zone.today 
     upload.scan_id = scan_id
     upload.user_id = user_id
     upload.resolve_status = false

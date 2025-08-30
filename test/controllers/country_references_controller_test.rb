@@ -17,7 +17,8 @@ class CountryReferencesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create country_reference" do
     assert_difference('CountryReference.count') do
-      post country_references_url, params: { country_reference: { country: @country_reference.country, country_code: @country_reference.country_code } }
+      post country_references_url, 
+params: { country_reference: { country: @country_reference.country, country_code: @country_reference.country_code } }
     end
 
     assert_redirected_to country_reference_url(CountryReference.last)
@@ -34,7 +35,8 @@ class CountryReferencesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update country_reference" do
-    patch country_reference_url(@country_reference), params: { country_reference: { country: @country_reference.country, country_code: @country_reference.country_code } }
+    patch country_reference_url(@country_reference), 
+params: { country_reference: { country: @country_reference.country, country_code: @country_reference.country_code } }
     assert_redirected_to country_reference_url(@country_reference)
   end
 

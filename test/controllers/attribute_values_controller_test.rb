@@ -17,7 +17,9 @@ class AttributeValuesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create attribute_value" do
     assert_difference('AttributeValue.count') do
-      post attribute_values_url, params: { attribute_value: { code: @attribute_value.code, description: @attribute_value.description, product_category_source_id: @attribute_value.product_category_source_id, title: @attribute_value.title } }
+      post attribute_values_url, 
+params: { attribute_value: { code: @attribute_value.code, description: @attribute_value.description, 
+product_category_source_id: @attribute_value.product_category_source_id, title: @attribute_value.title } }
     end
 
     assert_redirected_to attribute_value_url(AttributeValue.last)
@@ -34,7 +36,9 @@ class AttributeValuesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update attribute_value" do
-    patch attribute_value_url(@attribute_value), params: { attribute_value: { code: @attribute_value.code, description: @attribute_value.description, product_category_source_id: @attribute_value.product_category_source_id, title: @attribute_value.title } }
+    patch attribute_value_url(@attribute_value), 
+params: { attribute_value: { code: @attribute_value.code, description: @attribute_value.description, 
+product_category_source_id: @attribute_value.product_category_source_id, title: @attribute_value.title } }
     assert_redirected_to attribute_value_url(@attribute_value)
   end
 

@@ -53,7 +53,9 @@ class ProductAttributesController < ApplicationController
     @product_attribute.destroy
 
     respond_to do |format|
-      format.html { redirect_to product_attributes_path, status: :see_other, notice: "Product attribute was successfully destroyed." }
+      format.html do
+ redirect_to product_attributes_path, status: :see_other, notice: "Product attribute was successfully destroyed."
+      end
       format.json { head :no_content }
     end
   end
@@ -75,6 +77,7 @@ class ProductAttributesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def product_attribute_params
-      params.require(:product_attribute).permit(:company_id, :product_id, :brick_id, :attribute_title_id, :attribute_value_id, :product_category_source_id)
+      params.require(:product_attribute).permit(:company_id, :product_id, :brick_id, :attribute_title_id, 
+:attribute_value_id, :product_category_source_id)
     end
 end

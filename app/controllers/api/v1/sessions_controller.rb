@@ -2,7 +2,8 @@ class Api::V1::SessionsController < Api::V1::BaseController
   before_action :authenticate_user!, only: [:show, :destroy, :destroy_all]
 
   def show 
-    render json: { user_profile: Api::V1::UserSerializer.new(current_user).serializable_hash[:data][:attributes] }, status: :ok
+    render json: { user_profile: Api::V1::UserSerializer.new(current_user).serializable_hash[:data][:attributes] }, 
+status: :ok
   end
 
   
@@ -27,7 +28,7 @@ class Api::V1::SessionsController < Api::V1::BaseController
 
 
   def destroy
-    token = request.headers['Authorization'].split(' ').last
+    token = request.headers['Authorization'].split.last
     jwt_payload = JWT.decode(token, Rails.application.credentials.devise_jwt_secret_key, true, { algorithm: 'HS256' })
 
     if jwt_payload && AllowlistedJwt.find_by(jti: jwt_payload[0]['jti'])

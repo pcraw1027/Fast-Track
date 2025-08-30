@@ -4,7 +4,9 @@ class CitRecordsController < ApplicationController
 
   # GET /cit_records or /cit_records.json
   def index
-    @cit_records = CitRecord.includes(:company).all.paginate(page: params[:page], per_page: 12).order(created_at: :desc, id: :desc)
+    @cit_records = CitRecord.includes(:company).all.paginate(page: params[:page], per_page: 12).order(
+      created_at: :desc, id: :desc
+    )
   end
 
   def next_cit_record
@@ -41,7 +43,8 @@ class CitRecordsController < ApplicationController
     end
 
     if cit_record
-      redirect_to(company_capture_interface_path(mid: cit_record.mid, level: params[:level], filter_by: params[:filter_by]))
+      redirect_to(company_capture_interface_path(mid: cit_record.mid, level: params[:level], 
+filter_by: params[:filter_by]))
     else
       redirect_to(cit_interface_path(), alert: "No more CIT Level #{params[:level]} records!")
     end
@@ -71,11 +74,11 @@ class CitRecordsController < ApplicationController
       @cit_record = @company.cit_records.first if @company.cit_records.any?
     end
 
-    if @company.company_contacts.blank?
+    
 
-      contact = @company.company_contacts.build
+    contact = @company.company_contacts.build if @company.company_contacts.blank?
 
-    end
+    
 
 
     @gender_types = GenderType.all
@@ -188,6 +191,7 @@ class CitRecordsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def cit_record_params
-      params.require(:cit_record).permit(:product_activity_count, :mid, :level, :product_orphan_count, :source, :company_id)
+      params.require(:cit_record).permit(:product_activity_count, :mid, :level, :product_orphan_count, :source, 
+:company_id)
     end
 end

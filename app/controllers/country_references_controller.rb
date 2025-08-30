@@ -52,7 +52,9 @@ class CountryReferencesController < ApplicationController
     @country_reference.destroy
 
     respond_to do |format|
-      format.html { redirect_to country_references_path, status: :see_other, notice: "Country reference was successfully destroyed." }
+      format.html do
+ redirect_to country_references_path, status: :see_other, notice: "Country reference was successfully destroyed."
+      end
       format.json { head :no_content }
     end
   end

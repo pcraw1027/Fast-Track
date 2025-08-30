@@ -17,7 +17,9 @@ class IndustryCategoryTypesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create industry_category_type" do
     assert_difference('IndustryCategoryType.count') do
-      post industry_category_types_url, params: { industry_category_type: { category_type: @industry_category_type.category_type, definition: @industry_category_type.definition } }
+      post industry_category_types_url, 
+params: { industry_category_type: { category_type: @industry_category_type.category_type, 
+definition: @industry_category_type.definition } }
     end
 
     assert_redirected_to industry_category_type_url(IndustryCategoryType.last)
@@ -34,7 +36,9 @@ class IndustryCategoryTypesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update industry_category_type" do
-    patch industry_category_type_url(@industry_category_type), params: { industry_category_type: { category_type: @industry_category_type.category_type, definition: @industry_category_type.definition } }
+    patch industry_category_type_url(@industry_category_type), 
+params: { industry_category_type: { category_type: @industry_category_type.category_type, 
+definition: @industry_category_type.definition } }
     assert_redirected_to industry_category_type_url(@industry_category_type)
   end
 

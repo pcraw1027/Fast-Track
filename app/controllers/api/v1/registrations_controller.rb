@@ -17,11 +17,11 @@ class Api::V1::RegistrationsController < Api::V1::BaseController
   def verify_invite_code
     invitation = Invitation.find_by(invite_code: params[:invite_code])
     if invitation
-      render json: invitation, status: 200
+      render json: invitation, status: :ok
     else
       render json: {
         message: "Invalid invitation code #{params[:invite_code]}!"
-      }, status: 401
+      }, status: :unauthorized
     end
   end
 
@@ -30,9 +30,9 @@ class Api::V1::RegistrationsController < Api::V1::BaseController
     if user
       render json: {
         message: "username is already taken"
-      }, status: 401
+      }, status: :unauthorized
     else
-      render json: { message:"username is available" }, status: 200
+      render json: { message:"username is available" }, status: :ok
     end
   end
 
@@ -41,7 +41,8 @@ class Api::V1::RegistrationsController < Api::V1::BaseController
 
 
   def user_params
-    params.require(:user).permit(:email, :invite_code, :password, :password_confirmation, :username, :country, :postal_code)
+    params.require(:user).permit(:email, :invite_code, :password, :password_confirmation, :username, :country, 
+:postal_code)
   end
   
 

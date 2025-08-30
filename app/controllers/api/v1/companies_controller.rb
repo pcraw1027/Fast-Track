@@ -10,13 +10,23 @@ class Api::V1::CompaniesController < Api::V1::BaseController
       company = Company.includes(:industry_category_type, :company_snapshot,
           :company_ethnicity_stats, :company_gender_stats).find(params[:id])
     
-      parent_company = CompanyRelationship.parents(params[:id])&.map{|cr| {details: cr, parent_company: cr.parent_company}}&.first
-      subsidiaries_companies = CompanyRelationship.children(params[:id])&.map{|cr| {details: cr, child_company: cr.child_company}}
+      parent_company = CompanyRelationship.parents(params[:id])&.map do |cr|
+ {details: cr, parent_company: cr.parent_company}
+      end&.first
+      subsidiaries_companies = CompanyRelationship.children(params[:id])&.map do |cr|
+ {details: cr, child_company: cr.child_company}
+      end
 
       subsidiary_data = {title: "Subsidiaries/Brands", subsidiaries_companies: subsidiaries_companies}
       if subsidiaries_companies.blank? && parent_company.present?
-         subsidiaries_companies = CompanyRelationship.children(parent_company[:details].parent_company_id)&.map{|cr| {details: cr, child_company: cr.child_company}}
-         subsidiary_data = {title: "Sister Subsidiaries/Brands", subsidiaries_companies: subsidiaries_companies.select{|c| c[:child_company].id != company.id} } if subsidiaries_companies.any?
+         subsidiaries_companies = CompanyRelationship.children(parent_company[:details].parent_company_id)&.map do |cr|
+ {details: cr, child_company: cr.child_company}
+         end
+         if subsidiaries_companies.any?
+           subsidiary_data = {title: "Sister Subsidiaries/Brands", subsidiaries_companies: subsidiaries_companies.select do |c|
+ c[:child_company].id != company.id
+           end }
+         end
       end
       
     company_ceo_data = nil
@@ -42,7 +52,7 @@ class Api::V1::CompaniesController < Api::V1::BaseController
     review_stats = Review.stats_for(company)
     
     
-    company.sector = company.industry_category_type.title if company.sector.blank? && !company.industry_category_type_id.blank?
+    company.sector = company.industry_category_type.title if company.sector.blank? && company.industry_category_type_id.present?
 
 
     render json: {

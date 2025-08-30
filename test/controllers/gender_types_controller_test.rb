@@ -17,7 +17,8 @@ class GenderTypesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create gender_type" do
     assert_difference('GenderType.count') do
-      post gender_types_url, params: { gender_type: { definition: @gender_type.definition, gender: @gender_type.gender } }
+      post gender_types_url, 
+params: { gender_type: { definition: @gender_type.definition, gender: @gender_type.gender } }
     end
 
     assert_redirected_to gender_type_url(GenderType.last)
@@ -34,7 +35,8 @@ class GenderTypesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update gender_type" do
-    patch gender_type_url(@gender_type), params: { gender_type: { definition: @gender_type.definition, gender: @gender_type.gender } }
+    patch gender_type_url(@gender_type), 
+params: { gender_type: { definition: @gender_type.definition, gender: @gender_type.gender } }
     assert_redirected_to gender_type_url(@gender_type)
   end
 

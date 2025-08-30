@@ -2,6 +2,9 @@ class Api::V1::ReviewsController < Api::V1::BaseController
   before_action :authenticate_user!, except: [:show, :get_product_reviews, :get_company_reviews]
   before_action :set_review, only: [:update, :show]
   
+  def show
+      render json: @review, status: :ok
+  end
   def update
     if @review.update(review_params.except(:product_id, :company_id))
       render json: @review, status: :ok
@@ -10,9 +13,6 @@ class Api::V1::ReviewsController < Api::V1::BaseController
     end
   end
 
-  def show
-      render json: @review, status: :ok
-  end
 
   def product_reviews
     create_reviews("Product")
@@ -55,10 +55,10 @@ class Api::V1::ReviewsController < Api::V1::BaseController
   def create_reviews(reviewable_type)
     attribute_key = ""
     error_msg = ""
-    if review_params[:title].blank? && !review_params[:comment].blank?
+    if review_params[:title].blank? && review_params[:comment].present?
       error_msg = "review title is required"
       attribute_key = "title"
-    elsif !review_params[:title].blank? && review_params[:comment].blank?
+    elsif review_params[:title].present? && review_params[:comment].blank?
       error_msg = "review comment is required"
       attribute_key = "comment"
     end

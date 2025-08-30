@@ -3,7 +3,9 @@ class IndustryCategoryTypesController < ApplicationController
 
   # GET /industry_category_types or /industry_category_types.json
   def index
-    @industry_category_types = IndustryCategoryType.all.paginate(page: params[:page], per_page: 12).order(created_at: :desc, id: :desc)
+    @industry_category_types = IndustryCategoryType.all.paginate(page: params[:page], per_page: 12).order(
+      created_at: :desc, id: :desc
+    )
   end
 
   # GET /industry_category_types/1 or /industry_category_types/1.json
@@ -63,7 +65,10 @@ class IndustryCategoryTypesController < ApplicationController
     @industry_category_type.destroy
 
     respond_to do |format|
-      format.html { redirect_to industry_category_types_path, status: :see_other, notice: "Industry category type was successfully destroyed." }
+      format.html do
+ redirect_to industry_category_types_path, status: :see_other, 
+notice: "Industry category type was successfully destroyed."
+      end
       format.json { head :no_content }
     end
   end

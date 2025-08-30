@@ -18,7 +18,7 @@ class Api::V1::UploadRecordsController < Api::V1::BaseController
                               brand: upload_record_params[:brand],
                               upload_params: upload_record_params.except(:brand),
                               symbology: params[:upload_record][:symbology]
-                    ) unless upload_record_params.blank?
+                    ) if upload_record_params.present?
     
     if upload_claims.payload
       render json: {upload: upload_claims.payload, media: upload_claims.payload.media}, status: :ok

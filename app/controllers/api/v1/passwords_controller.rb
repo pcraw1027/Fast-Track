@@ -5,7 +5,10 @@ class Api::V1::PasswordsController < Api::V1::BaseController
 
   def update_password
     user = current_user
-    render json: { error: 'Current password is incorrect!' }, status: :unauthorized and return unless user&.valid_password?(params[:current_password])
+    unless user&.valid_password?(params[:current_password])
+      render json: { error: 'Current password is incorrect!' }, 
+status: :unauthorized and return
+    end
      
     if user.update(password: params[:new_password])
       render json: { message: 'Password updated successfully.' }, status: :ok
@@ -28,7 +31,7 @@ class Api::V1::PasswordsController < Api::V1::BaseController
   
   def reset_password
     if params[:token].blank?
-       render json: {error: 'Token not present'}, status: 400 and return
+       render json: {error: 'Token not present'}, status: :bad_request and return
     end
     token = params[:token].to_s
     user = User.find_by(reset_password_token: token.downcase)

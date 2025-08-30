@@ -17,7 +17,9 @@ class CompanyRelationshipTypesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create company_relationship_type" do
     assert_difference('CompanyRelationshipType.count') do
-      post company_relationship_types_url, params: { company_relationship_type: { definition: @company_relationship_type.definition, relationship: @company_relationship_type.relationship } }
+      post company_relationship_types_url, 
+params: { company_relationship_type: { definition: @company_relationship_type.definition, 
+relationship: @company_relationship_type.relationship } }
     end
 
     assert_redirected_to company_relationship_type_url(CompanyRelationshipType.last)
@@ -34,7 +36,9 @@ class CompanyRelationshipTypesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update company_relationship_type" do
-    patch company_relationship_type_url(@company_relationship_type), params: { company_relationship_type: { definition: @company_relationship_type.definition, relationship: @company_relationship_type.relationship } }
+    patch company_relationship_type_url(@company_relationship_type), 
+params: { company_relationship_type: { definition: @company_relationship_type.definition, 
+relationship: @company_relationship_type.relationship } }
     assert_redirected_to company_relationship_type_url(@company_relationship_type)
   end
 

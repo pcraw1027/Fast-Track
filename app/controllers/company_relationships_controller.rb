@@ -3,7 +3,9 @@ class CompanyRelationshipsController < ApplicationController
 
   # GET /company_relationships or /company_relationships.json
   def index
-    @company_relationships = CompanyRelationship.all.paginate(page: params[:page], per_page: 12).order(created_at: :desc, id: :desc)
+    @company_relationships = CompanyRelationship.all.paginate(page: params[:page], per_page: 12).order(
+      created_at: :desc, id: :desc
+    )
   end
 
   # GET /company_relationships/1 or /company_relationships/1.json
@@ -58,7 +60,10 @@ class CompanyRelationshipsController < ApplicationController
     @company_relationship.destroy
 
     respond_to do |format|
-      format.html { redirect_to company_relationships_path, status: :see_other, notice: "Company relationship was successfully destroyed." }
+      format.html do
+ redirect_to company_relationships_path, status: :see_other, 
+notice: "Company relationship was successfully destroyed."
+      end
       format.json { head :no_content }
     end
   end

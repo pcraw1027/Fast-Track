@@ -5,7 +5,7 @@ class ProductVariantsController < ApplicationController
   def edit
     @product = @product_variant.product
     unless @product_variant.media.any?
-      image_path = Rails.root.join('lib','seeds', 'prod_images', "011111396487.jpg")
+      image_path = Rails.root.join("lib/seeds/prod_images/011111396487.jpg")
       if File.exist?(image_path)
                 @product_variant.media.create!(
                 file: File.open(image_path),

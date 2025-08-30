@@ -17,7 +17,9 @@ class ScansControllerTest < ActionDispatch::IntegrationTest
 
   test "should create scan" do
     assert_difference('Scan.count') do
-      post scans_url, params: { scan: { barcode: @scan.barcode, product_exists: @scan.product_exists, product_id: @scan.product_id, scan_date: @scan.scan_date, user_id: @scan.user_id } }
+      post scans_url, 
+params: { scan: { barcode: @scan.barcode, product_exists: @scan.product_exists, product_id: @scan.product_id, 
+scan_date: @scan.scan_date, user_id: @scan.user_id } }
     end
 
     assert_redirected_to scan_url(Scan.last)
@@ -34,7 +36,9 @@ class ScansControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update scan" do
-    patch scan_url(@scan), params: { scan: { barcode: @scan.barcode, product_exists: @scan.product_exists, product_id: @scan.product_id, scan_date: @scan.scan_date, user_id: @scan.user_id } }
+    patch scan_url(@scan), 
+params: { scan: { barcode: @scan.barcode, product_exists: @scan.product_exists, product_id: @scan.product_id, 
+scan_date: @scan.scan_date, user_id: @scan.user_id } }
     assert_redirected_to scan_url(@scan)
   end
 

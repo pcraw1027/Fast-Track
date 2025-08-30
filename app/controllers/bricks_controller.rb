@@ -6,7 +6,9 @@ class BricksController < ApplicationController
   def index
     if params[:product_category_source_id]
       product_category_source_id = ProductCategorySource.find_by(code: params[:product_category_source_id]).id 
-      @bricks = Brick.where(product_category_source_id: product_category_source_id).paginate(page: params[:page], per_page: 12).order(created_at: :desc, id: :desc)
+      @bricks = Brick.where(product_category_source_id: product_category_source_id).paginate(page: params[:page], per_page: 12).order(
+        created_at: :desc, id: :desc
+      )
     else 
       @bricks = Brick.all.paginate(page: params[:page], per_page: 12).order(created_at: :desc, id: :desc)
     end
@@ -28,7 +30,7 @@ class BricksController < ApplicationController
               Brick.none
             end
       brick_h = search_result&.group_by(&:klass_id)
-      klasses = Klass.includes(family: [:segment]).where('id in (?)', search_result&.map(&:klass_id))
+      klasses = Klass.includes(family: [:segment]).where(id: search_result&.map(&:klass_id))
       result = []
 
       klasses.each do |klass|  

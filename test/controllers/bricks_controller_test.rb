@@ -17,7 +17,9 @@ class BricksControllerTest < ActionDispatch::IntegrationTest
 
   test "should create brick" do
     assert_difference('Brick.count') do
-      post bricks_url, params: { brick: { code: @brick.code, description: @brick.description, klass_id: @brick.klass_id, product_category_source_id: @brick.product_category_source_id, title: @brick.title } }
+      post bricks_url, 
+params: { brick: { code: @brick.code, description: @brick.description, klass_id: @brick.klass_id, 
+product_category_source_id: @brick.product_category_source_id, title: @brick.title } }
     end
 
     assert_redirected_to brick_url(Brick.last)
@@ -34,7 +36,9 @@ class BricksControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update brick" do
-    patch brick_url(@brick), params: { brick: { code: @brick.code, description: @brick.description, klass_id: @brick.klass_id, product_category_source_id: @brick.product_category_source_id, title: @brick.title } }
+    patch brick_url(@brick), 
+params: { brick: { code: @brick.code, description: @brick.description, klass_id: @brick.klass_id, 
+product_category_source_id: @brick.product_category_source_id, title: @brick.title } }
     assert_redirected_to brick_url(@brick)
   end
 

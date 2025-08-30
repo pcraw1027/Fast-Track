@@ -1,1 +1,2 @@
-json.partial! "company_relationship_types/company_relationship_type", company_relationship_type: @company_relationship_type
+json.partial! "company_relationship_types/company_relationship_type", 
+company_relationship_type: @company_relationship_type

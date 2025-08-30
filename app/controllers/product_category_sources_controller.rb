@@ -26,7 +26,9 @@ class ProductCategorySourcesController < ApplicationController
 
     respond_to do |format|
       if @product_category_source.save
-        format.html { redirect_to @product_category_source, notice: "Product category source was successfully created." }
+        format.html do
+ redirect_to @product_category_source, notice: "Product category source was successfully created."
+        end
         format.json { render :show, status: :created, location: @product_category_source }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -39,7 +41,9 @@ class ProductCategorySourcesController < ApplicationController
   def update
     respond_to do |format|
       if @product_category_source.update(product_category_source_params)
-        format.html { redirect_to @product_category_source, notice: "Product category source was successfully updated." }
+        format.html do
+ redirect_to @product_category_source, notice: "Product category source was successfully updated."
+        end
         format.json { render :show, status: :ok, location: @product_category_source }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -53,7 +57,10 @@ class ProductCategorySourcesController < ApplicationController
     @product_category_source.destroy
 
     respond_to do |format|
-      format.html { redirect_to product_category_sources_path, status: :see_other, notice: "Product category source was successfully destroyed." }
+      format.html do
+ redirect_to product_category_sources_path, status: :see_other, 
+notice: "Product category source was successfully destroyed."
+      end
       format.json { head :no_content }
     end
   end

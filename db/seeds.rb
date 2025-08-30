@@ -1,14 +1,14 @@
 
 require 'csv'
 
-csv_text = File.read(Rails.root.join('lib','seeds','AmazonCategoryCodesOutput.csv'))
+csv_text = Rails.root.join("lib/seeds/AmazonCategoryCodesOutput.csv").read
 csv = CSV.parse(csv_text, :headers => true, :encoding => 'ISO-8859-1')
 
 product_category_source_id = ProductCategorySource.find_by(code: 'AMZ').id 
 
 ac_rows = 1
 csv.each do |row|
-    p "AC - #{ac_rows} " +  row['SegmentTitle'] + " " + row['FamilyTitle'] +  " " + row['ClassTitle'] + " " + row['BrickTitle']
+    Rails.logger.debug "AC - #{ac_rows} " +  row['SegmentTitle'] + " " + row['FamilyTitle'] +  " " + row['ClassTitle'] + " " + row['BrickTitle']
     ac_rows +=1
 
        s = Segment.find_or_create_by!(code: row['SegmentCode'], title: row['SegmentTitle']&.strip,
@@ -36,7 +36,7 @@ end
 
 
 
-csv_text = File.read(Rails.root.join('lib','seeds','GPC_May_2024_Schema.csv'))
+csv_text = Rails.root.join("lib/seeds/GPC_May_2024_Schema.csv").read
 csv = CSV.parse(csv_text, :headers => true, :encoding => 'ISO-8859-1')
 last_segment_title = ""
 last_family_title = ""
@@ -46,7 +46,7 @@ gpc_rows = 1
 product_category_source_id = ProductCategorySource.find_by(code: 'GPC').id 
 
 csv.each do |row|
-    p "GPC - #{gpc_rows} " + +  row['SegmentTitle']
+    Rails.logger.debug "GPC - #{gpc_rows} " + +  row['SegmentTitle']
     gpc_rows += 1
     if row['SegmentTitle']&.strip != last_segment_title
         t = Segment.new

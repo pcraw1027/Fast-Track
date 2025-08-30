@@ -3,14 +3,14 @@ class ProcessMediumJob < ApplicationJob
 
   def perform(medium_id)
     medium = Medium.find(medium_id)
-    return unless medium.file.present?
+    return if medium.file.blank?
 
     file_path = medium.file.path
 
     if Rails.env.development?
       unless File.exist?(file_path)
         # Try searching in public/uploads/tmp
-        tmp_path = File.join(Rails.root, 'public', 'uploads', 'tmp', File.basename(file_path))
+        tmp_path = Rails.public_path.join("uploads", "tmp", File.basename(file_path)).to_s
         if File.exist?(tmp_path)
           file_path = tmp_path
           # Optionally, re-assign the file
@@ -23,14 +23,14 @@ class ProcessMediumJob < ApplicationJob
     elsif Rails.env.staging? || Rails.env.production?
       unless File.exist?(file_path)
         # Try to fetch the file from S3 using Fog
-        tmp_path = File.join(Rails.root, 'tmp', File.basename(file_path))
+        tmp_path = Rails.root.join("tmp", File.basename(file_path)).to_s
         fog_directory = CarrierWave::Uploader::Base.fog_directory
         s3_path = "uploads/tmp/#{File.basename(file_path)}"
         storage = CarrierWave::Storage::Fog.new(CarrierWave::Uploader::Base)
         directory = storage.connection.directories.get(fog_directory)
         file = directory.files.get(s3_path)
         if file
-          File.open(tmp_path, 'wb') { |f| f.write(file.body) }
+          File.binwrite(tmp_path, file.body)
           file_path = tmp_path
           medium.file = File.open(file_path)
         else
@@ -45,11 +45,11 @@ class ProcessMediumJob < ApplicationJob
     medium.file.recreate_versions!(:thumb)
     medium.file.process_full!
     medium.save!
-    puts "medium processed!!!!"
+    Rails.logger.debug "medium processed!!!!"
 
    
     tmp_filename = File.basename(file_path)
-    tmp_path = File.join(Rails.root, 'public', 'uploads', 'tmp', tmp_filename)
+    tmp_path = Rails.public_path.join('uploads', 'tmp', tmp_filename)
     if Rails.env.staging? || Rails.env.production?
       # Delete from S3 using Fog
       uploader = medium.file

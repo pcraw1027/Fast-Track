@@ -17,7 +17,9 @@ class CitRecordsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create cit_record" do
     assert_difference('CitRecord.count') do
-      post cit_records_url, params: { cit_record: { company_id: @cit_record.company_id, company_name: @cit_record.company_name, level: @cit_record.level, mid: @cit_record.mid, product_activity_count: @cit_record.product_activity_count, product_orphan_count: @cit_record.product_orphan_count, source: @cit_record.source } }
+      post cit_records_url, 
+params: { cit_record: { company_id: @cit_record.company_id, company_name: @cit_record.company_name, 
+level: @cit_record.level, mid: @cit_record.mid, product_activity_count: @cit_record.product_activity_count, product_orphan_count: @cit_record.product_orphan_count, source: @cit_record.source } }
     end
 
     assert_redirected_to cit_record_url(CitRecord.last)
@@ -34,7 +36,9 @@ class CitRecordsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update cit_record" do
-    patch cit_record_url(@cit_record), params: { cit_record: { company_id: @cit_record.company_id, company_name: @cit_record.company_name, level: @cit_record.level, mid: @cit_record.mid, product_activity_count: @cit_record.product_activity_count, product_orphan_count: @cit_record.product_orphan_count, source: @cit_record.source } }
+    patch cit_record_url(@cit_record), 
+params: { cit_record: { company_id: @cit_record.company_id, company_name: @cit_record.company_name, 
+level: @cit_record.level, mid: @cit_record.mid, product_activity_count: @cit_record.product_activity_count, product_orphan_count: @cit_record.product_orphan_count, source: @cit_record.source } }
     assert_redirected_to cit_record_url(@cit_record)
   end
 

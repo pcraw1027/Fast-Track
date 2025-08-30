@@ -52,7 +52,9 @@ class AddressTypesController < ApplicationController
     @address_type.destroy
 
     respond_to do |format|
-      format.html { redirect_to address_types_path, status: :see_other, notice: "Address type was successfully destroyed." }
+      format.html do
+ redirect_to address_types_path, status: :see_other, notice: "Address type was successfully destroyed."
+      end
       format.json { head :no_content }
     end
   end

@@ -1,5 +1,6 @@
 class Scan < ApplicationRecord
   include BarcodeValidations
+
   belongs_to :product, optional: true
   belongs_to :user
   

@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 #ruby '3.4.2'
-ruby '3.2.3'
+ruby '3.3.5'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
 gem 'rails', '~> 6.1.7', '>= 6.1.7.10'
 # Use postgresql as the database for Active Record
@@ -95,3 +95,12 @@ gem 'sidekiq'
 gem 'delayed_job_active_record'
 
 gem 'dotenv-rails', groups: [:development, :test]
+
+group :development, :test do
+  gem 'rubocop', require: false
+  gem 'rubocop-rails', require: false
+  gem 'rubocop-rspec', require: false
+  gem 'reek', require: false
+  gem 'brakeman', require: false
+  gem 'bundler-audit', require: false
+end

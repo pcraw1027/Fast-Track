@@ -3,7 +3,7 @@ class CitRecord < ApplicationRecord
   has_many :cit_level_users
   validates :mid, uniqueness: true
   default_scope -> { order(product_activity_count: :desc, updated_at: :desc) }
-  scope :by_level, -> (cit_level) { includes(:company, :cit_level_users).where('level = ?', cit_level) }
+  scope :by_level, -> (cit_level) { includes(:company, :cit_level_users).where(level: cit_level) }
 
   scope :for_parent_companies, -> {
       joins(company: :child_relationships)

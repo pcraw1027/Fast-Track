@@ -31,7 +31,8 @@ set :branch, "main" # or "main", depending on what branch you want to deploy
 # http://capistranorb.com/documentation/getting-started/configuration/
 # Feel free to add new variables to customise your setup.
 
-append :linked_files, "config/credentials/production.key", "config/secrets.yml", "config/database.yml", "config/master.key"
+append :linked_files, "config/credentials/production.key", "config/secrets.yml", "config/database.yml", 
+"config/master.key"
 
 
 # Custom SSH Options

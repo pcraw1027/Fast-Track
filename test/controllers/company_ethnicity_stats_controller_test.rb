@@ -17,7 +17,9 @@ class CompanyEthnicityStatsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create company_ethnicity_stat" do
     assert_difference('CompanyEthnicityStat.count') do
-      post company_ethnicity_stats_url, params: { company_ethnicity_stat: { company_id: @company_ethnicity_stat.company_id, count: @company_ethnicity_stat.count, employee_type_id: @company_ethnicity_stat.employee_type_id, ethnicity_type_id: @company_ethnicity_stat.ethnicity_type_id, percentage: @company_ethnicity_stat.percentage } }
+      post company_ethnicity_stats_url, 
+params: { company_ethnicity_stat: { company_id: @company_ethnicity_stat.company_id, 
+count: @company_ethnicity_stat.count, employee_type_id: @company_ethnicity_stat.employee_type_id, ethnicity_type_id: @company_ethnicity_stat.ethnicity_type_id, percentage: @company_ethnicity_stat.percentage } }
     end
 
     assert_redirected_to company_ethnicity_stat_url(CompanyEthnicityStat.last)
@@ -34,7 +36,9 @@ class CompanyEthnicityStatsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update company_ethnicity_stat" do
-    patch company_ethnicity_stat_url(@company_ethnicity_stat), params: { company_ethnicity_stat: { company_id: @company_ethnicity_stat.company_id, count: @company_ethnicity_stat.count, employee_type_id: @company_ethnicity_stat.employee_type_id, ethnicity_type_id: @company_ethnicity_stat.ethnicity_type_id, percentage: @company_ethnicity_stat.percentage } }
+    patch company_ethnicity_stat_url(@company_ethnicity_stat), 
+params: { company_ethnicity_stat: { company_id: @company_ethnicity_stat.company_id, 
+count: @company_ethnicity_stat.count, employee_type_id: @company_ethnicity_stat.employee_type_id, ethnicity_type_id: @company_ethnicity_stat.ethnicity_type_id, percentage: @company_ethnicity_stat.percentage } }
     assert_redirected_to company_ethnicity_stat_url(@company_ethnicity_stat)
   end
 

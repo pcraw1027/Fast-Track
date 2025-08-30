@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   include Pundit::Authorization
+
   protect_from_forgery unless: -> { request.format.json? }
   before_action :verify_authenticity_token, unless: -> { request.format.json? }
   before_action :configure_permitted_parameters, if: :devise_controller?
@@ -25,7 +26,7 @@ class ApplicationController < ActionController::Base
       render json: { error: "You are not authorized to perform this action." }, status: :forbidden
     else
       flash[:alert] = "You are not authorized to perform this action."
-      redirect_to(request.referrer || root_path)
+      redirect_to(request.referer || root_path)
     end
   end
 

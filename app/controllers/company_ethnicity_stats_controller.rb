@@ -53,7 +53,10 @@ class CompanyEthnicityStatsController < ApplicationController
     @company_ethnicity_stat.destroy
 
     respond_to do |format|
-      format.html { redirect_to company_ethnicity_stats_path, status: :see_other, notice: "Company ethnicity stat was successfully destroyed." }
+      format.html do
+ redirect_to company_ethnicity_stats_path, status: :see_other, 
+notice: "Company ethnicity stat was successfully destroyed."
+      end
       format.json { head :no_content }
     end
   end
@@ -72,6 +75,7 @@ class CompanyEthnicityStatsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def company_ethnicity_stat_params
-      params.require(:company_ethnicity_stat).permit(:company_id, :ethnicity_type_id, :employee_type_id, :count, :percentage)
+      params.require(:company_ethnicity_stat).permit(:company_id, :ethnicity_type_id, :employee_type_id, :count, 
+:percentage)
     end
 end

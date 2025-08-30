@@ -17,7 +17,9 @@ class UploadRecordsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create upload_record" do
     assert_difference('UploadRecord.count') do
-      post upload_records_url, params: { upload_record: { barcode: @upload_record.barcode, company_name: @upload_record.company_name, date: @upload_record.date, image: @upload_record.image, product_name: @upload_record.product_name, resolve_status: @upload_record.resolve_status, scan_id: @upload_record.scan_id, user_id: @upload_record.user_id, user_remarks: @upload_record.user_remarks } }
+      post upload_records_url, 
+params: { upload_record: { barcode: @upload_record.barcode, company_name: @upload_record.company_name, 
+date: @upload_record.date, image: @upload_record.image, product_name: @upload_record.product_name, resolve_status: @upload_record.resolve_status, scan_id: @upload_record.scan_id, user_id: @upload_record.user_id, user_remarks: @upload_record.user_remarks } }
     end
 
     assert_redirected_to upload_record_url(UploadRecord.last)
@@ -34,7 +36,9 @@ class UploadRecordsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update upload_record" do
-    patch upload_record_url(@upload_record), params: { upload_record: { barcode: @upload_record.barcode, company_name: @upload_record.company_name, date: @upload_record.date, image: @upload_record.image, product_name: @upload_record.product_name, resolve_status: @upload_record.resolve_status, scan_id: @upload_record.scan_id, user_id: @upload_record.user_id, user_remarks: @upload_record.user_remarks } }
+    patch upload_record_url(@upload_record), 
+params: { upload_record: { barcode: @upload_record.barcode, company_name: @upload_record.company_name, 
+date: @upload_record.date, image: @upload_record.image, product_name: @upload_record.product_name, resolve_status: @upload_record.resolve_status, scan_id: @upload_record.scan_id, user_id: @upload_record.user_id, user_remarks: @upload_record.user_remarks } }
     assert_redirected_to upload_record_url(@upload_record)
   end
 

@@ -54,7 +54,9 @@ class AttributeValuesController < ApplicationController
     @attribute_value.destroy
 
     respond_to do |format|
-      format.html { redirect_to attribute_values_path, status: :see_other, notice: "Attribute value was successfully destroyed." }
+      format.html do
+ redirect_to attribute_values_path, status: :see_other, notice: "Attribute value was successfully destroyed."
+      end
       format.json { head :no_content }
     end
   end

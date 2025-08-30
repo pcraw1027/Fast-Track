@@ -3,7 +3,9 @@ class CompanySnapshotsController < ApplicationController
 
   # GET /company_snapshots or /company_snapshots.json
   def index
-    @company_snapshots = CompanySnapshot.includes(:company).all.paginate(page: params[:page], per_page: 12).order(created_at: :desc, id: :desc)
+    @company_snapshots = CompanySnapshot.includes(:company).all.paginate(page: params[:page], per_page: 12).order(
+      created_at: :desc, id: :desc
+    )
   end
 
   # GET /company_snapshots/1 or /company_snapshots/1.json
@@ -52,7 +54,9 @@ class CompanySnapshotsController < ApplicationController
     @company_snapshot.destroy
 
     respond_to do |format|
-      format.html { redirect_to company_snapshots_path, status: :see_other, notice: "Company snapshot was successfully destroyed." }
+      format.html do
+ redirect_to company_snapshots_path, status: :see_other, notice: "Company snapshot was successfully destroyed."
+      end
       format.json { head :no_content }
     end
   end
@@ -65,6 +69,7 @@ class CompanySnapshotsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def company_snapshot_params
-      params.require(:company_snapshot).permit(:company_id, :employee_demographics_transparency, :employee_demographics_performance, :projected_culture_and_identity, :mgmt_composition_transparency, :mgmt_composition_performance)
+      params.require(:company_snapshot).permit(:company_id, :employee_demographics_transparency, 
+:employee_demographics_performance, :projected_culture_and_identity, :mgmt_composition_transparency, :mgmt_composition_performance)
     end
 end

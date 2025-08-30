@@ -25,7 +25,7 @@ class ApplicationService
   end
 
 
-  def failure(excpt_or_reason, options = {})
+  def failure(excpt_or_reason, _options = {})
     exception = excpt_or_reason.is_a?(Exception) ? excpt_or_reason : StandardError.new(excpt_or_reason.to_s)
     raise exception if @propagate
     #ErrorService.error(exception, options)

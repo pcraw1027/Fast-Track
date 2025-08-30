@@ -64,29 +64,29 @@ class Api::V1::ProductsController < Api::V1::BaseController
 
     # Always attempt exact matches first
     elastic_query[:query][:bool][:should] << {
-      match_phrase_prefix: { "name": { query: query, boost: 5 } }
+      match_phrase_prefix: { name: { query: query, boost: 5 } }
     }
 
     # logic based on character count
     if query_length == 1
       elastic_query[:query][:bool][:should] += [
-        { match_phrase_prefix: { "name": { query: query, boost: 5 } } }
+        { match_phrase_prefix: { name: { query: query, boost: 5 } } }
       ]
     elsif query_length == 2
       elastic_query[:query][:bool][:should] += [
-        { match_phrase_prefix: { "name": { query: query, boost: 5 } } }
+        { match_phrase_prefix: { name: { query: query, boost: 5 } } }
       ]
     elsif query_length == 3
       elastic_query[:query][:bool][:should] += [
-        { match_phrase_prefix: { "name": { query: query, boost: 5 } } },
-       { match_phrase_prefix: { "description": { query: query, boost: 4 } } },
-        { wildcard: { "name": "*#{query}*" } }
+        { match_phrase_prefix: { name: { query: query, boost: 5 } } },
+       { match_phrase_prefix: { description: { query: query, boost: 4 } } },
+        { wildcard: { name: "*#{query}*" } }
       ]
     elsif query_length >= 4
       elastic_query[:query][:bool][:should] += [
-        { match_phrase_prefix: { "name": { query: query, boost: 5 } } },
-        { match_phrase_prefix: { "description": { query: query, boost: 4 } } },
-        { wildcard: { "name": "*#{query}*" } }
+        { match_phrase_prefix: { name: { query: query, boost: 5 } } },
+        { match_phrase_prefix: { description: { query: query, boost: 4 } } },
+        { wildcard: { name: "*#{query}*" } }
       ]
     end
 
@@ -132,7 +132,7 @@ class Api::V1::ProductsController < Api::V1::BaseController
       end
     end
    
-    companies = Company.unscoped.where('id IN (?)', company_ids)
+    companies = Company.unscoped.where(id: company_ids)
 
     mapped_companies = companies.map{|c| { 
           id: c.id, 

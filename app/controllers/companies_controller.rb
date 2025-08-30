@@ -1,12 +1,14 @@
 class CompaniesController < ApplicationController
   before_action :set_company, only: %i[ show update destroy ]
   before_action :set_dropdowns, only: %i[ new ]
-  before_action :authenticate_user!, only: %i[ new edit update create destroy insert_company update_to_level_two update_to_level_three]
+  before_action :authenticate_user!, 
+only: %i[ new edit update create destroy insert_company update_to_level_two update_to_level_three]
 
   # GET /companies or /companies.json
   def index
     @companies = if params[:q].present?
-                Company.where("name ILIKE ?", "%#{params[:q]}%").paginate(page: params[:page], per_page: 12).order(created_at: :desc, id: :desc)
+                Company.where("name ILIKE ?", "%#{params[:q]}%").paginate(page: params[:page], per_page: 12).order(
+created_at: :desc, id: :desc)
               else
                 Company.all.paginate(page: params[:page], per_page: 12).order(created_at: :desc, id: :desc)
               end
@@ -16,10 +18,11 @@ class CompaniesController < ApplicationController
 
   def insert_company
     if company_params[:industry_category_type_id].blank? 
-        respond_to_invalid_entries("industry category type is required", company_capture_interface_path(mid: company_params[:mid]))  
+        respond_to_invalid_entries("industry category type is required", 
+company_capture_interface_path(mid: company_params[:mid]))  
     elsif (params[:company][:new_company_name].blank? && params[:company][:name].blank? && params[:company][:id].blank?  && !params[:company][:company_id]&.to_s&.match?(/^\d+$/))
       respond_to_invalid_entries("company name is required", company_capture_interface_path(mid: company_params[:mid])) 
-    elsif !params[:company][:company_id].blank? && params[:company][:company_id]&.to_s&.match?(/^\d+$/) || (!params[:company][:id].blank?  && params[:company][:id]&.to_s&.match?(/^\d+$/)) || !params[:company][:name].blank?
+    elsif (params[:company][:company_id].present? && params[:company][:company_id]&.to_s&.match?(/^\d+$/)) || (params[:company][:id].present?  && params[:company][:id]&.to_s&.match?(/^\d+$/)) || params[:company][:name].present?
        update_company
      else
           @company = Company.new(company_params.except(:mid, :id))
@@ -38,11 +41,16 @@ class CompaniesController < ApplicationController
 
               @company.update(mids: [cit_rec.mid])
               CroupierCore::UpgradeCitLevel.call!(mid: mid, company_id: @company.id, user_id: current_user.id, level: 1)
-              format.html { redirect_to company_capture_interface_path(mid: mid, filter_by: params[:company][:filter_by]), notice: "Company was successfully created." }
+              format.html do
+ redirect_to company_capture_interface_path(mid: mid, filter_by: params[:company][:filter_by]), 
+notice: "Company was successfully created."
+end
               format.json { render :show, status: :created, location: @company }
             else
               msg = @company.errors.map{|er| "#{er.attribute} #{er.message}"}.join(", ")
-              format.html { redirect_to company_capture_interface_path(mid: mid, filter_by: params[:company][:filter_by]), alert: msg }
+              format.html do
+ redirect_to company_capture_interface_path(mid: mid, filter_by: params[:company][:filter_by]), alert: msg
+end
               format.json { render json: @company.errors, status: :unprocessable_entity }
             end
 
@@ -58,10 +66,16 @@ class CompaniesController < ApplicationController
         @company.update!(company_params.except(:mid))
         CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, 
         user_id: current_user.id, level: 2)
-        format.html { redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:company][:filter_by]), notice: "company was successfully updated." }
+        format.html do
+ redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:company][:filter_by]), 
+notice: "company was successfully updated."
+end
         format.json { render :show, status: :ok, location: @company }
       rescue => e
-        format.html { redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:company][:filter_by]), alert: e.message }
+        format.html do
+ redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:company][:filter_by]), 
+alert: e.message
+end
         format.json { render json: @company.errors, status: :unprocessable_entity }
       end
     end
@@ -73,11 +87,18 @@ class CompaniesController < ApplicationController
       begin
         convert_child_params
         convert_parent_params
-        CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, user_id: current_user.id, level: 3)
-        format.html { redirect_to(company_capture_interface_path(mid: company_params[:mid], filter_by: params[:company][:filter_by]), notice: "Company was successfully updated.") and return }
+        CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, 
+user_id: current_user.id, level: 3)
+        format.html do
+ redirect_to(company_capture_interface_path(mid: company_params[:mid], filter_by: params[:company][:filter_by]), 
+notice: "Company was successfully updated.") and return
+end
         format.json { render :show, status: :created, location: @company }
       rescue => e
-        format.html { redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:company][:filter_by]), alert: e.message }
+        format.html do
+ redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:company][:filter_by]), 
+alert: e.message
+end
         format.json { render json: @company.errors, status: :unprocessable_entity }
       end
     end
@@ -89,11 +110,18 @@ class CompaniesController < ApplicationController
      respond_to do |format|
       begin
         convert_company_contact_params
-        CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, user_id: current_user.id, level: 4)
-        format.html { redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:company][:filter_by]), notice: "Company was successfully updated." }
+        CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, 
+user_id: current_user.id, level: 4)
+        format.html do
+ redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:company][:filter_by]), 
+notice: "Company was successfully updated."
+end
         format.json { render :show, status: :created, location: @company }
       rescue => e
-        format.html { redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:company][:filter_by]), alert: e.message }
+        format.html do
+ redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:company][:filter_by]), 
+alert: e.message
+end
         format.json { render json: @company.errors, status: :unprocessable_entity }
       end
     end
@@ -105,11 +133,18 @@ class CompaniesController < ApplicationController
      respond_to do |format|
       begin
         @company.update!(company_snapshot_params)
-        CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, user_id: current_user.id, level: 5)
-        format.html { redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:company][:filter_by]), notice: "Company was successfully updated." }
+        CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, 
+user_id: current_user.id, level: 5)
+        format.html do
+ redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:company][:filter_by]), 
+notice: "Company was successfully updated."
+end
         format.json { render :show, status: :created, location: @company }
       rescue => e
-        format.html { redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:company][:filter_by]), alert: e.message }
+        format.html do
+ redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:company][:filter_by]), 
+alert: e.message
+end
         format.json { render json: @company.errors, status: :unprocessable_entity }
       end
     end
@@ -144,7 +179,8 @@ end
 
 
   def edit
-    redirect_to(company_capture_interface_path(company_id: params[:id], level: params[:level], from_edit: true, filter_by: params[:filter_by]))
+    redirect_to(company_capture_interface_path(company_id: params[:id], level: params[:level], from_edit: true, 
+filter_by: params[:filter_by]))
   end
 
 
@@ -199,16 +235,13 @@ end
   end
 
   def update_company
-    company_id = params[:company][:company_id].blank? ? params[:company][:id] : params[:company][:company_id]
+    company_id = (params[:company][:company_id].presence || params[:company][:id])
     company = Company.find(company_id)
 
     respond_to do |format|
       begin
         company.update!(company_params.except(:mid))
-         if !company_params[:mid].blank?
-            CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: company.id, 
-            user_id: current_user.id, level: 1)
-          else
+         if company_params[:mid].blank?
 
             sys_gen_mid = CitRecord.generate_mid(company.id)
 
@@ -220,12 +253,21 @@ end
             CroupierCore::UpgradeCitLevel.call!(mid: sys_gen_mid, company_id: company.id, 
                           user_id: current_user.id, level: 1)
 
+          else
+            CroupierCore::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: company.id, 
+            user_id: current_user.id, level: 1)
           end
         
-        format.html { redirect_to edit_company_path(id: company.id, level: params[:company][:level], filter_by: params[:company][:filter_by]), notice: "company was successfully updated."  and return  }
+        format.html do
+ redirect_to edit_company_path(id: company.id, level: params[:company][:level], filter_by: params[:company][:filter_by]), 
+notice: "company was successfully updated."  and return
+end
         format.json { render json: company, status: :ok and return }
       rescue => e
-        format.html { redirect_to company_capture_interface_path(mid: company_params[:mid], level: params[:company][:level], filter_by: params[:company][:filter_by]), alert: e.message and return }
+        format.html do
+ redirect_to company_capture_interface_path(mid: company_params[:mid], level: params[:company][:level], filter_by: params[:company][:filter_by]), 
+alert: e.message and return
+end
         format.json { render json: company.errors, status: :unprocessable_entity and return }
       end
     end
@@ -243,12 +285,12 @@ end
 
   def convert_company_contact_params
 
-    unless company_contact_params[:company_contacts_attributes].blank?
+    if company_contact_params[:company_contacts_attributes].present?
       company_contact_params[:company_contacts_attributes].each do |key, contact_attributes|
         if contact_attributes[:_destroy] && contact_attributes[:_destroy] != "false"
           cr = CompanyContact.find(contact_attributes[:id])
           cr.destroy if cr
-        elsif !contact_attributes[:id].blank?
+        elsif contact_attributes[:id].present?
           person_id = spawned_person_id(contact_attributes)
           cp = CompanyContact.find(contact_attributes[:id])
           cp.update(
@@ -278,7 +320,7 @@ end
 
 
   def convert_child_params
-    unless company_relationship_params[:child_relationships_attributes].blank?
+    if company_relationship_params[:child_relationships_attributes].present?
       company_relationship_params[:child_relationships_attributes].each do |key, child_attributes|
         if child_attributes[:_destroy] && child_attributes[:_destroy] != "false"
           cr = CompanyRelationship.find(child_attributes[:id])
@@ -290,7 +332,8 @@ end
           ) if child_attributes[:logo]
         else
           child_company_id = child_attributes[:child_company_id]
-          child_company_id = spawned_company_id(child_attributes, child_attributes[:child_company_id]) if !child_company_id&.to_s&.match?(/^\d+$/)
+          child_company_id = spawned_company_id(child_attributes, 
+child_attributes[:child_company_id]) if !child_company_id&.to_s&.match?(/^\d+$/)
           CompanyRelationship.create!(
             company_relationship_type_id: child_attributes[:company_relationship_type_id], 
             parent_company_id: @company.id, child_company_id: child_company_id)
@@ -301,7 +344,7 @@ end
   end
 
   def convert_parent_params
-    unless company_relationship_params[:parent_relationships_attributes].blank?
+    if company_relationship_params[:parent_relationships_attributes].present?
       company_relationship_params[:parent_relationships_attributes].each do |key, parent_attributes|
         if parent_attributes[:_destroy] && parent_attributes[:_destroy] != "false"
           cr = CompanyRelationship.find(parent_attributes[:id])
@@ -313,7 +356,8 @@ end
           ) if parent_attributes[:logo]
         else
           parent_company_id = parent_attributes[:parent_company_id]
-          parent_company_id = spawned_company_id(parent_attributes, parent_attributes[:parent_company_id]) if !parent_company_id&.to_s&.match?(/^\d+$/)
+          parent_company_id = spawned_company_id(parent_attributes, 
+parent_attributes[:parent_company_id]) if !parent_company_id&.to_s&.match?(/^\d+$/)
           CompanyRelationship.create!(
             company_relationship_type_id: parent_attributes[:company_relationship_type_id], 
             parent_company_id: parent_company_id, child_company_id: @company.id

@@ -52,7 +52,9 @@ class GenderTypesController < ApplicationController
     @gender_type.destroy
 
     respond_to do |format|
-      format.html { redirect_to gender_types_path, status: :see_other, notice: "Gender type was successfully destroyed." }
+      format.html do
+ redirect_to gender_types_path, status: :see_other, notice: "Gender type was successfully destroyed."
+      end
       format.json { head :no_content }
     end
   end

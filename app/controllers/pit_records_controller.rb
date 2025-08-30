@@ -1,6 +1,7 @@
 class PitRecordsController < ApplicationController
   before_action :set_pit_record, only: %i[ show edit update destroy ]
-  before_action :authenticate_user!, only: %i[ new edit update create destroy pit_interface product_capture_interface invoke_bit_pit_triggers]
+  before_action :authenticate_user!, 
+only: %i[ new edit update create destroy pit_interface product_capture_interface invoke_bit_pit_triggers]
 
   # GET /pit_records or /pit_records.json
   def index
@@ -20,18 +21,22 @@ class PitRecordsController < ApplicationController
 
   def invoke_bit_pit_triggers
     if (pit_record_params[:barcode].strip.length < 12 || pit_record_params[:barcode].strip.length > 13)
-      redirect_to(product_capture_interface_path(barcode: pit_record_params[:barcode].strip), alert: "supported barcodes are between 12 and 13 digits") and return 
+      redirect_to(product_capture_interface_path(barcode: pit_record_params[:barcode].strip), 
+alert: "supported barcodes are between 12 and 13 digits") and return 
     end
     @pit_record = PitRecord.find_by(barcode: pit_record_params[:barcode].strip)
     if @pit_record
-      redirect_to(product_capture_interface_path(barcode: pit_record_params[:barcode].strip, level: @pit_record.level), alert: "Barcode already exists. Please enter New Product information.")
+      redirect_to(product_capture_interface_path(barcode: pit_record_params[:barcode].strip, level: @pit_record.level), 
+alert: "Barcode already exists. Please enter New Product information.")
     else
       @brc_intrf_claims = CroupierCore::BarcodeInterface.call!(barcode: pit_record_params[:barcode].strip, 
                                         source: "PIT Capture", asin: nil, user_id: current_user.id)
       if @brc_intrf_claims&.success?
-        redirect_to(product_capture_interface_path(barcode: pit_record_params[:barcode].strip), notice: (@brc_intrf_claims.payload[:message] + " - Please enter New Product Information."))
+        redirect_to(product_capture_interface_path(barcode: pit_record_params[:barcode].strip), 
+notice: (@brc_intrf_claims.payload[:message] + " - Please enter New Product Information."))
       else
-        redirect_to(product_capture_interface_path(barcode: pit_record_params[:barcode].strip), alert: @brc_intrf_claims.error.message)
+        redirect_to(product_capture_interface_path(barcode: pit_record_params[:barcode].strip), 
+alert: @brc_intrf_claims.error.message)
       end
     end
   end

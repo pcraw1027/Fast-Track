@@ -17,7 +17,8 @@ class EmployeeTypesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create employee_type" do
     assert_difference('EmployeeType.count') do
-      post employee_types_url, params: { employee_type: { definition: @employee_type.definition, employee: @employee_type.employee } }
+      post employee_types_url, 
+params: { employee_type: { definition: @employee_type.definition, employee: @employee_type.employee } }
     end
 
     assert_redirected_to employee_type_url(EmployeeType.last)
@@ -34,7 +35,8 @@ class EmployeeTypesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update employee_type" do
-    patch employee_type_url(@employee_type), params: { employee_type: { definition: @employee_type.definition, employee: @employee_type.employee } }
+    patch employee_type_url(@employee_type), 
+params: { employee_type: { definition: @employee_type.definition, employee: @employee_type.employee } }
     assert_redirected_to employee_type_url(@employee_type)
   end
 

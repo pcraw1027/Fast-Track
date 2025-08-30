@@ -17,7 +17,9 @@ class CompanyRelationshipsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create company_relationship" do
     assert_difference('CompanyRelationship.count') do
-      post company_relationships_url, params: { company_relationship: { child_company_id: @company_relationship.child_company_id, company_relationship_type_id: @company_relationship.company_relationship_type_id, parent_company_id: @company_relationship.parent_company_id } }
+      post company_relationships_url, 
+params: { company_relationship: { child_company_id: @company_relationship.child_company_id, 
+company_relationship_type_id: @company_relationship.company_relationship_type_id, parent_company_id: @company_relationship.parent_company_id } }
     end
 
     assert_redirected_to company_relationship_url(CompanyRelationship.last)
@@ -34,7 +36,9 @@ class CompanyRelationshipsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update company_relationship" do
-    patch company_relationship_url(@company_relationship), params: { company_relationship: { child_company_id: @company_relationship.child_company_id, company_relationship_type_id: @company_relationship.company_relationship_type_id, parent_company_id: @company_relationship.parent_company_id } }
+    patch company_relationship_url(@company_relationship), 
+params: { company_relationship: { child_company_id: @company_relationship.child_company_id, 
+company_relationship_type_id: @company_relationship.company_relationship_type_id, parent_company_id: @company_relationship.parent_company_id } }
     assert_redirected_to company_relationship_url(@company_relationship)
   end
 

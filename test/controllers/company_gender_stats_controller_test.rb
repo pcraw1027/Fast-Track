@@ -17,7 +17,9 @@ class CompanyGenderStatsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create company_gender_stat" do
     assert_difference('CompanyGenderStat.count') do
-      post company_gender_stats_url, params: { company_gender_stat: { company_id: @company_gender_stat.company_id, count: @company_gender_stat.count, employee_type_id: @company_gender_stat.employee_type_id, gender_type_id: @company_gender_stat.gender_type_id, percentage: @company_gender_stat.percentage } }
+      post company_gender_stats_url, 
+params: { company_gender_stat: { company_id: @company_gender_stat.company_id, count: @company_gender_stat.count, 
+employee_type_id: @company_gender_stat.employee_type_id, gender_type_id: @company_gender_stat.gender_type_id, percentage: @company_gender_stat.percentage } }
     end
 
     assert_redirected_to company_gender_stat_url(CompanyGenderStat.last)
@@ -34,7 +36,9 @@ class CompanyGenderStatsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update company_gender_stat" do
-    patch company_gender_stat_url(@company_gender_stat), params: { company_gender_stat: { company_id: @company_gender_stat.company_id, count: @company_gender_stat.count, employee_type_id: @company_gender_stat.employee_type_id, gender_type_id: @company_gender_stat.gender_type_id, percentage: @company_gender_stat.percentage } }
+    patch company_gender_stat_url(@company_gender_stat), 
+params: { company_gender_stat: { company_id: @company_gender_stat.company_id, count: @company_gender_stat.count, 
+employee_type_id: @company_gender_stat.employee_type_id, gender_type_id: @company_gender_stat.gender_type_id, percentage: @company_gender_stat.percentage } }
     assert_redirected_to company_gender_stat_url(@company_gender_stat)
   end
 

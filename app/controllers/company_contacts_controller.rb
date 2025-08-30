@@ -4,7 +4,8 @@ class CompanyContactsController < ApplicationController
 
   # GET /company_contacts or /company_contacts.json
   def index
-    @company_contacts = CompanyContact.all.paginate(page: params[:page], per_page: 12).order(created_at: :desc, id: :desc)
+    @company_contacts = CompanyContact.all.paginate(page: params[:page], per_page: 12).order(created_at: :desc, 
+id: :desc)
   end
 
   # GET /company_contacts/1 or /company_contacts/1.json
@@ -53,7 +54,9 @@ class CompanyContactsController < ApplicationController
     @company_contact.destroy
 
     respond_to do |format|
-      format.html { redirect_to company_contacts_path, status: :see_other, notice: "Company contact was successfully destroyed." }
+      format.html do
+ redirect_to company_contacts_path, status: :see_other, notice: "Company contact was successfully destroyed."
+      end
       format.json { head :no_content }
     end
   end
@@ -71,6 +74,7 @@ class CompanyContactsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def company_contact_params
-      params.require(:company_contact).permit(:company_id, :company_contact_type_id, :name, :job_title, :email, :phone, :photo)
+      params.require(:company_contact).permit(:company_id, :company_contact_type_id, :name, :job_title, :email, :phone, 
+:photo)
     end
 end
