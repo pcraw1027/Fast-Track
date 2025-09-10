@@ -24,6 +24,7 @@ class User < ApplicationRecord
   after_create :send_welcome_email
   validates :username, :country, :email, :postal_code, presence: true
   validates :username, uniqueness: { case_sensitive: true }
+  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
 
   default_scope -> { order(created_at: :desc) }
   

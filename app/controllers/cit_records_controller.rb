@@ -4,7 +4,7 @@ class CitRecordsController < ApplicationController
 
   # GET /cit_records or /cit_records.json
   def index
-    @cit_records = CitRecord.includes(:company).all.paginate(page: params[:page], per_page: 12).order(
+    @cit_records = CitRecord.includes(:company).all.paginate(page: params[:page], per_page: 20).order(
       created_at: :desc, id: :desc
     )
   end
@@ -74,12 +74,7 @@ filter_by: params[:filter_by]))
       @cit_record = @company.cit_records.first if @company.cit_records.any?
     end
 
-    
-
     contact = @company.company_contacts.build if @company.company_contacts.blank?
-
-    
-
 
     @gender_types = GenderType.all
     @ethinicity_types = EthnicityType.all
@@ -156,7 +151,7 @@ filter_by: params[:filter_by]))
 
 
   def classify_cit_records
-    cits = []
+      cits = []
     if params[:filter_by] == "parent"
       cits = CitRecord.for_parent_companies
     elsif params[:filter_by] == "subsidiary"
@@ -172,7 +167,6 @@ filter_by: params[:filter_by]))
     @cit_records_2s = []
     @cit_records_3s = []
     @cit_records_4s = []
-
 
     cits.each do |cit|
         @cit_records_0s.push(cit) if !cit.company&.level_1_flag || cit.company_id.blank?

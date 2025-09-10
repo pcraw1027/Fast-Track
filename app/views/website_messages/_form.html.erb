@@ -1,0 +1,73 @@
+<%= form_with(model: website_message) do |form| %>
+  <% if website_message.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(website_message.errors.count, "error") %> prohibited this website_message from being saved:</h2>
+
+      <ul>
+        <% website_message.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= form.label :sender_name %>
+    <%= form.text_field :sender_name, class: "form-control", required:"required" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :sender_email %>
+    <%= form.text_field :sender_email, class: "form-control", required:"required" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :message_type %>
+    <%= form.text_field :message_type, class: "form-control", required:"required" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :message_subject %>
+    <%= form.text_field :message_subject, class: "form-control", required:"required" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :interest %>
+    <%= form.text_field :interest, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :message_content %>
+    <%= form.text_area :message_content, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :sender_response_sent %>
+    <%= form.check_box :sender_response_sent, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :internal_response_sent %>
+    <%= form.check_box :internal_response_sent, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :initial_response %>
+    <%= form.check_box :initial_response, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :initial_response_date %>
+    <%= form.datetime_select :initial_response_date, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :conclusion %>
+    <%= form.text_area :conclusion, class: "form-control" %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "Submit", class: 'action-btn' %>
+  </div>
+  <br/>
+<% end %>

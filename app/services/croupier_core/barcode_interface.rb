@@ -31,5 +31,6 @@ class CroupierCore::BarcodeInterface < ApplicationService
       success({:bit_rec => bit_rec, :message => "Barcode Added"})
     end
   end
+  
 end
 
