@@ -3,6 +3,9 @@ module MonolithRoutes
     router.instance_exec do
       devise_for :users#, controllers: { registrations: 'registrations' }
 
+      resources :website_messages
+      resources :person_social_sites
+
       resources :cit_records 
       resources :pit_records
       resources :upload_records

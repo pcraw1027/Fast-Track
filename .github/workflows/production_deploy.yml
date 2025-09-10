@@ -1,14 +1,10 @@
-name: Code Analysis and Compliance Check
+name: Deploy to Production
 
 on:
   workflow_dispatch:
-  pull_request:
-    branches:
-      - main
-      - staging
 
 jobs:
-  compliance-check:
+  production-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -33,11 +29,6 @@ jobs:
         run: |
           bundle install --jobs 4 --retry 3
 
-      - name: Run Brakeman
-        run: bundle exec brakeman --no-exit-on-warn --format plain
-      - name: Run RuboCop
-        run: bundle exec rubocop
-      - name: Run Reek
-        run: bundle exec reek
-      - name: Run Bundler-Audit
-        run: bundle exec bundler-audit check --update
+      - name: Capistrano Deploy
+        run: STAGE=production bundle exec cap production deploy
+

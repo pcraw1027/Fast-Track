@@ -1,0 +1,2 @@
+module WebsiteMessagesHelper
+end
