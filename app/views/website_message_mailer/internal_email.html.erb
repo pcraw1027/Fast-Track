@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanks for your message</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333333;
+        }
+        p {
+            color: #555555;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #aaaaaa;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo img {
+            max-width: 200px;
+            height: 120px;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff !important;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="https://app-assets-bkt.s3.eu-north-1.amazonaws.com/CR147-Logo.webp" 
+                 alt="Logo" 
+                 style="width: 50%; height: 50%;"
+            
+            />
+        </div>
+        
+
+        <p>A new website message has been received with the following details:</p>
+
+        <p>Sender Name: <%= @website_message.sender_name %></p>
+        <p>Sender Email: <%= @website_message.sender_email %></p>
+        <% if @website_message.interest.present? %>
+            <p> Interest: <%= @website_message.interest %></p>
+        <% end %>
+        <p>Message Type: <%= @website_message.message_type %></p>
+        <p>Message Subject: <%= @website_message.message_subject %></p>
+
+        <p>Date: <%= @website_message.created_at.strftime("%B %d, %Y") %></p>
+
+        <p>Message: <%= @website_message.message_body %></p>
+
+        
+        <div class="footer">
+            <p>Best Regards,<br>The Croupier147 Team</p>
+        </div>
+    </div>
+</body>
+</html>

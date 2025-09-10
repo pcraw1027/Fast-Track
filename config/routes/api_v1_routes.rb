@@ -22,7 +22,10 @@ module ApiV1Routes
         post 'send_password_reset_instruction', to: 'passwords#send_password_reset_instruction'
         post 'reset_password', to: 'passwords#reset_password'
         put 'update_password', to: 'passwords#update_password'
-        
+
+        post 'contact_us', to: 'website_messages#contact_us'
+        post 'join_us', to: 'website_messages#join_us'
+
         post 'product_reviews', to: 'reviews#product_reviews'
         post 'company_reviews', to: 'reviews#company_reviews'
         get 'product_reviews', to: 'reviews#get_product_reviews'

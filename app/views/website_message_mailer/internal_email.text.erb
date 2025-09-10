@@ -1,0 +1,18 @@
+A new website message has been received with the following details:
+
+Sender Name: <%= @website_message.sender_name %>
+Sender Email: <%= @website_message.sender_email %>
+<% if @website_message.interest.present? %>
+        Interest: <%= @website_message.interest %>
+<% end %>
+Message Type: <%= @website_message.message_type %>
+Message Subject: <%= @website_message.message_subject %>
+
+Date: <%= @website_message.created_at.strftime("%B %d, %Y") %>
+
+Message: <%= @website_message.message_body %>
+
+Best Regards,
+Croupier147 Team
+
+

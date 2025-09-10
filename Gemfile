@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 #ruby '3.4.2'
-ruby '3.2.3'
+ruby '3.3.5'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
 gem 'rails', '~> 6.1.7', '>= 6.1.7.10'
 # Use postgresql as the database for Active Record
@@ -48,7 +48,7 @@ group :development do
   gem 'rack-mini-profiler', '~> 2.0'
   gem 'listen', '~> 3.3'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'spring'
+  gem 'spring', '~> 4.2.1'
 end
 
 group :test do
@@ -104,3 +104,5 @@ group :development, :test do
   gem 'brakeman', require: false
   gem 'bundler-audit', require: false
 end
+
+gem "logger", "~> 1.6"   # works with Ruby 3.3

@@ -3,7 +3,7 @@ require_relative 'routes/monolith_routes.rb'
 
 Rails.application.routes.draw do
   
-  resources :person_social_sites
+  
   extend MonolithRoutes
  
   defaults format: :json do

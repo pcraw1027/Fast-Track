@@ -4,7 +4,7 @@ class ScansController < ApplicationController
 
   # GET /scans or /scans.json
   def index
-    @scans = Scan.includes(:user).all.paginate(page: params[:page], per_page: 12).order(created_at: :desc, id: :desc)
+    @scans = Scan.includes(:user).all.paginate(page: params[:page], per_page: 20).order(created_at: :desc, id: :desc)
   end
 
   # GET /scans/1 or /scans/1.json
