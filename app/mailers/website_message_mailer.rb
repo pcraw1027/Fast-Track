@@ -3,7 +3,7 @@ class WebsiteMessageMailer < ApplicationMailer
 
   def internal_email(website_message)
     @website_message = website_message
-    mail(to: @website_message.sender_email, subject: "#{@website_message.sender_name} : #{@website_message.message_type}")
+    mail(to: "petercr@croupier147.com", subject: "#{@website_message.sender_name} : #{@website_message.message_type}")
   end
 
 

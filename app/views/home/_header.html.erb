@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light-green sticky-top">
   
   <%if Rails.env.staging?%>
-     <a class="staging-brand" href="#"> Staging... </a>
+     <a class="staging-brand" href="#"> Staging </a>
   <%end%>
   
   <%= link_to 'FastTrack', root_path, class:"navbar-brand" %>
@@ -112,16 +112,20 @@
         </div>
       </li>
 
-  <%if current_user %>
-        <li class="nav-item">
-          <%= link_to "Website Messages", website_messages_path, class:"nav-link" %>
-        </li>
-  <%end%>
-      <li class="nav-item">
-        <%= link_to "About Us", home_about_path, class:"nav-link" %>
+
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+          Croupier147
+        </a>
+        <div class="dropdown-menu bg-light-green">
+          <%= link_to "About Us", home_about_path, class:"nav-link" %>
+          <%if current_user %>
+              <%= link_to "Website Messages", website_messages_path, class:"nav-link" %>
+        <%end%>
+        <a class="nav-link" href="https://croupier147.com" target="_blank">Croupier147.com</a>
+        </div>
       </li>
 
-   
 
       <%if current_user %>
         <li class="nav-item dropdown">
