@@ -5,49 +5,92 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome to Croupier</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Montserrat:wght@700&display=swap');
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Inter', Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
+            background: linear-gradient(135deg, #eaf6fb 0%, #f4f7fa 100%);
         }
         .container {
             width: 100%;
-            max-width: 800px;
-            margin: 20px auto;
-            background: #ffffff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #333333;
-        }
-        p {
-            color: #555555;
-        }
-        .footer {
-            margin-top: 20px;
-            font-size: 12px;
-            color: #aaaaaa;
+            max-width: 540px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 36px 32px 28px 32px;
+            border-radius: 14px;
+            box-shadow: 0 8px 32px rgba(44, 204, 64, 0.10), 0 1.5px 8px rgba(44, 204, 64, 0.08);
+            border-top: 8px solid #2ecc40;
         }
         .logo {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 32px;
         }
         .logo img {
-            max-width: 200px;
-            height: 120px;
+            max-width: 160px;
+            height: 80px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 8px rgba(44,204,64,0.10));
+        }
+        h3 {
+            color: #1a2e35;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 28px;
+            margin-bottom: 14px;
+            text-align: center;
+            letter-spacing: 1.2px;
+            font-weight: 700;
+        }
+        p {
+            color: #3a4a54;
+            font-size: 17px;
+            line-height: 1.8;
+            margin: 14px 0;
+            font-family: 'Inter', Arial, sans-serif;
+        }
+        strong {
+            color: #2ecc40;
+            font-weight: 600;
+            letter-spacing: 1px;
+            font-size: 18px;
+        }
+        .footer {
+            margin-top: 36px;
+            font-size: 14px;
+            color: #7b8a8b;
+            border-top: 1px solid #eaeaea;
+            padding-top: 18px;
+            text-align: center;
+            font-family: 'Inter', Arial, sans-serif;
         }
         .button {
             display: inline-block;
-            padding: 10px 20px;
-            background-color: #007bff;
+            padding: 13px 32px;
+            background: linear-gradient(90deg, #2ecc40 60%, #27ae60 100%);
             color: #fff !important;
             text-decoration: none;
-            border-radius: 5px;
-            margin-top: 20px;
-            font-weight: bold;
+            border-radius: 8px;
+            margin-top: 28px;
+            font-weight: 600;
+            font-size: 17px;
+            font-family: 'Montserrat', Arial, sans-serif;
+            box-shadow: 0 2px 8px rgba(44,204,64,0.12);
+            transition: background 0.2s, box-shadow 0.2s;
+        }
+        .button:hover {
+            background: linear-gradient(90deg, #27ae60 60%, #2ecc40 100%);
+            box-shadow: 0 4px 16px rgba(44,204,64,0.18);
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 18px 8px 14px 8px;
+            }
+            h3 {
+                font-size: 22px;
+            }
+            p {
+                font-size: 15px;
+            }
         }
     </style>
 </head>
@@ -57,7 +100,6 @@
             <img src="https://app-assets-bkt.s3.eu-north-1.amazonaws.com/CR147-Logo.webp" 
                  alt="Logo" 
                  style="width: 50%; height: 50%;"
-            
             />
         </div>
         <h3>Welcome to Croupier147</h3>
@@ -74,7 +116,6 @@
         <p>If you have any questions, feel free to reach out to us.</p>
      <br>
 
-        
         <div class="footer">
             <p>Best Regards,<br>The Croupier147 Team</p>
         </div>
