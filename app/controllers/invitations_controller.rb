@@ -4,7 +4,7 @@ class InvitationsController < ApplicationController
 
   # GET /invitations or /invitations.json
   def index
-    @invitations = Invitation.includes(:invited_by).all.paginate(page: params[:page], per_page: 12).order(
+    @invitations = Invitation.includes(:invited_by).all.paginate(page: params[:page], per_page: 20).order(
       created_at: :desc, id: :desc
     )
   end

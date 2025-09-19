@@ -3,7 +3,7 @@ class CompanyRelationshipsController < ApplicationController
 
   # GET /company_relationships or /company_relationships.json
   def index
-    @company_relationships = CompanyRelationship.all.paginate(page: params[:page], per_page: 12).order(
+    @company_relationships = CompanyRelationship.all.paginate(page: params[:page], per_page: 20).order(
       created_at: :desc, id: :desc
     )
   end

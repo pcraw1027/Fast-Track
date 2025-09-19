@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_08_13_125142) do
+ActiveRecord::Schema.define(version: 2025_09_10_135717) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -527,6 +527,22 @@ ActiveRecord::Schema.define(version: 2025_08_13_125142) do
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["username"], name: "index_users_on_username", unique: true
+  end
+
+  create_table "website_messages", force: :cascade do |t|
+    t.string "sender_name", null: false
+    t.string "sender_email", null: false
+    t.string "message_type", null: false
+    t.string "message_subject"
+    t.string "interest"
+    t.text "message_content"
+    t.boolean "sender_response_sent", default: false, null: false
+    t.boolean "internal_response_sent", default: false, null: false
+    t.boolean "initial_response", default: false, null: false
+    t.datetime "initial_response_date"
+    t.text "conclusion"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   add_foreign_key "addresses", "address_types"

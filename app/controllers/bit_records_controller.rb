@@ -4,7 +4,7 @@ class BitRecordsController < ApplicationController
 
   # GET /bit_records or /bit_records.json
   def index
-    @bit_records = BitRecord.all.paginate(page: params[:page], per_page: 12).order(created_at: :desc, id: :desc)
+    @bit_records = BitRecord.all.paginate(page: params[:page], per_page: 20).order(created_at: :desc, id: :desc)
   end
 
   # GET /bit_records/1 or /bit_records/1.json

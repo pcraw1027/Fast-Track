@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to Croupier</title>
+    <title>Thanks for your message</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Montserrat:wght@700&display=swap');
         body {
@@ -92,21 +92,33 @@
                 font-size: 15px;
             }
         }
+        .faq-link {
+            color: #2ecc40;
+            text-decoration: underline;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="logo">
-            <img src="https://app-assets-bkt.s3.eu-north-1.amazonaws.com/logo.jpg" alt="Logo" />
+            <img src="https://app-assets-bkt.s3.eu-north-1.amazonaws.com/CR147-Logo.webp" 
+                 alt="Croupier147 Logo" />
         </div>
-        <h3>Welcome to Croupier147</h3>
-        <p>Dear <%= @user.username %>,</p>
-        <p>Thank you for joining us! We are thrilled to have you on board.</p>
-        <p>Explore our website for more information and resources:</p>
-        <p><a href="<%= @url %>" class="button">Visit Our Website</a></p>
+        <h1>Thank You for Contacting Us!</h1>
+        <p>Hi <%= @website_message.sender_name %>,</p>
+        <p>
+            The Croupier147 team has received your message.<br>
+            We will be back in touch within the next <strong>24 to 48 hours</strong>.
+        </p>
+        <p>
+            In the meantime, you can visit our 
+            <a href="https://croupier147.com/faq" class="faq-link">FAQ page</a>
+            for answers to common questions.
+        </p>
         <div class="footer">
-            <p>If you have any questions, feel free to reach out to us.</p>
-            <p>Best Regards,<br>The Croupier147 Team</p>
+            Best Regards,<br>
+            The Croupier147 Team
         </div>
     </div>
 </body>

@@ -5,7 +5,7 @@ only: %i[ new edit update create destroy pit_interface product_capture_interface
 
   # GET /pit_records or /pit_records.json
   def index
-    @pit_records = PitRecord.all.paginate(page: params[:page], per_page: 12).order(created_at: :desc, id: :desc)
+    @pit_records = PitRecord.all.paginate(page: params[:page], per_page: 20).order(created_at: :desc, id: :desc)
   end
 
   def next_pit_record

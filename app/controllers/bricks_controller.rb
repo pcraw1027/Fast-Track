@@ -6,11 +6,11 @@ class BricksController < ApplicationController
   def index
     if params[:product_category_source_id]
       product_category_source_id = ProductCategorySource.find_by(code: params[:product_category_source_id]).id 
-      @bricks = Brick.where(product_category_source_id: product_category_source_id).paginate(page: params[:page], per_page: 12).order(
+      @bricks = Brick.where(product_category_source_id: product_category_source_id).paginate(page: params[:page], per_page: 20).order(
         created_at: :desc, id: :desc
       )
     else 
-      @bricks = Brick.all.paginate(page: params[:page], per_page: 12).order(created_at: :desc, id: :desc)
+      @bricks = Brick.all.paginate(page: params[:page], per_page: 20).order(created_at: :desc, id: :desc)
     end
   end
 
