@@ -106,3 +106,5 @@ group :development, :test do
 end
 
 gem "logger", "~> 1.6"   # works with Ruby 3.3
+gem 'rack', '~> 2.2.19'
+gem 'uri', '>= 1.0.4'
