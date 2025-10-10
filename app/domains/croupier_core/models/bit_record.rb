@@ -13,7 +13,11 @@ module Domains
           self.table_name = "bit_records"
 
           def status_text
-            status == 0 ? "Open" : "Closed"
+            if status == 0 
+               "Open" 
+            else
+               "Closed"
+            end
           end
           
           def invoke_bit(barcode, source, asin, user_id, brand = "")
