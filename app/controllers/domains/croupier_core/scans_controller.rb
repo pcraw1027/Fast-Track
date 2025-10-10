@@ -5,7 +5,7 @@ class Domains::CroupierCore::ScansController < ApplicationController
   # GET /scans or /scans.json
   def index
     @scans = Domains::CroupierCore::Scan.includes(:user)
-              .all.paginate(page: params[:page], per_page: 20).order(created_at: :desc, id: :desc)
+                                        .all.paginate(page: params[:page], per_page: 20).order(created_at: :desc, id: :desc)
   end
 
   # GET /scans/1 or /scans/1.json
@@ -36,14 +36,16 @@ class Domains::CroupierCore::ScansController < ApplicationController
         
       if @scan.id
             @brc_intrf_claims = Domains::CroupierCore::Operations::BarcodeInterface
-            .call!(barcode: scan_params[:barcode], 
+                                .call!(barcode: scan_params[:barcode], 
               source: "Scan", asin: scan_params[:asin], user_id: current_user.id)
-            Domains::CroupierCore::Operations::UploadTrigger.call!(barcode: scan_params[:barcode], 
-                scan_id: @scan.id, 
-                user_id: current_user.id, 
-                asin: scan_params[:asin],
-                brand: upload_record_params[:brand],
-                upload_params: scan_params[:uploads].except(:brand)) if scan_params[:uploads].present? 
+            if scan_params[:uploads].present?
+              Domains::CroupierCore::Operations::UploadTrigger.call!(barcode: scan_params[:barcode], 
+                  scan_id: @scan.id, 
+                  user_id: current_user.id, 
+                  asin: scan_params[:asin],
+                  brand: upload_record_params[:brand],
+                  upload_params: scan_params[:uploads].except(:brand))
+            end 
 
       end
       
@@ -52,8 +54,8 @@ class Domains::CroupierCore::ScansController < ApplicationController
       if finder_claims.payload
         format.html { redirect_to finder_claims.payload, notice: "Scan was successfully created." }
         format.json { render :show, status: :created, location: @scan }
-      elsif @brc_intrf_claims && @brc_intrf_claims.success?
-        format.html { redirect_to @scan, notice:  "Scan was successfully created."}
+      elsif @brc_intrf_claims&.success?
+        format.html { redirect_to @scan, notice:  "Scan was successfully created." }
         format.json { render :show, status: :created, location: @scan }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -96,7 +98,7 @@ class Domains::CroupierCore::ScansController < ApplicationController
     # Only allow a list of trusted parameters through.
     def scan_params
       params.require(:domains_croupier_core_scan).permit(:barcode, :asin, upload: [:product_name, :company_name, :brand, 
-      :remarks, media_attributes: [:id, :file, :media_type, :position, :_destroy]])
+                                                                                   :remarks, { media_attributes: [:id, :file, :media_type, :position, :_destroy] }])
     end
 end
 

@@ -17,18 +17,17 @@ module Domains
           Domains::Users::AllowlistedJwt.create(jti: payload[:jti], user_id: @user.id, exp: time)
 
           encode_jwt(payload)
-
         end
 
 
-        private
+      private
 
 
         def encode_jwt(payload)
           JWT.encode(payload, Rails.application.credentials.devise_jwt_secret_key, 'HS256') # Update 'HS256' if using a different algorithm
         end
 
-      end
+    end
   end
 end
 

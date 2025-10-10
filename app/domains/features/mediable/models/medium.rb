@@ -1,7 +1,6 @@
 module Domains
   module Features
     module Mediable
-
         class Medium < ApplicationRecord
           self.table_name = "media"
           
@@ -30,12 +29,13 @@ module Domains
 
 
           def remove_file_from_s3
-            if file.present?
+            return if file.blank?
+
               file.remove! 
-            end
+            
           end
 
         end
-      end
     end
   end
+end

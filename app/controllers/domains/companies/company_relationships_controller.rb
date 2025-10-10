@@ -4,9 +4,9 @@ class Domains::Companies::CompanyRelationshipsController < ApplicationController
   # GET /company_relationships or /company_relationships.json
   def index
     @company_relationships = Domains::Companies::CompanyRelationship.all
-              .paginate(page: params[:page], per_page: 20).order(
-                  created_at: :desc, id: :desc
-                )
+                                                                    .paginate(page: params[:page], per_page: 20).order(
+                                                                      created_at: :desc, id: :desc
+                                                                    )
   end
 
   # GET /company_relationships/1 or /company_relationships/1.json

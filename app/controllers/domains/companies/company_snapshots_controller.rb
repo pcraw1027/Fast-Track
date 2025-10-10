@@ -4,9 +4,9 @@ class Domains::Companies::CompanySnapshotsController < ApplicationController
   # GET /company_snapshots or /company_snapshots.json
   def index
     @company_snapshots = Domains::Companies::CompanySnapshot.includes(:company).all
-            .paginate(page: params[:page], per_page: 20).order(
-              created_at: :desc, id: :desc
-            )
+                                                            .paginate(page: params[:page], per_page: 20).order(
+                                                              created_at: :desc, id: :desc
+                                                            )
   end
 
   # GET /company_snapshots/1 or /company_snapshots/1.json
@@ -74,9 +74,8 @@ class Domains::Companies::CompanySnapshotsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def company_snapshot_params
       params.require(:domains_companies_company_snapshot)
-      .permit(:company_id, :employee_demographics_transparency, 
+            .permit(:company_id, :employee_demographics_transparency, 
           :employee_demographics_performance, :projected_culture_and_identity, :mgmt_composition_transparency,
-          :mgmt_composition_performance
-         )
+          :mgmt_composition_performance)
     end
 end

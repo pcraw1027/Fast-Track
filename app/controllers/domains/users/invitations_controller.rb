@@ -5,9 +5,9 @@ class Domains::Users::InvitationsController < ApplicationController
   # GET /invitations or /invitations.json
   def index
     @invitations = Domains::Users::Invitation.includes(:invited_by)
-    .all.paginate(page: params[:page], per_page: 20).order(
-      created_at: :desc, id: :desc
-    )
+                                             .all.paginate(page: params[:page], per_page: 20).order(
+                                               created_at: :desc, id: :desc
+                                             )
   end
 
   # GET /invitations/1 or /invitations/1.json

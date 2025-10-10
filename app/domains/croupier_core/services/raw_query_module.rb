@@ -35,7 +35,7 @@ module Domains
             end
 
             #load product_variants data
-            product_variants = self.unscoped_products_with_assoc("barcode", recent_scan_data.map(&:barcode))
+            product_variants = unscoped_products_with_assoc("barcode", recent_scan_data.map(&:barcode))
             
             count_query = <<-SQL.squish
               SELECT COUNT(*) AS total_count FROM (
@@ -120,7 +120,7 @@ module Domains
             end
 
             #load product_variants data
-            product_variants = self.unscoped_products_with_assoc("product_id", product_ids)
+            product_variants = unscoped_products_with_assoc("product_id", product_ids)
 
               
           records = product_variants.map do |pv|
@@ -142,10 +142,10 @@ module Domains
           )
 
           Domains::CroupierCore::ProductVariant.unscoped
-            .includes(:media)
-              .left_outer_joins(:media, product: [:company, :reviews])
-              .select(
-                'product_variants.*',
+                                               .includes(:media)
+                                               .left_outer_joins(:media, product: [:company, :reviews])
+                                               .select(
+                                                 'product_variants.*',
                 'products.id AS product_id',
                 'products.name AS product_name',
                 'products.description AS product_description',
@@ -153,18 +153,18 @@ module Domains
                 'products.company_id AS product_company_id',
                 'companies.name AS company_name',
                 'AVG(reviews.rating) AS avrg_rating'
-              )
-              .where("#{attribute_key}": values)
-              .group(
-                'products.id',
+                                               )
+                                               .where("#{attribute_key}": values)
+                                               .group(
+                                                 'products.id',
                 'products.name',
                 'products.description',
                 'products.company_id',
                 'product_variants.id',
                 'companies.name'
-              )
-              .order(order_clause)
+                                               )
+                                               .order(order_clause)
         end
-     end
     end
   end
+end

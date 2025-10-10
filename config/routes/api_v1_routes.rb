@@ -55,8 +55,8 @@ module ApiV1Routes
           namespace :reviewable, path: "", as: "" do
             post 'product_reviews', to: 'reviews#product_reviews'
             post 'company_reviews', to: 'reviews#company_reviews'
-            get 'product_reviews', to: 'reviews#get_product_reviews'
-            get 'company_reviews', to: 'reviews#get_company_reviews'
+            get 'product_reviews', to: 'reviews#read_product_reviews'
+            get 'company_reviews', to: 'reviews#read_company_reviews'
             get 'user_product_review', to: 'reviews#user_product_review'
             get 'user_company_review', to: 'reviews#user_company_review'
             resources :reviews, only: [:show, :update]

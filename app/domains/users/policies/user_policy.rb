@@ -21,5 +21,5 @@ module Domains
           user.admin?
         end
       end
-   end
+  end
 end

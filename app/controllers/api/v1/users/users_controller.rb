@@ -8,9 +8,9 @@ class Api::V1::Users::UsersController < Api::V1::BaseController
     if user.update(filtered_params)
         render json: { user_profile: Domains::Users::V1::UserSerializer.new(user).serializable_hash[:data][:attributes] }, 
 status: :ok
-      else
+    else
         render json: { error: user.errors }, status: :unprocessable_entity 
-      end
+    end
   end
   
 

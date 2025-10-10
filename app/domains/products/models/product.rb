@@ -35,11 +35,11 @@ module Domains
       index_name "product_search_index"
 
       def level_1_flag
-        self.name.present? && self.description.present? && self.company_id.present?
+        name.present? && description.present? && company_id.present?
       end
 
       def level_2_flag
-        self.segment_id.present? && self.family_id.present? && self.klass_id.present? && self.brick_id.present?
+        segment_id.present? && family_id.present? && klass_id.present? && brick_id.present?
       end
 
       def level_3_flag

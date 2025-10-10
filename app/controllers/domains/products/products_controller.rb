@@ -1,26 +1,26 @@
 class Domains::Products::ProductsController < ApplicationController
   before_action :set_product, only: %i[ show update destroy ]
   before_action :set_dropdowns, only: %i[ new edit ]
-  before_action :authenticate_user!, only: %i[ new edit update create destroy insert_product update_to_level_two]
+  before_action :authenticate_user!, only: %i[ new edit update create destroy update_to_level_one update_to_level_two]
 
   # GET /products or /products.json
   def index
     @products = if params[:q].present?
                 Domains::Products::Product.includes(:company, :segment, :family, :klass, :brick, :product_variants)
-                        .where("name ILIKE ?", "%#{params[:q]}%")
-                        .paginate(page: params[:page], per_page: 20)
-                        .order(created_at: :desc, id: :desc)
-              else
+                                          .where("name ILIKE ?", "%#{params[:q]}%")
+                                          .paginate(page: params[:page], per_page: 20)
+                                          .order(created_at: :desc, id: :desc)
+                else
                 Domains::Products::Product.includes(:company, :segment, :family, :klass, :brick, :product_variants)
-                                  .all
-                                  .paginate(page: params[:page], per_page: 20)
-                                  .order(created_at: :desc, id: :desc)
-              end
+                                          .all
+                                          .paginate(page: params[:page], per_page: 20)
+                                          .order(created_at: :desc, id: :desc)
+                end
      
   end
 
   
-  def insert_product
+  def update_to_level_one
     error = ""
     error += "product name is required, " if product_params[:name].blank?
     error += "description is required" if product_params[:description].blank?
@@ -40,7 +40,7 @@ class Domains::Products::ProductsController < ApplicationController
     company = nil
     cit_rec = Domains::CroupierCore::CitRecord.find_by(mid: mid)
 
-    if product_params[:company_id]&.to_s.match?(/^\d+$/)
+    if product_params[:company_id]&.to_s&.match?(/^\d+$/)
       company = Domains::Companies::Company.find_by(id: product_params[:company_id])
       unless company
         respond_to_invalid_entries("Company not found", product_capture_interface_path(barcode: barcode))
@@ -48,18 +48,18 @@ class Domains::Products::ProductsController < ApplicationController
       end
       company_id = company.id
 
-      unless cit_rec
+      if cit_rec
+        cit_rec.update(company_id: company.id) if cit_rec.company_id != company.id
+      else
         sys_gen_mid = Domains::CroupierCore::CitRecord.generate_mid(company.id)
         cit_rec = Domains::CroupierCore::CitRecord.find_by(mid: sys_gen_mid)
         if cit_rec
           cit_rec.update(mid: mid, company_id: company.id)
         else
-          cit_rec = Domains::CroupierCore::CitRecordHandler
-          .update_or_create(nil, mid: mid, source: "Product Import",
+          Domains::CroupierCore::CitRecordHandler
+            .update_or_create(nil, mid: mid, source: "Product Import",
             user_id: current_user.id, company_id: company.id, brand: nil)
         end
-      else
-        cit_rec.update(company_id: company.id) if cit_rec.company_id != company.id
       end
 
     else
@@ -69,7 +69,7 @@ class Domains::Products::ProductsController < ApplicationController
           if old_company && old_company.name != company_name
             sys_gen_mid = Domains::CroupierCore::CitRecord.generate_mid(old_company.id)
             Domains::CroupierCore::CitRecordHandler
-            .update_or_create(nil, mid: sys_gen_mid, source: "Product Import",
+              .update_or_create(nil, mid: sys_gen_mid, source: "Product Import",
               user_id: current_user.id, company_id: old_company.id, brand: nil)
             old_company.update(mids: [sys_gen_mid])
           end
@@ -85,7 +85,7 @@ class Domains::Products::ProductsController < ApplicationController
           Domains::CroupierCore::CitRecordHandler.update_or_create(nil, mid: mid, source: "Product Import",
                                             user_id: current_user.id, company_id: company.id, brand: nil)
         end
-      rescue => e
+      rescue StandardError => e
         redirect_to(product_capture_interface_path(barcode: barcode), alert: e.message)
         return
       end
@@ -137,7 +137,7 @@ notice: "Product successfully added"
     barcode = product_variant_params[:barcode]&.strip
     respond_to do |format|
       if @product.update!(product_params)
-        pit_record = Domains::CroupierCore::PitRecord.find_by(barcode: barcode)
+        Domains::CroupierCore::PitRecord.find_by(barcode: barcode)
         Domains::CroupierCore::Operations::UpgradePitLevel.call!(barcode: barcode, 
         product_id: @product.id, asin: nil, user_id: current_user.id, level: 2) 
         format.html do
@@ -146,7 +146,7 @@ notice: "Product was successfully updated."
         end
         format.json { render :show, status: :ok, location: @product }
       else
-        error = @product.errors.map{|er| "#{er.attribute} #{er.message}"}.join(", ")
+        error = @product.errors.map { |er| "#{er.attribute} #{er.message}" }.join(", ")
             format.html do
  redirect_to product_capture_interface_path(barcode: barcode, level: params[:level]), alert: error
             end
@@ -181,7 +181,6 @@ notice: "Product was successfully updated."
     # @family = Family.find(@product.family_id) if @product.family_id
     # @klass = Klass.find(@product.klass_id) if @product.klass_id
     # @brick = Brick.find(@product.brick_id) if @product.brick_id
-
   end
 
   # POST /products or /products.json
@@ -242,23 +241,24 @@ notice: "Product was successfully updated."
 
     def set_dropdowns
       @product_category_sources = Domains::Classifications::ProductCategorySource.all
-      product_category_source_id = @product_category_sources&.find{|p| p.code == 'AMZ'}&.id 
+      product_category_source_id = @product_category_sources&.find { |p| p.code == 'AMZ' }&.id 
       @segments = Domains::Classifications::Segment.where(product_category_source_id: product_category_source_id)
     end
 
     def upgrade_pit_to_level_1(product_id, pit_level, company_id)
-      if pit_level == 0
+      return unless pit_level.zero?
+
             Domains::CroupierCore::Operations::UpgradePitLevel.call!(barcode: product_variant_params[:barcode].strip, 
                               product_id: product_id, 
                               asin: params[:domains_products_product][:asin],
                               user_id: current_user.id, company_id: company_id, level: 1)    
-          end
+      
     end
 
-    def respond_to_invalid_entries(msg, path=new_product_path)
+    def respond_to_invalid_entries(msg, path = new_product_path)
       respond_to do |format|
         format.html { redirect_to path, alert: msg }
-        format.json { render json: {errors: [{barcode: msg}]}, status: :unprocessable_entity }
+        format.json { render json: { errors: [{ barcode: msg }] }, status: :unprocessable_entity }
       end
     end
     

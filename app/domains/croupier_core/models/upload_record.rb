@@ -3,8 +3,8 @@ module Domains
     class UploadRecord < ApplicationRecord
       include BarcodeValidations
 
-      belongs_to :scan, class_name: "Domains::CroupierCore::Scan", foreign_key: "scan_id", optional: true
-      belongs_to :user, class_name: "Domains::Users::User", foreign_key: "user_id", optional: true
+      belongs_to :scan, class_name: "Domains::CroupierCore::Scan", optional: true
+      belongs_to :user, class_name: "Domains::Users::User", optional: true
       has_many :media, as: :mediaable, class_name: "Domains::Features::Mediable::Medium", dependent: :destroy
       accepts_nested_attributes_for :media, allow_destroy: true
       

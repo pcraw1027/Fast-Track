@@ -5,40 +5,39 @@ class Domains::CroupierCore::CitRecordsController < ApplicationController
   # GET /cit_records or /cit_records.json
   def index
     @cit_records = Domains::CroupierCore::CitRecord.includes(:company).all
-    .paginate(page: params[:page], per_page: 20).order(
-      created_at: :desc, id: :desc
-    )
+                                                   .paginate(page: params[:page], per_page: 20).order(
+                                                     created_at: :desc, id: :desc
+                                                   )
   end
 
   def next_cit_record
     classify_cit_records
-    cits = []
-    case (params[:level].to_i - 1)
-    when 0
-      cits = @cit_records_0s
-    when 1
-      cits = @cit_records_1s
-    when 2
-      cits = @cit_records_2s
-    when 3
-      cits = @cit_records_3s
-    when 4
-      cits = @cit_records_4s
-    else
-      cits = @cit_records_0s
-    end
+    cits = case (params[:level].to_i - 1)
+           when 0
+      @cit_records_0s
+           when 1
+      @cit_records_1s
+           when 2
+      @cit_records_2s
+           when 3
+      @cit_records_3s
+           when 4
+      @cit_records_4s
+           else
+      @cit_records_0s
+           end
 
     cit_record = nil
 
     if params[:previous_rec_id]
       index = cits.index { |cit_rec| cit_rec.id == params[:previous_rec_id].to_i }
-      if index && cits.length > index + 1
-        cit_record = cits[index + 1]
-      elsif index
-        cit_record = cits[index]
-      else
-        cit_record = cits[0]
-      end
+      cit_record = if index && cits.length > index + 1
+        cits[index + 1]
+                   elsif index
+        cits[index]
+                   else
+        cits[0]
+                   end
     else
       cit_record = cits[0]
     end
@@ -47,7 +46,7 @@ class Domains::CroupierCore::CitRecordsController < ApplicationController
       redirect_to(company_capture_interface_path(mid: cit_record.mid, level: params[:level], 
 filter_by: params[:filter_by]))
     else
-      redirect_to(cit_interface_path(), alert: "No more CIT Level #{params[:level]} records!")
+      redirect_to(cit_interface_path, alert: "No more CIT Level #{params[:level]} records!")
     end
   end
 
@@ -75,7 +74,7 @@ filter_by: params[:filter_by]))
       @cit_record = @company.cit_records.first if @company.cit_records.any?
     end
 
-    contact = @company.company_contacts.build if @company.company_contacts.blank?
+    @company.company_contacts.build if @company.company_contacts.blank?
 
     @gender_types = Domains::People::GenderType.all
     @ethinicity_types = Domains::People::EthnicityType.all
@@ -83,11 +82,10 @@ filter_by: params[:filter_by]))
     @address_types = Domains::ContactAndIdentity::AddressType.all
     @company_contact_types = Domains::Companies::CompanyContactType.all
     @company_relationship_types = Domains::Companies::CompanyRelationshipType.all
-    parent_sub = @company_relationship_types.find{|r| r.relationship == "Parent/Brand"}
-    filtered = @company_relationship_types.select{|r| r.relationship != "Parent/Brand"}
+    parent_sub = @company_relationship_types.find { |r| r.relationship == "Parent/Brand" }
+    filtered = @company_relationship_types.reject { |r| r.relationship == "Parent/Brand" }
     filtered.unshift(parent_sub)
     @company_relationship_types_subsidiaries = filtered
-
   end
 
 
@@ -152,16 +150,16 @@ filter_by: params[:filter_by]))
 
 
   def classify_cit_records
-      cits = []
-    if params[:filter_by] == "parent"
-      cits = Domains::CroupierCore::CitRecord.for_parent_companies
-    elsif params[:filter_by] == "subsidiary"
-      cits = Domains::CroupierCore::CitRecord.for_child_only_companies
-    elsif params[:filter_by] == "all"
-      cits = Domains::CroupierCore::CitRecord.with_company_and_level_users
-    else
-      cits = Domains::CroupierCore::CitRecord.for_companies_with_products
-    end
+    cits = case params[:filter_by]
+           when "parent"
+      Domains::CroupierCore::CitRecord.for_parent_companies
+           when "subsidiary"
+      Domains::CroupierCore::CitRecord.for_child_only_companies
+           when "all"
+      Domains::CroupierCore::CitRecord.with_company_and_level_users
+           else
+      Domains::CroupierCore::CitRecord.for_companies_with_products
+           end
     
     @cit_records_0s = []
     @cit_records_1s = []

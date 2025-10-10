@@ -2,10 +2,10 @@
   "scan_info": {
     "app_path": "/root/workspace/Fast-Track",
     "rails_version": "6.1.7.10",
-    "security_warnings": 13,
-    "start_time": "2025-08-30 17:03:18 +0100",
-    "end_time": "2025-08-30 17:03:26 +0100",
-    "duration": 7.77642417,
+    "security_warnings": 14,
+    "start_time": "2025-10-10 20:39:47 +0100",
+    "end_time": "2025-10-10 20:40:08 +0100",
+    "duration": 21.027397172,
     "checks_performed": [
       "BasicAuth",
       "BasicAuthTimingAttack",
@@ -86,27 +86,181 @@
       "XMLDoS",
       "YAMLParsing"
     ],
-    "number_of_controllers": 48,
-    "number_of_models": 41,
-    "number_of_templates": 245,
+    "number_of_controllers": 50,
+    "number_of_models": 42,
+    "number_of_templates": 252,
     "ruby_version": "3.3.5",
     "brakeman_version": "7.1.0"
   },
   "warnings": [
     {
-      "warning_type": "Mass Assignment",
-      "warning_code": 105,
-      "fingerprint": "1e643b1814be17b0bd95a5936069446f2341727a9204edeef21b48617c418330",
-      "check_name": "PermitAttributes",
-      "message": "Potentially dangerous key allowed for mass assignment",
-      "file": "app/controllers/users_controller.rb",
-      "line": 54,
-      "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
-      "code": "params.require(:user).permit(:first_name, :last_name, :role, :status, :country, :postal_code)",
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "138e28f880b22b4a386dd78444337ade58a540fdc2c766b20a5c5852fbdf9764",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/domains/croupier_core/services/raw_query_module.rb",
+      "line": 19,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "Domains::CroupierCore::Scan.find_by_sql(\"              SELECT DISTINCT ON (barcode) *\\n              FROM scans\\n              WHERE user_id = #{ActiveRecord::Base.connection.quote(current_user_id)}\\n              AND product_exists = true\\n              ORDER BY barcode, created_at DESC\\n              LIMIT #{per_page.to_i} OFFSET #{((page.to_i - 1) * per_page.to_i)}\\n\".squish)",
       "render_path": null,
       "location": {
         "type": "method",
-        "class": "UsersController",
+        "class": "Domains::CroupierCore::RawQueryModule",
+        "method": "s(:self).my_scan_products"
+      },
+      "user_input": "((page.to_i - 1) * per_page.to_i)",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
+      ]
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "30fdff93b0261f81ec44b9739b79f47bb817963251615ebf8c1eb6ec21e7a659",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/domains/croupier_core/services/raw_query_module.rb",
+      "line": 139,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "Arel.sql(\"CASE #{values.each_with_index.map do\n \"WHEN #{attribute_key} = #{ActiveRecord::Base.connection.quote(v)} THEN #{i}\"\n end.join(\" \")} ELSE #{values.length} END\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Domains::CroupierCore::RawQueryModule",
+        "method": "s(:self).unscoped_products_with_assoc"
+      },
+      "user_input": "values.each_with_index.map do\n \"WHEN #{attribute_key} = #{ActiveRecord::Base.connection.quote(v)} THEN #{i}\"\n end.join(\" \")",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
+      ]
+    },
+    {
+      "warning_type": "Redirect",
+      "warning_code": 18,
+      "fingerprint": "31208a5d60f9e2c40e9a614511dd3b9591bfb9d384f6325390b03ae3383929f8",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/domains/classifications/attribute_titles_controller.rb",
+      "line": 43,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(Domains::Classifications::AttributeTitle.find(params[:id]), :notice => \"Attribute title was successfully updated.\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Domains::Classifications::AttributeTitlesController",
+        "method": "update"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "cwe_id": [
+        601
+      ]
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "6587714f2518548a19ac507d094a067248904e4d91b128a89ea7f8f65de4b28f",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/domains/croupier_core/services/raw_query_module.rb",
+      "line": 33,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "ActiveRecord::Base.connection.exec_query(\"                SELECT product_id, COUNT(*) AS scan_count\\n                FROM scans\\n                WHERE product_id IN (#{Domains::CroupierCore::Scan.find_by_sql(\"              SELECT DISTINCT ON (barcode) *\\n              FROM scans\\n              WHERE user_id = #{ActiveRecord::Base.connection.quote(current_user_id)}\\n              AND product_exists = true\\n              ORDER BY barcode, created_at DESC\\n              LIMIT #{per_page.to_i} OFFSET #{((page.to_i - 1) * per_page.to_i)}\\n\".squish).map(&:product_id).compact.join(\",\")})\\n                GROUP BY product_id\\n\".squish)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Domains::CroupierCore::RawQueryModule",
+        "method": "s(:self).my_scan_products"
+      },
+      "user_input": "Domains::CroupierCore::Scan.find_by_sql(\"              SELECT DISTINCT ON (barcode) *\\n              FROM scans\\n              WHERE user_id = #{ActiveRecord::Base.connection.quote(current_user_id)}\\n              AND product_exists = true\\n              ORDER BY barcode, created_at DESC\\n              LIMIT #{per_page.to_i} OFFSET #{((page.to_i - 1) * per_page.to_i)}\\n\".squish).map(&:product_id)",
+      "confidence": "High",
+      "cwe_id": [
+        89
+      ]
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "69183a86916aa8410d10d71a0d54407b4251be36ccba681baa20590eebd81bc0",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/domains/croupier_core/services/raw_query_module.rb",
+      "line": 94,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "ActiveRecord::Base.connection.select_values(\"            SELECT \\n              products.id\\n            FROM \\n              scans\\n            JOIN \\n              products ON products.id = scans.product_id\\n            GROUP BY \\n              products.id\\n            ORDER BY \\n              COUNT(scans.id) DESC\\n            LIMIT #{per_page.to_i} OFFSET #{((page.to_i - 1) * per_page.to_i)}\\n\".squish)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Domains::CroupierCore::RawQueryModule",
+        "method": "s(:self).top_scan_products"
+      },
+      "user_input": "((page.to_i - 1) * per_page.to_i)",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
+      ]
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "696e30eea998836483ff7f9e48dd6c68f04e22472d7fd76460fccc76dbc86c25",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/domains/croupier_core/services/raw_query_module.rb",
+      "line": 117,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "ActiveRecord::Base.connection.exec_query(\"                SELECT product_id, COUNT(*) AS scan_count\\n                FROM scans\\n                WHERE product_id IN (#{ActiveRecord::Base.connection.select_values(\"            SELECT \\n              products.id\\n            FROM \\n              scans\\n            JOIN \\n              products ON products.id = scans.product_id\\n            GROUP BY \\n              products.id\\n            ORDER BY \\n              COUNT(scans.id) DESC\\n            LIMIT #{per_page.to_i} OFFSET #{((page.to_i - 1) * per_page.to_i)}\\n\".squish).join(\",\")})\\n                GROUP BY product_id\\n\".squish)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Domains::CroupierCore::RawQueryModule",
+        "method": "s(:self).top_scan_products"
+      },
+      "user_input": "ActiveRecord::Base.connection.select_values(\"            SELECT \\n              products.id\\n            FROM \\n              scans\\n            JOIN \\n              products ON products.id = scans.product_id\\n            GROUP BY \\n              products.id\\n            ORDER BY \\n              COUNT(scans.id) DESC\\n            LIMIT #{per_page.to_i} OFFSET #{((page.to_i - 1) * per_page.to_i)}\\n\".squish).join(\",\")",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
+      ]
+    },
+    {
+      "warning_type": "File Access",
+      "warning_code": 16,
+      "fingerprint": "69ae1c89c03755ec299474fb26ff619a64df38ba02209f8228fab9278f423a49",
+      "check_name": "FileAccess",
+      "message": "Model attribute used in file name",
+      "file": "app/domains/features/mediable/jobs/process_medium_job.rb",
+      "line": 74,
+      "link": "https://brakemanscanner.org/docs/warning_types/file_access/",
+      "code": "File.delete(Rails.public_path.join(\"uploads\", \"tmp\", File.basename((Domains::Features::Mediable::Medium.find(medium_id).file.path or Rails.root.join(\"tmp\", File.basename(Domains::Features::Mediable::Medium.find(medium_id).file.path)).to_s))))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Domains::Features::Mediable::ProcessMediumJob",
+        "method": "perform"
+      },
+      "user_input": "Domains::Features::Mediable::Medium.find(medium_id).file",
+      "confidence": "Weak",
+      "cwe_id": [
+        22
+      ]
+    },
+    {
+      "warning_type": "Mass Assignment",
+      "warning_code": 105,
+      "fingerprint": "82fec69b0b459faac98329a2aaaad7c940b5501b47eb9b6ce2b60e86946f9c7f",
+      "check_name": "PermitAttributes",
+      "message": "Potentially dangerous key allowed for mass assignment",
+      "file": "app/controllers/domains/users/users_controller.rb",
+      "line": 55,
+      "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
+      "code": "params.require(:domains_users_user).permit(:first_name, :last_name, :role, :status, :country, :postal_code)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Domains::Users::UsersController",
         "method": "user_params"
       },
       "user_input": ":role",
@@ -118,61 +272,17 @@
     {
       "warning_type": "File Access",
       "warning_code": 16,
-      "fingerprint": "32ac79cc4c8c0c85fb707d1464484e9f06d909006cb7517200c3ea7decbecdca",
-      "check_name": "FileAccess",
-      "message": "Model attribute used in file name",
-      "file": "app/jobs/process_medium_job.rb",
-      "line": 71,
-      "link": "https://brakemanscanner.org/docs/warning_types/file_access/",
-      "code": "File.delete(Rails.public_path.join(\"uploads\", \"tmp\", File.basename((Medium.find(medium_id).file.path or Rails.root.join(\"tmp\", File.basename(Medium.find(medium_id).file.path)).to_s))))",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "ProcessMediumJob",
-        "method": "perform"
-      },
-      "user_input": "Medium.find(medium_id).file",
-      "confidence": "Weak",
-      "cwe_id": [
-        22
-      ]
-    },
-    {
-      "warning_type": "File Access",
-      "warning_code": 16,
-      "fingerprint": "4e7f4daca177e7cced32097f15f9a15f6f5fd135ef6a98c92b940a8db15a148a",
-      "check_name": "FileAccess",
-      "message": "Model attribute used in file name",
-      "file": "app/jobs/process_medium_job.rb",
-      "line": 35,
-      "link": "https://brakemanscanner.org/docs/warning_types/file_access/",
-      "code": "File.open(Rails.root.join(\"tmp\", File.basename(Medium.find(medium_id).file.path)).to_s)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "ProcessMediumJob",
-        "method": "perform"
-      },
-      "user_input": "Medium.find(medium_id).file",
-      "confidence": "Weak",
-      "cwe_id": [
-        22
-      ]
-    },
-    {
-      "warning_type": "File Access",
-      "warning_code": 16,
-      "fingerprint": "5bed60fcf0566077579c361d7147a3bab21c55bbe5854016170ed9bfa7d74910",
+      "fingerprint": "9ea261b7bffafafd20410e98612a0e13ec664bc027b4115793d2d2615e7c39a3",
       "check_name": "FileAccess",
       "message": "Parameter value used in file name",
-      "file": "app/controllers/api/v1/reviews_controller.rb",
+      "file": "app/controllers/api/v1/features/reviewable/reviews_controller.rb",
       "line": 27,
       "link": "https://brakemanscanner.org/docs/warning_types/file_access/",
       "code": "load(params[:product_id], \"Product\")",
       "render_path": null,
       "location": {
         "type": "method",
-        "class": "Api::V1::ReviewsController",
+        "class": "Api::V1::Features::Reviewable::ReviewsController",
         "method": "get_product_reviews"
       },
       "user_input": "params[:product_id]",
@@ -182,63 +292,19 @@
       ]
     },
     {
-      "warning_type": "File Access",
-      "warning_code": 16,
-      "fingerprint": "6d21f48dc42ffc7510509126d5a3495a3df4b5741c591e720eb551903aa0ab3b",
-      "check_name": "FileAccess",
-      "message": "Parameter value used in file name",
-      "file": "app/controllers/api/v1/reviews_controller.rb",
-      "line": 31,
-      "link": "https://brakemanscanner.org/docs/warning_types/file_access/",
-      "code": "load(params[:company_id], \"Company\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Api::V1::ReviewsController",
-        "method": "get_company_reviews"
-      },
-      "user_input": "params[:company_id]",
-      "confidence": "High",
-      "cwe_id": [
-        22
-      ]
-    },
-    {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "79172f576c8c57bae22ec995cd65719c9e4dc02b4c64867ec5af28779f081bb9",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/services/raw_query_module.rb",
-      "line": 32,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "ActiveRecord::Base.connection.exec_query(\"            SELECT product_id, COUNT(*) AS scan_count\\n            FROM scans\\n            WHERE product_id IN (#{Scan.find_by_sql(\"          SELECT DISTINCT ON (barcode) *\\n          FROM scans\\n          WHERE user_id = #{ActiveRecord::Base.connection.quote(current_user_id)}\\n          AND product_exists = true\\n          ORDER BY barcode, created_at DESC\\n          LIMIT #{per_page.to_i} OFFSET #{((page.to_i - 1) * per_page.to_i)}\\n\".squish).map(&:product_id).compact.join(\",\")})\\n            GROUP BY product_id\\n\".squish)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "RawQueryModule",
-        "method": "s(:self).my_scan_products"
-      },
-      "user_input": "Scan.find_by_sql(\"          SELECT DISTINCT ON (barcode) *\\n          FROM scans\\n          WHERE user_id = #{ActiveRecord::Base.connection.quote(current_user_id)}\\n          AND product_exists = true\\n          ORDER BY barcode, created_at DESC\\n          LIMIT #{per_page.to_i} OFFSET #{((page.to_i - 1) * per_page.to_i)}\\n\".squish).map(&:product_id)",
-      "confidence": "High",
-      "cwe_id": [
-        89
-      ]
-    },
-    {
       "warning_type": "Mass Assignment",
       "warning_code": 105,
-      "fingerprint": "9e796e7ed9a8d56e0c7f8f76d6cceb50eae44e330737974fd5f288a35a0d6843",
+      "fingerprint": "a63bc722cf93157a099903d2f6d22b602418f5d14fc1f014c15002d932921ca8",
       "check_name": "PermitAttributes",
       "message": "Potentially dangerous key allowed for mass assignment",
-      "file": "app/controllers/company_contact_types_controller.rb",
+      "file": "app/controllers/domains/companies/company_contact_types_controller.rb",
       "line": 71,
       "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
-      "code": "params.require(:company_contact_type).permit(:role, :definition)",
+      "code": "params.require(:domains_companies_company_contact_type).permit(:role, :definition)",
       "render_path": null,
       "location": {
         "type": "method",
-        "class": "CompanyContactTypesController",
+        "class": "Domains::Companies::CompanyContactTypesController",
         "method": "company_contact_type_params"
       },
       "user_input": ":role",
@@ -248,47 +314,25 @@
       ]
     },
     {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "bc9bf841c490850a01057146998685436cc34a475ededd3ee1d6a898c867d78f",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/services/raw_query_module.rb",
-      "line": 117,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "ActiveRecord::Base.connection.exec_query(\"            SELECT product_id, COUNT(*) AS scan_count\\n            FROM scans\\n            WHERE product_id IN (#{ActiveRecord::Base.connection.select_values(\"        SELECT \\n          products.id\\n        FROM \\n          scans\\n        JOIN \\n          products ON products.id = scans.product_id\\n        GROUP BY \\n          products.id\\n        ORDER BY \\n          COUNT(scans.id) DESC\\n        LIMIT #{per_page.to_i} OFFSET #{((page.to_i - 1) * per_page.to_i)}\\n\".squish).join(\",\")})\\n            GROUP BY product_id\\n\".squish)",
+      "warning_type": "Redirect",
+      "warning_code": 18,
+      "fingerprint": "d7af181a992672f9bca1bf7416dc3ceb3df9d33363acb738010f6f6bc7852b47",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/domains/products/product_variants_controller.rb",
+      "line": 50,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(Domains::Features::Mediable::Medium.find(params[:medium_id]).mediaable.product, :status => :see_other, :notice => \"product image was successfully deleted.\")",
       "render_path": null,
       "location": {
         "type": "method",
-        "class": "RawQueryModule",
-        "method": "s(:self).top_scan_products"
+        "class": "Domains::Products::ProductVariantsController",
+        "method": "destroy_media"
       },
-      "user_input": "ActiveRecord::Base.connection.select_values(\"        SELECT \\n          products.id\\n        FROM \\n          scans\\n        JOIN \\n          products ON products.id = scans.product_id\\n        GROUP BY \\n          products.id\\n        ORDER BY \\n          COUNT(scans.id) DESC\\n        LIMIT #{per_page.to_i} OFFSET #{((page.to_i - 1) * per_page.to_i)}\\n\".squish).join(\",\")",
-      "confidence": "Medium",
+      "user_input": "Domains::Features::Mediable::Medium.find(params[:medium_id]).mediaable.product",
+      "confidence": "High",
       "cwe_id": [
-        89
-      ]
-    },
-    {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "bcb9868d55d6f891c96c123d1d6052d9ae94bea487ee887fe9273f390b1e7486",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/services/raw_query_module.rb",
-      "line": 18,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "Scan.find_by_sql(\"          SELECT DISTINCT ON (barcode) *\\n          FROM scans\\n          WHERE user_id = #{ActiveRecord::Base.connection.quote(current_user_id)}\\n          AND product_exists = true\\n          ORDER BY barcode, created_at DESC\\n          LIMIT #{per_page.to_i} OFFSET #{((page.to_i - 1) * per_page.to_i)}\\n\".squish)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "RawQueryModule",
-        "method": "s(:self).my_scan_products"
-      },
-      "user_input": "((page.to_i - 1) * per_page.to_i)",
-      "confidence": "Medium",
-      "cwe_id": [
-        89
+        601
       ]
     },
     {
@@ -310,73 +354,56 @@
       ]
     },
     {
-      "warning_type": "Redirect",
-      "warning_code": 18,
-      "fingerprint": "deeeb9bdc9a593fe7a3545d53ca6f7ad47a1f14d85abccac8989f43c34123ca1",
-      "check_name": "Redirect",
-      "message": "Possible unprotected redirect",
-      "file": "app/controllers/product_variants_controller.rb",
-      "line": 50,
-      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
-      "code": "redirect_to(Medium.find(params[:medium_id]).mediaable.product, :status => :see_other, :notice => \"product image was successfully deleted.\")",
+      "warning_type": "File Access",
+      "warning_code": 16,
+      "fingerprint": "e2d983a8307de2954d2627362cb82ffae3ecce6e16e8697f27daa060896ff8ed",
+      "check_name": "FileAccess",
+      "message": "Parameter value used in file name",
+      "file": "app/controllers/api/v1/features/reviewable/reviews_controller.rb",
+      "line": 31,
+      "link": "https://brakemanscanner.org/docs/warning_types/file_access/",
+      "code": "load(params[:company_id], \"Company\")",
       "render_path": null,
       "location": {
         "type": "method",
-        "class": "ProductVariantsController",
-        "method": "destroy_media"
+        "class": "Api::V1::Features::Reviewable::ReviewsController",
+        "method": "get_company_reviews"
       },
-      "user_input": "Medium.find(params[:medium_id]).mediaable.product",
+      "user_input": "params[:company_id]",
       "confidence": "High",
       "cwe_id": [
-        601
+        22
       ]
     },
     {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "f9ffa092a615e405e1693efcf9bcdbb73d3b17a56404a673d94bcc2b73acd7c5",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/services/raw_query_module.rb",
-      "line": 94,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "ActiveRecord::Base.connection.select_values(\"        SELECT \\n          products.id\\n        FROM \\n          scans\\n        JOIN \\n          products ON products.id = scans.product_id\\n        GROUP BY \\n          products.id\\n        ORDER BY \\n          COUNT(scans.id) DESC\\n        LIMIT #{per_page.to_i} OFFSET #{((page.to_i - 1) * per_page.to_i)}\\n\".squish)",
+      "warning_type": "File Access",
+      "warning_code": 16,
+      "fingerprint": "f8dc4928b4f4849524f2f6048515f800da3957a5f9265d93ef8d6a487ea57f12",
+      "check_name": "FileAccess",
+      "message": "Model attribute used in file name",
+      "file": "app/domains/features/mediable/jobs/process_medium_job.rb",
+      "line": 38,
+      "link": "https://brakemanscanner.org/docs/warning_types/file_access/",
+      "code": "File.open(Rails.root.join(\"tmp\", File.basename(Domains::Features::Mediable::Medium.find(medium_id).file.path)).to_s)",
       "render_path": null,
       "location": {
         "type": "method",
-        "class": "RawQueryModule",
-        "method": "s(:self).top_scan_products"
+        "class": "Domains::Features::Mediable::ProcessMediumJob",
+        "method": "perform"
       },
-      "user_input": "((page.to_i - 1) * per_page.to_i)",
-      "confidence": "Medium",
+      "user_input": "Domains::Features::Mediable::Medium.find(medium_id).file",
+      "confidence": "Weak",
       "cwe_id": [
-        89
-      ]
-    },
-    {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "fd79312ea98db981defe3f0b3fbe6caf397d243bb47874fd5abbf6b4aac5ef73",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/services/raw_query_module.rb",
-      "line": 139,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "Arel.sql(\"CASE #{values.each_with_index.map do\n \"WHEN #{attribute_key} = #{ActiveRecord::Base.connection.quote(v)} THEN #{i}\"\n end.join(\" \")} ELSE #{values.length} END\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "RawQueryModule",
-        "method": "s(:self).unscoped_products_with_assoc"
-      },
-      "user_input": "values.each_with_index.map do\n \"WHEN #{attribute_key} = #{ActiveRecord::Base.connection.quote(v)} THEN #{i}\"\n end.join(\" \")",
-      "confidence": "Medium",
-      "cwe_id": [
-        89
+        22
       ]
     }
   ],
   "ignored_warnings": [],
-  "errors": [],
+  "errors": [
+    {
+      "error": "app/controllers/api/v1/products/products_controller.rb:155 :: parse error on value \"&&\" (tANDOP) Could not parse app/controllers/api/v1/products/products_controller.rb",
+      "location": "/root/.rbenv/versions/3.3.5/lib/ruby/gems/3.3.0/gems/racc-1.8.1/lib/racc/parser.rb:536:in `on_error'"
+    }
+  ],
   "obsolete": []
 }

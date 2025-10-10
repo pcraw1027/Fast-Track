@@ -6,16 +6,17 @@ module Domains
         include BarcodeValidations
 
         attr_accessor :message
-          belongs_to :user, class_name: "Domains::Users::User", foreign_key: "user_id"
+
+          belongs_to :user, class_name: "Domains::Users::User"
           enum status: { open: 0, close: 1 }
           default_scope -> { order(updated_at: :desc) }
           self.table_name = "bit_records"
 
           
-          def invoke_bit(barcode, source, asin, user_id, brand="")
+          def invoke_bit(barcode, source, asin, user_id, brand = "")
             bit_invoke_claims = Domains::CroupierCore::Operations::Bit.call!(barcode: barcode, source: source, asin: asin, 
                                                         user_id: user_id, brand: brand)
-            self.update(status: 1) if bit_invoke_claims.success?
+            update(status: 1) if bit_invoke_claims.success?
           end
 
           def self.load_from_file(file, current_user_id)
@@ -23,14 +24,15 @@ module Domains
             CSV.foreach(file.path, headers: true, encoding: 'iso-8859-1:utf-8') do |row|
                 barcode = row['Barcode'] || row['barcode']
                 next unless barcode
+
                 @brc_intrf_claims = Domains::CroupierCore::Operations::BarcodeInterface.call!(barcode: barcode, 
                                                 source: "BIT Load", asin: nil, user_id: current_user_id)
                 
-                result << @brc_intrf_claims.payload if @brc_intrf_claims && @brc_intrf_claims.success?
+                result << @brc_intrf_claims.payload if @brc_intrf_claims&.success?
             end
             result
           end
 
-        end
     end
+  end
 end

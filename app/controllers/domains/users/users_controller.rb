@@ -7,7 +7,7 @@ class Domains::Users::UsersController < ApplicationController
   # GET /users or /users.json
   def index
     @users = Domains::Users::User.all.paginate(page: params[:page], per_page: 12)
-    .order(created_at: :desc, id: :desc)
+                                 .order(created_at: :desc, id: :desc)
   end
 
   # GET /users/1 or /users/1.json
@@ -53,7 +53,7 @@ class Domains::Users::UsersController < ApplicationController
 
     def user_params
     params.require(:domains_users_user).permit(:first_name, :last_name, :role, :status, :country, :postal_code)
-  end
+    end
 
 
 end

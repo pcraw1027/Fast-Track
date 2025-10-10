@@ -9,9 +9,9 @@ module Domains
       mount_uploader :photo, Uploaders::PhotoUploader
       before_destroy :remove_photo_from_s3
     
-      scope :by_company, -> (company_id) { includes(:company_contact_type, :person).where(company_id: company_id) }
-      scope :company_ceo, ->(company_id) {
-                            result = includes(:company_contact_type, :person)
+      scope :by_company, ->(company_id) { includes(:company_contact_type, :person).where(company_id: company_id) }
+      scope :company_ceo, lambda { |company_id|
+                            includes(:company_contact_type, :person)
                               .where(company_id: company_id, company_contact_types: { role: 'CEO' })
                           }
     
@@ -20,9 +20,10 @@ module Domains
       private
     
       def remove_photo_from_s3
-        if photo.present?
+        return if photo.blank?
+
           photo.remove!
-        end
+        
       end
     
     end

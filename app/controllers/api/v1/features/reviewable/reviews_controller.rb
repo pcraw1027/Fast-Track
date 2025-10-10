@@ -1,5 +1,5 @@
 class Api::V1::Features::Reviewable::ReviewsController < Api::V1::BaseController
-  before_action :authenticate_user!, except: [:show, :get_product_reviews, :get_company_reviews]
+  before_action :authenticate_user!, except: [:show, :read_product_reviews, :read_company_reviews]
   before_action :set_review, only: [:update, :show]
   
   def show
@@ -23,11 +23,11 @@ class Api::V1::Features::Reviewable::ReviewsController < Api::V1::BaseController
   end
   
 
-  def get_product_reviews
+  def read_product_reviews
     render json: load(params[:product_id], "Product"), status: :ok
   end
 
-  def get_company_reviews
+  def read_company_reviews
     render json: load(params[:company_id], "Company"), status: :ok
   end
 
@@ -64,7 +64,7 @@ class Api::V1::Features::Reviewable::ReviewsController < Api::V1::BaseController
       attribute_key = "comment"
     end
 
-    render json: { attribute_key => [error_msg]}, status: :unprocessable_entity and return if attribute_key.length > 0
+    render json: { attribute_key => [error_msg] }, status: :unprocessable_entity and return if attribute_key.length.positive?
 
     review = Domains::Features::Reviewable::Review.new(review_params.except(:product_id, :company_id))
     review.user_id = current_user.id

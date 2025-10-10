@@ -37,8 +37,8 @@ class Api::V1::Products::ProductsController < Api::V1::BaseController
 
   def search
     query = params[:q].to_s.strip
-    page = (params[:page] && params[:page].to_i > 0) ? params[:page].to_i : 1
-    per_page = (params[:per_page] && params[:per_page].to_i > 0 && params[:per_page].to_i <= 10) ? params[:per_page]&.to_i : 50
+    page = params[:page]&.to_i&.positive? ? params[:page].to_i : 1
+    per_page = params[:per_page]&.to_i&.positive? && params[:per_page].to_i <= 10 ? params[:per_page]&.to_i : 50
     from = (page - 1) * per_page
 
     if query.blank?
@@ -79,7 +79,7 @@ class Api::V1::Products::ProductsController < Api::V1::BaseController
     elsif query_length == 3
       elastic_query[:query][:bool][:should] += [
         { match_phrase_prefix: { name: { query: query, boost: 5 } } },
-       { match_phrase_prefix: { description: { query: query, boost: 4 } } },
+        { match_phrase_prefix: { description: { query: query, boost: 4 } } },
         { wildcard: { name: "*#{query}*" } }
       ]
     elsif query_length >= 4
@@ -117,44 +117,48 @@ class Api::V1::Products::ProductsController < Api::V1::BaseController
       product_ids << hit['_id'] if hit['_source']['type'] == 'Product'
       company_ids << hit['_id'] if hit['_source']['type'] == 'Company'
 
-       if hit['highlight']
+       next unless hit['highlight']
        
-        m = {}
-        hit['highlight'].each do |field, in_matches|
+       m = {}
+       hit['highlight'].each do |field, in_matches|
   
-          if m[field]
-            next #m[field] << [in_matches.join(' ... ')]
-          else
-            m[field] = [in_matches.join(' ... ')]
-          end
-        end
-        matches["#{hit['_source']['type']}-#{hit['_id']}"] = m
-      end
+         next if m[field]
+
+           #m[field] << [in_matches.join(' ... ')]
+          
+           m[field] = [in_matches.join(' ... ')]
+          
+       end
+       matches["#{hit['_source']['type']}-#{hit['_id']}"] = m
     end
 
     companies = Domains::Companies::Company.unscoped.where(id: company_ids)
 
-    mapped_companies = companies.map{|c| { 
-          id: c.id, 
+    mapped_companies = companies.map do |c| 
+                         { 
+                           id: c.id, 
           name: (matches["Company-#{c.id}"]["name"] ? matches["Company-#{c.id}"]["name"][0] : c.name), 
           logo: c.logo&.url,
           searches: c.searches 
-      }
+                         }
       
-    }
+    end
 
 
     product_with_variants = Domains::CroupierCore::RawQueryModule.unscoped_products_with_assoc("product_id", product_ids)
             
     products = product_with_variants.map do |pv|
+      descr = if matches["Product-#{pv.product_id}"]["description"]&.length&.positive?
+        truncate_highlighted(matches["Product-#{pv.product_id}"]["description"][0])
+              else
+        truncate_snippet(pv.description)
+              end
+
       product = pv.product
       {
-          id: pv.id,
+        id: pv.id,
           name: product.name,
-          description: ((matches["Product-#{pv.product_id}"]["description"] 
-                            && matches["Product-#{pv.product_id}"]["description"].length > 0 ) 
-                            ? truncate_highlighted(matches["Product-#{pv.product_id}"]["description"][0]) 
-                              : truncate_snippet(product.description)),
+          description: descr,
           searches: pv.searches,
           product_company_id: pv.product_company_id,
           company_name: pv.company_name,
@@ -162,19 +166,22 @@ class Api::V1::Products::ProductsController < Api::V1::BaseController
       
       }
     end
-    {companies: mapped_companies, products: products} 
+    { companies: mapped_companies, products: products } 
   end
 
 
   def truncate_snippet(snippet, word_limit = 15)
     return "" if snippet.blank?
+
     words = snippet.split(/\s+/)
     return snippet if words.size <= word_limit
-    words.first(word_limit).join(" ") + "..."
+
+    "#{words.first(word_limit).join(' ')}..."
   end
 
   def truncate_highlighted(snippet)
     return "" if snippet.blank?
+
     snippet.split(' ... ')[0]
   end
  

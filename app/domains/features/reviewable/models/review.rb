@@ -9,23 +9,23 @@ module Domains
         validates :rating, presence: { message: "is required" }, inclusion: { in: 1..5, message: "must be between 1 and 5" }
 
         def self.load_data(per_page, page, record_id, class_name)
-          page = 1 unless page.to_i > 0
-          per_page = 10 unless per_page.to_i > 0
+          page = 1 unless page.to_i.positive?
+          per_page = 10 unless per_page.to_i.positive?
           offset   = (page - 1) * per_page
 
           base_query = joins(:user)
-                        .where(reviewable_type: class_name, reviewable_id: record_id)
-                        .where.not(title: nil)
+                       .where(reviewable_type: class_name, reviewable_id: record_id)
+                       .where.not(title: nil)
 
           total_count = base_query.count
 
           paginated_reviews = base_query
-            .select('reviews.*, users.username, users.country')
-            .limit(per_page)
-            .offset(offset)
-            .order(updated_at: :desc, rating: :desc)
+                              .select('reviews.*, users.username, users.country')
+                              .limit(per_page)
+                              .offset(offset)
+                              .order(updated_at: :desc, rating: :desc)
           PaginatedResult.new(paginated_reviews, per_page, page, total_count)
-      end
+        end
 
       def self.stats_for(record)
         sql = <<-SQL.squish
@@ -88,8 +88,8 @@ module Domains
             [[nil, record.id], [nil, record.class.name]]
           )
 
-          results.rows.to_h { |rating, count, total, percentage| [rating, percentage] }
-        end
+          results.rows.to_h { |rating, _count, _total, percentage| [rating, percentage] }
+      end
 
 
         # def self.rating_distribution_for(record)

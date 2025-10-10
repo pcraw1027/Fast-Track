@@ -1,5 +1,3 @@
-
-
 module Domains
   module Socials
     class SocialSite < ApplicationRecord
@@ -9,19 +7,19 @@ module Domains
     
       default_scope -> { order(updated_at: :desc) }
       
-      scope :grouped_people_count, -> () {
+      scope :grouped_people_count, lambda {
                                 joins(:people).group(:id, :site).count
-                              }
+      }
     
-      scope :social_site_people_count, -> (social_site) {
+      scope :social_site_people_count, lambda { |social_site|
                                 find_by(site_code: social_site).people.count
-                              }
+      }
                               
-      scope :with_people_count, -> () {
+      scope :with_people_count, lambda {
                                         left_joins(:people)
-                                        .select('social_sites.*, COUNT(people.id) AS people_count')
-                                        .group('social_sites.id')
-                                      }
+                                          .select('social_sites.*, COUNT(people.id) AS people_count')
+                                          .group('social_sites.id')
+      }
     
     end
     

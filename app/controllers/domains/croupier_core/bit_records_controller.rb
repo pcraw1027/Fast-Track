@@ -20,26 +20,26 @@ class Domains::CroupierCore::BitRecordsController < ApplicationController
    def bit_interface
     @bit_record = Domains::CroupierCore::BitRecord.new
     @bit_records = Domains::CroupierCore::BitRecord.where(user_id: current_user.id)
-  end
+   end
 
   # POST /insert_barcode
   def insert_barcode
-    begin
+    
       if bit_record_params[:barcode].present?
         @brc_intrf_claims = Domains::CroupierCore::Operations::BarcodeInterface.call!(barcode: bit_record_params[:barcode].strip, 
                                       source: "BIT Load", asin: nil, user_id: current_user.id)
         if @brc_intrf_claims&.success?
-          render json: {bit_records: [@brc_intrf_claims.payload], error:""}
+          render json: { bit_records: [@brc_intrf_claims.payload], error: "" }
         else
-          render json: {bit_records: [], error: @brc_intrf_claims.error}
+          render json: { bit_records: [], error: @brc_intrf_claims.error }
         end
       elsif bit_record_load_params[:file].present?
         bit_records = Domains::CroupierCore::BitRecord.load_from_file(bit_record_load_params[:file].tempfile, current_user.id)
-        render json: {bit_records: bit_records, error: ""}
+        render json: { bit_records: bit_records, error: "" }
       end
-    rescue => e
-      render json: {bit_records: [], error: e.message}
-    end
+  rescue StandardError => e
+      render json: { bit_records: [], error: e.message }
+    
   end
 
   # GET /bit_records/1/edit

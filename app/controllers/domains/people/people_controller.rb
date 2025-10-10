@@ -4,8 +4,8 @@ class Domains::People::PeopleController < ApplicationController
   # GET /people or /people.json
   def index
     @people = Domains::People::Person.all
-                  .paginate(page: params[:page], per_page: 20)
-                  .order(created_at: :desc, id: :desc)
+                                     .paginate(page: params[:page], per_page: 20)
+                                     .order(created_at: :desc, id: :desc)
   end
 
   # GET /people/1 or /people/1.json
@@ -13,8 +13,7 @@ class Domains::People::PeopleController < ApplicationController
     @person = Domains::People::Person.includes(:gender_type,
                               :ethnicity_type,
                               :country_reference,
-                              person_social_sites: [:social_site]
-                              ).find(params[:id])
+                              person_social_sites: [:social_site]).find(params[:id])
   end
   
   # GET /people_search?q=...
@@ -22,12 +21,12 @@ class Domains::People::PeopleController < ApplicationController
     if params[:q].present?
       query = "%#{params[:q]}%"
       people = Domains::People::Person
-      .where("first_name ILIKE ? OR last_name ILIKE ? OR email ILIKE ?", query, query, query).limit(20)
+               .where("first_name ILIKE ? OR last_name ILIKE ? OR email ILIKE ?", query, query, query).limit(20)
     else
       people = Domains::People::Person.none
     end
     render json: people.as_json(only: [:id, :first_name, :last_name, :middle_name, :letters, :email, 
-                  :website, :gender_type_id, :ethnicity_type_id, :country_reference_id, :picture])
+                                       :website, :gender_type_id, :ethnicity_type_id, :country_reference_id, :picture])
   end
 
 
