@@ -36,3 +36,5 @@ detectors:
     enabled: false
   ControlParameter:
     enabled: false
+  UncommunicativeModuleName:
+    enabled: false

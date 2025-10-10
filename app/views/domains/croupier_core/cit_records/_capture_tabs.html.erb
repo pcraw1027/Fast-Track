@@ -1,0 +1,172 @@
+<div class="container mt-0">
+   
+   <div id="accordion">
+    
+        <div class="card">
+            <div class="card-header" id="headingOne">
+                <h5 class="mb-0">
+                <button
+                    class="btn theme-link btn-block collapsed text-left m-0 p-0 font-weight-bold"
+                    data-toggle="collapse"
+                    data-target="#collapseOne"
+                    aria-expanded="<%= params[:level] == '1' ? 'true' : 'false' %>"
+                    aria-controls="collapseOne"
+                >
+                    Level 1 (Base Data) <%= 'True' if company.level_1_flag %> <%= 'False' if !company.level_1_flag %>
+                </button>
+                </h5>
+            </div>
+
+            <div
+                id="collapseOne"
+                class="<%= params[:level] == '1' ? '' : 'collapse' %>"
+                aria-labelledby="headingOne"
+                data-parent="#accordion"
+            >
+                <div class="card-body">
+                     <%= render partial: "domains/croupier_core/cit_records/form_level1", locals: {company: company, cit_record: cit_record, 
+                        industry_category_types: industry_category_types, 
+                        industry_category_type: industry_category_type
+                    } %>
+                </div>
+            </div>
+        </div>
+
+      
+            <div class="card">
+            <div class="card-header" id="headingTwo">
+                <h5 class="mb-0">
+                <button
+                    class="btn theme-link btn-block collapsed text-left m-0 p-0 font-weight-bold"
+                    data-toggle="collapse"
+                    data-target="#collapseTwo"
+                    aria-expanded="<%= params[:level] == '2' ? 'true' : 'false' %>"
+                    aria-controls="collapseTwo"
+                >
+                    Level 2 (company Addresses) <%= 'True' if company.level_2_flag %> <%= 'False' if !company.level_2_flag %>
+                </button>
+                </h5>
+            </div>
+
+            <div
+                id="collapseTwo"
+                class="<%= params[:level] == '2' ? '' : 'collapse' %>"
+                aria-labelledby="headingTwo"
+                data-parent="#accordion"
+            >
+                <div class="card-body">
+                    <%if company.level_1_flag %>
+                        <%= render partial: "domains/croupier_core/cit_records/form_level2", 
+                        locals: {company: company, cit_record: cit_record  } %>
+                    <%else%>
+                        <h5>Level 1 data is required!</h5>
+                    <%end%>
+                </div>
+            </div>
+            </div>
+
+   
+            <div class="card">
+            <div class="card-header" id="headingThree">
+                <h5 class="mb-0">
+                <button
+                    class="btn theme-link btn-block collapsed text-left m-0 p-0 font-weight-bold"
+                    data-toggle="collapse"
+                    data-target="#collapseThree"
+                    aria-expanded="<%= params[:level] == '3' ? 'true' : 'false' %>"
+                    aria-controls="collapseThree"
+                >
+                    Level 3 (Parents, Subsidiaries, & Brands) <%= 'True' if company.level_3_flag %> <%= 'False' if !company.level_3_flag %>
+                </button>
+                </h5>
+            </div>
+
+            <div
+                id="collapseThree"
+                class="<%= params[:level] == '3' ? '' : 'collapse' %>"
+                aria-labelledby="headingThree"
+                data-parent="#accordion"
+            >
+                <div class="card-body">
+                    <%if company.level_1_flag %>
+                        <%= render partial: "domains/croupier_core/cit_records/form_level3", locals: { company: company, 
+                                company_relationship_types: @company_relationship_types,
+                                cit_record: cit_record 
+                        } %>
+                        
+                    <%else%>
+                        <h5>Level 1 data is required!</h5>
+                    <%end%>
+                </div>
+            </div>
+        </div>
+
+            <div class="card">
+            <div class="card-header" id="headingFour">
+                <h5 class="mb-0">
+                <button
+                    class="btn theme-link btn-block collapsed text-left m-0 p-0 font-weight-bold"
+                    data-toggle="collapse"
+                    data-target="#collapseFour"
+                    aria-expanded="<%= params[:level] == '4' ? 'true' : 'false' %>"
+                    aria-controls="collapseFour"
+                >
+                    Level 4 (Company Contacts) <%= 'True' if company.level_4_flag %> <%= 'False' if !company.level_4_flag %>
+                </button>
+                </h5>
+            </div>
+
+            <div
+                id="collapseFour"
+                class="<%= params[:level] == '4' ? '' : 'collapse' %>"
+                aria-labelledby="headingFour"
+                data-parent="#accordion"
+            >
+                <div class="card-body">
+                    <%if company.level_1_flag %>
+                        <%= render partial: "domains/croupier_core/cit_records/form_level4", locals: {company: company, cit_record: cit_record} %>
+                        
+                    <%else%>
+                        <h5>Level 1 data is required!</h5>
+                    <%end%>
+                </div>
+            </div>
+            </div>
+
+  
+            <div class="card">
+            <div class="card-header" id="headingFive">
+                <h5 class="mb-0">
+                <button
+                    class="btn theme-link btn-block collapsed text-left m-0 p-0 font-weight-bold"
+                    data-toggle="collapse"
+                    data-target="#collapseFive"
+                    aria-expanded="<%= params[:level] == '5' ? 'true' : 'false' %>"
+                    aria-controls="collapseFive"
+                >
+                    Level 5 (Diversity Snapshot) <%= 'True' if company.level_5_flag %> <%= 'False' if !company.level_5_flag %>
+                </button>
+                </h5>
+            </div>
+
+            <div
+                id="collapseFive"
+                class="<%= params[:level] == '5' ? '' : 'collapse' %>"
+                aria-labelledby="headingFive"
+                data-parent="#accordion"
+            >
+                <div class="card-body">
+                    <%if company.level_1_flag %>
+                        <%= render partial: "domains/croupier_core/cit_records/form_level5", locals: {company: company, cit_record: cit_record} %>
+                        
+                    <%else%>
+                        <h5>Level 1 data is required!</h5>
+                    <%end%>
+                </div>
+            </div>
+            </div>
+
+         </div>
+    </div>
+    
+

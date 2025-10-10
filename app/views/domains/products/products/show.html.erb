@@ -1,0 +1,83 @@
+<div class="jumbotron">
+  <div class="row">
+    <div class="col">
+
+        
+        <%if @product.company_id %>
+          <p>
+            <strong>Company:</strong>
+            <%= @product.company.name %>
+          </p>
+      <%end%>
+      
+        <p>
+          <strong>Product category source:</strong>
+          <%= @product.product_category_source.description %>
+        </p>
+
+        <p>
+          <strong>Name:</strong>
+          <%= @product.name %>
+        </p>
+
+    
+
+        <p>
+          <strong>Description:</strong>
+          <%= @product.description %>
+        </p>
+
+        
+
+        <p>
+          <strong>Qrcode:</strong>
+          <%= @product.qrcode %>
+        </p>
+
+        <p>
+          <strong>Captured Product Category:</strong>
+          <%= @product.captured_product_category %>
+        </p>
+
+        <p>
+          <strong>Size:</strong>
+          <%= @product.size %>
+        </p>
+
+        <%if @product.family %>
+                <p>
+                  <strong>Segment:</strong>
+                  <%= @product.segment.code %>
+                  <%= @product.segment.title %>
+                </p>
+        <%end%>
+                <%if @product.family %>
+                <p>
+                  <strong>Family:</strong>
+                  <%= @product.family.code %>
+                  <%= @product.family.title %>
+                </p>
+                <%end%>
+                <%if @product.family %>
+                <p>
+                  <strong>Klass:</strong>
+                  <%= @product.klass.code %>
+                  <%= @product.klass.title %>
+                </p>
+        <%end%>
+        <%if @product.family %>
+                <p>
+                  <strong>Brick:</strong>
+                  <%= @product.brick.code %>
+                  <%= @product.brick.title %>
+                </p>
+        <%end%>
+
+        <%= link_to 'Edit', edit_domains_products_product_path(@product) %> |
+        <%= link_to 'Back', domains_products_products_path %>
+        </div>
+    </div>
+</div>
+<%= render partial: 'domains/products/products/menu', locals: {variants: @variants}%>
+
+<br/><br/><br/>

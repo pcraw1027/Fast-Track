@@ -1,0 +1,40 @@
+<h3>Companies</h3>
+<table class="table table-striped table-bordered table-hover table-sm container-fluid">
+  <thead class="thead-dark">
+    <tr>
+      <th>Name</th>
+      <th>MIDs</th>
+      <th>Logo</th>
+      <th>Website</th>
+      <th>Diversity Report</th>
+      <th>Diversity Score</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @companies.each do |company| %>
+      <tr>
+        <td><%= company.name %></td>
+        <td><%= company.mids %></td>
+        <td><%= image_tag company.logo.thumb.url if company.logo? %></td>
+        <td><%= link_to company.website if company.website %></td>
+        <td><%= link_to company.diversity_report if company.diversity_report %></td>
+        <td><%= company.diversity_score %></td>
+        <td><%= link_to 'View', company %></td>
+        <td><%= link_to 'Edit', edit_domains_companies_company_path(company) %></td>
+       
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<br/>
+<nav aria-label="Page navigation">
+  <%= will_paginate @companies, renderer: BootstrapPagination::Rails,
+      class: 'pagination justify-content-center' %>
+</nav>
+
+<%= link_to 'New Company', company_capture_interface_path, class: "action-btn" %>
+
+
+

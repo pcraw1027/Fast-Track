@@ -3,52 +3,74 @@ module ApiV1Routes
     router.instance_exec do
       namespace :v1 do
 
-        get "/" => "landing#live"
-        get "activity_stats" => "landing#activity_stats"
+        namespace :app_landing, path: "", as: "" do
+            get "/" => "landing#live"
+            get "activity_stats" => "landing#activity_stats"
+            get 'landing_metrics', to: 'landing#landing_metrics'
+            get 'open_activity_stats', to: 'landing#open_activity_stats' 
+            get 'top_scans', to: 'landing#top_scans'
+        end
+
         
-        devise_for :users, controllers: {
-          sessions: 'api/v1/sessions',
-          registrations: "api/v1/registrations"
+        devise_for :users, class_name: "Domains::Users::User", controllers: {
+          sessions: 'api/v1/auth/sessions',
+          registrations: "api/v1/auth/registrations"
         }
 
-        delete 'logout_all', to: 'sessions#destroy_all'
-        get 'profile_data', to: 'sessions#show'
-        get 'landing_metrics', to: 'landing#landing_metrics'
-        get 'open_activity_stats', to: 'landing#open_activity_stats' 
-        get 'top_scans', to: 'landing#top_scans'
-        get 'my_scans', to: 'scans#my_scans'
-        get 'verify_invite_code', to: 'registrations#verify_invite_code' 
-        get 'verify_username', to: 'registrations#verify_username'        
-        post 'send_password_reset_instruction', to: 'passwords#send_password_reset_instruction'
-        post 'reset_password', to: 'passwords#reset_password'
-        put 'update_password', to: 'passwords#update_password'
+        namespace :auth, path: "", as: "" do
+            delete 'logout_all', to: 'sessions#destroy_all'
+            get 'profile_data', to: 'sessions#show'
+            get 'verify_invite_code', to: 'registrations#verify_invite_code' 
+            get 'verify_username', to: 'registrations#verify_username'        
+            post 'send_password_reset_instruction', to: 'passwords#send_password_reset_instruction'
+            post 'reset_password', to: 'passwords#reset_password'
+            put 'update_password', to: 'passwords#update_password'
+        end
 
-        post 'contact_us', to: 'website_messages#contact_us'
-        post 'join_us', to: 'website_messages#join_us'
+        namespace :croupier_core, path: "", as: "" do
+          get 'my_scans', to: 'scans#my_scans'
+          get 'my_uploads', to: 'upload_records#my_uploads'
+          resources :upload_records, only: [:create]
+          resources :scans, only: [:show, :create]
+        end
 
-        post 'product_reviews', to: 'reviews#product_reviews'
-        post 'company_reviews', to: 'reviews#company_reviews'
-        get 'product_reviews', to: 'reviews#get_product_reviews'
-        get 'company_reviews', to: 'reviews#get_company_reviews'
-        get 'user_product_review', to: 'reviews#user_product_review'
-        get 'user_company_review', to: 'reviews#user_company_review'
-        put 'update_profile', to: 'users#update' 
-        
-        get 'my_uploads', to: 'upload_records#my_uploads'
-        get 'search', to: 'products#search'
-        
-        resources :reviews, only: [:show, :update]
-        resources :upload_records, only: [:create]
-        resources :scans, only: [:show, :create]
-        resources :products, only: [:show] do 
-          member do
-            put :increment_search
+        namespace :products, path: "", as: "" do
+          get 'search', to: 'products#search'
+          resources :products, only: [:show] do 
+            member do
+              put :increment_search
+            end
           end
         end
-        resources :companies, only: [:show] do 
-          member do
-            put :increment_search
+
+        namespace :companies, path: "", as: "" do
+          resources :companies, only: [:show] do 
+            member do
+              put :increment_search
+            end
           end
+        end
+
+        namespace :features, path: "", as: "" do
+          namespace :reviewable, path: "", as: "" do
+            post 'product_reviews', to: 'reviews#product_reviews'
+            post 'company_reviews', to: 'reviews#company_reviews'
+            get 'product_reviews', to: 'reviews#read_product_reviews'
+            get 'company_reviews', to: 'reviews#read_company_reviews'
+            get 'user_product_review', to: 'reviews#user_product_review'
+            get 'user_company_review', to: 'reviews#user_company_review'
+            resources :reviews, only: [:show, :update]
+          end
+        end
+
+
+        namespace :website_data, path: "", as: "" do
+          post 'contact_us', to: 'website_messages#contact_us'
+          post 'join_us', to: 'website_messages#join_us'
+        end
+
+        namespace :users, path: "", as: "" do
+          put 'update_profile', to: 'users#update' 
         end
 
       end

@@ -1,0 +1,27 @@
+module Domains
+  module Socials
+    class SocialSite < ApplicationRecord
+      self.table_name = "social_sites"
+      has_many :person_social_sites, class_name: "Domains::Socials::PersonSocialSite", dependent: :destroy
+      has_many :people, class_name: "Domains::People::Person", through: :person_social_sites
+    
+      default_scope -> { order(updated_at: :desc) }
+      
+      scope :grouped_people_count, lambda {
+                                joins(:people).group(:id, :site).count
+      }
+    
+      scope :social_site_people_count, lambda { |social_site|
+                                find_by(site_code: social_site).people.count
+      }
+                              
+      scope :with_people_count, lambda {
+                                        left_joins(:people)
+                                          .select('social_sites.*, COUNT(people.id) AS people_count')
+                                          .group('social_sites.id')
+      }
+    
+    end
+    
+  end
+end

@@ -1,0 +1,29 @@
+
+
+<h3>Gender Types</h3>
+
+<table class="table table-striped table-bordered table-hover table-sm container-fluid">
+  <thead class="thead-dark" >
+    <tr>
+      <th>Gender</th>
+      <th>Definition</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @gender_types.each do |gender_type| %>
+      <tr>
+        <td><%= gender_type.gender %></td>
+        <td><%= gender_type.definition %></td>
+        <td><%= link_to 'View', gender_type %></td>
+        <td><%= link_to 'Edit', edit_domains_people_gender_type_path(gender_type) %></td>
+        <td><%= button_to 'Delete', gender_type, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-outline-danger btn-sm" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Gender Type', new_domains_people_gender_type_path, class: "action-btn" %>

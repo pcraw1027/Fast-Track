@@ -1,0 +1,25 @@
+
+
+<p>
+  <strong>Code:</strong>
+  <%= @segment.code %>
+</p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @segment.title %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @segment.description %>
+</p>
+
+<p>
+  <strong>Product Category Source:</strong>
+  <%= @segment.product_category_source.code %> |
+  <%= @segment.product_category_source.description %>
+</p>
+
+<%= link_to 'Edit', edit_domains_classifications_segment_path(@segment) %> |
+<%= link_to 'Back', domains_classifications_segments_path %>

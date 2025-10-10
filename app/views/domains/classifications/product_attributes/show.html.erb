@@ -1,0 +1,34 @@
+
+
+<p>
+  <strong>Company:</strong>
+  <%= @product_attribute.company.name %>
+</p>
+
+<p>
+  <strong>Product:</strong>
+  <%= @product_attribute.product.name %>
+</p>
+
+<p>
+  <strong>Brick:</strong>
+  <%= @product_attribute.brick.title %>
+</p>
+
+<p>
+  <strong>Attribute:</strong>
+  <%= @product_attribute.attribute_title.title %>
+</p>
+
+<p>
+  <strong>Attribute Value:</strong>
+  <%= @product_attribute.attribute_value.title %>
+</p>
+
+<p>
+  <strong>Product category source:</strong>
+  <%= @product_attribute.product_category_source.code %>
+</p>
+
+<%= link_to 'Edit', edit_domains_classifications_product_attribute_path(@product_attribute) %> |
+<%= link_to 'Back', domains_classifications_product_attributes_path %>

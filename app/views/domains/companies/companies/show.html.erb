@@ -1,0 +1,97 @@
+<div class="jumbotron">
+  <div class="row">
+    <div class="col">
+      <h1 class="display-4">
+        <%= @company.name %>
+      </h3>
+  
+      <p>
+        <strong>Established:</strong>
+        <%= @company.created_at.strftime("%Y") %>
+      </p>
+      <p class="lead">
+        <%= @company.industry_category_type&.title %>
+      </p>
+    </div>
+    <div class="col">
+    </div>
+    <div class="col">  
+      <%= image_tag @company.logo.url if @company.logo? %>
+    </div>
+   </div>
+  <hr class="my-4">
+  <div class="row">
+    <div class="col">
+      <p>
+        <%= @company.address_1 %></br>
+        <%= @company.address_2 %></br>
+        <%= @company.city %></br>
+        <%= @company.state %></br>
+        <%= @company.country %></br></br>
+        <%= link_to @company.website %>
+      </p>
+    </div>
+    <div class="col">
+      <p>
+        <strong>Diversity score:</strong>
+        <%= @company.diversity_score %>
+      </p>
+
+      <p>
+        <strong>Total employees:</strong>
+        <%= @company.total_employees %>
+      </p>
+      
+      <p>
+        <strong>Display Industry Category:</strong>
+        <%= @company.sector %>
+      </p>
+
+      <p>
+        <strong>MIDs:</strong>
+        <%= @company.mids %>
+      </p>
+
+      <p>
+        <strong>Diversity report:</strong>
+        <%= link_to @company.diversity_report %>
+      </p>
+      <div>
+        <p><strong>Company Snapshot:</strong></p>
+      
+        <small><strong>Employee Demographics - Transparency:</strong> <%= @company.company_snapshot&.employee_demographics_transparency&.titleize %></small>
+        <br>
+        <small><strong>Employee Demographics - Performance:</strong> <%= @company.company_snapshot&.employee_demographics_performance&.titleize %></small>
+        <br>
+        <small><strong>Projected Culture & Identity:</strong> <%= @company.company_snapshot&.projected_culture_and_identity&.titleize %></small>
+        <br>
+        <small><strong>Mgmt/Board Composition - Transparency:</strong> <%= @company.company_snapshot&.mgmt_composition_transparency&.titleize %></small>
+        <br>
+        <small><strong>Mgmt/Board Composition - Performance:</strong> <%= @company.company_snapshot&.mgmt_composition_performance&.titleize %></small>
+        
+      </div>
+
+    </div>
+  </div>
+  <!--
+  <a class="action-btn btn-lg" href="#" role="button">Learn more</a>
+  -->
+  <%= link_to 'Edit', edit_domains_companies_company_path(@company), class: "action-btn" %> 
+  <%= link_to 'Back', domains_companies_companies_path, class: "action-btn" %>
+</div>
+
+
+
+<%= render partial: 'domains/companies/companies/menu', locals: {products: @products,
+                                                product_attributes: @product_attributes,
+                                                company_relationships: @company_relationships,
+                                                company_contacts: @company_contacts,
+                                                company_ethnicity_stats: @company_ethnicity_stats,
+                                                company_gender_stats: @company_gender_stats}%>
+
+
+<br/><br/><br/>
+
+
+
+
