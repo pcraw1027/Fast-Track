@@ -1,0 +1,36 @@
+ 
+ <form method="get" action="/cit_interface">
+    <br>
+    <div class="row">
+        <div class="col-md-4">
+          <h5>Company Import Triger (CIT)</h5>
+        </div>
+        <div class="col-md-6">
+          <div class="d-flex flex-row form-group">
+          <label class="form-label" style="font-size: 20px;">Filter by:</label>
+          <select name="filter_by" id="filter_by-select-inp" class="form-control ml-2 mr-sm-2" aria-label="Search">
+            <option selected disabled>Select an option</option>
+            <option value="products">Companies with Products</option>
+            <option value="parent">Parent Companies</option>
+            <option value="subsidiary">Subsidiary Companies</option>
+            <option value="all">All Companies</option>
+          </select>
+          <input class="btn btn-outline-success my-2 my-sm-0" type="submit" value="Apply filter" />
+        </div>
+      </div>
+
+      <div class="col-md-2">
+      </div>
+    </div>
+</form>
+   
+
+  <%= render partial: 'domains/croupier_core/cit_records/tabs', locals: { cit_records_0s: @cit_records_0s,
+                                                cit_records_1s: @cit_records_1s,
+                                                cit_records_2s: @cit_records_2s,
+                                                cit_records_3s: @cit_records_3s,
+                                                cit_records_4s: @cit_records_4s,
+                                                cit_records_5s: @cit_records_5s}%>
+
+
+<br/><br/><br/>

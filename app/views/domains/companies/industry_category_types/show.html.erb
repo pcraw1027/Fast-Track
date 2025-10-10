@@ -1,0 +1,19 @@
+
+
+<p>
+  <strong>Category Code:</strong>
+  <%= @industry_category_type.category_code %>
+</p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @industry_category_type.title %>
+</p>
+
+<p>
+  <strong>NAICS Year:</strong>
+  <%= @industry_category_type.naics_year %>
+</p>
+
+<%= link_to 'Edit', edit_domains_companies_industry_category_type_path(@industry_category_type) %> |
+<%= link_to 'Back', domains_companies_industry_category_types_path %>

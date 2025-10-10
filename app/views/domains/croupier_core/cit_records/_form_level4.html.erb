@@ -1,0 +1,50 @@
+
+<%= form_for(company, url: domains_companies_company_update_to_level_four_path(company_id: company.id), html: { method: :put }) do |form| %>
+
+  <% if company.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(company.errors.count, "error") %> prohibited this company from being saved:</h2>
+
+      <ul>
+        <% company.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= form.hidden_field :cit_record_id, value: cit_record.id %>
+  <%= form.hidden_field :mid, value: cit_record.mid %>
+  <%= form.hidden_field :filter_by, value: params[:filter_by] %>
+  <%= form.hidden_field :level, value: params[:level] %>
+
+
+  <div class="row">
+    <div class = "col-md-12">
+     
+        <div id="contacts">
+            <%= form.fields_for :company_contacts do |contact_form| %>
+            <%= render 'company_contact_fields', f: contact_form %>
+            <hr>
+            <% end %>
+  
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class = "col-md-12">
+        <i class="fas fa-plus" style="color: #0B9444;" ></i><%= link_to_add_association 'Add Contact', form, :company_contacts, class:"theme-link" %>
+    </div>
+    
+  </div>
+
+
+<div class="actions text-center">
+    <%= form.submit "Update", class: 'action-btn' %>
+  </div>
+
+<% end %>
+
+
+

@@ -1,0 +1,54 @@
+<div class="jumbotron">
+  <div class="row">
+    <div class="col">
+
+      <p>
+      <strong>Barcode:</strong>
+      <%= @bit_record.barcode %>
+    </p>
+
+    <p>
+      <strong>Symbology:</strong>
+      <%= @bit_record.symbology %>
+    </p>
+
+    <p>
+      <strong>Status:</strong>
+      <%= @bit_record.status %>
+    </p>
+
+     <p>
+      <strong>Source:</strong>
+      <%= @bit_record.source %>
+    </p>
+
+    <% if @bit_record.user_id %>
+    <p>
+      <strong>User:</strong>
+
+      <a href="/users/<%= @bit_record.user_id %>"><%= @bit_record.user.username %> </a>
+    </p>
+    <% end %>
+
+
+    <p>
+      <strong>Source:</strong>
+      <%= @bit_record.source %>
+    </p>
+
+    <p>
+      <strong>Created at:</strong>
+      <%= @bit_record.created_at %>
+    </p>
+
+     <p>
+      <strong>Updated at:</strong>
+      <%= @bit_record.updated_at %>
+    </p>
+
+</div>
+</div>
+</div>
+
+<%= link_to 'Edit', edit_domains_croupier_core_bit_record_path(@bit_record), class: "action-btn" %> |
+<%= link_to 'Back', domains_croupier_core_bit_records_path, class: "action-btn" %>

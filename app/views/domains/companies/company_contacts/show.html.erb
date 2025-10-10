@@ -1,0 +1,39 @@
+
+
+<p>
+  <strong>Company:</strong>
+  <%= @company_contact.company.name %>
+</p>
+
+<p>
+  <strong>Company Contact Type:</strong>
+  <%= @company_contact.company_contact_type.role %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @company_contact.name %>
+</p>
+
+<p>
+  <strong>Photo:</strong>
+  <%= image_tag @company_contact.photo.url if @company_contact.photo? %>
+</p>
+
+<p>
+  <strong>Job title:</strong>
+  <%= @company_contact.job_title %>
+</p>
+
+<p>
+  <strong>Email:</strong>
+  <%= @company_contact.email %>
+</p>
+
+<p>
+  <strong>Phone:</strong>
+  <%= @company_contact.phone %>
+</p>
+
+<%= link_to 'Edit', edit_domains_companies_company_contact_path(@company_contact) %> |
+<%= link_to 'Back', domains_companies_company_contacts_path %>

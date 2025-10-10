@@ -1,0 +1,53 @@
+
+<div class="jumbotron">
+  <div class="row">
+    <div class="col">
+
+<p>
+  <strong>Invited by:</strong>
+
+  <a href="/users/<%= @invitation.invited_by_id %>"><%= @invitation.invited_by.username %> </a>
+</p>
+
+<p>
+  <strong>Invite code:</strong>
+  <%= @invitation.invite_code %>
+</p>
+
+<p>
+  <strong>First Name:</strong>
+  <%= @invitation.first_name %>
+</p>
+
+<p>
+  <strong>Last Name:</strong>
+  <%= @invitation.last_name %>
+</p>
+<p>
+  <strong>Username:</strong>
+  <%= @invitation.username %>
+</p>
+<p>
+  <strong>Country:</strong>
+  <%= @invitation.country %>
+</p>
+<p>
+  <strong>Postal code:</strong>
+  <%= @invitation.postal_code %>
+</p>
+
+<p>
+  <strong>Email:</strong>
+  <%= @invitation.email %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @invitation.status %>
+</p>
+
+</div>
+</div>
+</div>
+<%= link_to 'Edit', edit_domains_users_invitation_path(@invitation) %> |
+<%= link_to 'Back', domains_users_invitations_path %>
