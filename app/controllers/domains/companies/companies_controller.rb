@@ -8,10 +8,11 @@ only: %i[ new edit update create destroy insert_company update_to_level_two upda
   def index
     @companies = if params[:q].present?
                 Domains::Companies::Company.where("name ILIKE ?", "%#{params[:q]}%").paginate(page: params[:page], per_page: 20).order(
-created_at: :desc, id: :desc)
-              else
+                  created_at: :desc, id: :desc
+                )
+                 else
                 Domains::Companies::Company.all.paginate(page: params[:page], per_page: 20).order(created_at: :desc, id: :desc)
-              end
+                 end
     
   end
 
@@ -20,11 +21,11 @@ created_at: :desc, id: :desc)
     if company_params[:industry_category_type_id].blank? 
         respond_to_invalid_entries("industry category type is required", 
       company_capture_interface_path(mid: company_params[:mid]))  
-    elsif (params[:domains_companies_company][:new_company_name].blank? && params[:domains_companies_company][:name].blank? && params[:domains_companies_company][:id].blank?  && !params[:domains_companies_company][:company_id]&.to_s&.match?(/^\d+$/))
+    elsif params[:domains_companies_company][:new_company_name].blank? && params[:domains_companies_company][:name].blank? && params[:domains_companies_company][:id].blank? && !params[:domains_companies_company][:company_id]&.to_s&.match?(/^\d+$/)
       respond_to_invalid_entries("company name is required", company_capture_interface_path(mid: company_params[:mid])) 
-    elsif (params[:domains_companies_company][:company_id].present? && params[:domains_companies_company][:company_id]&.to_s&.match?(/^\d+$/)) || (params[:domains_companies_company][:id].present?  && params[:domains_companies_company][:id]&.to_s&.match?(/^\d+$/)) || params[:domains_companies_company][:name].present?
+    elsif (params[:domains_companies_company][:company_id].present? && params[:domains_companies_company][:company_id]&.to_s&.match?(/^\d+$/)) || (params[:domains_companies_company][:id].present? && params[:domains_companies_company][:id]&.to_s&.match?(/^\d+$/)) || params[:domains_companies_company][:name].present?
        update_company
-     else
+    else
           @company = Domains::Companies::Company.new(company_params.except(:mid, :id))
           @company.name = params[:domains_companies_company][:new_company_name]
           mid = company_params[:mid]
@@ -41,51 +42,50 @@ created_at: :desc, id: :desc)
 
               @company.update(mids: [cit_rec.mid])
               Domains::CroupierCore::Operations::UpgradeCitLevel
-                  .call!(mid: mid, company_id: @company.id, user_id: current_user.id, level: 1)
+                .call!(mid: mid, company_id: @company.id, user_id: current_user.id, level: 1)
               format.html do
                 redirect_to company_capture_interface_path(mid: mid, filter_by: params[:domains_companies_company][:filter_by]), 
                 notice: "Company was successfully created."
               end
               format.json { render :show, status: :created, location: @company }
-            else
-              msg = @company.errors.map{|er| "#{er.attribute} #{er.message}"}.join(", ")
+             else
+              msg = @company.errors.map { |er| "#{er.attribute} #{er.message}" }.join(", ")
               format.html do
  redirect_to company_capture_interface_path(mid: mid, filter_by: params[:domains_companies_company][:filter_by]), alert: msg
-end
+              end
               format.json { render json: @company.errors, status: :unprocessable_entity }
-            end
-
+             end
           end
 
-      end
+    end
   end
 
   def update_to_level_two
     @company = Domains::Companies::Company.find(params[:company_id])
     respond_to do |format|
-      begin
+      
         @company.update!(company_params.except(:mid))
         Domains::CroupierCore::Operations::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, 
         user_id: current_user.id, level: 2)
         format.html do
  redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:domains_companies_company][:filter_by]), 
 notice: "company was successfully updated."
-end
+        end
         format.json { render :show, status: :ok, location: @company }
-      rescue => e
+    rescue StandardError => e
         format.html do
  redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:domains_companies_company][:filter_by]), 
 alert: e.message
-end
+        end
         format.json { render json: @company.errors, status: :unprocessable_entity }
-      end
+      
     end
   end
 
   def update_to_level_three
      @company = Domains::Companies::Company.find(params[:company_id])
      respond_to do |format|
-      begin
+      
         convert_child_params
         convert_parent_params
         Domains::CroupierCore::Operations::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, 
@@ -93,62 +93,62 @@ user_id: current_user.id, level: 3)
         format.html do
  redirect_to(company_capture_interface_path(mid: company_params[:mid], filter_by: params[:domains_companies_company][:filter_by]), 
 notice: "Company was successfully updated.") and return
-end
+        end
         format.json { render :show, status: :created, location: @company }
-      rescue => e
+     rescue StandardError => e
         format.html do
  redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:domains_companies_company][:filter_by]), 
 alert: e.message
-end
+        end
         format.json { render json: @company.errors, status: :unprocessable_entity }
-      end
-    end
+      
+     end
   end
 
   def update_to_level_four
     @company = Domains::Companies::Company.find(params[:company_id])
 
      respond_to do |format|
-      begin
+      
         convert_company_contact_params
         Domains::CroupierCore::Operations::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, 
 user_id: current_user.id, level: 4)
         format.html do
  redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:domains_companies_company][:filter_by]), 
 notice: "Company was successfully updated."
-end
+        end
         format.json { render :show, status: :created, location: @company }
-      rescue => e
+     rescue StandardError => e
         format.html do
  redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:domains_companies_company][:filter_by]), 
 alert: e.message
-end
+        end
         format.json { render json: @company.errors, status: :unprocessable_entity }
-      end
-    end
+      
+     end
   end
 
 
   def update_to_level_five
      @company = Domains::Companies::Company.find(params[:company_id])
      respond_to do |format|
-      begin
+      
         @company.update!(company_snapshot_params)
         Domains::CroupierCore::Operations::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, 
 user_id: current_user.id, level: 5)
         format.html do
  redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:domains_companies_company][:filter_by]), 
 notice: "Company was successfully updated."
-end
+        end
         format.json { render :show, status: :created, location: @company }
-      rescue => e
+     rescue StandardError => e
         format.html do
  redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:domains_companies_company][:filter_by]), 
 alert: e.message
-end
+        end
         format.json { render json: @company.errors, status: :unprocessable_entity }
-      end
-    end
+      
+     end
   end
 
 
@@ -156,7 +156,8 @@ end
     @products = Domains::Products::Product.where(company_id: params[:id])
     @product_attributes = Domains::Classifications::ProductAttribute.where(company_id: params[:id])
     @company_relationships = Domains::Companies::CompanyRelationship.where(
-      parent_company_id: params[:id]).or(Domains::Companies::CompanyRelationship.where(child_company_id: params[:id]))
+      parent_company_id: params[:id]
+    ).or(Domains::Companies::CompanyRelationship.where(child_company_id: params[:id]))
     @company_contacts = Domains::Companies::CompanyContact.where(company_id: params[:id])
     @company_ethnicity_stats = Domains::Companies::CompanyEthnicityStat.where(company_id: params[:id])
     @company_gender_stats = Domains::Companies::CompanyGenderStat.where(company_id: params[:id])
@@ -210,7 +211,7 @@ filter_by: params[:filter_by]))
           format.html { render :edit, status: :unprocessable_entity }
           format.json { render json: @company.errors, status: :unprocessable_entity }
         end
-      end
+    end
   end
 
 
@@ -220,7 +221,6 @@ filter_by: params[:filter_by]))
       format.html { redirect_to companies_path, status: :see_other, notice: "Company was successfully destroyed." }
       format.json { head :no_content }
     end
-
   end
 
 
@@ -237,17 +237,17 @@ filter_by: params[:filter_by]))
   end
 
   def update_company
-    company_id = (params[:domains_companies_company][:company_id].presence || params[:domains_companies_company][:id])
+    company_id = params[:domains_companies_company][:company_id].presence || params[:domains_companies_company][:id]
     company = Domains::Companies::Company.find(company_id)
 
     respond_to do |format|
-      begin
+      
         company.update!(company_params.except(:mid))
          if company_params[:mid].blank?
 
             sys_gen_mid = Domains::CroupierCore::CitRecord.generate_mid(company.id)
 
-            cit_rec = Domains::CroupierCore::CitRecordHandler.update_or_create(nil, mid: sys_gen_mid, source: "Company Import", 
+            Domains::CroupierCore::CitRecordHandler.update_or_create(nil, mid: sys_gen_mid, source: "Company Import", 
                             user_id: current_user.id, company_id: company.id, brand: nil)
 
             company.update(mids: [sys_gen_mid])
@@ -255,118 +255,131 @@ filter_by: params[:filter_by]))
             Domains::CroupierCore::Operations::UpgradeCitLevel.call!(mid: sys_gen_mid, company_id: company.id, 
                           user_id: current_user.id, level: 1)
 
-          else
+         else
             Domains::CroupierCore::Operations::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: company.id, 
             user_id: current_user.id, level: 1)
-          end
+         end
         
         format.html do
  redirect_to edit_domains_companies_company_path(id: company.id, level: params[:domains_companies_company][:level], filter_by: params[:domains_companies_company][:filter_by]), 
-notice: "company was successfully updated."  and return
-end
+notice: "company was successfully updated." and return
+        end
         format.json { render json: company, status: :ok and return }
-      rescue => e
+    rescue StandardError => e
         format.html do
  redirect_to company_capture_interface_path(mid: company_params[:mid], level: params[:domains_companies_company][:level], filter_by: params[:domains_companies_company][:filter_by]), 
 alert: e.message and return
-end
+        end
         format.json { render json: company.errors, status: :unprocessable_entity and return }
-      end
+      
     end
   end
 
 
 
-  def respond_to_invalid_entries(msg, path=new_company_path)
+  def respond_to_invalid_entries(msg, path = new_company_path)
     respond_to do |format|
       format.html { redirect_to path, alert: msg and return  }
-      format.json { render json: {errors: [{barcode: msg}]}, status: :unprocessable_entity and return }
+      format.json { render json: { errors: [{ barcode: msg }] }, status: :unprocessable_entity and return }
     end
   end  
 
 
   def convert_company_contact_params
+    return if company_contact_params[:company_contacts_attributes].blank?
 
-    if company_contact_params[:company_contacts_attributes].present?
-      company_contact_params[:company_contacts_attributes].each do |key, contact_attributes|
+      company_contact_params[:company_contacts_attributes].each_value do |contact_attributes|
         if contact_attributes[:_destroy] && contact_attributes[:_destroy] != "false"
           cr = Domains::Companies::CompanyContact.find(contact_attributes[:id])
-          cr.destroy if cr
+          cr&.destroy
         elsif contact_attributes[:id].present?
           person_id = spawned_person_id(contact_attributes)
           cp = Domains::Companies::CompanyContact.find(contact_attributes[:id])
-          cp.update(
-            company_contact_type_id: contact_attributes[:company_contact_type_id], 
-            job_title: contact_attributes[:job_title], 
-            person_id: person_id, 
-            email: contact_attributes[:email],
-            phone: contact_attributes[:phone], 
-            photo: contact_attributes[:photo]
-          ) if cp && person_id
+          if cp && person_id
+            cp.update(
+              company_contact_type_id: contact_attributes[:company_contact_type_id], 
+              job_title: contact_attributes[:job_title], 
+              person_id: person_id, 
+              email: contact_attributes[:email],
+              phone: contact_attributes[:phone], 
+              photo: contact_attributes[:photo]
+            )
+          end
         else
           person_id = spawned_person_id(contact_attributes)
-          Domains::Companies::CompanyContact.create!(
-            company_contact_type_id: contact_attributes[:company_contact_type_id], 
-            job_title: contact_attributes[:job_title], 
-            person_id: person_id, 
-            email: contact_attributes[:email],
-            phone: contact_attributes[:phone], 
-            photo: contact_attributes[:photo],
-            company_id: @company.id
-            ) if person_id
+          if person_id
+            Domains::Companies::CompanyContact.create!(
+              company_contact_type_id: contact_attributes[:company_contact_type_id], 
+              job_title: contact_attributes[:job_title], 
+              person_id: person_id, 
+              email: contact_attributes[:email],
+              phone: contact_attributes[:phone], 
+              photo: contact_attributes[:photo],
+              company_id: @company.id
+            )
+          end
         end
-
       end
-    end
+    
   end
 
 
   def convert_child_params
-    if company_relationship_params[:child_relationships_attributes].present?
-      company_relationship_params[:child_relationships_attributes].each do |key, child_attributes|
+    return if company_relationship_params[:child_relationships_attributes].blank?
+
+      company_relationship_params[:child_relationships_attributes].each_value do |child_attributes|
         if child_attributes[:_destroy] && child_attributes[:_destroy] != "false"
           cr = Domains::Companies::CompanyRelationship.find(child_attributes[:id])
-          cr.destroy if cr
+          cr&.destroy
         elsif child_attributes[:id]
           cp = Domains::Companies::Company.find(child_attributes[:child_company_id])
-          cp&.update(
-            logo: child_attributes[:logo]
-          ) if child_attributes[:logo]
+          if child_attributes[:logo]
+            cp&.update(
+              logo: child_attributes[:logo]
+            )
+          end
         else
           child_company_id = child_attributes[:child_company_id]
-          child_company_id = spawned_company_id(child_attributes, 
-child_attributes[:child_company_id]) if !child_company_id&.to_s&.match?(/^\d+$/)
+          unless child_company_id&.to_s&.match?(/^\d+$/)
+            child_company_id = spawned_company_id(child_attributes, 
+child_attributes[:child_company_id])
+          end
           Domains::Companies::CompanyRelationship.create!(
             company_relationship_type_id: child_attributes[:company_relationship_type_id], 
-            parent_company_id: @company.id, child_company_id: child_company_id)
+            parent_company_id: @company.id, child_company_id: child_company_id
+          )
         end
-
       end
-    end
+    
   end
 
   def convert_parent_params
-    if company_relationship_params[:parent_relationships_attributes].present?
-      company_relationship_params[:parent_relationships_attributes].each do |key, parent_attributes|
+    return if company_relationship_params[:parent_relationships_attributes].blank?
+
+      company_relationship_params[:parent_relationships_attributes].each_value do |parent_attributes|
         if parent_attributes[:_destroy] && parent_attributes[:_destroy] != "false"
           cr = Domains::Companies::CompanyRelationship.find(parent_attributes[:id])
-          cr.destroy if cr
+          cr&.destroy
         elsif parent_attributes[:id]
           cp = Domains::Companies::Company.find(parent_attributes[:parent_company_id])
-          cp&.update(
-            logo: parent_attributes[:logo]
-          ) if parent_attributes[:logo]
+          if parent_attributes[:logo]
+            cp&.update(
+              logo: parent_attributes[:logo]
+            )
+          end
         else
           parent_company_id = parent_attributes[:parent_company_id]
-          parent_company_id = spawned_company_id(parent_attributes, 
-parent_attributes[:parent_company_id]) if !parent_company_id&.to_s&.match?(/^\d+$/)
+          unless parent_company_id&.to_s&.match?(/^\d+$/)
+            parent_company_id = spawned_company_id(parent_attributes, 
+parent_attributes[:parent_company_id])
+          end
           Domains::Companies::CompanyRelationship.create!(
             company_relationship_type_id: parent_attributes[:company_relationship_type_id], 
             parent_company_id: parent_company_id, child_company_id: @company.id
           )
         end
       end
-    end
+    
   end
 
   def spawned_person_id(contact_attributes)
@@ -392,8 +405,8 @@ parent_attributes[:parent_company_id]) if !parent_company_id&.to_s&.match?(/^\d+
     cit_rec = Domains::CroupierCore::CitRecordHandler.update_or_create(nil, mid: mid, source: "Company Import", 
                   user_id: current_user.id, company_id: company.id, brand: nil)
     company.update(mids: [cit_rec.mid])
-    Domains::CroupierCore::CitLevelUser.find_or_create_by!(level: 3, user_id: current_user.id, cit_record_id: cit_rec.id ) if cit_rec
-    return company.id
+    Domains::CroupierCore::CitLevelUser.find_or_create_by!(level: 3, user_id: current_user.id, cit_record_id: cit_rec.id) if cit_rec
+    company.id
   end
 
   def company_params
@@ -402,40 +415,35 @@ parent_attributes[:parent_company_id]) if !parent_company_id&.to_s&.match?(/^\d+
             :black_owned, :female_owned, :established, :website, :diversity_report, 
             :diversity_score, :total_employees,
             addresses_attributes: [:id, :address_type_id, :addressable_id, :address1, :address2, :city, 
-                                   :state, :postal_code, :country_reference_id, :_destroy]
-        )
-      if prm[:established].present? && prm[:established].match?(/\A\d{4}\z/)
-         prm[:established] = Date.new(prm[:established].to_i)
-      else
-         prm[:established] = nil
-      end
+                                   :state, :postal_code, :country_reference_id, :_destroy])
+      prm[:established] = (Date.new(prm[:established].to_i) if prm[:established].present? && prm[:established].match?(/\A\d{4}\z/))
       prm
   end
 
   def company_contact_params
         params.require(:domains_companies_company).permit(
-            company_contacts_attributes: [
-                  :id, :company_contact_type_id, :job_title, :person_id, :phone, :first_name, 
-                  :last_name, :middle_name, :email, :phone, :photo, :_destroy
-                ]
-            )
+          company_contacts_attributes: [
+            :id, :company_contact_type_id, :job_title, :person_id, :phone, :first_name, 
+            :last_name, :middle_name, :email, :phone, :photo, :_destroy
+          ]
+        )
   end
 
   def company_relationship_params
         params.require(:domains_companies_company).permit(
-            parent_relationships_attributes: [:id, :parent_company_id, 
-                      :company_relationship_type_id, :logo, :_destroy],
-            child_relationships_attributes: [:id, :child_company_id, 
-                      :company_relationship_type_id, :logo, :_destroy]
-            )
+          parent_relationships_attributes: [:id, :parent_company_id, 
+                                            :company_relationship_type_id, :logo, :_destroy],
+          child_relationships_attributes: [:id, :child_company_id, 
+                                           :company_relationship_type_id, :logo, :_destroy]
+        )
   end
 
   def company_snapshot_params
         params.require(:domains_companies_company).permit(
-            company_snapshot_attributes: [:id, :employee_demographics_transparency, 
-            :employee_demographics_performance, :projected_culture_and_identity, 
-            :mgmt_composition_transparency, :mgmt_composition_performance,  :_destroy]
-            )
+          company_snapshot_attributes: [:id, :employee_demographics_transparency, 
+                                        :employee_demographics_performance, :projected_culture_and_identity, 
+                                        :mgmt_composition_transparency, :mgmt_composition_performance,  :_destroy]
+        )
   end
 
 

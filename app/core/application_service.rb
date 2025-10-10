@@ -5,19 +5,19 @@ class ApplicationService
     end
   end
 
-  def initialize(propagate = true)
+  def initialize(propagate: true)
     @propagate = propagate
   end
 
   def self.call(...)
-    service = new(false)
+    service = new(propagate: false)
     service.call(...)
   rescue StandardError => e
     service.failure(e)
   end
 
   def self.call!(...)
-    new(true).call(...)
+    new(propagate: true).call(...)
   end
 
   def success(payload = nil)
@@ -28,6 +28,7 @@ class ApplicationService
   def failure(excpt_or_reason, _options = {})
     exception = excpt_or_reason.is_a?(Exception) ? excpt_or_reason : StandardError.new(excpt_or_reason.to_s)
     raise exception if @propagate
+
     #ErrorService.error(exception, options)
     Response.new(false, nil, exception)
   end

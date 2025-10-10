@@ -6,14 +6,14 @@ class Domains::Classifications::BricksController < ApplicationController
   def index
     if params[:product_category_source_id]
       product_category_source_id = Domains::Classifications::ProductCategorySource
-              .find_by(code: params[:product_category_source_id]).id 
+                                   .find_by(code: params[:product_category_source_id]).id 
       @bricks = Domains::Classifications::Brick.where(product_category_source_id: product_category_source_id)
-                  .paginate(page: params[:page], per_page: 20).order(
-                              created_at: :desc, id: :desc
-                            )
+                                               .paginate(page: params[:page], per_page: 20).order(
+                                                 created_at: :desc, id: :desc
+                                               )
     else 
       @bricks = Domains::Classifications::Brick.all.paginate(page: params[:page], per_page: 20)
-                    .order(created_at: :desc, id: :desc)
+                                               .order(created_at: :desc, id: :desc)
     end
   end
 
@@ -29,9 +29,9 @@ class Domains::Classifications::BricksController < ApplicationController
   def by_title_search
       search_result = if params[:q].present?
               Domains::Classifications::Brick.where("title ILIKE ?", "%#{params[:q]}%")
-            else
+                      else
               Domains::Classifications::Brick.none
-            end
+                      end
       brick_h = search_result&.group_by(&:klass_id)
       klasses = Domains::Classifications::Klass.includes(family: [:segment]).where(id: search_result&.map(&:klass_id))
       result = []
@@ -44,15 +44,15 @@ class Domains::Classifications::BricksController < ApplicationController
             id: brick.id,
             code: brick.code,
             title: brick.title,
-            klass: {id: klass.id, code: klass.code, title: klass.title },              
-            family: {id: family.id, code: family.code, title: family.title},
-            segment: {id: segment.id, code: segment.code, title: segment.title }
+            klass: { id: klass.id, code: klass.code, title: klass.title },              
+            family: { id: family.id, code: family.code, title: family.title },
+            segment: { id: segment.id, code: segment.code, title: segment.title }
           }  
         end     
       end
 
     render json: result
-end
+  end
 
   # GET /bricks/new
   def new

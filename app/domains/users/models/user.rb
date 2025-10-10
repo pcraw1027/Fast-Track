@@ -3,6 +3,7 @@ module Domains
       class User < ApplicationRecord
               self.table_name = "users"
               include Devise::JWT::RevocationStrategies::Allowlist
+
               # Include default devise modules. Others available are:
               # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
               devise :database_authenticatable, :registerable, :trackable,
@@ -38,33 +39,33 @@ module Domains
                 token = generate_token.downcase
                 self.reset_password_token = token
                 self.reset_password_sent_at = Time.now.utc
-                self.save!
+                save!
                 token
               end
 
               def password_token_valid?
-                  (self.reset_password_sent_at + 4.hours) > Time.now.utc
+                  (reset_password_sent_at + 4.hours) > Time.now.utc
               end
 
               def reset_password!(password)
                 self.password = password
-                self.reset_password_token =  nil
-                self.save!
+                self.reset_password_token = nil
+                save!
               end
 
-              #   def on_jwt_dispatch(token, payload)
-              #   super
-              #   do_something(token, payload)
-              # end
+        #   def on_jwt_dispatch(token, payload)
+        #   super
+        #   do_something(token, payload)
+        # end
 
-                private
+        private
 
 
                 def generate_token
-                  token = String.random(6, ['0'..'9','A'..'Z'] )
+                  token = String.random(6, ['0'..'9', 'A'..'Z'])
                   user = Domains::Users::User.find_by(reset_password_token: token.downcase)
                   while user.present? 
-                    token = String.random(6, ['0'..'9','A'..'Z'] )
+                    token = String.random(6, ['0'..'9', 'A'..'Z'])
                     user = Domains::Users::User.find_by(reset_password_token: token.downcase)
                   end
                   token
@@ -73,10 +74,11 @@ module Domains
               def password_complexity
                 return if password.blank?
 
-                unless password.match?(/\A(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])[\S]{8,}\z/)
+                return if password.match?(/\A(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])\S{8,}\z/)
+
                   errors.add :password, 
             "must be at least 8 characters and include at least one lowercase letter, one uppercase letter, one number, and one special character"
-                end
+                
               end
 
               def send_welcome_email
@@ -84,19 +86,21 @@ module Domains
               end
 
               def remove_avatar_from_s3
-                if avatar.present?
+                return if avatar.blank?
+
                   avatar.remove!
-                end
+                
               end
 
               def remove_photo_from_s3
-                if photo.present?
+                return if photo.blank?
+
                   photo.remove!
-                end
+                
               end
               
 
       end
-end
+  end
 end
 

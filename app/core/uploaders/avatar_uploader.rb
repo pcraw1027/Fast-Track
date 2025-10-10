@@ -1,13 +1,13 @@
 class Uploaders::AvatarUploader < CarrierWave::Uploader::Base
-  # Include RMagick, MiniMagick, or Vips support:
- # include CarrierWave::RMagick
+   # Include RMagick, MiniMagick, or Vips support:
+   # include CarrierWave::RMagick
    include CarrierWave::MiniMagick
 
   # include CarrierWave::Vips
 
   # Choose what kind of storage to use for this uploader:
   #storage :file
-   #storage :fog
+  #storage :fog
 
   # Override the directory where uploaded files will be stored.
   # This is a sensible default for uploaders that are meant to be mounted:
@@ -15,29 +15,29 @@ class Uploaders::AvatarUploader < CarrierWave::Uploader::Base
     "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
   end
 
-  # Provide a default URL as a default if there hasn't been a file uploaded:
-  # def default_url(*args)
-  #   # For Rails 3.1+ asset pipeline compatibility:
-  #   # ActionController::Base.helpers.asset_path("fallback/" + [version_name, "default.png"].compact.join('_'))
-  #
-  #   "/images/fallback/" + [version_name, "default.png"].compact.join('_')
-  # end
+   # Provide a default URL as a default if there hasn't been a file uploaded:
+   # def default_url(*args)
+   #   # For Rails 3.1+ asset pipeline compatibility:
+   #   # ActionController::Base.helpers.asset_path("fallback/" + [version_name, "default.png"].compact.join('_'))
+   #
+   #   "/images/fallback/" + [version_name, "default.png"].compact.join('_')
+   # end
 
-  # Process files as they are uploaded:
-  #process resize_to_fit: [180,180]
-  # process scale: [200, 300]
-  #
-  # def scale(width, height)
-  #   # do something
-  # end
+   # Process files as they are uploaded:
+   #process resize_to_fit: [180,180]
+   # process scale: [200, 300]
+   #
+   # def scale(width, height)
+   #   # do something
+   # end
 
 
-   process :resize_and_make_background_transparent => ['180x180']
+   process resize_and_make_background_transparent: ['180x180']
   
 
-  # Create different versions of your uploaded files:
+    # Create different versions of your uploaded files:
     version :thumb do
-      process :resize_and_make_background_transparent => ['18x18']
+      process resize_and_make_background_transparent: ['18x18']
     end
 
 
@@ -54,12 +54,12 @@ class Uploaders::AvatarUploader < CarrierWave::Uploader::Base
       img.resize(size)
       img
     end
-  end
+    end
     
   # Add an allowlist of extensions which are allowed to be uploaded.
   # For images you might use something like this:
   def extension_allowlist
-    %w(jpg jpeg gif png)
+    %w[jpg jpeg gif png]
   end
 
   def remove_previously_stored_files_after_update

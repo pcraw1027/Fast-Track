@@ -5,6 +5,5 @@ module Domains
             has_many :company_gender_stats, class_name: "Domains::Companies::CompanyGenderStat"                             
             self.table_name = "employee_types"
         end
-
     end
 end

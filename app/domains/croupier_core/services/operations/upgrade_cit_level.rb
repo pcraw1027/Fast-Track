@@ -1,5 +1,3 @@
-
-
 module Domains
   module CroupierCore
     module Operations
@@ -8,13 +6,13 @@ module Domains
           cit_rec = Domains::CroupierCore::CitRecord.find_by(mid: mid)
           if cit_rec && cit_rec.level < level
             updates = {
-                  level: level
-                }
+              level: level
+            }
                 updates[:company_id] = company_id if company_id.present?
               
                 cit_rec.update(updates)
           end
-          Domains::CroupierCore::CitLevelUser.find_or_create_by!(level: level, user_id: user_id, cit_record_id: cit_rec.id ) if cit_rec
+          Domains::CroupierCore::CitLevelUser.find_or_create_by!(level: level, user_id: user_id, cit_record_id: cit_rec.id) if cit_rec
       
         end
       end

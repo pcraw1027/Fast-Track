@@ -5,5 +5,5 @@ module Domains
         self.table_name = "attribute_values"
         has_many :product_attributes, class_name: "Domains::Classifications::ProductAttribute"
       end
-    end
+  end
 end

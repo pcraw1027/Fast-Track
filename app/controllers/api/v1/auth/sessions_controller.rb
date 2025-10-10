@@ -10,16 +10,17 @@ status: :ok
   def create
     user = Domains::Users::User.find_by(email: params[:email]) || Domains::Users::User.find_by(username: params[:email].downcase)
     render json: { error: 'email or username not found.' }, status: :unauthorized and return  unless user
-    if user && user.valid_password?(params[:password]) && user.active?
+
+    if user&.valid_password?(params[:password]) && user.active?
       
-      token = Domains::Users::AuthJwtStrategy.new(user).authenticate_user()
+      token = Domains::Users::AuthJwtStrategy.new(user).authenticate_user
       
       render json: {
         message: 'Logged in successfully.',
         user: Domains::Users::V1::UserSerializer.new(user).serializable_hash[:data][:attributes],
         token: token
       }, status: :ok
-    elsif user && user.valid_password?(params[:password]) && !user.active?
+    elsif user&.valid_password?(params[:password]) && !user.active?
        render json: { error: "Your account has been #{user.status}. Please contact support." }, status: :unauthorized
     else
       render json: { error: 'Invalid password.' }, status: :unauthorized

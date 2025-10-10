@@ -11,5 +11,5 @@ module Domains
         self.table_name = "klasses"
       
       end
-    end
+  end
 end

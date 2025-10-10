@@ -21,8 +21,8 @@ class Uploaders::MediaUploader < CarrierWave::Uploader::Base
 
   def content_type_allowlist
     [
-      /image\//,
-      /video\//,
+      %r{image/},
+      %r{video/},
       'video/mpeg',
       'application/pdf',
       'image/svg+xml',
@@ -68,7 +68,7 @@ class Uploaders::MediaUploader < CarrierWave::Uploader::Base
   end
 
   def process_full!
-    cache_stored_file! if !cached?
+    cache_stored_file! unless cached?
     resize_and_make_background_transparent("522x522")
     restore_versions!
   end
@@ -78,7 +78,7 @@ class Uploaders::MediaUploader < CarrierWave::Uploader::Base
   end
 
   version :thumb, if: :image? do
-    process :resize_and_make_background_transparent => ['180x180'], if: :process_thumb?
+    process resize_and_make_background_transparent: ['180x180'], if: :process_thumb?
   end
 
   def process_thumb?(_file)

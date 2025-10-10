@@ -17,17 +17,17 @@ class Api::V1::AppLanding::LandingController < Api::V1::BaseController
     render json: {
       top_scans: top_scan_products(10, 1).records,
       activity_stats: activity_stats
-      }, status: :ok
+    }, status: :ok
   end
 
 
   def landing_metrics
     my_scan_products = RawQueryModule.my_scan_products(10, 1, current_user.id)
     render json: {
-        my_scans: my_scan_products.records,
+      my_scans: my_scan_products.records,
         top_scans: top_scan_products(10, 1).records,
         activity_stats: activity_stats
-      }, status: :ok
+    }, status: :ok
   end
 
 
@@ -53,22 +53,22 @@ class Api::V1::AppLanding::LandingController < Api::V1::BaseController
     total_companies_monthly = Company.where(created_at: start_date..end_date).count
     [
       {
-        type:"scans",
+        type: "scans",
         currentMonth: total_scans_monthly,
         overall: total_scans
       },
       {
-        type:"uploads",
+        type: "uploads",
         currentMonth: total_uploads_monthly,
         overall: total_uploads
       },
       {
-        type:"products",
+        type: "products",
         currentMonth: total_products_monthly,
         overall: total_products
       },
       {
-        type:"companies",
+        type: "companies",
         currentMonth: total_companies_monthly,
         overall: total_companies
       }

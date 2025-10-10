@@ -10,22 +10,23 @@ class Api::V1::CroupierCore::UploadRecordsController < Api::V1::BaseController
   end
 
   def create
-     upload_claims = Domains::CroupierCore::Operations::UploadTrigger.call!(
-                              barcode: upload_record_params[:barcode], 
-                              scan_id: upload_record_params[:scan_id], 
-                              user_id: current_user.id, 
-                              asin: upload_record_params[:asin],
-                              brand: upload_record_params[:brand],
-                              upload_params: upload_record_params.except(:brand),
-                              symbology: params[:upload_record][:symbology]
-                    ) if upload_record_params.present?
+     if upload_record_params.present?
+       upload_claims = Domains::CroupierCore::Operations::UploadTrigger.call!(
+         barcode: upload_record_params[:barcode], 
+         scan_id: upload_record_params[:scan_id], 
+         user_id: current_user.id, 
+         asin: upload_record_params[:asin],
+         brand: upload_record_params[:brand],
+         upload_params: upload_record_params.except(:brand),
+         symbology: params[:upload_record][:symbology]
+       )
+     end
     
     if upload_claims.payload
-      render json: {upload: upload_claims.payload, media: upload_claims.payload.media}, status: :ok
+      render json: { upload: upload_claims.payload, media: upload_claims.payload.media }, status: :ok
     else
       render json: upload_claims.error, status: :unprocessable_entity
     end
-
   end
 
 

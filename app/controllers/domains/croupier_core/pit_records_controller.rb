@@ -6,36 +6,37 @@ only: %i[ new edit update create destroy pit_interface product_capture_interface
   # GET /pit_records or /pit_records.json
   def index
     @pit_records = Domains::CroupierCore::PitRecord.all.paginate(page: params[:page], per_page: 20)
-    .order(created_at: :desc, id: :desc)
+                                                   .order(created_at: :desc, id: :desc)
   end
 
   def next_pit_record
     pit_record = Domains::CroupierCore::PitRecord.where(level: params[:level])
-                          .order(product_activity_count: :desc)
-                          .limit(1).first
+                                                 .order(product_activity_count: :desc)
+                                                 .limit(1).first
     if pit_record
         redirect_to(product_capture_interface_path(barcode: pit_record.barcode, level: params[:level]))
-      else
-        redirect_to(pit_interface_path(), alert: "No more PIT Level #{params[:level]} records!")
-      end
+    else
+        redirect_to(pit_interface_path, alert: "No more PIT Level #{params[:level]} records!")
+    end
   end
 
   def invoke_bit_pit_triggers
-    if (pit_record_params[:barcode].strip.length < 12 || pit_record_params[:barcode].strip.length > 13)
+    if pit_record_params[:barcode].strip.length < 12 || pit_record_params[:barcode].strip.length > 13
       redirect_to(product_capture_interface_path(barcode: pit_record_params[:barcode].strip), 
 alert: "supported barcodes are between 12 and 13 digits") and return 
     end
+
     @pit_record = Domains::CroupierCore::PitRecord.find_by(barcode: pit_record_params[:barcode].strip)
     if @pit_record
       redirect_to(product_capture_interface_path(barcode: pit_record_params[:barcode].strip, level: @pit_record.level), 
 alert: "Barcode already exists. Please enter New Product information.")
     else
       @brc_intrf_claims = Domains::CroupierCore::Operations::BarcodeInterface
-            .call!(barcode: pit_record_params[:barcode].strip, 
+                          .call!(barcode: pit_record_params[:barcode].strip, 
                 source: "PIT Capture", asin: nil, user_id: current_user.id)
       if @brc_intrf_claims&.success?
         redirect_to(product_capture_interface_path(barcode: pit_record_params[:barcode].strip), 
-notice: (@brc_intrf_claims.payload[:message] + " - Please enter New Product Information."))
+notice: "#{@brc_intrf_claims.payload[:message]} - Please enter New Product Information.")
       else
         redirect_to(product_capture_interface_path(barcode: pit_record_params[:barcode].strip), 
 alert: @brc_intrf_claims.error.message)
@@ -57,12 +58,13 @@ alert: @brc_intrf_claims.error.message)
 
     @segments = []
 
-    if params[:barcode]
+    return unless params[:barcode]
+
       @pit_record = Domains::CroupierCore::PitRecord.find_by(barcode: params[:barcode].strip)
 
       if @pit_record
         product_category_sources = Domains::Classifications::ProductCategorySource.all
-        product_category_source_id = product_category_sources.find{|p| p.code == 'AMZ'}&.id 
+        product_category_source_id = product_category_sources.find { |p| p.code == 'AMZ' }&.id 
         @product.product_category_source_id = product_category_source_id
         @segments = Domains::Classifications::Segment.where(product_category_source_id: product_category_source_id)
         product_variant = Domains::Products::ProductVariant.new
@@ -98,11 +100,10 @@ alert: @brc_intrf_claims.error.message)
         flash[:message] = "Pit Record with barcode not found"
       end
 
-    end
+    
   end
 
   def pit_interface
-
     pits = Domains::CroupierCore::PitRecord.with_products
 
     @pit_records_0s = []
@@ -118,7 +119,6 @@ alert: @brc_intrf_claims.error.message)
       @pit_records_3s.push(pit) if !pit.product&.level_4_flag && pit.product&.level_1_flag
       @pit_records_4s.push(pit) if !pit.product&.level_5_flag && pit.product&.level_1_flag
     end
-
   end
 
   # GET /pit_records/1 or /pit_records/1.json

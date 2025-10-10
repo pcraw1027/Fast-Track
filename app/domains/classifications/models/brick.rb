@@ -10,6 +10,6 @@ module Domains
 
         self.table_name = "bricks"
       end
-    end
+  end
 end
 

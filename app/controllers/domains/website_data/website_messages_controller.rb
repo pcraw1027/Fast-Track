@@ -4,9 +4,9 @@ class Domains::WebsiteData::WebsiteMessagesController < ApplicationController
   # GET /website_messages or /website_messages.json
   def index
     @website_messages = Domains::WebsiteData::WebsiteMessage.all
-      .paginate(page: params[:page], per_page: 20).order(
-      created_at: :desc, id: :desc
-    )
+                                                            .paginate(page: params[:page], per_page: 20).order(
+                                                              created_at: :desc, id: :desc
+                                                            )
   end
 
   # GET /website_messages/1 or /website_messages/1.json
@@ -55,8 +55,10 @@ class Domains::WebsiteData::WebsiteMessagesController < ApplicationController
     @website_message.destroy
 
     respond_to do |format|
-      format.html { redirect_to domains_website_data_website_messages_path, status: :see_other,
-        notice: "Website message was successfully destroyed." }
+      format.html do 
+        redirect_to domains_website_data_website_messages_path, status: :see_other,
+        notice: "Website message was successfully destroyed."
+      end
       format.json { head :no_content }
     end
   end

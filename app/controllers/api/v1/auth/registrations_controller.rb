@@ -6,12 +6,10 @@ class Api::V1::Auth::RegistrationsController < Api::V1::BaseController
     user.username = user_params[:username].downcase if user_params[:username]
     if user.save
       invitation = Domains::Users::Invitation.find_by(invite_code: user_params[:invite_code])
-      invitation.update(username: user_params[:username].downcase, country: user_params[:country], 
-      postal_code: user_params[:postal_code], status: 1) if invitation
-      respond_with(user)
-    else
-      respond_with(user)
+      invitation&.update(username: user_params[:username].downcase, country: user_params[:country], 
+        postal_code: user_params[:postal_code], status: 1)
     end
+respond_with(user)
   end
 
   def verify_invite_code
@@ -32,7 +30,7 @@ class Api::V1::Auth::RegistrationsController < Api::V1::BaseController
         message: "username is already taken"
       }, status: :unauthorized
     else
-      render json: { message:"username is available" }, status: :ok
+      render json: { message: "username is available" }, status: :ok
     end
   end
 
@@ -48,7 +46,7 @@ class Api::V1::Auth::RegistrationsController < Api::V1::BaseController
 
   def respond_with(resource)
     if resource.persisted?
-      token = Domains::Users::AuthJwtStrategy.new(resource).authenticate_user()
+      token = Domains::Users::AuthJwtStrategy.new(resource).authenticate_user
       render json: {
         message: 'Signed up successfully.',
         user: Domains::Users::V1::UserSerializer.new(resource).serializable_hash[:data][:attributes],

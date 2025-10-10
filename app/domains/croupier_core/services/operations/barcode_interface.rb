@@ -21,22 +21,20 @@ module Domains
             bit_rec = Domains::CroupierCore::BitRecord.find_by(barcode: barcode, source: source)
             if bit_rec
               Domains::CroupierCore::Operations::IncrPitCitProdCount.call!(barcode: barcode)
-              success({:bit_rec => bit_rec, :message => "Barcode Exists"})
+              success({ bit_rec: bit_rec, message: "Barcode Exists" })
             else
               barcode_symbology = SUPPORTED_SYMBOLOGIES[symbology] || "Unknown"
 
-              if barcode_symbology == "Unknown"
-                barcode_symbology = SUPPORTED_SYMBOLOGIES_BY_BARCODE_LENGTH[barcode.length] || "Unknown"
-              end
+              barcode_symbology = SUPPORTED_SYMBOLOGIES_BY_BARCODE_LENGTH[barcode.length] || "Unknown" if barcode_symbology == "Unknown"
               bit_rec = Domains::CroupierCore::BitRecord.create!(barcode: barcode, status: 0, source: source,
                       asin: asin, user_id: user_id, symbology: barcode_symbology)
               bit_rec.invoke_bit(barcode, source, asin, user_id)
-              success({:bit_rec => bit_rec, :message => "Barcode Added"})
+              success({ bit_rec: bit_rec, message: "Barcode Added" })
             end
           end
           
         end
-      end
     end
   end
+end
 

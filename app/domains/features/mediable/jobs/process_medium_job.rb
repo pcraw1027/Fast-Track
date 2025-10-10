@@ -55,9 +55,9 @@ module Domains
             tmp_path = Rails.public_path.join('uploads', 'tmp', tmp_filename)
             if Rails.env.staging? || Rails.env.production?
               # Delete from S3 using Fog
-              uploader = medium.file
+              medium.file
               fog_directory = CarrierWave::Uploader::Base.fog_directory
-              fog_connection = CarrierWave::Uploader::Base.fog_credentials
+              CarrierWave::Uploader::Base.fog_credentials
               s3_path = "uploads/tmp/#{tmp_filename}"
               # Always use Fog API to delete the specific S3 file by path
               storage = CarrierWave::Storage::Fog.new(CarrierWave::Uploader::Base)
@@ -69,14 +69,12 @@ module Domains
               else
                 Rails.logger.warn "Temp file not found in S3 for deletion: \\#{s3_path}"
               end
-            else
-              if File.exist?(tmp_path)
-                File.delete(tmp_path)
+            elsif File.exist?(tmp_path)
+              File.delete(tmp_path)
                 Rails.logger.info "Deleted temp file: \\#{tmp_path}"
-              end
             end
-        end
+          end
         end 
-   end
- end
+    end
+  end
 end

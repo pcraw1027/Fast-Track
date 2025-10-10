@@ -1,6 +1,3 @@
-
-
-
 module Domains
   module CroupierCore
     module Operations

@@ -5,9 +5,9 @@ class Domains::CroupierCore::UploadRecordsController < ApplicationController
   # GET /upload_records or /upload_records.json
   def index
     @upload_records = Domains::CroupierCore::UploadRecord.includes(:user, :scan)
-                      .all.paginate(page: params[:page], per_page: 20).order(
-                        created_at: :desc, id: :desc
-                      )
+                                                         .all.paginate(page: params[:page], per_page: 20).order(
+                                                           created_at: :desc, id: :desc
+                                                         )
   end
 
   # GET /upload_records/1 or /upload_records/1.json
@@ -26,12 +26,14 @@ class Domains::CroupierCore::UploadRecordsController < ApplicationController
 
   # POST /upload_records or /upload_records.json
   def create
-    upload_claims = Domains::CroupierCore::Operations::UploadTrigger.call!(barcode: upload_record_params[:barcode], 
-                              scan_id: upload_record_params[:scan_id], 
-                              user_id: current_user.id, 
-                              asin: upload_record_params[:asin],
-                              brand: upload_record_params[:brand],
-                              upload_params: upload_record_params.except(:brand)) if upload_record_params.present?
+    if upload_record_params.present?
+      upload_claims = Domains::CroupierCore::Operations::UploadTrigger.call!(barcode: upload_record_params[:barcode], 
+                                scan_id: upload_record_params[:scan_id], 
+                                user_id: current_user.id, 
+                                asin: upload_record_params[:asin],
+                                brand: upload_record_params[:brand],
+                                upload_params: upload_record_params.except(:brand))
+    end
     
 
     respond_to do |format|

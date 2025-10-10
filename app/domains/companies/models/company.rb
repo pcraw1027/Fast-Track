@@ -4,6 +4,7 @@ module Domains
         include Searchable
 
         attr_accessor :mid, :photo, :email, :phone, :contact_name, :new_company_name, :company_id
+
         belongs_to :industry_category_type, optional: true
         mount_uploader :logo, Uploaders::LogoUploader
         has_many :parent_relationships, foreign_key: :child_company_id, class_name: "Domains::Companies::CompanyRelationship"
@@ -60,10 +61,11 @@ module Domains
 
         def level_5_flag
           return false unless company_snapshot
+
           !company_snapshot.slice(:employee_demographics_transparency, 
                   :employee_demographics_performance, :projected_culture_and_identity, 
                   :mgmt_composition_transparency, :mgmt_composition_performance)
-              .values.all? { |v| v == "none" }
+                           .values.all? { |v| v == "none" }
         end
 
 
@@ -71,18 +73,19 @@ module Domains
 
 
         def remove_logo_from_s3
-          if logo.present?
+          return if logo.blank?
+
             logo.remove!
-          end
+          
         end
 
         def create_snapshot
-          Domains::Companies::CompanySnapshot.create!(company_id: self.id,
+          Domains::Companies::CompanySnapshot.create!(company_id: id,
           employee_demographics_transparency: 0, 
                   employee_demographics_performance: 0, projected_culture_and_identity: 0, 
                   mgmt_composition_transparency: 0, mgmt_composition_performance: 0)
         end
 
       end
-    end
   end
+end

@@ -6,14 +6,14 @@ class Domains::Classifications::KlassesController < ApplicationController
   def index
     if params[:product_category_source_id]
       product_category_source_id = Domains::Classifications::ProductCategorySource
-                                    .find_by(code: params[:product_category_source_id]).id 
+                                   .find_by(code: params[:product_category_source_id]).id 
       @klasses = Domains::Classifications::Klass.where(product_category_source_id: product_category_source_id)
-                                    .paginate(page: params[:page], per_page: 20).order(
-                                  created_at: :desc, id: :desc
-                                )
+                                                .paginate(page: params[:page], per_page: 20).order(
+                                                  created_at: :desc, id: :desc
+                                                )
     else 
       @klasses = Domains::Classifications::Klass.all.paginate(page: params[:page], per_page: 20)
-                    .order(created_at: :desc, id: :desc)
+                                                .order(created_at: :desc, id: :desc)
     end
   end
 

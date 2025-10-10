@@ -1,5 +1,3 @@
-
-
 module Domains
   module People
     class Person < ApplicationRecord
@@ -24,11 +22,12 @@ module Domains
     
     
       def remove_photo_from_s3
-        if picture.present?
+        return if picture.blank?
+
           picture.remove!
-        end
+        
       end
     end
         
-    end
+  end
 end

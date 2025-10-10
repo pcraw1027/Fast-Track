@@ -9,6 +9,5 @@ module Domains
       belongs_to :product_category_source, class_name: "Domains::Classifications::ProductCategorySource"
       self.table_name = "product_attributes"
     end
-
-    end
+  end
 end

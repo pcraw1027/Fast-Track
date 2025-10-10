@@ -17,6 +17,5 @@ module Domains
       end
 
     end
-
   end
 end

@@ -11,25 +11,25 @@ class Api::V1::Companies::CompaniesController < Api::V1::BaseController
           :company_ethnicity_stats, :company_gender_stats).find(params[:id])
     
       parent_company = Domains::Companies::CompanyRelationship.parents(params[:id])&.map do |cr|
- {details: cr, parent_company: cr.parent_company}
+ { details: cr, parent_company: cr.parent_company }
       end&.first
       subsidiaries_companies = Domains::Companies::CompanyRelationship.children(params[:id])&.map do |cr|
- {details: cr, child_company: cr.child_company}
+ { details: cr, child_company: cr.child_company }
       end
 
-      subsidiary_data = {title: "Subsidiaries/Brands", subsidiaries_companies: subsidiaries_companies}
+      subsidiary_data = { title: "Subsidiaries/Brands", subsidiaries_companies: subsidiaries_companies }
       if subsidiaries_companies.blank? && parent_company.present?
          subsidiaries_companies = Domains::Companies::CompanyRelationship
-              .children(parent_company[:details].parent_company_id)&.map do |cr|
-                                    {details: cr, child_company: cr.child_company}
-                          end
+                                  .children(parent_company[:details].parent_company_id)&.map do |cr|
+                                    { details: cr, child_company: cr.child_company }
+         end
          if subsidiaries_companies.any?
            subsidiary_data = {
-                    title: "Sister Subsidiaries/Brands", 
-                    subsidiaries_companies: subsidiaries_companies.select do |c|
-                              c[:child_company].id != company.id
+             title: "Sister Subsidiaries/Brands", 
+                    subsidiaries_companies: subsidiaries_companies.reject do |c|
+                              c[:child_company].id == company.id
                     end 
-               }
+           }
          end
       end
       
@@ -60,7 +60,7 @@ class Api::V1::Companies::CompaniesController < Api::V1::BaseController
 
 
     render json: {
-        level_1_flag: company.level_1_flag,
+      level_1_flag: company.level_1_flag,
         company: company,
         industry_category_type: company.industry_category_type,
         parent_company: parent_company,
@@ -71,7 +71,7 @@ class Api::V1::Companies::CompaniesController < Api::V1::BaseController
         company_snapshot: company.company_snapshot,
         review_stats: review_stats,
         rating_distribution: rating_distribution
-      }, status: :ok
+    }, status: :ok
   end
 
 end
