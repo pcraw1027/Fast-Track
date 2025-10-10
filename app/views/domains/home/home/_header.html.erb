@@ -1,0 +1,186 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light-green sticky-top">
+  
+  <%if Rails.env.staging?%>
+     <a class="staging-brand" href="#"> Staging </a>
+  <%end%>
+  
+  <%= link_to 'FastTrack', root_path, class:"navbar-brand" %>
+  
+  <!--
+  <a class="navbar-brand" href="#">
+    <img src = "app/assets/images/cr147 Final_2022_short form-01.jpg" />
+  </a>
+  -->
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+
+
+      <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+        Trigger Maintenance
+      </a>
+      <div class="dropdown-menu bg-light-green">
+        <%= link_to "BIT Record", domains_croupier_core_bit_records_path, class: "nav-link" %>
+        <%= link_to "PIT Records", domains_croupier_core_pit_records_path, class:"nav-link" %>
+        <%= link_to "CIT Records", domains_croupier_core_cit_records_path, class:"nav-link" %>
+        <%= link_to "Scan Records", domains_croupier_core_scans_path, class: "nav-link" %>
+        <%= link_to "Upload Record", domains_croupier_core_upload_records_path, class:"nav-link" %>
+      </div>
+    </li>
+
+     <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+        Product
+      </a>
+      <div class="dropdown-menu bg-light-green">
+        <%= link_to "Product Maintenance", domains_products_products_path, class: "nav-link" %>
+        <%= link_to "Product Capture Interface", product_capture_interface_path, class: "nav-link" %>
+        <%= link_to "Segment Codes", domains_classifications_segments_path, class: "nav-link" %>
+        <%= link_to "Family Codes", domains_classifications_families_path, class:"nav-link" %>
+        <%= link_to "Class Codes", domains_classifications_klasses_path, class:"nav-link" %>
+        <%= link_to "Brick Codes", domains_classifications_bricks_path, class:"nav-link" %>
+        <%= link_to "Attribute Codes", domains_classifications_attribute_titles_path, class:"nav-link" %>
+        <%= link_to "Attribute Value", domains_classifications_attribute_values_path, class:"nav-link" %>
+        <%= link_to "Category Source", domains_classifications_product_category_sources_path, class:"nav-link" %>
+      </div>
+    </li>
+
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+          Company
+        </a>
+        <div class="dropdown-menu bg-light-green">
+          <%= link_to "Company Maintenance", domains_companies_companies_path, class: "nav-link" %>
+          <%= link_to "Company Capture Interface", cit_interface_path, class:"nav-link" %>
+          <%= link_to "Industry Sector", domains_companies_industry_category_types_path, class: "nav-link" %>
+          <%= link_to "Relationship Types", domains_companies_company_relationship_types_path, class: "nav-link" %>
+          <%= link_to "Contact Types", domains_companies_company_contact_types_path, class:"nav-link" %>
+          <%= link_to "Ethnicity Types", domains_people_ethnicity_types_path, class:"nav-link" %>
+          <%= link_to "Gender Types", domains_people_gender_types_path, class:"nav-link" %>
+          <%= link_to "Employee Types", domains_companies_employee_types_path, class:"nav-link" %>
+        </div>
+      </li>
+
+
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+        Import Triggers
+      </a>
+      <div class="dropdown-menu bg-light-green">
+        <%= link_to "Barcode import", bit_interface_path, class: "nav-link" %>
+        <%= link_to "Product import", pit_interface_path, class: "nav-link" %>
+        <%= link_to "Company import", cit_interface_path, class:"nav-link" %>
+      </div>
+    </li>
+
+
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+        Users
+      </a>
+      <div class="dropdown-menu bg-light-green">
+        <a class="nav-link" href="/domains/users/users">
+          User Maintenance
+        </a>
+        <a class="nav-link" href="/domains/users/invitations">
+          User Invitations
+        </a>
+        <a class="nav-link" href="#">
+          User Waitlist
+        </a>
+
+      </div>
+    </li>
+
+   
+        <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+          Persons
+        </a>
+        <div class="dropdown-menu bg-light-green">
+          <a class="nav-link" href="/domains/people/people">Persons</a>
+          <%= link_to "Person Social Sites", domains_socials_person_social_sites_path, class:"nav-link" %>         
+          <%= link_to "Addresses", domains_contact_and_identity_addresses_path, class:"nav-link" %>
+          <%= link_to "Address Types", domains_contact_and_identity_address_types_path, class: "nav-link" %>
+          <%= link_to "Country References", domains_contact_and_identity_country_references_path, class: "nav-link" %>
+          <%= link_to "Social Sites", domains_socials_social_sites_path, class:"nav-link" %>
+        </div>
+      </li>
+
+
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+          Croupier147
+        </a>
+        <div class="dropdown-menu bg-light-green">
+          <%= link_to "About Us", home_about_path, class:"nav-link" %>
+          <%if current_user %>
+              <%= link_to "Website Messages", domains_website_data_website_messages_path, class:"nav-link" %>
+        <%end%>
+        <a class="nav-link" href="https://croupier147.com" target="_blank">Croupier147.com</a>
+        </div>
+      </li>
+
+
+      <%if current_user %>
+        <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+                Hi, <%= current_user.username%>
+              </a>
+              <div class="dropdown-menu bg-light-green">
+            <a href="/domains/users/users/<%= current_user.id %>" class="nav-link"> Profile</a>
+              <%= link_to edit_user_registration_path(current_user), class:"nav-link" do %>
+                      Account Settings
+                      <%end%>
+
+                <%= button_to 'Logout', destroy_user_session_path, method: :delete, class: "nav-link btn btn-outline-link btn-sm" %>
+
+
+
+              </div>
+            </li>
+      <%else%>
+        <li class="nav-item">
+            <a class="nav-link" href="/users/sign_in">
+              Sign in
+            </a>
+        </li>
+      <%end%>
+      
+
+
+<!--
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Link</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+          Dropdown
+        </a>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled">Disabled</a>
+      </li>
+ -->     
+    </ul>
+    <form class="form-inline my-2 my-lg-0" onsubmit="return false;">
+      <input id="search-input" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="button" onclick="handleSearch()">Search</button>
+    </form>
+
+  </div>
+</nav>

@@ -1,0 +1,88 @@
+<div>
+  <%= image_tag @person.picture.url if @person.picture? %>
+</div>
+
+<p>
+  <strong>Title:</strong>
+  <%= @person.title %>
+</p>
+
+<p>
+  <strong>First name:</strong>
+  <%= @person.first_name %>
+</p>
+
+<p>
+  <strong>Middle name:</strong>
+  <%= @person.middle_name %>
+</p>
+
+<p>
+  <strong>Last name:</strong>
+  <%= @person.last_name %>
+</p>
+
+<p>
+  <strong>Letters:</strong>
+  <%= @person.letters %>
+</p>
+
+
+<p>
+  <strong>Gender type:</strong>
+  <%= @person.gender_type&.gender %>
+</p>
+
+<p>
+  <strong>Ethnicity type:</strong>
+  <%= @person.ethnicity_type&.ethnicity %>
+</p>
+
+<p>
+  <strong>Country reference:</strong>
+  <%= @person.country_reference&.country %>
+</p>
+
+
+
+<p>
+  <strong>Email:</strong>
+  <%= @person.email %>
+</p>
+
+<p>
+  <strong>Phone:</strong>
+  <%= @person.phone %>
+</p>
+
+<p>
+  <strong>Website:</strong>
+  <%= @person.website %>
+</p>
+
+<h5>Social Sites</h5>
+
+<table class="table table-striped table-bordered table-hover table-sm container-fluid">
+  <thead class="thead-dark">
+    <tr>
+      <th>Site</th>
+      <th>Profile link</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @person.person_social_sites.each do |pss| %>
+      <tr>
+        <td><%= pss.social_site.site if pss.social_site%></td>
+        <td><%= pss.profile_link %></td>
+        <td><%= link_to 'Show', pss %></td>
+        <td><%= link_to 'Edit', edit_domains_people_social_site_path(pss.id) %></td>
+        <td><%= button_to 'Delete', pss, data: { confirm: 'Are you sure?' }, method: :delete, class: "btn btn-outline-danger btn-sm" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to 'Edit', edit_domains_people_person_path(@person) %> |
+<%= link_to 'Back', domains_people_people_path %>

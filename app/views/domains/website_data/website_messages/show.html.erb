@@ -1,0 +1,64 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Sender name:</strong>
+  <%= @website_message.sender_name %>
+</p>
+
+<p>
+  <strong>Sender email:</strong>
+  <%= @website_message.sender_email %>
+</p>
+
+<p>
+  <strong>Message type:</strong>
+  <%= @website_message.message_type %>
+</p>
+
+<p>
+  <strong>Date Sent:</strong>
+  <%= @website_message.created_at.strftime("%B %d, %Y") %>
+</p>
+
+<p>
+  <strong>Message subject:</strong>
+  <%= @website_message.message_subject %>
+</p>
+
+<p>
+  <strong>Interest:</strong>
+  <%= @website_message.interest %>
+</p>
+
+<p>
+  <strong>Message content:</strong>
+  <%= @website_message.message_content %>
+</p>
+
+<p>
+  <strong>Sender response sent:</strong>
+  <%= @website_message.sender_response_sent %>
+</p>
+
+<p>
+  <strong>Internal response sent:</strong>
+  <%= @website_message.internal_response_sent %>
+</p>
+
+<p>
+  <strong>Initial response:</strong>
+  <%= @website_message.initial_response %>
+</p>
+
+<p>
+  <strong>Initial response date:</strong>
+  <%= @website_message.initial_response_date %>
+</p>
+
+<p>
+  <strong>Conclusion:</strong>
+  <%= @website_message.conclusion %>
+</p>
+
+<%= link_to 'Edit', edit_domains_website_data_website_message_path(@website_message) if current_user.admin? %> 
+<%= link_to 'Back', domains_website_data_website_messages_path %>

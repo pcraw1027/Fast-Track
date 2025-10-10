@@ -1,0 +1,29 @@
+
+
+<p>
+  <strong>Company:</strong>
+  <%= @company_gender_stat.company_id %>
+</p>
+
+<p>
+  <strong>Gender type:</strong>
+  <%= @company_gender_stat.gender_type_id %>
+</p>
+
+<p>
+  <strong>Employee type:</strong>
+  <%= @company_gender_stat.employee_type_id %>
+</p>
+
+<p>
+  <strong>Count:</strong>
+  <%= @company_gender_stat.count %>
+</p>
+
+<p>
+  <strong>Percentage:</strong>
+  <%= @company_gender_stat.percentage %>
+</p>
+
+<%= link_to 'Edit', edit_domains_companies_company_gender_stat_path(@company_gender_stat) %> |
+<%= link_to 'Back', domains_companies_company_gender_stats_path %>

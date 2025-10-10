@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Person:</strong>
+  <a href="/people/<%= @person_social_site.person_id %>"><%= @person_social_site.person&.first_name + " " + @person_social_site.person&.last_name %></a>
+</p>
+
+<p>
+  <strong>Person:</strong>
+  <%= @person_social_site.profile_link %>
+</p>
+
+<p>
+  <strong>Social site:</strong>
+  <%= @person_social_site.social_site&.site %>
+</p>
+
+<%= link_to 'Edit', edit_domains_socials_person_social_site_path(@person_social_site) %> |
+<%= link_to 'Back', domains_socials_person_social_sites_path %>

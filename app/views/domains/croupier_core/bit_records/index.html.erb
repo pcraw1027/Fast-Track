@@ -1,0 +1,35 @@
+<h3>BIT Records</h3>
+<table class="table table-striped table-bordered table-hover table-sm container-fluid">
+  <thead class="thead-dark">
+    <tr>
+      <th>Barcode</th>
+      <th>Symbology</th>
+      <th>Status</th>
+      <th>Source</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @bit_records.each do |bit_record| %>
+      <tr>
+        <td><%= bit_record.barcode %></td>
+        <td><%= bit_record.symbology %></td>
+        
+        <td><%= bit_record.status %></td>
+        <td><%= bit_record.source %></td>
+        <td><%= link_to 'Show', bit_record %></td>
+        <td><%= link_to 'Edit', edit_domains_croupier_core_bit_record_path(bit_record) %></td>
+        <td><%= button_to 'Destroy', bit_record, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-outline-danger btn-sm" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+<nav aria-label="Page navigation">
+  <%= will_paginate @bit_records, renderer: BootstrapPagination::Rails,
+      class: 'pagination justify-content-center' %>
+</nav>
+
+<%= link_to 'New Bit Record', new_domains_croupier_core_bit_record_path, class: "action-btn" %>

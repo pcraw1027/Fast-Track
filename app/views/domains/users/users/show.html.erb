@@ -1,0 +1,48 @@
+<br>
+<%if current_user.admin?%>
+  <p>
+    <strong>status:</strong>
+    <span class="<%= @user.active? ? 'status-active' : @user.suspended? ? 'status-suspended' : 'status-deleted' %>"><%= @user.status %></span>
+  </p>
+<%end%>
+
+<p>
+  <strong>Username:</strong>
+  <%= @user.username %>
+</p>
+
+<p>
+  <strong>Email:</strong>
+  <%= @user.email %>
+</p>
+<p>
+  <strong>Role:</strong>
+  <%= @user.role %>
+</p>
+
+<p>
+  <strong>Country:</strong>
+  <%= @user.country %>
+</p>
+
+<p>
+  <strong>Postal code:</strong>
+  <%= @user.postal_code %>
+</p>
+
+<p>
+  <strong>Invite code:</strong>
+  <%= @user.invite_code %>
+</p>
+
+
+
+
+<%if current_user.id == @user.id %>
+
+        <%= link_to edit_user_registration_path(current_user) do %>
+                <i class="fa fa-user"></i>Edit your account<%end%>
+<%else%>
+
+<%= link_to 'users', domains_users_users_path %>
+<%end%>
