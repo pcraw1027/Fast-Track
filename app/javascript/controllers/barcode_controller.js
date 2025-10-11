@@ -11,7 +11,8 @@ export default class extends Controller {
     if (!barcode) return this.showError("Please enter barcode.");
     if (![6, 8, 12, 13].includes(barcode.length)) return this.showError("barcode must be 6, 8, 12, or 13 characters long, symbology UPC-E, EAN-8, UPC-A, or EAN-13.");
     const formData = new FormData();
-    formData.append("bit_record[barcode]", barcode)
+    //console.log("Barcode to submit:", barcode); // Debugging line
+    formData.append("domains_croupier_core_bit_record[barcode]", barcode)
     try {
         const response = await fetch("/insert_barcode", {
           method: "POST",

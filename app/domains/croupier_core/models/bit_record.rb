@@ -7,11 +7,18 @@ module Domains
 
         attr_accessor :message
 
+          #enum status: { open: 0, close: 1 }
           belongs_to :user, class_name: "Domains::Users::User"
-          enum status: { open: 0, close: 1 }
           default_scope -> { order(updated_at: :desc) }
           self.table_name = "bit_records"
 
+          def status_text
+            if status.zero? 
+               "Open" 
+            else
+               "Closed"
+            end
+          end
           
           def invoke_bit(barcode, source, asin, user_id, brand = "")
             bit_invoke_claims = Domains::CroupierCore::Operations::Bit.call!(barcode: barcode, source: source, asin: asin, 
