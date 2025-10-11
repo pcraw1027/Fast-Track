@@ -13,7 +13,7 @@ module Domains
           self.table_name = "bit_records"
 
           def status_text
-            if status == 0 
+            if status.zero? 
                "Open" 
             else
                "Closed"
