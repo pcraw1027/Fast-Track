@@ -1,6 +1,8 @@
 require_relative "boot"
 
 require "rails/all"
+require 'logger'
+
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -18,5 +20,14 @@ module FastTrack
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+  
+    # Ignore "category" subfolders inside each domain (models, services, jobs, policies, etc.)
+    Rails.autoloaders.main.ignore(
+      Rails.root.join('app/domains/**/models'),
+      Rails.root.join('app/domains/**/services'),
+      Rails.root.join('app/domains/**/jobs'),
+      Rails.root.join('app/domains/**/policies'),
+      Rails.root.join('app/domains/**/serializers')
+    )
   end
 end
