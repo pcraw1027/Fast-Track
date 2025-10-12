@@ -71,6 +71,72 @@ module Domains
         end
 
 
+
+        def self.recent_scan_products(per_page, page)
+          per_page = per_page.to_i
+          page = page.to_i
+          offset = (page - 1) * per_page
+
+          # 1. Get product IDs sorted by scan count, with pagination
+          product_ids_query = <<-SQL.squish
+            SELECT 
+              products.id
+            FROM 
+              scans
+            JOIN 
+              products ON products.id = scans.product_id
+            GROUP BY 
+              products.id, scans.created_at
+            ORDER BY 
+              scans.created_at DESC
+            LIMIT #{per_page} OFFSET #{offset}
+          SQL
+
+          product_ids = ActiveRecord::Base.connection.select_values(product_ids_query)
+
+          # 2. Total count of unique products with scans
+          count_query = <<-SQL.squish
+            SELECT COUNT(*) FROM (
+              SELECT products.id
+              FROM scans
+              JOIN products ON products.id = scans.product_id
+              GROUP BY products.id
+            ) AS product_counts
+          SQL
+
+          total_count = ActiveRecord::Base.connection.select_value(count_query).to_i
+
+            product_scan_counts = {}
+            if product_ids.any?
+              scan_counts_query = <<-SQL.squish
+                SELECT product_id, COUNT(*) AS scan_count
+                FROM scans
+                WHERE product_id IN (#{product_ids.join(',')})
+                GROUP BY product_id
+              SQL
+
+              scan_counts = ActiveRecord::Base.connection.exec_query(scan_counts_query)
+              product_scan_counts = scan_counts.rows.to_h
+
+            end
+
+            #load product_variants data
+            product_variants = unscoped_products_with_assoc("product_id", product_ids)
+
+              
+          records = product_variants.map do |pv|
+              {
+                scan_count: product_scan_counts[pv.product_id] || 0,
+                product_variant: pv,
+                media: pv.media
+              }
+          end
+
+          PaginatedResult.new(records, per_page, page, total_count)
+        end
+
+
+
         def self.top_scan_products(per_page, page)
           per_page = per_page.to_i
           page = page.to_i
@@ -141,7 +207,7 @@ module Domains
             end.join(' ')} ELSE #{values.length} END"
           )
 
-          Domains::CroupierCore::ProductVariant.unscoped
+          Domains::Products::ProductVariant.unscoped
                                                .includes(:media)
                                                .left_outer_joins(:media, product: [:company, :reviews])
                                                .select(
