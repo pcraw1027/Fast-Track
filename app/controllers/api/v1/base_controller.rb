@@ -51,12 +51,12 @@ def record_not_found(exception)
         user_id = payload[0]['sub']
   
         # Check if the token is in the AllowlistedJwt table
-        allowlisted_token = AllowlistedJwt.find_by(jti: payload[0]['jti'], user_id: user_id)
+        allowlisted_token = Domains::Users::AllowlistedJwt.find_by(jti: payload[0]['jti'], user_id: user_id)
   
         if allowlisted_token.nil?
           render json: { error: 'Authorization token has been revoked or does not exist' }, status: :unauthorized
         else
-          @current_user = User.find(user_id)
+          @current_user = Domains::Users::User.find(user_id)
         end
       rescue JWT::DecodeError
         render json: { error: 'Invalid authorization token' }, status: :unauthorized

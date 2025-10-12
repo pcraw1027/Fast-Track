@@ -36,6 +36,7 @@ group :development, :test do
 end
 
 group :development do
+  gem "logger", "~> 1.6"   
   gem 'capistrano'
   gem 'capistrano-bundler'
   gem 'capistrano-rails'
@@ -105,6 +106,7 @@ group :development, :test do
   gem 'bundler-audit', require: false
 end
 
-gem "logger", "~> 1.6"   # works with Ruby 3.3
+
 gem 'rack', '~> 2.2.19'
 gem 'uri', '>= 1.0.4'
+

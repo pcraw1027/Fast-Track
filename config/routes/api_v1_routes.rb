@@ -9,6 +9,7 @@ module ApiV1Routes
             get 'landing_metrics', to: 'landing#landing_metrics'
             get 'open_activity_stats', to: 'landing#open_activity_stats' 
             get 'top_scans', to: 'landing#top_scans'
+            get 'recent_scans', to: 'landing#recent_scans'
         end
 
         

@@ -1,4 +1,4 @@
-class Domains::ContactAndIdentityAddressTypesController < ApplicationController
+class Domains::ContactAndIdentity::AddressTypesController < ApplicationController
   before_action :set_address_type, only: %i[ show edit update destroy ]
 
   # GET /address_types or /address_types.json
