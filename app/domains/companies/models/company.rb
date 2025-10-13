@@ -15,7 +15,7 @@ module Domains
         has_many :company_ethnicity_stats, class_name: "Domains::Companies::CompanyEthnicityStat", dependent: :destroy
         has_many :company_gender_stats, class_name: "Domains::Companies::CompanyGenderStat", dependent: :destroy
         has_many :products, class_name: "Domains::Products::Product", dependent: :destroy
-        has_many :cit_records, class_name: "Domains::Companies::CitRecord", dependent: :destroy
+        has_many :cit_records, class_name: "Domains::CroupierCore::CitRecord", dependent: :destroy
         has_many :reviews, as: :reviewable, class_name: "Domains::Features::Reviewable::Review", dependent: :destroy
         has_many :addresses, as: :addressable, class_name: "Domains::ContactAndIdentity::Address", dependent: :destroy
         has_one :company_snapshot, class_name: "Domains::Companies::CompanySnapshot", dependent: :destroy
