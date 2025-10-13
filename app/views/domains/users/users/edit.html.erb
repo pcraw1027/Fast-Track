@@ -46,12 +46,12 @@
 
         <div class="form-group">
         <%= form.label :role %><br />
-        <%= form.select :role, User.roles.keys.map { |k| [k.titleize, k] }, {}, class: "form-control" %>
+        <%= form.select :role, Domains::Users::User.roles.keys.map { |k| [k.titleize, k] }, {}, class: "form-control" %>
         </div>
 
     <div class="form-group">
         <%= form.label :status %>
-        <%= form.select :status, User.statuses.keys.map { |k| [k.titleize, k] }, {}, class: "form-control" %>
+        <%= form.select :status, Domains::Users::User.statuses.keys.map { |k| [k.titleize, k] }, {}, class: "form-control" %>
     </div>
 
     <div class="actions">
