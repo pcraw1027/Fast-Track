@@ -1,5 +1,6 @@
 class Domains::Classifications::SegmentsController < ApplicationController
   before_action :set_segment, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!, only: %i[ new edit update create destroy]
 
   # GET /segments or /segments.json
   def index

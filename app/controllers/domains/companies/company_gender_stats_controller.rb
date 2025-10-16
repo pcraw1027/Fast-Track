@@ -1,5 +1,6 @@
 class Domains::Companies::CompanyGenderStatsController < ApplicationController
   before_action :set_company_gender_stat, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!, only: %i[ new edit update create destroy]
 
   # GET /company_gender_stats or /company_gender_stats.json
   def index

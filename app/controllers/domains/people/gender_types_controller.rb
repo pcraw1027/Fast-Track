@@ -1,5 +1,6 @@
 class Domains::People::GenderTypesController < ApplicationController
   before_action :set_gender_type, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!, only: %i[ new edit update create destroy]
 
   # GET /gender_types or /gender_types.json
   def index

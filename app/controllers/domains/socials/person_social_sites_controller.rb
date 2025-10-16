@@ -1,5 +1,6 @@
 class Domains::Socials::PersonSocialSitesController < ApplicationController
   before_action :set_person_social_site, only: %i[ edit update destroy ]
+  before_action :authenticate_user!, only: %i[ new edit update create destroy]
 
   # GET /person_social_sites or /person_social_sites.json
   def index

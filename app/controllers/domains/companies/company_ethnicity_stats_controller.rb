@@ -1,6 +1,7 @@
 class Domains::Companies::CompanyEthnicityStatsController < ApplicationController
   before_action :set_company_ethnicity_stat, only: %i[ show edit update destroy ]
   before_action :set_dropdowns, only: %i[ new edit create ]
+  before_action :authenticate_user!, only: %i[ new edit update create destroy]
 
   # GET /company_ethnicity_stats or /company_ethnicity_stats.json
   def index

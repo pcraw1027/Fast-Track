@@ -1,5 +1,6 @@
 class Domains::Companies::EmployeeTypesController < ApplicationController
   before_action :set_employee_type, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!, only: %i[ new edit update create destroy]
 
   # GET /employee_types or /employee_types.json
   def index
