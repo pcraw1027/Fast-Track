@@ -1,6 +1,7 @@
 class Domains::Classifications::BricksController < ApplicationController
   before_action :set_brick, only: %i[ show edit update destroy ]
   before_action :set_dropdowns, only: %i[ new edit create]
+  before_action :authenticate_user!, only: %i[ new edit update create destroy]
 
   # GET /bricks or /bricks.json
   def index

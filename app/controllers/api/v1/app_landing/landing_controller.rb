@@ -16,15 +16,14 @@ class Api::V1::AppLanding::LandingController < Api::V1::BaseController
     page = params[:page] || 1
     per_page = params[:per_page] || 20
     per_page = 20 if per_page.to_i > 20
-    render json: recent_scan_products(per_page, page), status: :ok
+    rs = recent_scan_products(per_page, page)
+    logger.info "******************  #{rs.inspect}"
+    render json: rs, status: :ok
   end
-
-
-  
 
   def open_activity_stats
     render json: {
-      top_scans: top_scan_products(10, 1).records,
+      recent_scans: recent_scan_products(10, 1).records,
       activity_stats: activity_stats
     }, status: :ok
   end
@@ -34,7 +33,7 @@ class Api::V1::AppLanding::LandingController < Api::V1::BaseController
     my_scan_products = Domains::CroupierCore::RawQueryModule.my_scan_products(10, 1, current_user.id)
     render json: {
       my_scans: my_scan_products.records,
-        top_scans: top_scan_products(10, 1).records,
+        recent_scans: recent_scan_products(10, 1).records,
         activity_stats: activity_stats
     }, status: :ok
   end
@@ -44,7 +43,7 @@ class Api::V1::AppLanding::LandingController < Api::V1::BaseController
   private 
 
 
-  
+
   def top_scan_products(per_page, page)
     Domains::CroupierCore::RawQueryModule.top_scan_products(per_page, page)
   end
@@ -52,8 +51,6 @@ class Api::V1::AppLanding::LandingController < Api::V1::BaseController
   def recent_scan_products(per_page, page)
     Domains::CroupierCore::RawQueryModule.recent_scan_products(per_page, page)
   end
-
-  
 
   def activity_stats
     start_date = Time.current.beginning_of_month

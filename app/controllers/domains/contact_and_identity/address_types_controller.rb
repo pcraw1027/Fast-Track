@@ -1,5 +1,6 @@
 class Domains::ContactAndIdentity::AddressTypesController < ApplicationController
   before_action :set_address_type, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!, only: %i[ new edit update create destroy]
 
   # GET /address_types or /address_types.json
   def index

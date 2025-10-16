@@ -1,6 +1,7 @@
 class Domains::Classifications::AttributeTitlesController < ApplicationController
   before_action :set_attribute_title, only: %i[ show edit update destroy ]
   before_action :set_dropdowns, only: %i[ new edit create ]
+  before_action :authenticate_user!, only: %i[ new edit update create destroy]
 
 
   # GET /attribute_titles or /attribute_titles.json

@@ -1,5 +1,6 @@
 class Domains::People::EthnicityTypesController < ApplicationController
   before_action :set_ethnicity_type, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!, only: %i[ new edit update create destroy]
   
   # GET /ethnicity_types or /ethnicity_types.json
   def index

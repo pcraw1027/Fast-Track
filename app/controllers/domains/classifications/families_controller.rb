@@ -1,6 +1,7 @@
 class Domains::Classifications::FamiliesController < ApplicationController
   before_action :set_family, only: %i[ show edit update destroy ]
   before_action :set_dropdowns, only: %i[ new edit create ]
+  before_action :authenticate_user!, only: %i[ new edit update create destroy]
 
   # GET /families or /families.json
   def index

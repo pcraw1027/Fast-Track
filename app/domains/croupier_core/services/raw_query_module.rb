@@ -78,51 +78,50 @@ module Domains
           offset = (page - 1) * per_page
 
           # 1. Get product IDs sorted by scan count, with pagination
-          product_ids_query = <<-SQL.squish
-            SELECT 
-              products.id
-            FROM 
-              scans
-            JOIN 
-              products ON products.id = scans.product_id
-            GROUP BY 
-              products.id, scans.created_at
-            ORDER BY 
-              scans.created_at DESC
-            LIMIT #{per_page} OFFSET #{offset}
-          SQL
+          sql = <<-SQL.squish
+                    SELECT product_id
+                    FROM (
+                      SELECT scans.product_id,
+                            MAX(scans.created_at) AS latest_created_at
+                      FROM scans
+                      GROUP BY scans.product_id
+                    ) AS latest_scans
+                    ORDER BY latest_scans.latest_created_at DESC
+                    LIMIT ? OFFSET ?
+                  SQL
 
+          product_ids_query = ActiveRecord::Base.sanitize_sql_array([sql, per_page, offset])
           product_ids = ActiveRecord::Base.connection.select_values(product_ids_query)
-
+          p "************************************************************************"
+          p product_ids
           # 2. Total count of unique products with scans
           count_query = <<-SQL.squish
-            SELECT COUNT(*) FROM (
-              SELECT products.id
-              FROM scans
-              JOIN products ON products.id = scans.product_id
-              GROUP BY products.id
-            ) AS product_counts
+            SELECT COUNT(DISTINCT scans.product_id)
+            FROM scans
+            WHERE scans.product_id IS NOT NULL
           SQL
 
           total_count = ActiveRecord::Base.connection.select_value(count_query).to_i
+          p total_count
+          p "**********************************************************************"
+            ids = product_ids.map(&:to_i).join(", ")
 
-            product_scan_counts = {}
-            if product_ids.any?
-              scan_counts_query = <<-SQL.squish
-                SELECT product_id, COUNT(*) AS scan_count
-                FROM scans
-                WHERE product_id IN (#{product_ids.join(',')})
-                GROUP BY product_id
-              SQL
+            scan_counts_query = <<-SQL.squish
+              SELECT product_id, COUNT(*) AS scan_count
+              FROM scans
+              WHERE product_id IN (#{ids})
+              GROUP BY product_id
+            SQL
 
-              scan_counts = ActiveRecord::Base.connection.exec_query(scan_counts_query)
-              product_scan_counts = scan_counts.rows.to_h
+            scan_counts = ActiveRecord::Base.connection.exec_query(scan_counts_query)
+            product_scan_counts = scan_counts.to_a.to_h { |r| [r["product_id"], r["scan_count"]] }
 
-            end
-
+            p product_scan_counts
+            p "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
             #load product_variants data
             product_variants = unscoped_products_with_assoc("product_id", product_ids)
-
+            p product_variants
+            p "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
               
           records = product_variants.map do |pv|
               {

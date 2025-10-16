@@ -1,5 +1,6 @@
 class Domains::ContactAndIdentity::AddressesController < ApplicationController
   before_action :set_address, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!, only: %i[ new edit update create destroy]
 
   # GET /addresses or /addresses.json
   def index

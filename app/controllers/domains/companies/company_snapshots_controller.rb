@@ -1,5 +1,6 @@
 class Domains::Companies::CompanySnapshotsController < ApplicationController
   before_action :set_company_snapshot, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!, only: %i[ new edit update create destroy]
 
   # GET /company_snapshots or /company_snapshots.json
   def index

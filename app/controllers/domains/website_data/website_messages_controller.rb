@@ -1,5 +1,6 @@
 class Domains::WebsiteData::WebsiteMessagesController < ApplicationController
   before_action :set_website_message, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!, only: %i[ new edit update create destroy]
 
   # GET /website_messages or /website_messages.json
   def index
