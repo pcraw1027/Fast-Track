@@ -1,6 +1,7 @@
 class Domains::Users::UsersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_user, only: %i[ show destroy edit update ]
+  before_action :authenticate_user!, only: %i[ edit update destroy]
   #before_action :authorize_user
 
   

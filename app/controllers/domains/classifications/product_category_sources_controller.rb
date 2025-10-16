@@ -1,5 +1,6 @@
 class Domains::Classifications::ProductCategorySourcesController < ApplicationController
   before_action :set_product_category_source, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!, only: %i[ new edit update create destroy]
 
   # GET /product_category_sources or /product_category_sources.json
   def index

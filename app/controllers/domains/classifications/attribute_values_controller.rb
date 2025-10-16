@@ -1,6 +1,7 @@
 class Domains::Classifications::AttributeValuesController < ApplicationController
   before_action :set_attribute_value, only: %i[ show edit update destroy ]
   before_action :set_dropdowns, only: %i[ new edit create ]
+  before_action :authenticate_user!, only: %i[ new edit update create destroy]
 
 
   # GET /attribute_values or /attribute_values.json

@@ -1,6 +1,7 @@
 class Domains::Classifications::ProductAttributesController < ApplicationController
   before_action :set_product_attribute, only: %i[ show edit update destroy ]
   before_action :set_dropdowns, only: %i[ new edit create ]
+  before_action :authenticate_user!, only: %i[ new edit update create destroy]
 
   # GET /product_attributes or /product_attributes.json
   def index

@@ -1,5 +1,6 @@
 class Domains::Companies::CompanyRelationshipsController < ApplicationController
   before_action :set_company_relationship, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!, only: %i[ new edit update create destroy]
 
   # GET /company_relationships or /company_relationships.json
   def index

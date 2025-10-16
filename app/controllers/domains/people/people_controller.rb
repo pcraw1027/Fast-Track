@@ -1,5 +1,6 @@
 class Domains::People::PeopleController < ApplicationController
   before_action :set_person, only: %i[ edit update destroy ]
+  before_action :authenticate_user!, only: %i[ new edit update create destroy]
 
   # GET /people or /people.json
   def index

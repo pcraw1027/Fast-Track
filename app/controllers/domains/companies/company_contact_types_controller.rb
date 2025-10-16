@@ -1,5 +1,6 @@
 class Domains::Companies::CompanyContactTypesController < ApplicationController
   before_action :set_company_contact_type, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!, only: %i[ new edit update create destroy]
 
   # GET /company_contact_types or /company_contact_types.json
   def index

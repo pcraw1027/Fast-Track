@@ -1,6 +1,7 @@
 class Domains::Companies::CompanyContactsController < ApplicationController
   before_action :set_company_contact, only: %i[ show edit update destroy ]
   before_action :set_dropdowns, only: %i[ new edit create]
+  before_action :authenticate_user!, only: %i[ new edit update create destroy]
 
   # GET /company_contacts or /company_contacts.json
   def index

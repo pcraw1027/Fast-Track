@@ -1,5 +1,6 @@
 class Domains::ContactAndIdentity::CountryReferencesController < ApplicationController
   before_action :set_country_reference, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!, only: %i[ new edit update create destroy]
 
   # GET /country_references or /country_references.json
   def index

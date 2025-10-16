@@ -1,5 +1,6 @@
 class Domains::Companies::IndustryCategoryTypesController < ApplicationController
   before_action :set_industry_category_type, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!, only: %i[ new edit update create destroy]
 
   # GET /industry_category_types or /industry_category_types.json
   def index
