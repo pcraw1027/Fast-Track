@@ -88,12 +88,12 @@ module Domains
                     ) AS latest_scans
                     ORDER BY latest_scans.latest_created_at DESC
                     LIMIT ? OFFSET ?
-                  SQL
+          SQL
 
           product_ids_query = ActiveRecord::Base.sanitize_sql_array([sql, per_page, offset])
           product_ids = ActiveRecord::Base.connection.select_values(product_ids_query)
-          p "************************************************************************"
-          p product_ids
+          Rails.logger.debug "************************************************************************"
+          Rails.logger.debug product_ids
           # 2. Total count of unique products with scans
           count_query = <<-SQL.squish
             SELECT COUNT(DISTINCT scans.product_id)
@@ -102,8 +102,8 @@ module Domains
           SQL
 
           total_count = ActiveRecord::Base.connection.select_value(count_query).to_i
-          p total_count
-          p "**********************************************************************"
+          Rails.logger.debug total_count
+          Rails.logger.debug "**********************************************************************"
             ids = product_ids.map(&:to_i).join(", ")
 
             scan_counts_query = <<-SQL.squish
@@ -116,12 +116,12 @@ module Domains
             scan_counts = ActiveRecord::Base.connection.exec_query(scan_counts_query)
             product_scan_counts = scan_counts.to_a.to_h { |r| [r["product_id"], r["scan_count"]] }
 
-            p product_scan_counts
-            p "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
+            Rails.logger.debug product_scan_counts
+            Rails.logger.debug "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
             #load product_variants data
             product_variants = unscoped_products_with_assoc("product_id", product_ids)
-            p product_variants
-            p "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+            Rails.logger.debug product_variants
+            Rails.logger.debug "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
               
           records = product_variants.map do |pv|
               {
