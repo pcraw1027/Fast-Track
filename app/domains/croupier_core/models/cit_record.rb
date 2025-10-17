@@ -44,11 +44,29 @@ module Domains
         mid.include?('C')
       end
 
+      def self.normalize_cit_rec(cit_rec, company_id)
+          return unless cit_rec.company_id != company_id
+
+              cit_rec.update(company_id: company_id) 
+              cit_recs = Domains::CroupierCore::CitRecord.where(company_id: company_id)
+
+              return unless cit_recs.any?
+
+                cit_recs.each do |cit|
+                    next unless Domains::CroupierCore::CitRecord.system_generated?(cit.mid)
+
+                    cit.destroy
+                    break
+                end
+              
+          
+      end
+
       def self.resolve_cit_rec(mid, company_id, user_id)
         cit_recs = Domains::CroupierCore::CitRecord.where(company_id: company_id)
         mid_updated = false
         if cit_recs.any?
-          cit_recs.each_with_index do |cit_rec, _i|
+          cit_recs.each do |cit_rec|
               next unless Domains::CroupierCore::CitRecord.system_generated?(cit_rec.mid)
 
               cit_rec.update(mid: mid, company_id: company_id)

@@ -48,7 +48,7 @@ class Domains::Products::ProductsController < ApplicationController
       end
       company_id = company.id
       if cit_rec
-        cit_rec.update(company_id: company.id) if cit_rec.company_id != company.id
+        Domains::CroupierCore::CitRecord.normalize_cit_rec(cit_rec, company_id)
       else
         Domains::CroupierCore::CitRecord.resolve_cit_rec(mid, company.id, current_user.id)
       end
