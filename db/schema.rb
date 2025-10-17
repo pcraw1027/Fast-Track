@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_09_10_135717) do
+ActiveRecord::Schema.define(version: 2025_10_17_071904) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -132,14 +132,12 @@ ActiveRecord::Schema.define(version: 2025_09_10_135717) do
     t.integer "total_employees"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.text "mids", default: [], array: true
     t.string "sector", default: ""
     t.string "postal_code"
     t.bigint "searches", default: 0, null: false
     t.boolean "black_owned", default: false, null: false
     t.boolean "female_owned", default: false, null: false
     t.index ["industry_category_type_id"], name: "index_companies_on_industry_category_type_id"
-    t.index ["mids"], name: "index_companies_on_mids", using: :gin
   end
 
   create_table "company_contact_types", force: :cascade do |t|

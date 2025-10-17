@@ -3,7 +3,6 @@ module Domains
     class CitRecord < ApplicationRecord
       belongs_to :company, class_name: "Domains::Companies::Company", optional: true
       has_many :cit_level_users, class_name: "Domains::CroupierCore::CitLevelUser", dependent: :destroy
-      validates :mid, uniqueness: true
       self.table_name = "cit_records"
       default_scope -> { order(product_activity_count: :desc, updated_at: :desc) }
       scope :by_level, ->(cit_level) { includes(:company, :cit_level_users).where(level: cit_level) }
@@ -40,6 +39,32 @@ module Domains
         end
         mid
       end  
+
+      def self.system_generated?(mid)
+        mid.include?('C')
+      end
+
+      def self.resolve_cit_rec(mid, company_id, user_id)
+        cit_recs = Domains::CroupierCore::CitRecord.where(company_id: company_id)
+        mid_updated = false
+        if cit_recs.any?
+          cit_recs.each_with_index do |cit_rec, _i|
+              next unless Domains::CroupierCore::CitRecord.system_generated?(cit_rec.mid)
+
+              cit_rec.update(mid: mid, company_id: company_id)
+              mid_updated = true
+              break
+          end
+        end
+
+          return if mid_updated
+
+            Domains::CroupierCore::CitRecordHandler
+              .update_or_create(nil, mid: mid, source: "Product Import",
+              user_id: user_id, company_id: company_id, brand: nil)
+          
+      end
+
 
     end
   end

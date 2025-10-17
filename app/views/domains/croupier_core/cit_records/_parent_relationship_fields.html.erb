@@ -11,22 +11,16 @@
             %>
     </div>
     </div>
-
  
-    <div class = "col-md-2">
+    <div class = "col-md-6">
         <div class = "form-group">
             <%= f.label :id, "ID", class:"form-label" %>
             <%= f.text_field :id, value: f.object.parent_company_id, disabled: true, class:"form-control" %>
         </div>
     </div>
 
-    <div class = "col-md-4">
-        <div class = "form-group">
-            <%= f.label :mids, "MIDs", class:"form-label" %>
-            <%= f.text_field :mids, value: f.object.parent_company&.mids, disabled: true, class:"form-control" %>
-        </div>
-    </div>
    </div>
+
     <div class = "row">
     <div class = "col-md-4">
         <div class = "form-group">

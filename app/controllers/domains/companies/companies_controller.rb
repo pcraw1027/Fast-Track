@@ -31,16 +31,11 @@ only: %i[ new edit update create destroy insert_company update_to_level_two upda
           mid = company_params[:mid]
           respond_to do |format|
              if @company.save
-              cit_rec = nil
               if company_params[:mid].blank?
                 mid = Domains::CroupierCore::CitRecord.generate_mid(@company.id)
-                cit_rec = Domains::CroupierCore::CitRecordHandler.update_or_create(nil, mid: mid, source: "Company Import",
+                Domains::CroupierCore::CitRecordHandler.update_or_create(nil, mid: mid, source: "Company Import",
                                 user_id: current_user.id, company_id: @company.id, brand: nil)
-              else
-                cit_rec = Domains::CroupierCore::CitRecord.find_by(mid: mid)
               end
-
-              @company.update(mids: [cit_rec.mid])
               Domains::CroupierCore::Operations::UpgradeCitLevel
                 .call!(mid: mid, company_id: @company.id, user_id: current_user.id, level: 1)
               format.html do
@@ -56,7 +51,6 @@ only: %i[ new edit update create destroy insert_company update_to_level_two upda
               format.json { render json: @company.errors, status: :unprocessable_entity }
              end
           end
-
     end
   end
 
@@ -189,7 +183,6 @@ filter_by: params[:filter_by]))
 
   def create
     @company = Domains::Companies::Company.new(company_params.except(:mid))
-    @company.mids = [company_params[:mid]]
     respond_to do |format|
       if @company.save
         format.html { redirect_to @company, notice: "Company was successfully created." }
@@ -249,8 +242,6 @@ filter_by: params[:filter_by]))
 
             Domains::CroupierCore::CitRecordHandler.update_or_create(nil, mid: sys_gen_mid, source: "Company Import", 
                             user_id: current_user.id, company_id: company.id, brand: nil)
-
-            company.update(mids: [sys_gen_mid])
 
             Domains::CroupierCore::Operations::UpgradeCitLevel.call!(mid: sys_gen_mid, company_id: company.id, 
                           user_id: current_user.id, level: 1)
@@ -404,7 +395,6 @@ parent_attributes[:parent_company_id])
     mid = Domains::CroupierCore::CitRecord.generate_mid(company.id)
     cit_rec = Domains::CroupierCore::CitRecordHandler.update_or_create(nil, mid: mid, source: "Company Import", 
                   user_id: current_user.id, company_id: company.id, brand: nil)
-    company.update(mids: [cit_rec.mid])
     Domains::CroupierCore::CitLevelUser.find_or_create_by!(level: 3, user_id: current_user.id, cit_record_id: cit_rec.id) if cit_rec
     company.id
   end

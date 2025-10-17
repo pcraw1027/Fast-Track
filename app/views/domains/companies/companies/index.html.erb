@@ -3,7 +3,6 @@
   <thead class="thead-dark">
     <tr>
       <th>Name</th>
-      <th>MIDs</th>
       <th>Logo</th>
       <th>Website</th>
       <th>Diversity Report</th>
@@ -16,7 +15,6 @@
     <% @companies.each do |company| %>
       <tr>
         <td><%= company.name %></td>
-        <td><%= company.mids %></td>
         <td><%= image_tag company.logo.thumb.url if company.logo? %></td>
         <td><%= link_to company.website if company.website %></td>
         <td><%= link_to company.diversity_report if company.diversity_report %></td>

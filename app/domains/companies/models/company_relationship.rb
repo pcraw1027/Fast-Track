@@ -1,7 +1,7 @@
 module Domains
   module Companies
     class CompanyRelationship < ApplicationRecord
-      attr_accessor :new_company_name, :mids
+      attr_accessor :new_company_name
 
       belongs_to :company_relationship_type, class_name: "Domains::Companies::CompanyRelationshipType"
       belongs_to :parent_company, class_name: "Domains::Companies::Company"
