@@ -47,44 +47,15 @@ class Domains::Products::ProductsController < ApplicationController
         return
       end
       company_id = company.id
-
       if cit_rec
         cit_rec.update(company_id: company.id) if cit_rec.company_id != company.id
       else
-        sys_gen_mid = Domains::CroupierCore::CitRecord.generate_mid(company.id)
-        cit_rec = Domains::CroupierCore::CitRecord.find_by(mid: sys_gen_mid)
-        if cit_rec
-          cit_rec.update(mid: mid, company_id: company.id)
-        else
-          Domains::CroupierCore::CitRecordHandler
-            .update_or_create(nil, mid: mid, source: "Product Import",
-            user_id: current_user.id, company_id: company.id, brand: nil)
-        end
+        Domains::CroupierCore::CitRecord.resolve_cit_rec(mid, company.id, current_user.id)
       end
-
     else
       begin
-        if cit_rec
-          old_company = cit_rec.company
-          if old_company && old_company.name != company_name
-            sys_gen_mid = Domains::CroupierCore::CitRecord.generate_mid(old_company.id)
-            Domains::CroupierCore::CitRecordHandler
-              .update_or_create(nil, mid: sys_gen_mid, source: "Product Import",
-              user_id: current_user.id, company_id: old_company.id, brand: nil)
-            old_company.update(mids: [sys_gen_mid])
-          end
-        end
-
-        company = Domains::Companies::Company.create!(name: company_name, mids: [mid])
-        company_id = company.id
-        serialized_params[:company_id] = company.id
-
-        if cit_rec
-          cit_rec.update(company_id: company.id) if cit_rec.company_id != company.id
-        else
-          Domains::CroupierCore::CitRecordHandler.update_or_create(nil, mid: mid, source: "Product Import",
-                                            user_id: current_user.id, company_id: company.id, brand: nil)
-        end
+        company_id = Domains::Companies::Company.spawn_new_instance(cit_rec, company_name, current_user.id)
+        serialized_params[:company_id] = company_id
       rescue StandardError => e
         redirect_to(product_capture_interface_path(barcode: barcode), alert: e.message)
         return

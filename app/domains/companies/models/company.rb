@@ -27,10 +27,8 @@ module Domains
         accepts_nested_attributes_for :company_snapshot, reject_if: :all_blank
 
         validates :name, presence: true
-        validates :mids, uniqueness: true
 
         default_scope -> { order(name: :asc) }
-        scope :find_by_mid, ->(mid) { where("mids @> ARRAY[?]::text[]", [mid]) }
         
         after_create :create_snapshot
         before_destroy :remove_logo_from_s3
@@ -66,6 +64,30 @@ module Domains
                   :employee_demographics_performance, :projected_culture_and_identity, 
                   :mgmt_composition_transparency, :mgmt_composition_performance)
                            .values.all? { |v| v == "none" }
+        end
+
+
+        def self.spawn_new_instance(cit_rec, company_name, user_id)
+            if cit_rec
+              old_company = cit_rec.company
+              if old_company && old_company.name != company_name
+                sys_gen_mid = Domains::CroupierCore::CitRecord.generate_mid(old_company.id)
+                Domains::CroupierCore::CitRecordHandler
+                  .update_or_create(nil, mid: sys_gen_mid, source: "Product Import",
+                  user_id: user_id, company_id: old_company.id, brand: nil)
+            
+              end
+            end
+
+            company = Domains::Companies::Company.create!(name: company_name)
+            
+            if cit_rec
+              cit_rec.update(company_id: company.id) if cit_rec.company_id != company.id
+            else
+              Domains::CroupierCore::CitRecordHandler.update_or_create(nil, mid: mid, source: "Product Import",
+                                                user_id: user_id, company_id: company.id, brand: nil)
+            end
+            company.id
         end
 
 
