@@ -1,7 +1,7 @@
 namespace :elasticsearch do
   desc "Reindex searchable models"
   task reindex: :environment do
-    models = [Product, Company]
+    models = [Domains::Products::Product, Domains::Companies::Company]
 
     product_index_name = 'product_search_index'
     company_index_name = 'company_search_index'
