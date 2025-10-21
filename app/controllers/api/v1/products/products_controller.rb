@@ -7,23 +7,17 @@ class Api::V1::Products::ProductsController < Api::V1::BaseController
   end
   
   def show
-    product = Domains::Products::Product.includes(:company).find(params[:id])
-    product_variants = Domains::Products::ProductVariant.by_product(product.id)
+    product = Domains::Products::Product.includes(:company, product_variants: [:media]).find(params[:id])
     company = product.company
     company_name = company.name if company
     rating_distribution = Domains::Features::Reviewable::Review.rating_distribution_for(product)
     review_stats = Domains::Features::Reviewable::Review.stats_for(product)
     scans = Domains::CroupierCore::Scan.where(product_id: product.id).count
     
-    variant_data = product_variants&.map do |v|
-      media = v.media
-      logger.info "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
-      logger.info "************ #{media.inspect}"
-      logger.info "*%%%%%%%%%%%%%%%%%%%%%%%%**** #{media.first.inspect}"
-      logger.info "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
+    variant_data = product.product_variants&.map do |v|
       {
         "product_variant" => v,
-        "media" => media
+        "media" => v.media
       }
     end
 
