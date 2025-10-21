@@ -128,7 +128,7 @@ notice: "Product was successfully updated."
 
   # GET /products/1 or /products/1.json
   def show
-    @variants = @product.product_variants.includes(:media)
+    @variants = Domains::Products::ProductVariant.by_product(@product.id)
   end
 
   # GET /products/new

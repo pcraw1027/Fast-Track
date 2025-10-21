@@ -81,12 +81,12 @@ module Domains
           sql = <<-SQL.squish
                     SELECT product_id
                     FROM (
-                      SELECT scans.product_id,
-                            MAX(scans.created_at) AS latest_created_at
+                      SELECT DISTINCT ON (product_id) product_id, created_at
                       FROM scans
-                      GROUP BY scans.product_id
-                    ) AS latest_scans
-                    ORDER BY latest_scans.latest_created_at DESC
+                      WHERE product_id IS NOT NULL
+                      ORDER BY product_id, created_at DESC
+                    ) t
+                      ORDER BY t.created_at DESC
                     LIMIT ? OFFSET ?
           SQL
 

@@ -9,6 +9,8 @@ module Domains
       accepts_nested_attributes_for :media, allow_destroy: true
       validates :barcode, uniqueness: true
 
+      scope :by_product, ->(product_id) { includes(:media).where(product_id: product_id) }
+
       self.table_name = "product_variants"
       
 
