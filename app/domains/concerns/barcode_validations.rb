@@ -6,8 +6,10 @@ module BarcodeValidations
     validate :barcode_length_allowed
   end
 
+
   private
 
+  
   def barcode_length_allowed
     allowed_lengths = [6, 8, 12, 13]
     return if barcode.present? && allowed_lengths.include?(barcode.length)

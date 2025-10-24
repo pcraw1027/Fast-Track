@@ -96,6 +96,12 @@ class Api::V1::Products::ProductsController < Api::V1::BaseController
     total_hits = search_results.response['hits']['total']['value']
     total_pages = (total_hits.to_f / per_page).ceil
 
+    Rails.logger.debug "***********************************************"
+    Rails.logger.debug "total_hits #{total_hits.inspect} *********************"
+    Rails.logger.debug "total_pages #{total_pages.inspect} ************************************"
+    
+    
+
     records = parse_multimodel_response(search_results)
 
     render json: {
@@ -113,9 +119,11 @@ class Api::V1::Products::ProductsController < Api::V1::BaseController
     product_ids = []
     company_ids = []
     matches = {}
+    product_type = 'Domains::Products::Product'
+    company_type = 'Domains::Companies::Company'
     response.response['hits']['hits'].each do |hit|
-      product_ids << hit['_id'] if hit['_source']['type'] == 'Product'
-      company_ids << hit['_id'] if hit['_source']['type'] == 'Company'
+      product_ids << hit['_id'] if hit['_source']['type'] == product_type
+      company_ids << hit['_id'] if hit['_source']['type'] == company_type
 
        next unless hit['highlight']
        
@@ -133,31 +141,32 @@ class Api::V1::Products::ProductsController < Api::V1::BaseController
     end
 
     companies = Domains::Companies::Company.unscoped.where(id: company_ids)
-
+    
     mapped_companies = companies.map do |c| 
-                         { 
-                           id: c.id, 
-          name: (matches["Company-#{c.id}"]["name"] ? matches["Company-#{c.id}"]["name"][0] : c.name), 
-          logo: c.logo&.url,
-          searches: c.searches 
-                         }
+      { 
+        id: c.id, 
+        name: (matches["#{company_type}-#{c.id}"]["name"] ? matches["#{company_type}-#{c.id}"]["name"][0] : c.name), 
+        logo: c.logo&.url,
+        searches: c.searches 
+      }
       
     end
 
-
+    
     product_with_variants = Domains::CroupierCore::RawQueryModule.unscoped_products_with_assoc("product_id", product_ids)
-            
+
     products = product_with_variants.map do |pv|
-      descr = if matches["Product-#{pv.product_id}"]["description"]&.length&.positive?
-        truncate_highlighted(matches["Product-#{pv.product_id}"]["description"][0])
+
+      descr = if matches["#{product_type}-#{pv.product_id}"]["description"]&.length&.positive?
+                  truncate_highlighted(matches["#{product_type}-#{pv.product_id}"]["description"][0])
               else
-        truncate_snippet(pv.description)
+                  truncate_snippet(pv.product_description)
               end
 
-      product = pv.product
+
       {
         id: pv.id,
-          name: product.name,
+          name: pv.product_name,
           description: descr,
           searches: pv.searches,
           product_company_id: pv.product_company_id,

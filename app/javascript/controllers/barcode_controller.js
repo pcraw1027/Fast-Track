@@ -64,7 +64,7 @@ export default class extends Controller {
     if (!file) return this.showError("Please choose a file to load.")
 
     const formData = new FormData()
-    formData.append("bit_record[file]", file)
+    formData.append("domains_croupier_core_bit_record[file]", file)
 
     try {
       const response = await fetch("/insert_barcode", {

@@ -56,9 +56,9 @@
     var query = document.getElementById('search-input').value.trim();
     var path = window.location.pathname;
 
-    var target = '/products';
-    if (path.startsWith('/companies')) {
-      target = '/companies';
+    var target = '/domains/products/products';
+    if (path.includes('/domains/companies')) {
+      target = '/domains/companies/companies';
     }
 
     if (query) {
