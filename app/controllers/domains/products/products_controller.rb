@@ -6,12 +6,12 @@ class Domains::Products::ProductsController < ApplicationController
   # GET /products or /products.json
   def index
     @products = if params[:q].present?
-                Domains::Products::Product.includes(:company, :segment, :family, :klass, :brick, :product_variants)
+                Domains::Products::Product.includes(:company, :segment, :family, :klass, :brick, product_variants: :media)
                                           .where("name ILIKE ?", "%#{params[:q]}%")
                                           .paginate(page: params[:page], per_page: 20)
                                           .order(created_at: :desc, id: :desc)
                 else
-                Domains::Products::Product.includes(:company, :segment, :family, :klass, :brick, :product_variants)
+                Domains::Products::Product.includes(:company, :segment, :family, :klass, :brick, :product_variants, product_variants: :media)
                                           .all
                                           .paginate(page: params[:page], per_page: 20)
                                           .order(created_at: :desc, id: :desc)

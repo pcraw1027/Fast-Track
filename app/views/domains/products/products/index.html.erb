@@ -5,6 +5,7 @@
     <tr>
       <th>Company</th>
       <th>Name</th>
+      <th>Images</th>
       <th>Barcode</th>
       <th>Size</th>
       <th>Segment</th>
@@ -20,6 +21,33 @@
       <tr>
         <td><%= product.company.name if product.company %></td>
         <td><%= product.name %></td>
+
+    <td>
+   
+           <% product.product_variants.each do |product_variant| %>
+
+         
+          <% product_variant.media.each do |media| %>
+        
+            <% if media.image? && media.file.present? %>
+              <%= image_tag media.file.thumb.url, style: "width: 50px; height: 50px;" %>
+            <% elsif media.video? && media.file.present? %>
+              <video controls>
+                <source src="<%= media.file.url %>" type="video/mp4">
+              </video>
+            <% elsif media.file.present? %>
+              <%= link_to 'download file', media.file.url %>
+            <% end %>
+          
+            <% end %>
+
+     
+        <% end %>
+
+       </td>
+
+
+
         <td><%= product.product_variants.map(&:barcode).join(", ") %></td>
         <td><%= product.size %></td>
         <td><%= product.segment.title if product.segment%></td>

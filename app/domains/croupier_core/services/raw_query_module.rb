@@ -8,13 +8,16 @@ module Domains
 
             #select and paginate scans
             recent_scans_sql = <<-SQL.squish
-              SELECT DISTINCT ON (barcode) *
-              FROM scans
-              WHERE user_id = #{ActiveRecord::Base.connection.quote(current_user_id)}
-              AND product_exists = true
-              ORDER BY barcode, created_at DESC
-              LIMIT #{per_page} OFFSET #{offset}
-            SQL
+                                  SELECT *
+                                  FROM (
+                                    SELECT DISTINCT ON (barcode) *
+                                    FROM scans
+                                    WHERE user_id = #{ActiveRecord::Base.connection.quote(current_user_id)}
+                                      AND product_exists = true
+                                  ) AS deduped
+                                  ORDER BY created_at DESC
+                                  LIMIT #{per_page} OFFSET #{offset}
+                                SQL
 
             recent_scan_data = Domains::CroupierCore::Scan.find_by_sql(recent_scans_sql)
 
@@ -43,7 +46,6 @@ module Domains
                 FROM scans
                 WHERE user_id = #{ActiveRecord::Base.connection.quote(current_user_id)}
                 AND product_exists = true
-                ORDER BY barcode, created_at DESC
               ) AS recent_scans
             SQL
 
@@ -92,8 +94,7 @@ module Domains
 
           product_ids_query = ActiveRecord::Base.sanitize_sql_array([sql, per_page, offset])
           product_ids = ActiveRecord::Base.connection.select_values(product_ids_query)
-          Rails.logger.debug "************************************************************************"
-          Rails.logger.debug product_ids
+
           # 2. Total count of unique products with scans
           count_query = <<-SQL.squish
             SELECT COUNT(DISTINCT scans.product_id)
@@ -102,8 +103,7 @@ module Domains
           SQL
 
           total_count = ActiveRecord::Base.connection.select_value(count_query).to_i
-          Rails.logger.debug total_count
-          Rails.logger.debug "**********************************************************************"
+        
             ids = product_ids.map(&:to_i).join(", ")
 
             scan_counts_query = <<-SQL.squish
@@ -116,12 +116,8 @@ module Domains
             scan_counts = ActiveRecord::Base.connection.exec_query(scan_counts_query)
             product_scan_counts = scan_counts.to_a.to_h { |r| [r["product_id"], r["scan_count"]] }
 
-            Rails.logger.debug product_scan_counts
-            Rails.logger.debug "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
             #load product_variants data
             product_variants = unscoped_products_with_assoc("product_id", product_ids)
-            Rails.logger.debug product_variants
-            Rails.logger.debug "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
               
           records = product_variants.map do |pv|
               {
