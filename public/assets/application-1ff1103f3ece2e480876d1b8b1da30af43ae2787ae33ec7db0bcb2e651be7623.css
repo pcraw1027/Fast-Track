@@ -1,0 +1,677 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, or any plugin's
+ * vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+
+
+ */
+/* line 19, app/assets/stylesheets/application.scss */
+.status-active {
+  color: #0B9444;
+  font-weight: 500;
+}
+
+/* line 24, app/assets/stylesheets/application.scss */
+.status-suspended {
+  color: orange;
+  font-weight: 500;
+}
+
+/* line 28, app/assets/stylesheets/application.scss */
+.status-delete {
+  color: red;
+  font-weight: 500;
+}
+
+/* line 33, app/assets/stylesheets/application.scss */
+.staging-brand {
+  border: #303030;
+  background-color: #efd901;
+  color: black;
+  padding: 12px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  font-weight: 500;
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+/* line 45, app/assets/stylesheets/application.scss */
+.staging-brand:hover {
+  color: #093369;
+}
+
+/* line 51, app/assets/stylesheets/application.scss */
+.pagination li {
+  margin-right: 0.5rem;
+}
+
+/* line 55, app/assets/stylesheets/application.scss */
+.pagination li:last-child {
+  margin-right: 0;
+}
+
+/* line 59, app/assets/stylesheets/application.scss */
+.bg-light-green {
+  background-color: #E7F5ED;
+}
+
+/* line 63, app/assets/stylesheets/application.scss */
+.theme-link {
+  color: #0B9444 !important;
+  font-weight: 500;
+}
+
+/* line 68, app/assets/stylesheets/application.scss */
+a {
+  color: #0B9444;
+}
+
+/* line 71, app/assets/stylesheets/application.scss */
+a:hover {
+  color: #DE9B18;
+  text-decoration-color: #DE9B18;
+}
+
+/* line 75, app/assets/stylesheets/application.scss */
+.action-btn {
+  background-color: #8CC63F;
+  border: none;
+  border-radius: 15px;
+  padding: 8px 15px 8px 15px;
+  text-decoration: none;
+  color: #1F3635 !important;
+  font-weight: 500;
+}
+
+/* line 85, app/assets/stylesheets/application.scss */
+.action-btn-outlined {
+  background-color: transparent;
+  border: 1px solid #8CC63F;
+  border-radius: 15px;
+  padding: 5px 20px 5px 20px;
+  text-decoration: none;
+  color: #1F3635 !important;
+  font-weight: 500;
+}
+
+/* line 96, app/assets/stylesheets/application.scss */
+th {
+  font-weight: 500;
+  font-size: 14px;
+}
+
+/* line 103, app/assets/stylesheets/application.scss */
+select {
+  appearance: none;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 16px;
+  width: 100%;
+  max-width: 300px;
+  background-image: url("data:image/svg+xml,%3Csvg fill='none' stroke='%23666' stroke-width='2' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+  cursor: pointer;
+}
+
+/* line 119, app/assets/stylesheets/application.scss */
+.uploaded-pic img {
+  float: none;
+  margin: 0 auto;
+  width: 180px;
+  height: 180px;
+  -webkit-border-radius: 50% !important;
+  -moz-border-radius: 50% !important;
+  border-radius: 50% !important;
+}
+
+/* line 129, app/assets/stylesheets/application.scss */
+.uploaded-title {
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* line 135, app/assets/stylesheets/application.scss */
+.ts-control {
+  border: 1px solid #d0d0d0;
+  padding: 8px 8px;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  box-shadow: none;
+  border-radius: 3px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* line 148, app/assets/stylesheets/application.scss */
+.ts-wrapper.multi.has-items .ts-control {
+  padding: calc(8px - 2px - 0) 8px calc(8px - 2px - 3px - 0);
+}
+
+/* line 151, app/assets/stylesheets/application.scss */
+.full .ts-control {
+  background-color: #fff;
+}
+
+/* line 154, app/assets/stylesheets/application.scss */
+.disabled .ts-control, .disabled .ts-control * {
+  cursor: default !important;
+}
+
+/* line 157, app/assets/stylesheets/application.scss */
+.focus .ts-control {
+  box-shadow: none;
+}
+
+/* line 160, app/assets/stylesheets/application.scss */
+.ts-control > * {
+  vertical-align: baseline;
+  display: inline-block;
+}
+
+/* line 164, app/assets/stylesheets/application.scss */
+.ts-wrapper.multi .ts-control > div {
+  cursor: pointer;
+  margin: 0 3px 3px 0;
+  padding: 2px 6px;
+  background: #f2f2f2;
+  color: #303030;
+  border: 0 solid #d0d0d0;
+}
+
+/* line 172, app/assets/stylesheets/application.scss */
+.ts-wrapper.multi .ts-control > div.active {
+  background: #e8e8e8;
+  color: #303030;
+  border: 0 solid #cacaca;
+}
+
+/* line 177, app/assets/stylesheets/application.scss */
+.ts-wrapper.multi.disabled .ts-control > div, .ts-wrapper.multi.disabled .ts-control > div.active {
+  color: #7d7d7d;
+  background: white;
+  border: 0 solid white;
+}
+
+/* line 182, app/assets/stylesheets/application.scss */
+.ts-control > input {
+  flex: 1 1 auto;
+  min-width: 7rem;
+  display: inline-block !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  text-indent: 0 !important;
+  border: 0 none !important;
+  background: none !important;
+  line-height: inherit !important;
+  -webkit-user-select: auto !important;
+  -moz-user-select: auto !important;
+  -ms-user-select: auto !important;
+  user-select: auto !important;
+  box-shadow: none !important;
+}
+
+/* line 201, app/assets/stylesheets/application.scss */
+.ts-control > input::-ms-clear {
+  display: none;
+}
+
+/* line 204, app/assets/stylesheets/application.scss */
+.ts-control > input:focus {
+  outline: none !important;
+}
+
+/* line 207, app/assets/stylesheets/application.scss */
+.has-items .ts-control > input {
+  margin: 0 4px !important;
+}
+
+/* line 210, app/assets/stylesheets/application.scss */
+.ts-control.rtl {
+  text-align: right;
+}
+
+/* line 213, app/assets/stylesheets/application.scss */
+.ts-control.rtl.single .ts-control:after {
+  left: 15px;
+  right: auto;
+}
+
+/* line 217, app/assets/stylesheets/application.scss */
+.ts-control.rtl .ts-control > input {
+  margin: 0 4px 0 -2px !important;
+}
+
+/* line 220, app/assets/stylesheets/application.scss */
+.disabled .ts-control {
+  opacity: 0.5;
+  background-color: #fafafa;
+}
+
+/* line 224, app/assets/stylesheets/application.scss */
+.input-hidden .ts-control > input {
+  opacity: 0;
+  position: absolute;
+  left: -10000px;
+}
+
+/* line 230, app/assets/stylesheets/application.scss */
+.ts-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+  border: 1px solid #d0d0d0;
+  background: #fff;
+  margin: 0.25rem 0 0;
+  border-top: 0 none;
+  box-sizing: border-box;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-radius: 0 0 3px 3px;
+}
+
+/* line 244, app/assets/stylesheets/application.scss */
+.ts-dropdown [data-selectable] {
+  cursor: pointer;
+  overflow: hidden;
+}
+
+/* line 248, app/assets/stylesheets/application.scss */
+.ts-dropdown [data-selectable] .highlight {
+  background: rgba(125, 168, 208, 0.2);
+  border-radius: 1px;
+}
+
+/* line 252, app/assets/stylesheets/application.scss */
+.ts-dropdown .option,
+.ts-dropdown .optgroup-header,
+.ts-dropdown .no-results,
+.ts-dropdown .create {
+  padding: 5px 8px;
+}
+
+/* line 258, app/assets/stylesheets/application.scss */
+.ts-dropdown .option, .ts-dropdown [data-disabled], .ts-dropdown [data-disabled] .option[data-selectable] {
+  cursor: inherit;
+  opacity: 0.5;
+}
+
+/* line 262, app/assets/stylesheets/application.scss */
+.ts-dropdown .option[data-selectable] {
+  opacity: 1;
+  cursor: pointer;
+}
+
+/* line 266, app/assets/stylesheets/application.scss */
+.ts-dropdown .optgroup:first-child .optgroup-header {
+  border-top: 0 none;
+}
+
+/* line 269, app/assets/stylesheets/application.scss */
+.ts-dropdown .optgroup-header {
+  color: #303030;
+  background: #fff;
+  cursor: default;
+}
+
+/* line 274, app/assets/stylesheets/application.scss */
+.ts-dropdown .active {
+  background-color: #f5fafd;
+  color: #495c68;
+}
+
+/* line 278, app/assets/stylesheets/application.scss */
+.ts-dropdown .active.create {
+  color: #495c68;
+}
+
+/* line 281, app/assets/stylesheets/application.scss */
+.ts-dropdown .create {
+  color: rgba(48, 48, 48, 0.5);
+}
+
+/* line 284, app/assets/stylesheets/application.scss */
+.ts-dropdown .spinner {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  margin: 5px 8px;
+}
+
+/* line 290, app/assets/stylesheets/application.scss */
+.ts-dropdown .spinner::after {
+  content: " ";
+  display: block;
+  width: 24px;
+  height: 24px;
+  margin: 3px;
+  border-radius: 50%;
+  border: 5px solid #d0d0d0;
+  border-color: #d0d0d0 transparent #d0d0d0 transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* line 310, app/assets/stylesheets/application.scss */
+.ts-dropdown-content {
+  overflow: hidden auto;
+  max-height: 200px;
+  scroll-behavior: smooth;
+}
+
+/* line 316, app/assets/stylesheets/application.scss */
+.ts-wrapper.plugin-drag_drop .ts-dragging {
+  color: transparent !important;
+}
+
+/* line 319, app/assets/stylesheets/application.scss */
+.ts-wrapper.plugin-drag_drop .ts-dragging > * {
+  visibility: hidden !important;
+}
+
+/* line 323, app/assets/stylesheets/application.scss */
+.plugin-checkbox_options:not(.rtl) .option input {
+  margin-right: 0.5rem;
+}
+
+/* line 327, app/assets/stylesheets/application.scss */
+.plugin-checkbox_options.rtl .option input {
+  margin-left: 0.5rem;
+}
+
+/* stylelint-disable function-name-case */
+/* line 332, app/assets/stylesheets/application.scss */
+.plugin-clear_button {
+  --ts-pr-clear-button: 1em;
+}
+
+/* line 335, app/assets/stylesheets/application.scss */
+.plugin-clear_button .clear-button {
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: calc(8px - 6px);
+  margin-right: 0 !important;
+  background: transparent !important;
+  transition: opacity 0.5s;
+  cursor: pointer;
+}
+
+/* line 346, app/assets/stylesheets/application.scss */
+.plugin-clear_button.form-select .clear-button, .plugin-clear_button.single .clear-button {
+  right: 8px;
+}
+
+/* line 349, app/assets/stylesheets/application.scss */
+.plugin-clear_button.focus.has-items .clear-button, .plugin-clear_button.has-items:not(.disabled):hover .clear-button {
+  opacity: 1;
+}
+
+/* line 353, app/assets/stylesheets/application.scss */
+.ts-wrapper .dropdown-header {
+  position: relative;
+  padding: 10px 8px;
+  border-bottom: 1px solid #d0d0d0;
+  background: color-mix(#fff, #d0d0d0, 85%);
+  border-radius: 3px 3px 0 0;
+}
+
+/* line 360, app/assets/stylesheets/application.scss */
+.ts-wrapper .dropdown-header-close {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  color: #303030;
+  opacity: 0.4;
+  margin-top: -12px;
+  line-height: 20px;
+  font-size: 20px !important;
+}
+
+/* line 370, app/assets/stylesheets/application.scss */
+.ts-wrapper .dropdown-header-close:hover {
+  color: black;
+}
+
+/* line 374, app/assets/stylesheets/application.scss */
+.plugin-dropdown_input.focus.dropdown-active .ts-control {
+  box-shadow: none;
+  border: 1px solid #d0d0d0;
+}
+
+/* line 378, app/assets/stylesheets/application.scss */
+.plugin-dropdown_input .dropdown-input {
+  border: 1px solid #d0d0d0;
+  border-width: 0 0 1px;
+  display: block;
+  padding: 8px 8px;
+  box-shadow: none;
+  width: 100%;
+  background: transparent;
+}
+
+/* line 387, app/assets/stylesheets/application.scss */
+.plugin-dropdown_input .items-placeholder {
+  border: 0 none !important;
+  box-shadow: none !important;
+  width: 100%;
+}
+
+/* line 392, app/assets/stylesheets/application.scss */
+.plugin-dropdown_input.has-items .items-placeholder, .plugin-dropdown_input.dropdown-active .items-placeholder {
+  display: none !important;
+}
+
+/* line 396, app/assets/stylesheets/application.scss */
+.ts-wrapper.plugin-input_autogrow.has-items .ts-control > input {
+  min-width: 0;
+}
+
+/* line 399, app/assets/stylesheets/application.scss */
+.ts-wrapper.plugin-input_autogrow.has-items.focus .ts-control > input {
+  flex: none;
+  min-width: 4px;
+}
+
+/* line 403, app/assets/stylesheets/application.scss */
+.ts-wrapper.plugin-input_autogrow.has-items.focus .ts-control > input::-ms-input-placeholder {
+  color: transparent;
+}
+
+/* line 406, app/assets/stylesheets/application.scss */
+.ts-wrapper.plugin-input_autogrow.has-items.focus .ts-control > input::placeholder {
+  color: transparent;
+}
+
+/* line 410, app/assets/stylesheets/application.scss */
+.ts-dropdown.plugin-optgroup_columns .ts-dropdown-content {
+  display: flex;
+}
+
+/* line 413, app/assets/stylesheets/application.scss */
+.ts-dropdown.plugin-optgroup_columns .optgroup {
+  border-right: 1px solid #f2f2f2;
+  border-top: 0 none;
+  flex-grow: 1;
+  flex-basis: 0;
+  min-width: 0;
+}
+
+/* line 420, app/assets/stylesheets/application.scss */
+.ts-dropdown.plugin-optgroup_columns .optgroup:last-child {
+  border-right: 0 none;
+}
+
+/* line 423, app/assets/stylesheets/application.scss */
+.ts-dropdown.plugin-optgroup_columns .optgroup::before {
+  display: none;
+}
+
+/* line 426, app/assets/stylesheets/application.scss */
+.ts-dropdown.plugin-optgroup_columns .optgroup-header {
+  border-top: 0 none;
+}
+
+/* line 430, app/assets/stylesheets/application.scss */
+.ts-wrapper.plugin-remove_button .item {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* line 434, app/assets/stylesheets/application.scss */
+.ts-wrapper.plugin-remove_button .item .remove {
+  color: inherit;
+  text-decoration: none;
+  vertical-align: middle;
+  display: inline-block;
+  padding: 0 6px;
+  border-radius: 0 2px 2px 0;
+  box-sizing: border-box;
+}
+
+/* line 443, app/assets/stylesheets/application.scss */
+.ts-wrapper.plugin-remove_button .item .remove:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* line 446, app/assets/stylesheets/application.scss */
+.ts-wrapper.plugin-remove_button.disabled .item .remove:hover {
+  background: none;
+}
+
+/* line 449, app/assets/stylesheets/application.scss */
+.ts-wrapper.plugin-remove_button .remove-single {
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: 23px;
+}
+
+/* line 456, app/assets/stylesheets/application.scss */
+.ts-wrapper.plugin-remove_button:not(.rtl) .item {
+  padding-right: 0 !important;
+}
+
+/* line 459, app/assets/stylesheets/application.scss */
+.ts-wrapper.plugin-remove_button:not(.rtl) .item .remove {
+  border-left: 1px solid #d0d0d0;
+  margin-left: 6px;
+}
+
+/* line 463, app/assets/stylesheets/application.scss */
+.ts-wrapper.plugin-remove_button:not(.rtl) .item.active .remove {
+  border-left-color: #cacaca;
+}
+
+/* line 466, app/assets/stylesheets/application.scss */
+.ts-wrapper.plugin-remove_button.disabled:not(.rtl) .item .remove {
+  border-left-color: white;
+}
+
+/* line 470, app/assets/stylesheets/application.scss */
+.ts-wrapper.plugin-remove_button.rtl .item {
+  padding-left: 0 !important;
+}
+
+/* line 473, app/assets/stylesheets/application.scss */
+.ts-wrapper.plugin-remove_button.rtl .item .remove {
+  border-right: 1px solid #d0d0d0;
+  margin-right: 6px;
+}
+
+/* line 477, app/assets/stylesheets/application.scss */
+.ts-wrapper.plugin-remove_button.rtl .item.active .remove {
+  border-right-color: #cacaca;
+}
+
+/* line 480, app/assets/stylesheets/application.scss */
+.ts-wrapper.plugin-remove_button.rtl.disabled .item .remove {
+  border-right-color: white;
+}
+
+/* line 484, app/assets/stylesheets/application.scss */
+:root {
+  --ts-pr-clear-button: 0px;
+  --ts-pr-caret: 0px;
+  --ts-pr-min: .75rem;
+}
+
+/* line 490, app/assets/stylesheets/application.scss */
+.ts-wrapper.single .ts-control, .ts-wrapper.single .ts-control input {
+  cursor: pointer;
+}
+
+/* line 494, app/assets/stylesheets/application.scss */
+.ts-control:not(.rtl) {
+  padding-right: 8px !important;
+}
+
+/* line 498, app/assets/stylesheets/application.scss */
+.ts-control.rtl {
+  padding-left: 8px !important;
+}
+
+/* line 502, app/assets/stylesheets/application.scss */
+.ts-wrapper {
+  position: relative;
+}
+
+/* line 506, app/assets/stylesheets/application.scss */
+.ts-dropdown,
+.ts-control,
+.ts-control input {
+  color: #303030;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+/* line 515, app/assets/stylesheets/application.scss */
+.ts-control,
+.ts-wrapper.single.input-active .ts-control {
+  background: #fff;
+  cursor: text;
+}
+
+/* line 521, app/assets/stylesheets/application.scss */
+.ts-hidden-accessible {
+  border: 0 !important;
+  clip: rect(0 0 0 0) !important;
+  -webkit-clip-path: inset(50%) !important;
+  clip-path: inset(50%) !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  position: absolute !important;
+  width: 1px !important;
+  white-space: nowrap !important;
+}
+
+/*# sourceMappingURL=tom-select.css.map */
