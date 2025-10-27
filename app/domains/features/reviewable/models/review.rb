@@ -4,7 +4,7 @@ module Domains
       class Review < ApplicationRecord
         self.table_name = "reviews"
         belongs_to :reviewable, polymorphic: true
-        belongs_to :user
+        belongs_to :user, class_name: "Domains::Users::User"
 
         validates :rating, presence: { message: "is required" }, inclusion: { in: 1..5, message: "must be between 1 and 5" }
 

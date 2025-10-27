@@ -5,6 +5,7 @@ class Api::V1::Features::Reviewable::ReviewsController < Api::V1::BaseController
   def show
       render json: @review, status: :ok
   end
+
   def update
     if @review.update(review_params.except(:product_id, :company_id))
       render json: @review, status: :ok
@@ -24,7 +25,7 @@ class Api::V1::Features::Reviewable::ReviewsController < Api::V1::BaseController
   
 
   def read_product_reviews
-    render json: load(params[:product_id], "Product"), status: :ok
+    render json: load(params[:product_id], "Domains::Products::Product"), status: :ok
   end
 
   def read_company_reviews
@@ -32,12 +33,13 @@ class Api::V1::Features::Reviewable::ReviewsController < Api::V1::BaseController
   end
 
   def user_product_review
-    render json: load_user_review(params[:product_id], "Product"), status: :ok
+    render json: load_user_review(params[:product_id], "Domains::Products::Product"), status: :ok
   end
 
   def user_company_review
-    render json: load_user_review(params[:company_id], "Company"), status: :ok
+    render json: load_user_review(params[:company_id], "Domains::Companies::Company"), status: :ok
   end
+
 
 
   private
