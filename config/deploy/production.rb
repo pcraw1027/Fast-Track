@@ -15,10 +15,10 @@
 # property set. Specify the username and a domain or IP for the server.
 # Don't use `:all`, it's a meta role.
 
-#server '13.61.251.1', user: 'deploy', roles: %w{app web} 
+
 set :rails_env, 'production'
 set :puma_env, fetch(:rack_env, fetch(:rails_env, 'production'))
-server "13.61.251.1", user: "deploy", roles: %w{app db web}, primary: true
+server "3.213.73.120", user: "deploy", roles: %w{app db web}, primary: true
 
 
 set :stage, :production
