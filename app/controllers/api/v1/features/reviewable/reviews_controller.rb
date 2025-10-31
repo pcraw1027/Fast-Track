@@ -16,11 +16,11 @@ class Api::V1::Features::Reviewable::ReviewsController < Api::V1::BaseController
 
 
   def product_reviews
-    create_reviews("Product")
+    create_reviews("Domains::Products::Product")
   end
 
   def company_reviews
-    create_reviews("Company")
+    create_reviews("Domains::Companies::Company")
   end
   
 

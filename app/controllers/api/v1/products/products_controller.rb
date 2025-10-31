@@ -165,7 +165,7 @@ class Api::V1::Products::ProductsController < Api::V1::BaseController
 
 
       {
-        id: pv.id,
+        id: pv.product_id,
           name: pv.product_name,
           description: descr,
           searches: pv.searches,
