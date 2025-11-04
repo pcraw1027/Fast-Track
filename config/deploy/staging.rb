@@ -47,7 +47,7 @@ append :linked_files, "config/credentials/staging.key", "config/secrets.yml", "c
 # Global options
 # --------------
   set :ssh_options, {
-    keys: %w(~/croupier-staging.pem),
+    keys: %w(~/.ssh/id_rsa),
     forward_agent: false,
     auth_methods: %w(publickey password)
   }

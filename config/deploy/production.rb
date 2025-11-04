@@ -61,3 +61,4 @@ append :linked_files, "config/credentials/production.key", "config/secrets.yml",
 #     auth_methods: %w(publickey password)
 #     # password: "please use keys"
 #   }
+
