@@ -61,15 +61,15 @@ module Domains
         private
 
 
-                def generate_token
-                  token = String.random(6, ['0'..'9', 'A'..'Z'])
-                  user = Domains::Users::User.find_by(reset_password_token: token.downcase)
-                  while user.present? 
-                    token = String.random(6, ['0'..'9', 'A'..'Z'])
-                    user = Domains::Users::User.find_by(reset_password_token: token.downcase)
-                  end
-                  token
-                end
+            def generate_token
+              token = String.random(6, ['0'..'9', 'A'..'Z'])
+              user = Domains::Users::User.find_by(reset_password_token: token.downcase)
+              while user.present? 
+                token = String.random(6, ['0'..'9', 'A'..'Z'])
+                user = Domains::Users::User.find_by(reset_password_token: token.downcase)
+              end
+              token
+            end
 
               def password_complexity
                 return if password.blank?
