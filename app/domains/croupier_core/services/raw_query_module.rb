@@ -54,6 +54,8 @@ module Domains
 
             #scan_map = recent_scans.index_by(&:barcode)
             barcode_hash = {} 
+
+
             product_variants.each do |pv|
                 barcode_hash[pv.barcode] = {
                   scan_count: product_scan_counts[pv.product_id] || 0,
@@ -73,8 +75,7 @@ module Domains
         end
 
 
-
-        def self.recent_scan_products(per_page, page)
+         def self.recent_scan_products(per_page, page)
           per_page = per_page.to_i
           page = page.to_i
           offset = (page - 1) * per_page
@@ -129,6 +130,80 @@ module Domains
 
           PaginatedResult.new(records, per_page, page, total_count)
         end
+
+
+
+        # def self.recent_scan_products(per_page, page)
+        #   per_page = per_page.to_i
+        #   page = page.to_i
+        #   offset = (page - 1) * per_page
+
+        #   sql = <<-SQL.squish
+        #             SELECT product_id
+        #             FROM (
+        #               SELECT DISTINCT ON (product_id) product_id, created_at
+        #               FROM scans
+        #               WHERE product_id IS NOT NULL
+        #               ORDER BY product_id, created_at DESC
+        #             ) t
+        #               ORDER BY t.created_at DESC
+        #             LIMIT ? OFFSET ?
+        #   SQL
+
+        #   recent_scans_sql = <<-SQL.squish
+        #                           SELECT *
+        #                           FROM (
+        #                             SELECT DISTINCT ON (barcode) *
+        #                             FROM scans
+        #                             WHERE product_exists = true
+        #                           ) AS deduped
+        #                           ORDER BY created_at DESC
+        #                           LIMIT #{per_page} OFFSET #{offset}
+        #                         SQL
+
+        #   recent_scan_data = Domains::CroupierCore::Scan.find_by_sql(recent_scans_sql)
+
+        #   product_ids = recent_scan_data.map(&:product_id).compact
+
+        #   count_query = <<-SQL.squish
+        #     SELECT COUNT(DISTINCT scans.product_id)
+        #     FROM scans
+        #     WHERE scans.product_id IS NOT NULL
+        #   SQL
+
+        #   total_count = ActiveRecord::Base.connection.select_value(count_query).to_i
+        
+        #     ids = product_ids.map(&:to_i).join(", ")
+
+        #     scan_counts_query = <<-SQL.squish
+        #       SELECT product_id, COUNT(*) AS scan_count
+        #       FROM scans
+        #       WHERE product_id IN (#{ids})
+        #       GROUP BY product_id
+        #     SQL
+
+        #     scan_counts = ActiveRecord::Base.connection.exec_query(scan_counts_query)
+        #     product_scan_counts = scan_counts.to_a.to_h { |r| [r["product_id"], r["scan_count"]] }
+
+        #     product_variants = unscoped_products_with_assoc("product_id", product_ids)
+            
+        #    barcode_hash = {} 
+        #     product_variants.each do |pv|
+        #         barcode_hash[pv.barcode] = {
+        #           scan_count: product_scan_counts[pv.product_id] || 0,
+        #           product_variant: pv,
+        #           media: pv.media
+        #         }
+        #     end
+
+        #     records = recent_scan_data.map do |scn|
+        #       {
+        #         scan: scn,
+        #         product_data: barcode_hash[scn.barcode]
+        #       }
+        #     end
+        #   PaginatedResult.new(records, per_page, page, total_count)
+        # end
 
 
 

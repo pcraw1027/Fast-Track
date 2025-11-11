@@ -7,6 +7,15 @@ class Uploaders::MediaUploader < CarrierWave::Uploader::Base
     "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
   end
 
+  def cache_dir
+    if Rails.env.production? || Rails.env.staging?
+      "#{Rails.root}/tmp/uploads/cache"
+    else
+      Rails.root.join("tmp/uploads/cache").to_s
+    end
+  end
+
+  
   def extension_allowlist
     %w[
       jpg jpeg png gif svg
@@ -52,7 +61,7 @@ class Uploaders::MediaUploader < CarrierWave::Uploader::Base
 
   # process :resize_and_make_background_transparent => ['522x522'], if: :image?
  
-  def resize_and_make_background_transparent(size)
+  def resize_and_make_background_transparent(size)            
     manipulate! do |img|
       img.format('png')
       img.alpha('on')
@@ -63,6 +72,9 @@ class Uploaders::MediaUploader < CarrierWave::Uploader::Base
       end
 
       img.resize(size)
+      puts "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
+        puts size
+        puts "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
       img
     end
   end

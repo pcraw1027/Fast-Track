@@ -1,80 +1,105 @@
+require "open-uri"
+require "mini_mime"
+
 module Domains
   module Features
     module Mediable
-        class ProcessMediumJob < ApplicationJob
-          queue_as :default
+      class ProcessMediumJob < ApplicationJob
+        queue_as :default
 
-          def perform(medium_id)
-            medium = Domains::Features::Mediable::Medium.find(medium_id)
-            return if medium.file.blank?
+        def perform(medium_id)
+          log "********************************"
+          log "Processing Medium ##{medium_id}"
+          log "********************************"
 
-            file_path = medium.file.path
-
-            if Rails.env.development?
-              unless File.exist?(file_path)
-                # Try searching in public/uploads/tmp
-                tmp_path = Rails.public_path.join("uploads", "tmp", File.basename(file_path)).to_s
-                if File.exist?(tmp_path)
-                  file_path = tmp_path
-                  # Optionally, re-assign the file
-                  medium.file = File.open(file_path)
-                else
-                  Rails.logger.error "File not found for Medium #{medium_id}: #{file_path} or #{tmp_path}"
-                  return
-                end
-              end
-            elsif Rails.env.staging? || Rails.env.production?
-              unless File.exist?(file_path)
-                # Try to fetch the file from S3 using Fog
-                tmp_path = Rails.root.join("tmp", File.basename(file_path)).to_s
-                fog_directory = CarrierWave::Uploader::Base.fog_directory
-                s3_path = "uploads/tmp/#{File.basename(file_path)}"
-                storage = CarrierWave::Storage::Fog.new(CarrierWave::Uploader::Base)
-                directory = storage.connection.directories.get(fog_directory)
-                file = directory.files.get(s3_path)
-                if file
-                  File.binwrite(tmp_path, file.body)
-                  file_path = tmp_path
-                  medium.file = File.open(file_path)
-                else
-                  Rails.logger.error "File not found for Medium #{medium_id} in S3: #{s3_path}"
-                  return
-                end
-              end
-            end
-
-        
-            medium.file.cache_stored_file! unless medium.file.cached?
-            medium.file.recreate_versions!(:thumb)
-            medium.file.process_full!
-            medium.save!
-            Rails.logger.debug "medium processed!!!!"
-
-          
-            tmp_filename = File.basename(file_path)
-            tmp_path = Rails.public_path.join('uploads', 'tmp', tmp_filename)
-            if Rails.env.staging? || Rails.env.production?
-              # Delete from S3 using Fog
-              medium.file
-              fog_directory = CarrierWave::Uploader::Base.fog_directory
-              CarrierWave::Uploader::Base.fog_credentials
-              s3_path = "uploads/tmp/#{tmp_filename}"
-              # Always use Fog API to delete the specific S3 file by path
-              storage = CarrierWave::Storage::Fog.new(CarrierWave::Uploader::Base)
-              directory = storage.connection.directories.get(fog_directory)
-              file = directory.files.get(s3_path)
-              if file
-                file.destroy
-                Rails.logger.info "Deleted temp file from S3: \\#{s3_path}"
-              else
-                Rails.logger.warn "Temp file not found in S3 for deletion: \\#{s3_path}"
-              end
-            elsif File.exist?(tmp_path)
-              File.delete(tmp_path)
-                Rails.logger.info "Deleted temp file: \\#{tmp_path}"
-            end
+          medium = Domains::Features::Mediable::Medium.find_by(id: medium_id)
+          unless medium
+            log "❌ Medium #{medium_id} not found"
+            return
           end
-        end 
+
+          if medium.file.blank?
+            log "❌ Medium #{medium_id} has no attached file"
+            return
+          end
+
+          if Rails.env.production? || Rails.env.staging?
+            process_remote_file(medium)
+          else
+            process_local_file(medium)
+          end
+
+          log "✅ Medium processed successfully!"
+        rescue => e
+          log "❌ Error processing Medium #{medium_id}: #{e.message}"
+          log e.backtrace.take(5).join("\n")
+        end
+
+        private
+
+        # ✅ Production/staging: Use remote S3 file directly
+        def process_remote_file(medium)
+            remote_url = medium.file.url
+            log "📦 Loading remote file directly from S3: #{remote_url}"
+
+            file_io = URI.open(remote_url)
+            filename = File.basename(URI.parse(remote_url).path)
+            content_type = MiniMime.lookup_by_filename(filename)&.content_type || "application/octet-stream"
+
+            # ✅ Ensure CarrierWave cache directory exists
+            cache_path = CarrierWave::Uploader::Base.new.cache_dir
+            FileUtils.mkdir_p(cache_path) unless Dir.exist?(cache_path)
+
+            uploaded_file = CarrierWave::SanitizedFile.new(
+              tempfile: file_io,
+              filename: filename,
+              content_type: content_type
+            )
+
+            medium.file = uploaded_file
+            medium.file.cache!
+            log "✅ File loaded and cached in CarrierWave: #{filename}"
+
+            medium.file.recreate_versions!(:thumb)
+            medium.file.process_full! if medium.file.respond_to?(:process_full!)
+            medium.save!
+          rescue => e
+            log "❌ Failed to process remote file: #{e.message}"
+            raise
+          end
+
+
+        # 🧰 Development: use local filesystem version
+        def process_local_file(medium)
+          file_path = medium.file.path
+          log "File path: #{file_path}"
+
+          unless File.exist?(file_path)
+            log "❌ File not found locally: #{file_path}"
+            return
+          end
+
+          uploaded_file = CarrierWave::SanitizedFile.new(
+            tempfile: File.open(file_path),
+            filename: File.basename(file_path),
+            content_type: MiniMime.lookup_by_filename(file_path)&.content_type
+          )
+
+          medium.file = uploaded_file
+          medium.file.cache_stored_file!
+          log "✅ File cached locally: #{medium.file.cache_name}"
+
+          medium.file.recreate_versions!(:thumb)
+          medium.file.process_full! if medium.file.respond_to?(:process_full!)
+          medium.save!
+        end
+
+        def log(msg)
+          puts msg
+          Rails.logger.info(msg)
+        end
+      end
     end
   end
 end
+

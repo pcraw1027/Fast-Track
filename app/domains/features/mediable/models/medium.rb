@@ -16,7 +16,7 @@ module Domains
 
           #default_scope { order(:position) }
 
-          after_create :process_in_background
+          after_save :process_in_background
           before_destroy :remove_file_from_s3
 
 
