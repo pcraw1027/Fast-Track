@@ -49,7 +49,7 @@ class Uploaders::MediaUploader < CarrierWave::Uploader::Base
     end
   end
 
-
+  
   def restore_versions!
     versions.each_value(&:store!)
   end
@@ -57,7 +57,7 @@ class Uploaders::MediaUploader < CarrierWave::Uploader::Base
   version :thumb do
      process resize_to_fit: [180, 180]
   end
-
+  
   def mini_magick
     MiniMagick
   end
