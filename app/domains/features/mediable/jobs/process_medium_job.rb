@@ -42,8 +42,8 @@ module Domains
           thumb_url = medium.file.thumb.url
           log "🌐 Remote file URL: #{remote_url}"
 
-          s3 = Aws::S3::Resource.new( aws_access_key_id: Rails.application.credentials.aws_access_key_id,
-                                      aws_secret_access_key: Rails.application.credentials.aws_secret_access_key,
+          s3 = Aws::S3::Resource.new( access_key_id: Rails.application.credentials.aws_access_key_id,
+                                      secret_access_key: Rails.application.credentials.aws_secret_access_key,
                                       region: Rails.application.credentials.s3_region)
           bucket_name = Rails.application.credentials.s3_bucket_name
           bucket = s3.bucket(bucket_name)
@@ -99,20 +99,8 @@ module Domains
           # STEP 4️⃣ — Assign and re-upload
           # ------------------------------
           begin
-            content_type = MiniMime.lookup_by_filename(output_path)&.content_type || "image/png"
-
-            uploaded_file = CarrierWave::SanitizedFile.new(
-              file: File.open(output_path, "rb"),
-              filename: output_filename,
-              content_type: content_type
-            )
-
-            uploader = Uploaders::MediaUploader.new(medium, :file)
-            uploader.cache!(uploaded_file)
-            uploader.store!
-
             # assign new uploader to the model
-            medium.file = uploader
+            medium.file = File.open(output_path)
             medium.skip_process_in_background = true
             medium.save!
             log "☁️  Uploaded processed image and updated Medium ##{medium.id}"
