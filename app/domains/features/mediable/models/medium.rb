@@ -3,6 +3,7 @@ module Domains
     module Mediable
         class Medium < ApplicationRecord
           self.table_name = "media"
+          attr_accessor :skip_process_in_background
           
           # Associations
           belongs_to :mediaable, polymorphic: true
@@ -16,7 +17,7 @@ module Domains
 
           #default_scope { order(:position) }
 
-          after_save :process_in_background
+          after_save :process_in_background, unless: :skip_process_in_background
           before_destroy :remove_file_from_s3
 
 

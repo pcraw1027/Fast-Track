@@ -1,20 +1,10 @@
 require 'mini_magick'
 class Uploaders::MediaUploader < CarrierWave::Uploader::Base
-
   include CarrierWave::MiniMagick
 
   def store_dir
     "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
   end
-
-  def cache_dir
-    if Rails.env.production? || Rails.env.staging?
-      "#{Rails.root}/tmp/uploads/cache"
-    else
-      Rails.root.join("tmp/uploads/cache").to_s
-    end
-  end
-
   
   def extension_allowlist
     %w[
@@ -59,42 +49,13 @@ class Uploaders::MediaUploader < CarrierWave::Uploader::Base
     end
   end
 
-  # process :resize_and_make_background_transparent => ['522x522'], if: :image?
- 
-  def resize_and_make_background_transparent(size)            
-    manipulate! do |img|
-      img.format('png')
-      img.alpha('on')
-
-      img.combine_options do |c|
-        c.fuzz '5%'  
-        c.transparent '#F7F7F7'
-      end
-
-      img.resize(size)
-      puts "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
-        puts size
-        puts "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
-      img
-    end
-  end
-
-  def process_full!
-    cache_stored_file! unless cached?
-    resize_and_make_background_transparent("522x522")
-    restore_versions!
-  end
 
   def restore_versions!
     versions.each_value(&:store!)
   end
 
-  version :thumb, if: :image? do
-    process resize_and_make_background_transparent: ['180x180'], if: :process_thumb?
-  end
-
-  def process_thumb?(_file)
-    false # prevent running on initial save
+  version :thumb do
+     process resize_to_fit: [180, 180]
   end
 
   def mini_magick
