@@ -1,4 +1,6 @@
 require 'mini_magick'
+
+
 class Uploaders::MediaUploader < CarrierWave::Uploader::Base
   include CarrierWave::MiniMagick
 
@@ -16,6 +18,33 @@ class Uploaders::MediaUploader < CarrierWave::Uploader::Base
       ppt pptx
       rtf txt
     ]
+  end
+
+  version :thumb, if: :image? do
+  end
+
+  # Prevent version processing entirely
+  def process_thumb?(_file)
+    false
+  end
+
+  def skip_processing?
+    true
+  end
+
+  # Allow image?
+  def image?(new_file)
+    new_file&.content_type&.start_with?('image')
+  end
+
+
+  # Prevent CarrierWave from deleting manually stored version files
+  def remove_previously_stored_files_after_update
+    false
+  end
+
+  def extension_allowlist
+    %w[jpg jpeg png gif svg pdf mp4 mov mpeg doc docx xls xlsx ppt pptx rtf txt]
   end
 
   def content_type_allowlist
@@ -37,34 +66,10 @@ class Uploaders::MediaUploader < CarrierWave::Uploader::Base
     ]
   end
 
-  def remove_previously_stored_files_after_update
-    true
-  end
-
-  def image?(new_file)
-    if new_file.content_type
-      new_file.content_type.start_with?('image')
-    else
-      false
-    end
-  end
-
-  
-  def restore_versions!
-    versions.each_value(&:store!)
-  end
-
-  version :thumb do
-     process resize_to_fit: [180, 180]
-  end
-  
   def mini_magick
     MiniMagick
   end
 
-
 end
 
-
-  
 

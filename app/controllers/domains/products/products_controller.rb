@@ -9,12 +9,12 @@ class Domains::Products::ProductsController < ApplicationController
                 Domains::Products::Product.includes(:company, :segment, :family, :klass, :brick, product_variants: :media)
                                           .where("name ILIKE ?", "%#{params[:q]}%")
                                           .paginate(page: params[:page], per_page: 20)
-                                          .order(created_at: :desc, id: :desc)
+                                          .order(updated_at: :desc, id: :desc)
                 else
                 Domains::Products::Product.includes(:company, :segment, :family, :klass, :brick, :product_variants, product_variants: :media)
                                           .all
                                           .paginate(page: params[:page], per_page: 20)
-                                          .order(created_at: :desc, id: :desc)
+                                          .order(updated_at: :desc, id: :desc)
                 end
      
   end
