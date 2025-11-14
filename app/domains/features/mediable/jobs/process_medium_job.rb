@@ -31,62 +31,46 @@ module Domains
           log e.backtrace.take(10).join("\n")
         end
 
-
-
         private
-
-
 
         def process_remote_file(medium)
           remote_url = medium.file.url
-          thumb_url = medium.file.thumb.url
           log "🌐 Remote file URL: #{remote_url}"
 
-          s3 = Aws::S3::Resource.new( access_key_id: Rails.application.credentials.aws_access_key_id,
-                                      secret_access_key: Rails.application.credentials.aws_secret_access_key,
-                                      region: Rails.application.credentials.s3_region)
-          bucket_name = Rails.application.credentials.s3_bucket_name
-          bucket = s3.bucket(bucket_name)
+          s3 = Aws::S3::Resource.new(
+            access_key_id: Rails.application.credentials.aws_access_key_id,
+            secret_access_key: Rails.application.credentials.aws_secret_access_key,
+            region: Rails.application.credentials.s3_region
+          )
+          bucket = s3.bucket(Rails.application.credentials.s3_bucket_name)
 
           temp_dir = Rails.root.join("tmp", "media_processing", medium.id.to_s)
           FileUtils.mkdir_p(temp_dir)
 
-          # ------------------------------
-          # STEP 1️⃣ — Download from S3
-          # ------------------------------
           original_filename = File.basename(URI.parse(remote_url).path)
           sanitized_filename = original_filename.gsub(/[^\w.\-]/, "_")
           local_input_path = File.join(temp_dir, sanitized_filename)
 
+          # 1️⃣ Download original file
           URI.open(remote_url, "rb") do |remote_file|
             File.open(local_input_path, "wb") { |f| IO.copy_stream(remote_file, f) }
           end
           log "✅ Downloaded to: #{local_input_path}"
 
-          # ------------------------------
-          # STEP 2️⃣ — Remove Background
-          # ------------------------------
           output_filename = "processed_#{sanitized_filename}"
           output_path = File.join(temp_dir, output_filename)
 
+          thumb_output_filename = "thumb_#{sanitized_filename}"
+          thumb_output_path = File.join(temp_dir, thumb_output_filename)
           begin
-            image = MiniMagick::Image.open(local_input_path)
-            image.format "png"
-            image.alpha('on')
-            image.combine_options do |c|
-              c.fuzz "5%"
-              c.transparent '#F7F7F7'
-            end
-            image.resize("522x522")
-            image.write(output_path)
-            log "🎨 Background removed and saved to: #{output_path}"
+            process_and_write_image(local_input_path, output_path, "522x522")
+            process_and_write_image(file_path, thumb_output_path, "180x180")
+            log "🎨 Processed main + thumbnail"
           rescue => e
-            raise "MiniMagick background removal failed: #{e.message}"
+            raise "MiniMagick error: #{e.message}"
           end
 
-          # ------------------------------
-          # STEP 3️⃣ — Delete old S3 file
-          # ------------------------------
+          # 4️⃣ Delete old file from S3
           begin
             s3_key = URI.parse(remote_url).path.sub(%r{^/}, "")
             bucket.object(s3_key).delete
@@ -95,61 +79,88 @@ module Domains
             log "⚠️ Could not delete old file: #{e.message}"
           end
 
-          # ------------------------------
-          # STEP 4️⃣ — Assign and re-upload
-          # ------------------------------
+          # 5️⃣ Reassign processed file to medium
           begin
-            # assign new uploader to the model
             medium.file = File.open(output_path)
             medium.skip_process_in_background = true
             medium.save!
-            log "☁️  Uploaded processed image and updated Medium ##{medium.id}"
+            log "📤 Uploaded new main image"
           rescue => e
-            raise "Failed to reassign processed file: #{e.message}"
+            raise "Failed to save processed file: #{e.message}"
           end
 
-        rescue => e
-          log "❌ Failed to process remote file: #{e.message}"
-          log e.backtrace.take(10).join("\n")
-          raise e
+          begin
+            uploader = medium.file
+            thumb_key = uploader.thumb.path.gsub(%r{^/}, "")
+            bucket.object(thumb_key).upload_file(thumb_output_path)
+
+            log "📤 Uploaded thumbnail to S3"
+          rescue => e
+            log "⚠️ Failed to upload thumbnail: #{e.message}"
+          end
+
         ensure
           if Dir.exist?(temp_dir)
             FileUtils.remove_entry_secure(temp_dir)
-            log "🧹 Cleaned up temporary files at: #{temp_dir}"
+            log "🧹 Cleaned up temporary directory"
           end
         end
 
-        # ------------------------------
-        # LOCAL DEV FALLBACK
-        # ------------------------------
         def process_local_file(medium)
           file_path = medium.file.path
           return log("❌ File not found locally: #{file_path}") unless File.exist?(file_path)
 
           log "📂 Using local file: #{file_path}"
-          output_path = file_path.sub(/(\.\w+)$/, "_processed\\1")
 
-          image = MiniMagick::Image.open(file_path)
-          image.alpha('on')
-          image.format "png"
-          image.combine_options do |c|
-            c.fuzz "5%"
-            c.transparent '#F7F7F7'
-          end
-          image.resize("522x522")
-
-          image.write(output_path)
-          log "🎨 Background removed locally and saved to #{output_path}"
+          output_path = file_path.sub(/(\.\w+)$/, "_processed.png")
+          thumb_output_path = file_path.sub(/(\.\w+)$/, "_processed_thumb.png")
+          process_and_write_image(file_path, output_path, "522x522")
+          log "🎨 Local processing complete: #{output_path}"
+          process_and_write_image(file_path, thumb_output_path, "180x180")
+          log "🎨 Local thumbnail complete: #{thumb_output_path}"
 
           medium.file = File.open(output_path)
           medium.skip_process_in_background = true
           medium.save!
-          log "✅ Medium saved with processed local file"
+
+          log "💾 Medium saved with processed main image"
+
+          #
+          # 4️⃣ Store thumbnail to CarrierWave expected path
+          #
+          begin
+            uploader = medium.file
+
+            # Absolute path to thumbnail
+            thumb_fs_path = File.join(uploader.root, uploader.thumb.store_path)
+
+            FileUtils.mkdir_p(File.dirname(thumb_fs_path))
+            FileUtils.cp(thumb_output_path, thumb_fs_path)
+
+            log "🖼️ Local thumbnail stored at: #{thumb_fs_path}"
+
+
+
+            log "🖼️ Local thumbnail stored at: #{thumb_path}"
+          rescue => e
+            log "⚠️ Failed to write local thumbnail: #{e.message}"
+          end
         end
 
-        # ------------------------------
-        # LOGGING
-        # ------------------------------
+
+        def process_and_write_image(in_path, output_path, size)
+          image = MiniMagick::Image.open(in_path) # ← RE-OPEN IMAGE
+          image.format "png"
+          image.combine_options do |c|
+            c.fuzz "5%"
+            c.transparent "#F7F7F7"
+          end
+          image.auto_orient
+          image.resize(size)
+          image.write(output_path)
+        end
+
+
         def log(msg)
           puts msg
           Rails.logger.info(msg)
