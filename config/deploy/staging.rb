@@ -47,7 +47,7 @@ append :linked_files, "config/credentials/staging.key", "config/secrets.yml", "c
 # Global options
 # --------------
   set :ssh_options, {
-    keys: %w(~/.ssh/deploy_rsa),
+    keys: %w(~/.ssh/id_rsa),
     forward_agent: false,
     auth_methods: %w(publickey password)
   }
