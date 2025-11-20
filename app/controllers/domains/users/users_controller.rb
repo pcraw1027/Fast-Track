@@ -1,13 +1,13 @@
 class Domains::Users::UsersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_user, only: %i[ show destroy edit update ]
-  before_action :authenticate_user!, only: %i[ edit update destroy]
+  before_action :authenticate_user!, only: %i[ edit update destroy index]
   #before_action :authorize_user
 
   
   # GET /users or /users.json
   def index
-    @users = Domains::Users::User.all.paginate(page: params[:page], per_page: 12)
+    @users = Domains::Users::User.all.paginate(page: params[:page], per_page: 15)
                                  .order(created_at: :desc, id: :desc)
   end
 

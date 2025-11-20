@@ -60,16 +60,8 @@
     </div>
   </div>
 
-
-
   <%= form.hidden_field :pit_record_id, value: pit_record.id %>
 
-  
-
-  <div class="form-group">
-        <%= form.label :captured_product_category %>
-        <%= form.text_field :captured_product_category, class: "form-control" %>
-      </div>
 
 <div class="form-group">
   <%= form.label :description %>
@@ -80,7 +72,7 @@
   <div class="row">
     <div class="col-md-8">
        <div class="form-group">
-        <%= form.label :company_id, "Company Name", class:"form-label" %>
+        <%= form.label :company_id, "Brand/Company Name", class:"form-label" %>
         <%= form.select :company_id, [[@company&.name, @company&.id]], 
           { prompt: "Search for a company" }, 
           data: { controller: "company-select" } 
@@ -103,7 +95,7 @@
  <div class="row">
     <div class="col-md-8">
        <div class="form-group">
-        <label>Entered Company Name</label>
+        <label>Entered Brand/Company Name</label>
 
         <input value="<%= @company_name %>" class="form-control" readonly="true"/>
       </div>
