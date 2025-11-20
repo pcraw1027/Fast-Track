@@ -64,7 +64,7 @@ module Domains
           thumb_output_path = File.join(temp_dir, thumb_output_filename)
           begin
             process_and_write_image(local_input_path, output_path, "522x522")
-            process_and_write_image(file_path, thumb_output_path, "180x180")
+            process_and_write_image(local_input_path, thumb_output_path, "180x180")
             log "🎨 Processed main + thumbnail"
           rescue => e
             raise "MiniMagick error: #{e.message}"
@@ -90,9 +90,23 @@ module Domains
           end
 
           begin
+            # TransferManager requires the low-level client
+            client = s3.client
+
+            # Create a TransferManager
+            manager = Aws::S3::TransferManager.new(client: client)
+
             uploader = medium.file
             thumb_key = uploader.thumb.path.gsub(%r{^/}, "")
-            bucket.object(thumb_key).upload_file(thumb_output_path)
+
+
+            handle = manager.upload_file(
+              thumb_output_path,
+              bucket: Rails.application.credentials.s3_bucket_name,
+              key: thumb_key
+            )
+
+
 
             log "📤 Uploaded thumbnail to S3"
           rescue => e
