@@ -236,7 +236,7 @@ notice: "Product was successfully updated."
     # Only allow a list of trusted parameters through.
     def product_params
       params.require(:domains_products_product).permit(:company_id, :name, :product_category_source_id, :description, 
-      :qrcode, :size, :segment_id, :captured_product_category, :family_id, :klass_id, :brick_id)
+      :qrcode, :size, :segment_id,  :family_id, :klass_id, :brick_id)
     end
     
     def product_variant_params

@@ -9,12 +9,16 @@ class Domains::Classifications::BricksController < ApplicationController
       product_category_source_id = Domains::Classifications::ProductCategorySource
                                    .find_by(code: params[:product_category_source_id]).id 
       @bricks = Domains::Classifications::Brick.where(product_category_source_id: product_category_source_id)
-                                               .paginate(page: params[:page], per_page: 20).order(
-                                                 created_at: :desc, id: :desc
-                                               )
+                                              .includes(:klass)
+                                              .references(:klass)                                         
+                                              .paginate(page: params[:page], per_page: 20)
+                                              .order("klasses.title ASC, bricks.title ASC")
     else 
-      @bricks = Domains::Classifications::Brick.all.paginate(page: params[:page], per_page: 20)
-                                               .order(created_at: :desc, id: :desc)
+      @bricks = Domains::Classifications::Brick
+            .includes(:klass)
+            .references(:klass)
+            .paginate(page: params[:page], per_page: 20)
+            .order("klasses.title ASC, bricks.title ASC")
     end
   end
 
@@ -33,26 +37,28 @@ class Domains::Classifications::BricksController < ApplicationController
                       else
               Domains::Classifications::Brick.none
                       end
-      brick_h = search_result&.group_by(&:klass_id)
+
       klasses = Domains::Classifications::Klass.includes(family: [:segment]).where(id: search_result&.map(&:klass_id))
+      klasses_h = klasses&.group_by(&:id)
       result = []
 
-      klasses.each do |klass|  
-        brick_h[klass.id].each do |brick|   
-          family = klass.family
-          segment = family.segment
-          result << {
+      search_result.each do |brick|
+        klass = klasses_h[brick.klass_id]
+        family = klass.family
+        segment = family.segment
+
+        result << {
             id: brick.id,
             code: brick.code,
             title: brick.title,
             klass: { id: klass.id, code: klass.code, title: klass.title },              
             family: { id: family.id, code: family.code, title: family.title },
             segment: { id: segment.id, code: segment.code, title: segment.title }
-          }  
-        end     
+          } 
+
       end
 
-    render json: result
+     render json: result
   end
 
   # GET /bricks/new
