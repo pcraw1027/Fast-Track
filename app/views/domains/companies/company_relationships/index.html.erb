@@ -24,8 +24,18 @@
 </table>
 
 <br>
-<nav aria-label="Page navigation">
-  <%= will_paginate @company_relationships, renderer: BootstrapPagination::Rails,
+
+<nav aria-label="Page navigation" class="pagination-form">
+    <%= will_paginate @company_relationships, renderer: BootstrapPagination::Rails,
       class: 'pagination justify-content-center' %>
+
+        <form method="get" action="/domains/companies/company_relationships">
+
+          <div class="form-group">
+             <input name="page" class="ml-2 jumpto-field" type="number" placeholder="Page #"/>
+             <input class="btn btn-outline-success" type="submit" value="Goto page" />
+          </div>
+
+        </form>
 </nav>
 <%= link_to 'New Company Relationship', new_domains_companies_company_relationship_path %>

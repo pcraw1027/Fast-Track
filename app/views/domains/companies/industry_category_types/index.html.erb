@@ -24,9 +24,20 @@
 </table>
 
 <br>
-<nav aria-label="Page navigation">
-  <%= will_paginate @industry_category_types, renderer: BootstrapPagination::Rails,
+
+
+<nav aria-label="Page navigation" class="pagination-form">
+    <%= will_paginate @industry_category_types, renderer: BootstrapPagination::Rails,
       class: 'pagination justify-content-center' %>
+
+        <form method="get" action="/domains/companies/industry_category_types">
+
+          <div class="form-group">
+             <input name="page" class="ml-2 jumpto-field" type="number" placeholder="Page #"/>
+             <input class="btn btn-outline-success" type="submit" value="Goto page" />
+          </div>
+
+        </form>
 </nav>
 
 <%= link_to 'New Industry Category Type', new_domains_companies_industry_category_type_path, class: "action-btn" %>

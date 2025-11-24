@@ -21,6 +21,7 @@ module MonolithRoutes
       get '/companies_search', to: 'domains/companies/companies#search', controller: 'domains/companies/companies'
       post '/insert_company', to: 'domains/companies/companies#insert_company', controller: 'domains/companies/companies'
       get '/industry_categories_search', to: 'domains/companies/industry_category_types#search', controller: 'domains/companies/industry_category_types'
+      get '/klasses_search', to: 'domains/classifications/klasses#search', controller: 'domains/classifications/klasses'
       get '/home/about', to: 'domains/home/home#about', controller: 'domains/home/home'
       get '/people_search', to: 'domains/people/people#search', controller: 'domains/people/people'
 

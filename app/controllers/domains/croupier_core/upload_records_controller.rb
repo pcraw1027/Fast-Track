@@ -5,7 +5,7 @@ class Domains::CroupierCore::UploadRecordsController < ApplicationController
   # GET /upload_records or /upload_records.json
   def index
     @upload_records = Domains::CroupierCore::UploadRecord.includes(:user, :scan)
-                                                         .all.paginate(page: params[:page], per_page: 20).order(
+                                                         .all.paginate(page: params[:page], per_page: 15).order(
                                                            created_at: :desc, id: :desc
                                                          )
   end

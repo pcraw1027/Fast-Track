@@ -63,9 +63,20 @@
 </table>
 
 <br>
-<nav aria-label="Page navigation">
-  <%= will_paginate @products, renderer: BootstrapPagination::Rails,
+
+
+<nav aria-label="Page navigation" class="pagination-form">
+    <%= will_paginate @products, renderer: BootstrapPagination::Rails,
       class: 'pagination justify-content-center' %>
+
+        <form method="get" action="/domains/products/products">
+
+          <div class="form-group">
+             <input name="page" class="ml-2 jumpto-field" type="number" placeholder="Page #"/>
+             <input class="btn btn-outline-success" type="submit" value="Goto page" />
+          </div>
+
+        </form>
 </nav>
 
 <%= link_to 'New Product', product_capture_interface_path, class: "action-btn" %>

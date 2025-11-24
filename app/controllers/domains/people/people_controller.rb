@@ -5,7 +5,7 @@ class Domains::People::PeopleController < ApplicationController
   # GET /people or /people.json
   def index
     @people = Domains::People::Person.all
-                                     .paginate(page: params[:page], per_page: 20)
+                                     .paginate(page: params[:page], per_page: 15)
                                      .order(created_at: :desc, id: :desc)
   end
 

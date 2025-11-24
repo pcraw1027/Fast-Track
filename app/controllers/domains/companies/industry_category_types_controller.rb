@@ -5,7 +5,7 @@ class Domains::Companies::IndustryCategoryTypesController < ApplicationControlle
   # GET /industry_category_types or /industry_category_types.json
   def index
     @industry_category_types = Domains::Companies::IndustryCategoryType.all
-                                                                       .paginate(page: params[:page], per_page: 20).order(
+                                                                       .paginate(page: params[:page], per_page: 15).order(
                                                                          created_at: :desc, id: :desc
                                                                        )
   end

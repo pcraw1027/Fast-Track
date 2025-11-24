@@ -9,17 +9,29 @@ class Domains::Classifications::KlassesController < ApplicationController
       product_category_source_id = Domains::Classifications::ProductCategorySource
                                    .find_by(code: params[:product_category_source_id]).id 
       @klasses = Domains::Classifications::Klass.where(product_category_source_id: product_category_source_id)
-                                                .paginate(page: params[:page], per_page: 20).order(
+                                                .paginate(page: params[:page], per_page: 15).order(
                                                   created_at: :desc, id: :desc
                                                 )
     else 
-      @klasses = Domains::Classifications::Klass.all.paginate(page: params[:page], per_page: 20)
+      @klasses = Domains::Classifications::Klass.all.paginate(page: params[:page], per_page: 15)
                                                 .order(created_at: :desc, id: :desc)
     end
+   
   end
 
   # GET /klasses/1 or /klasses/1.json
   def show
+  end
+
+  def search
+    if params[:q].present?
+      query = "%#{params[:q]}%"
+      companies = Domains::Classifications::Klass
+                  .where("title ILIKE ? OR code ILIKE ?", query, query)
+                  .limit(20)
+    else
+      companies = Domains::Classifications::Klass.none
+    end
   end
 
   def by_family

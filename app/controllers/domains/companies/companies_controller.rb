@@ -7,11 +7,11 @@ only: %i[ new edit update create destroy insert_company update_to_level_two upda
   # GET /companies or /companies.json
   def index
     @companies = if params[:q].present?
-                Domains::Companies::Company.where("name ILIKE ?", "%#{params[:q]}%").paginate(page: params[:page], per_page: 20).order(
+                Domains::Companies::Company.where("name ILIKE ?", "%#{params[:q]}%").paginate(page: params[:page], per_page: 15).order(
                   created_at: :desc, id: :desc
                 )
                  else
-                Domains::Companies::Company.all.paginate(page: params[:page], per_page: 20).order(created_at: :desc, id: :desc)
+                Domains::Companies::Company.all.paginate(page: params[:page], per_page: 15).order(created_at: :desc, id: :desc)
                  end
     
   end

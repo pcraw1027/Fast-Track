@@ -1,4 +1,45 @@
+
 <h3>Bricks</h3>
+
+<%= form_for(@brick, url: domains_classifications_bricks_path, html: { method: :get }) do |form| %>
+   <div class="row">
+
+   <div class = "col-md-3">
+      <div class="form-group">
+        <%= form.label :product_category_source_id %>
+        <%= form.collection_select :product_category_source_id, @product_category_sources, :id, :code, class: "form-control" %>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="form-group">
+            <%= form.label :klass_id, "Filter by Class", class:"form-label" %>
+            <%= form.select :klass_id, [], 
+              { prompt: "Search for a klass" }, 
+              data: { controller: "klass-select" } 
+            %>
+      </div>
+   </div>
+
+    <div class="col-md-3">
+        <div class="form-group">
+          <%= form.label :search_query, class:"form-label" %>
+          <%= form.text_field :search_query, class: "form-control"  %>
+        </div>
+    </div>
+
+      <div class="col-md-2">
+          <%= form.submit "Apply filter", class: 'btn btn-outline-success mt-md-4' %>
+       
+      </div>
+
+  </div>
+
+<%end%>
+
+
+
+
 <table class="table table-striped table-bordered table-hover table-sm container-fluid">
   <thead class="thead-dark">
     <tr>
@@ -30,9 +71,18 @@
 </table>
 
 <br>
-<nav aria-label="Page navigation">
-  <%= will_paginate @bricks, renderer: BootstrapPagination::Rails,
+<nav aria-label="Page navigation" class="pagination-form">
+    <%= will_paginate @bricks, renderer: BootstrapPagination::Rails,
       class: 'pagination justify-content-center' %>
+
+        <form method="get" action="/domains/classifications/bricks">
+
+          <div class="form-group">
+             <input name="page" class="ml-2 jumpto-field" type="number" placeholder="Page #"/>
+             <input class="btn btn-outline-success" type="submit" value="Goto page" />
+          </div>
+
+        </form>
 </nav>
 
 <%= link_to 'New Brick', new_domains_classifications_brick_path, class: "action-btn" %>

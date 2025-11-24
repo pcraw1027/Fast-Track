@@ -5,7 +5,7 @@ only: %i[ new edit update create destroy pit_interface product_capture_interface
 
   # GET /pit_records or /pit_records.json
   def index
-    @pit_records = Domains::CroupierCore::PitRecord.all.paginate(page: params[:page], per_page: 20)
+    @pit_records = Domains::CroupierCore::PitRecord.all.paginate(page: params[:page], per_page: 15)
                                                    .order(created_at: :desc, id: :desc)
   end
 

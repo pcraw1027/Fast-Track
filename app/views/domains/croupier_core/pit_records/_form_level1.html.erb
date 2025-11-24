@@ -71,14 +71,14 @@
   
   <div class="row">
     <div class="col-md-8">
-       <div class="form-group">
-        <%= form.label :company_id, "Brand/Company Name", class:"form-label" %>
-        <%= form.select :company_id, [[@company&.name, @company&.id]], 
-          { prompt: "Search for a company" }, 
-          data: { controller: "company-select" } 
-        %>
-        <%= form.hidden_field :new_company_name, id: "new_company_name" %>
-    </div>
+        <div class="form-group">
+          <%= form.label :company_id, "Brand/Company Name", class:"form-label" %>
+            <%= form.select :company_id, [[@company&.name, @company&.id]], 
+              { prompt: "Search for a company" }, 
+              data: { controller: "company-select" } 
+            %>
+            <%= f orm.hidden_field :new_company_name, id: "new_company_name" %>
+        </div>
   </div>
 
     <div class="col-md-4">

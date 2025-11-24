@@ -13,18 +13,18 @@ class Api::V1::BaseController < ApplicationController
     render json: { error: exception.message }, status: :forbidden
   end
 
-
   def record_rollback(exception)
     render json: { error: exception.message }, status: :bad_request
   end
 
-def record_not_found(exception)
+  def record_not_found(exception)
     render json: { error: exception.message }, status: :not_found
   end
 
   def record_invalid(exception)
     render json: { error: exception.message }, status: :unprocessable_entity
   end
+
   def limit_reached(exception)
     render json: { error: exception.message}, status: :internal_server_error
   end

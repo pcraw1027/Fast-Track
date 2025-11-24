@@ -5,7 +5,7 @@ class Domains::Companies::CompanySnapshotsController < ApplicationController
   # GET /company_snapshots or /company_snapshots.json
   def index
     @company_snapshots = Domains::Companies::CompanySnapshot.includes(:company).all
-                                                            .paginate(page: params[:page], per_page: 20).order(
+                                                            .paginate(page: params[:page], per_page: 15).order(
                                                               created_at: :desc, id: :desc
                                                             )
   end

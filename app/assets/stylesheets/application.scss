@@ -46,7 +46,45 @@
   color: rgb(9, 51, 105);
 }
 
+.pagination-form {
+  display: flex !important;
+  justify-content: center !important;
 
+}
+
+.jumpto-field:focus {
+  border-color: #0B9444; 
+  box-shadow: 0 0 0 0.2rem rgba(12, 250, 91, 0.25); 
+  outline: none;
+}
+
+.jumpto-field {
+  width: 95px;
+  height: 39px;
+  padding: 8px 8px; 
+  margin: 0; 
+  display: inline-block; 
+  border: 1px solid #ccc; 
+  border-radius: 4px; 
+  box-sizing: border-box; 
+  font-family: Arial, sans-serif; 
+  font-size: 16px;
+  background-clip: padding-box;
+
+
+  &::-ms-expand {
+    background-color: transparent;
+    border: 0;
+  }
+
+
+  &::placeholder {
+    color: #333;
+    opacity: 1;
+  }
+
+
+}
 
 .pagination li {
   margin-right: 0.5rem;

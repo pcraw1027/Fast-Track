@@ -5,21 +5,28 @@ class Domains::Classifications::BricksController < ApplicationController
 
   # GET /bricks or /bricks.json
   def index
-    if params[:product_category_source_id]
-      product_category_source_id = Domains::Classifications::ProductCategorySource
-                                   .find_by(code: params[:product_category_source_id]).id 
-      @bricks = Domains::Classifications::Brick.where(product_category_source_id: product_category_source_id)
-                                              .includes(:klass)
-                                              .references(:klass)                                         
-                                              .paginate(page: params[:page], per_page: 20)
-                                              .order("klasses.title ASC, bricks.title ASC")
-    else 
-      @bricks = Domains::Classifications::Brick
-            .includes(:klass)
-            .references(:klass)
-            .paginate(page: params[:page], per_page: 20)
-            .order("klasses.title ASC, bricks.title ASC")
+    @klass = nil
+    @brick = Domains::Classifications::Brick.new
+    @bricks = Domains::Classifications::Brick.where(nil)
+    @product_category_sources =  Domains::Classifications::ProductCategorySource.all
+    if params[:product_category_source_id].present?
+      @bricks = @bricks.where(product_category_source_id: params[:product_category_source_id])                                  
+    end 
+    if params[:klass_id].present?
+      @klass = Domains::Classifications::Klass.find(params[:klass_id])
+      @bricks = @bricks.where(klass_id: params[:klass_id]) 
     end
+    if params[:search_query].present?
+      search_query = "%#{params[:search_query]}%"
+      query = "code ILIKE :query OR " \
+              "title ILIKE :query"
+      @bricks = @bricks.where(query, query: search_query)
+    end
+    @bricks = @bricks.includes(:klass)
+                      .references(:klass)                                         
+                      .paginate(page: params[:page], per_page: 15)
+                      .order("klasses.title ASC, bricks.title ASC")
+
   end
 
   # GET /bricks/1 or /bricks/1.json

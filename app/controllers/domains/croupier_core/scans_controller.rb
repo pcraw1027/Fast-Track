@@ -5,7 +5,7 @@ class Domains::CroupierCore::ScansController < ApplicationController
   # GET /scans or /scans.json
   def index
     @scans = Domains::CroupierCore::Scan.includes(:user)
-                                        .all.paginate(page: params[:page], per_page: 20).order(created_at: :desc, id: :desc)
+                                        .all.paginate(page: params[:page], per_page: 15).order(created_at: :desc, id: :desc)
   end
 
   # GET /scans/1 or /scans/1.json

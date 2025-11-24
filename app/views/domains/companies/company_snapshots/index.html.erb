@@ -31,7 +31,17 @@
 
 <br>
 
-<nav aria-label="Page navigation">
-  <%= will_paginate @company_snapshots, renderer: BootstrapPagination::Rails,
+
+<nav aria-label="Page navigation" class="pagination-form">
+    <%= will_paginate @company_snapshots, renderer: BootstrapPagination::Rails,
       class: 'pagination justify-content-center' %>
+
+        <form method="get" action="/domains/companies/company_snapshots">
+
+          <div class="form-group">
+             <input name="page" class="ml-2 jumpto-field" type="number" placeholder="Page #"/>
+             <input class="btn btn-outline-success" type="submit" value="Goto page" />
+          </div>
+
+        </form>
 </nav>

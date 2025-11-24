@@ -9,11 +9,11 @@ class Domains::Classifications::FamiliesController < ApplicationController
       product_category_source_id = Domains::Classifications::ProductCategorySource
                                    .find_by(code: params[:product_category_source_id]).id 
       @families = Domains::Classifications::Family.where(product_category_source_id: product_category_source_id)
-                                                  .paginate(page: params[:page], per_page: 20).order(
+                                                  .paginate(page: params[:page], per_page: 15).order(
                                                     created_at: :desc, id: :desc
                                                   )
     else 
-      @families = Domains::Classifications::Family.all.paginate(page: params[:page], per_page: 20)
+      @families = Domains::Classifications::Family.all.paginate(page: params[:page], per_page: 15)
                                                   .order(created_at: :desc, id: :desc)
     end
   end

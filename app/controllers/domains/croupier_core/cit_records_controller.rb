@@ -5,7 +5,7 @@ class Domains::CroupierCore::CitRecordsController < ApplicationController
   # GET /cit_records or /cit_records.json
   def index
     @cit_records = Domains::CroupierCore::CitRecord.includes(:company).all
-                                                   .paginate(page: params[:page], per_page: 20).order(
+                                                   .paginate(page: params[:page], per_page: 15).order(
                                                      created_at: :desc, id: :desc
                                                    )
   end

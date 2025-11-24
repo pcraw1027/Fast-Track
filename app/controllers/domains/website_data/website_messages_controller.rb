@@ -5,7 +5,7 @@ class Domains::WebsiteData::WebsiteMessagesController < ApplicationController
   # GET /website_messages or /website_messages.json
   def index
     @website_messages = Domains::WebsiteData::WebsiteMessage.all
-                                                            .paginate(page: params[:page], per_page: 20).order(
+                                                            .paginate(page: params[:page], per_page: 15).order(
                                                               created_at: :desc, id: :desc
                                                             )
   end

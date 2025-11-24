@@ -8,11 +8,11 @@ class Domains::Classifications::SegmentsController < ApplicationController
       product_category_source_id = Domains::Classifications::ProductCategorySource
                                    .find_by(code: params[:product_category_source_id]).id 
       @segments = Domains::Classifications::Segment.where(product_category_source_id: product_category_source_id)
-                                                   .paginate(page: params[:page], per_page: 20).order(
+                                                   .paginate(page: params[:page], per_page: 15).order(
                                                      created_at: :desc, id: :desc
                                                    )
     else 
-      @segments = Domains::Classifications::Segment.all.paginate(page: params[:page], per_page: 20)
+      @segments = Domains::Classifications::Segment.all.paginate(page: params[:page], per_page: 15)
                                                    .order(created_at: :desc, id: :desc)
     end
   end

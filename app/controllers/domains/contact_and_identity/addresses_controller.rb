@@ -5,7 +5,7 @@ class Domains::ContactAndIdentity::AddressesController < ApplicationController
   # GET /addresses or /addresses.json
   def index
     @addresses = Domains::ContactAndIdentity::Address.all
-                                                     .paginate(page: params[:page], per_page: 20).order(created_at: :desc, id: :desc)
+                                                     .paginate(page: params[:page], per_page: 15).order(created_at: :desc, id: :desc)
   end
 
   # GET /addresses/1 or /addresses/1.json
