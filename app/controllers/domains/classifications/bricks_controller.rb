@@ -86,7 +86,7 @@ class Domains::Classifications::BricksController < ApplicationController
     end
 
     def convert_brick_params
-    return if nested_brick_params[:domains_classifications_brick].blank?
+    return if nested_brick_params[:titles_attributes].blank?
       code = 01
       recent_klass_bricks = Domains::Classifications::Brick.where(
             klass_id: brick_params[:klass_id]).order(created_at: :desc).limit(1);
@@ -94,7 +94,7 @@ class Domains::Classifications::BricksController < ApplicationController
         code = recent_klass_bricks[0].code + 1
       end
 
-      nested_brick_params[:domains_classifications_brick].each_value do |brick_attributes|
+      nested_brick_params[:titles_attributes].each_value do |brick_attributes|
 
           Domains::Classifications::Brick.create!(
             klass_id: brick_params[:klass_id],
@@ -109,7 +109,7 @@ class Domains::Classifications::BricksController < ApplicationController
   
   def nested_brick_params
         params.require(:domains_classifications_brick).permit(
-          bricks_attributes: [:title]
+          titles_attributes: [:title]
         )
   end
 
