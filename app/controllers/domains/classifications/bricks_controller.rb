@@ -5,28 +5,12 @@ class Domains::Classifications::BricksController < ApplicationController
 
   # GET /bricks or /bricks.json
   def index
-    @klass = nil
-    @brick = Domains::Classifications::Brick.new
-    @bricks = Domains::Classifications::Brick.where(nil)
     @product_category_sources =  Domains::Classifications::ProductCategorySource.all
-    if params[:product_category_source_id].present?
-      @bricks = @bricks.where(product_category_source_id: params[:product_category_source_id])                                  
-    end 
-    if params[:klass_id].present?
-      @klass = Domains::Classifications::Klass.find(params[:klass_id])
-      @bricks = @bricks.where(klass_id: params[:klass_id]) 
-    end
-    if params[:search_query].present?
-      search_query = "%#{params[:search_query]}%"
-      query = "code ILIKE :query OR " \
-              "title ILIKE :query"
-      @bricks = @bricks.where(query, query: search_query)
-    end
-    @bricks = @bricks.includes(:klass)
-                      .references(:klass)                                         
-                      .paginate(page: params[:page], per_page: 15)
-                      .order("klasses.title ASC, bricks.title ASC")
-
+    @brick = Domains::Classifications::Brick.new
+    result = Domains::Classifications::Brick.index_data(params[:product_category_source_id],  
+                                                params[:klass_id], params[:search_query], params[:page])
+    @klass = result[0]
+    @bricks = result[1]
   end
 
   # GET /bricks/1 or /bricks/1.json
@@ -39,32 +23,7 @@ class Domains::Classifications::BricksController < ApplicationController
   end
 
   def by_title_search
-      search_result = if params[:q].present?
-              Domains::Classifications::Brick.where("title ILIKE ?", "%#{params[:q]}%")
-                      else
-              Domains::Classifications::Brick.none
-                      end
-
-      klasses = Domains::Classifications::Klass.includes(family: [:segment]).where(id: search_result&.map(&:klass_id))
-      klasses_h = klasses&.group_by(&:id)
-      result = []
-
-      search_result.each do |brick|
-        klass = klasses_h[brick.klass_id]
-        family = klass.family
-        segment = family.segment
-
-        result << {
-            id: brick.id,
-            code: brick.code,
-            title: brick.title,
-            klass: { id: klass.id, code: klass.code, title: klass.title },              
-            family: { id: family.id, code: family.code, title: family.title },
-            segment: { id: segment.id, code: segment.code, title: segment.title }
-          } 
-
-      end
-
+    result = Domains::Classifications::Brick.search_by_title(params[:q])
      render json: result
   end
 
@@ -125,6 +84,34 @@ class Domains::Classifications::BricksController < ApplicationController
       @klasses = Domains::Classifications::Klass.all
       @product_category_sources = Domains::Classifications::ProductCategorySource.all
     end
+
+    def convert_brick_params
+    return if nested_brick_params[:domains_classifications_brick].blank?
+      code = 01
+      recent_klass_bricks = Domains::Classifications::Brick.where(
+            klass_id: brick_params[:klass_id]).order(created_at: :desc).limit(1);
+      if recent_klass_bricks.any?
+        code = recent_klass_bricks[0].code + 1
+      end
+
+      nested_brick_params[:domains_classifications_brick].each_value do |brick_attributes|
+
+          Domains::Classifications::Brick.create!(
+            klass_id: brick_params[:klass_id],
+            code: code,
+            title: brick_attributes[:title],
+            product_category_source_id: brick_params[:product_category_source_id]
+          )
+          code += 1
+      end
+    
+  end
+  
+  def nested_brick_params
+        params.require(:domains_classifications_brick).permit(
+          bricks_attributes: [:title]
+        )
+  end
 
     # Only allow a list of trusted parameters through.
     def brick_params
