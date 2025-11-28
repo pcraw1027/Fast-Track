@@ -5,6 +5,7 @@ module MonolithRoutes
   
       get '/product_capture_interface', to: 'domains/croupier_core/pit_records#product_capture', controller: 'domains/croupier_core/pit_records'
       get '/company_capture_interface', to: 'domains/croupier_core/cit_records#company_capture', controller: 'domains/croupier_core/cit_records'
+      get 'brick_capture', to: 'domains/classifications/bricks#company_capture', controller: 'domains/classifications/bricks'
       get '/next_pit_record', to: 'domains/croupier_core/pit_records#next_pit_record', controller: 'domains/croupier_core/pit_records'
       get '/next_cit_record', to: 'domains/croupier_core/cit_records#next_cit_record', controller: 'domains/croupier_core/cit_records'
       post '/invoke_bit_pit_triggers', to: 'domains/croupier_core/pit_records#invoke_bit_pit_triggers', controller: 'domains/croupier_core/pit_records'
