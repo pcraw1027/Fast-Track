@@ -51,6 +51,30 @@ class Domains::Classifications::BricksController < ApplicationController
     end
   end
 
+  def brick_capture
+    @klass = Domains::Classifications::Klass.find(params[:klass_id])
+    @product_category_source = Domains::Classifications::ProductCategorySource.find(params[:p_cat_id])
+  end
+
+  def create_bulk
+    error_message = nil
+    begin
+      convert_brick_params
+    rescue CustomError => e
+      error_message = e.message
+    ensure
+      respond_to do |format|
+        if !error_message
+          format.html { redirect_to brick_path, notice: "Bricks were successfully created." }
+        else
+          format.html { redirect_to brick_capture_path(klass_id: brick_params[:klass_id], 
+                                      p_cat_id: brick_params[:product_category_source_id]), 
+                                      status: :unprocessable_entity, alert: error_message }
+        end
+      end
+    end 
+  end
+
   # PATCH/PUT /bricks/1 or /bricks/1.json
   def update
     respond_to do |format|
