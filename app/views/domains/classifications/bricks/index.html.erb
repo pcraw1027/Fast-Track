@@ -49,7 +49,7 @@
       <th>Class Code</th>
       <th>Class Title</th>
       <th>Product Category Source</th>
-      <th colspan="3"></th>
+      <th colspan="4"></th>
     </tr>
   </thead>
 
@@ -64,6 +64,8 @@
         <td><%= brick.product_category_source.code %></td>
         <td><%= link_to 'View', brick %></td>
         <td><%= link_to 'Edit', edit_domains_classifications_brick_path(brick) %></td>
+<td><%= link_to 'Add bulk', brick_capture_path(klass_id: brick.klass_id, 
+                                      p_cat_id: brick.product_category_source_id), class: "btn btn-outline-primary btn-sm" %></td>
         <td><%= button_to 'Delete', brick, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-outline-danger btn-sm" %></td>
       </tr>
     <% end %>
