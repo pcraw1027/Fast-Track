@@ -1,0 +1,18 @@
+<div class="nested-fields p-3 mb-3">
+  
+<div class="row">
+ 
+    <div class = "col-md-12">
+        <div class = "form-group">
+            <%= f.label :title, class:"form-label" %>
+            <%= f.text_field :title, class:"form-control" %>
+        </div>
+    </div>
+
+
+  </div>
+
+
+  <i class="fas fa-trash" style="color: #ff0000;"></i> <%= link_to_remove_association "remove title", f, class: "btn btn-outline-danger btn-sm" %>
+<br/><br/>
+</div>

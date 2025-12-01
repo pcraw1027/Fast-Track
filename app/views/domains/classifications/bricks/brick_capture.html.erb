@@ -1,0 +1,71 @@
+<div class="container">
+<h3>Add Bricks</h3>
+<%= form_for(@brick, url: create_bulk_bricks_path, html: { method: :post }) do |form| %>
+
+  <% if @brick.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(brick.errors.count, "error") %> prohibited this brick from being saved:</h2>
+
+      <ul>
+        <% @brick.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= form.hidden_field :klass_id, value: @klass.id %>
+  <%= form.hidden_field :product_category_source_id, value: @product_category_source.id %>
+
+
+<div class="row">
+<div class = "col-md-4">
+        <div class = "form-group">
+            <label class="form-label">Class Title: </label>
+            <input value="<%= @klass.title%>" class="form-control" readonly />
+        </div>
+    </div>
+    <div class = "col-md-4">
+        <div class = "form-group">
+            <label class="form-label">Class Code: </label>
+            <input value="<%= @klass.code%>" class="form-control" readonly />
+        </div>
+    </div>
+     <div class = "col-md-4">
+        <div class = "form-group">
+            <label class="form-label">Product Category Source: </label>
+            <input value="<%= @product_category_source.description%>" class="form-control" readonly />
+        </div>
+    </div>
+</div>
+
+  <div class="row">
+    <div class = "col-md-12">
+
+      <div class="container mt-5">
+
+            <div id="attribute_titles">
+              <%= form.fields_for :attribute_titles do |attribute_title_form| %>
+                
+                      <%= render 'attribute_title_fields', f: attribute_title_form  %>
+                 <hr>
+              <% end %>
+            </div>
+      </div>
+    </div>
+  </div>
+
+<div class="row">
+    <div class = "col-md-12">
+      <i class="fas fa-plus" style="color: #0B9444;" ></i> <%= link_to_add_association 'add title', form, :attribute_titles, class:"theme-link" %>
+    </div>
+  </div>
+</div>
+
+<div class="actions text-center">
+    <%= form.submit "Add bricks", class: 'action-btn' %>
+  </div>
+<% end %>
+
+<%= link_to 'Back', domains_classifications_bricks_path, class: "btn btn-outline-info btn-sm" %>
+</div>

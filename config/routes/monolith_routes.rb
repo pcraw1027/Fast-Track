@@ -5,7 +5,7 @@ module MonolithRoutes
   
       get '/product_capture_interface', to: 'domains/croupier_core/pit_records#product_capture', controller: 'domains/croupier_core/pit_records'
       get '/company_capture_interface', to: 'domains/croupier_core/cit_records#company_capture', controller: 'domains/croupier_core/cit_records'
-      get 'brick_capture', to: 'domains/classifications/bricks#company_capture', controller: 'domains/classifications/bricks'
+      get '/brick_capture', to: 'domains/classifications/bricks#brick_capture', controller: 'domains/classifications/bricks'
       get '/next_pit_record', to: 'domains/croupier_core/pit_records#next_pit_record', controller: 'domains/croupier_core/pit_records'
       get '/next_cit_record', to: 'domains/croupier_core/cit_records#next_cit_record', controller: 'domains/croupier_core/cit_records'
       post '/invoke_bit_pit_triggers', to: 'domains/croupier_core/pit_records#invoke_bit_pit_triggers', controller: 'domains/croupier_core/pit_records'
@@ -25,13 +25,12 @@ module MonolithRoutes
       get '/klasses_search', to: 'domains/classifications/klasses#search', controller: 'domains/classifications/klasses'
       get '/home/about', to: 'domains/home/home#about', controller: 'domains/home/home'
       get '/people_search', to: 'domains/people/people#search', controller: 'domains/people/people'
-
+      post '/create_bulk_bricks', to: 'domains/classifications/bricks#create_bulk', controller: 'domains/classifications/bricks'
 
       devise_for :users, class_name: "Domains::Users::User",
             module: :devise#, controllers: { registrations: 'registrations' }
 
       namespace :domains do
-      
           namespace :website_data do
               resources :website_messages
           end
@@ -52,7 +51,7 @@ module MonolithRoutes
             end
 
             namespace :classifications do
-              resources :bricks
+              resources :bricks 
               resources :klasses
               resources :families
               resources :segments

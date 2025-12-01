@@ -5,7 +5,7 @@ class Domains::Classifications::BricksController < ApplicationController
 
   # GET /bricks or /bricks.json
   def index
-    @product_category_sources =  Domains::Classifications::ProductCategorySource.all
+    @product_category_sources = Domains::Classifications::ProductCategorySource.all
     @brick = Domains::Classifications::Brick.new
     result = Domains::Classifications::Brick.index_data(params[:product_category_source_id],  
                                                 params[:klass_id], params[:search_query], params[:page])
@@ -52,6 +52,7 @@ class Domains::Classifications::BricksController < ApplicationController
   end
 
   def brick_capture
+    @brick = Domains::Classifications::Brick.new
     @klass = Domains::Classifications::Klass.find(params[:klass_id])
     @product_category_source = Domains::Classifications::ProductCategorySource.find(params[:p_cat_id])
   end
@@ -64,12 +65,14 @@ class Domains::Classifications::BricksController < ApplicationController
       error_message = e.message
     ensure
       respond_to do |format|
-        if !error_message
-          format.html { redirect_to brick_path, notice: "Bricks were successfully created." }
-        else
-          format.html { redirect_to brick_capture_path(klass_id: brick_params[:klass_id], 
+        if error_message
+          format.html do 
+            redirect_to brick_capture_path(klass_id: brick_params[:klass_id], 
                                       p_cat_id: brick_params[:product_category_source_id]), 
-                                      status: :unprocessable_entity, alert: error_message }
+                                      status: :unprocessable_entity, alert: error_message 
+          end
+        else
+          format.html { redirect_to domains_classifications_bricks_path, notice: "Submitted titles created." }
         end
       end
     end 
@@ -110,16 +113,15 @@ class Domains::Classifications::BricksController < ApplicationController
     end
 
     def convert_brick_params
-    return if nested_brick_params[:titles_attributes].blank?
-      code = 01
+    return if nested_brick_params[:attribute_titles_attributes].blank?
+
+      code = 0o1
       recent_klass_bricks = Domains::Classifications::Brick.where(
-            klass_id: brick_params[:klass_id]).order(created_at: :desc).limit(1);
-      if recent_klass_bricks.any?
-        code = recent_klass_bricks[0].code + 1
-      end
+        klass_id: brick_params[:klass_id]
+      ).order(created_at: :desc).limit(1)
+      code = recent_klass_bricks[0].code + 1 if recent_klass_bricks.any?
 
-      nested_brick_params[:titles_attributes].each_value do |brick_attributes|
-
+      nested_brick_params[:attribute_titles_attributes].each_value do |brick_attributes|
           Domains::Classifications::Brick.create!(
             klass_id: brick_params[:klass_id],
             code: code,
@@ -129,11 +131,11 @@ class Domains::Classifications::BricksController < ApplicationController
           code += 1
       end
     
-  end
+    end
   
   def nested_brick_params
         params.require(:domains_classifications_brick).permit(
-          titles_attributes: [:title]
+          attribute_titles_attributes: [:title]
         )
   end
 

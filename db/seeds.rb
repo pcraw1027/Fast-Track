@@ -31,98 +31,98 @@ require 'csv'
     Domains::ContactAndIdentity::CountryReference.destroy_all
     Domains::ContactAndIdentity::AddressType.destroy_all
 
-admin = Domains::Users::User.create!(email:"oshanani@gmail.com", password:"Edpass@2", role: 1, status: 0, 
-username:"Ed", country: "US", postal_code:"07077")
+admin = Domains::Users::User.create!(email: "oshanani@gmail.com", password: "Edpass@2", role: 1, status: 0, 
+username: "Ed", country: "US", postal_code: "07077")
 
-admin2 = Domains::Users::User.create!(email:"pcraw1027@gmail.com", password:"Ptpass@2", role: 1, status: 0, 
-username:"pcraw", country: "US", postal_code:"07077")
+admin2 = Domains::Users::User.create!(email: "pcraw1027@gmail.com", password: "Ptpass@2", role: 1, status: 0, 
+username: "pcraw", country: "US", postal_code: "07077")
 
 
  Domains::Companies::CompanyRelationshipType.create(
-        [{relationship: "Parent/Child", definition: "Parent Company has a Child Subsidary"},
-        {relationship: "Parent/Brand", definition: "Parent Company has a Child Brand"},
-        {relationship: "Parent/Supplier", definition: "Parent Company has a Child Supplier"},
-        {relationship: "Other", definition: "Other type of relationship not yet defined"}]
+        [{ relationship: "Parent/Child", definition: "Parent Company has a Child Subsidary" },
+         { relationship: "Parent/Brand", definition: "Parent Company has a Child Brand" },
+         { relationship: "Parent/Supplier", definition: "Parent Company has a Child Supplier" },
+         { relationship: "Other", definition: "Other type of relationship not yet defined" }]
     )
 
     Domains::Companies::CompanyContactType.create(
-        [{role: "CEO", definition: "Company head"},
-        {role: "Decision Maker", definition: "Company officer"},
-        {role: "CMO", definition: "Chief Marketing Officer - Head of Marketing"},
-        {role: "PR Head", definition: "Head of Public Relations"}]
+        [{ role: "CEO", definition: "Company head" },
+         { role: "Decision Maker", definition: "Company officer" },
+         { role: "CMO", definition: "Chief Marketing Officer - Head of Marketing" },
+         { role: "PR Head", definition: "Head of Public Relations" }]
     )
 
     Domains::People::EthnicityType.create(
-        [{ethnicity: "Hispanic", definition: "Hispanic or Latino - A person of Cuban, Mexican, Puerto Rican, South or Central American, or other Spanish culture or origin regardless of race.", source: "Hispanic or Latino"},
-        {ethnicity: "White", definition: "White - A person having origins in any of the original peoples of Europe, the Middle East, or North Africa.", source: "White"},
-        {ethnicity: "Black", definition: "Black or African American - A person having origins in any of the black racial groups of Africa.", source: "Black or African American"},
-        {ethnicity: "Native Hawaiian", definition: "Native Hawaiian or Other Pacific Islander - A person having origins in any of the peoples of Hawaii, Guam, Samoa, or other Pacific Islands.", source: "Native Hawaiian or Other Pacific Islander"},
-        {ethnicity: "Asian", definition: "Asian - A person having origins in any of the original peoples of the Far East, Southeast Asia, or the Indian Subcontinent, including, for example, Cambodia, China, India, Japan, Korea, Malaysia, Pakistan, the Philippine Islands, Thailand, and Vietnam.", source: "Asian"},
-        {ethnicity: "American Indian", definition: "American Indian or Alaska Native - A person having origins in any of the original peoples of North and South America (including Central America), and who maintain tribal affiliation or community attachment.", source: "American Indian or Alaska Native"},
-        {ethnicity: "Two or More", definition: "Two or More Races - All persons who identify with more than one of the above five races (White, Black or African American, Native Hawaiian or Other Pacific Islander, Asian, American Indian or Alaska Native). For the purposes of this group, identifying as Hispanic or Latino and only one of the listed 5 race groups does NOT qualify.", source: "Two or More Races"}]
+        [{ ethnicity: "Hispanic", definition: "Hispanic or Latino - A person of Cuban, Mexican, Puerto Rican, South or Central American, or other Spanish culture or origin regardless of race.", source: "Hispanic or Latino" },
+         { ethnicity: "White", definition: "White - A person having origins in any of the original peoples of Europe, the Middle East, or North Africa.", source: "White" },
+         { ethnicity: "Black", definition: "Black or African American - A person having origins in any of the black racial groups of Africa.", source: "Black or African American" },
+         { ethnicity: "Native Hawaiian", definition: "Native Hawaiian or Other Pacific Islander - A person having origins in any of the peoples of Hawaii, Guam, Samoa, or other Pacific Islands.", source: "Native Hawaiian or Other Pacific Islander" },
+         { ethnicity: "Asian", definition: "Asian - A person having origins in any of the original peoples of the Far East, Southeast Asia, or the Indian Subcontinent, including, for example, Cambodia, China, India, Japan, Korea, Malaysia, Pakistan, the Philippine Islands, Thailand, and Vietnam.", source: "Asian" },
+         { ethnicity: "American Indian", definition: "American Indian or Alaska Native - A person having origins in any of the original peoples of North and South America (including Central America), and who maintain tribal affiliation or community attachment.", source: "American Indian or Alaska Native" },
+         { ethnicity: "Two or More", definition: "Two or More Races - All persons who identify with more than one of the above five races (White, Black or African American, Native Hawaiian or Other Pacific Islander, Asian, American Indian or Alaska Native). For the purposes of this group, identifying as Hispanic or Latino and only one of the listed 5 race groups does NOT qualify.", source: "Two or More Races" }]
     )
 
     Domains::People::GenderType.create(
-        [{gender: "Male", definition: ""},
-        {gender: "Female", definition: ""},
-        {gender: "Transgender", definition: ""},
-        {gender: "Nonbinary", definition: ""},
-        {gender: "Other", definition: ""}]
+        [{ gender: "Male", definition: "" },
+         { gender: "Female", definition: "" },
+         { gender: "Transgender", definition: "" },
+         { gender: "Nonbinary", definition: "" },
+         { gender: "Other", definition: "" }]
     )
 
     Domains::ContactAndIdentity::CountryReference.create(
-        [{country_code: "CAN", country: "Canada"},
-        {country_code: "GBR", country: "United Kingdom and Northern Ireland"},
-        {country_code: "USA", country: "United States of America"},
-        {country_code: "OTH", country: "Other"} ]
+        [{ country_code: "CAN", country: "Canada" },
+         { country_code: "GBR", country: "United Kingdom and Northern Ireland" },
+         { country_code: "USA", country: "United States of America" },
+         { country_code: "OTH", country: "Other" }]
     )
 
     Domains::Socials::SocialSite.create(
         [
-            {site_code: "X", site: "X (formerly Twitter)"},
-            {site_code: "LinkedIn", site: "LinkedIn"},
-            {site_code: "TikTok", site: "TikTok"},
-            {site_code: "YouTube", site: "YouTube"},
-            {site_code: "Instagram", site: "Instagram"},
-            {site_code: "FB", site: "FaceBook"},
-            {site_code: "Bluesky", site: "Bluesky"},
-            {site_code: "Discord", site: "Discord"},
-            {site_code: "Slack", site: "Slack"},
-            {site_code: "Threads", site: "Threads"},
-            {site_code: "Pinterest", site: "Pinterest"},
-            {site_code: "OTH", site: "Other"},
+          { site_code: "X", site: "X (formerly Twitter)" },
+          { site_code: "LinkedIn", site: "LinkedIn" },
+          { site_code: "TikTok", site: "TikTok" },
+          { site_code: "YouTube", site: "YouTube" },
+          { site_code: "Instagram", site: "Instagram" },
+          { site_code: "FB", site: "FaceBook" },
+          { site_code: "Bluesky", site: "Bluesky" },
+          { site_code: "Discord", site: "Discord" },
+          { site_code: "Slack", site: "Slack" },
+          { site_code: "Threads", site: "Threads" },
+          { site_code: "Pinterest", site: "Pinterest" },
+          { site_code: "OTH", site: "Other" }
         
         ]
         )
 
 Domains::ContactAndIdentity::AddressType.create(
         [
-            {name: "Main Address (Corporate HQ)", is_person_address: false},
-            {name: "Country HQ", is_person_address: false},
-            {name: "Regional HQ", is_person_address: false},
-            {name: "Manufacturing Facility", is_person_address: false},
-            {name: "Distribution Facility", is_person_address: false},
-            {name: "Storage Facility (Warehouse)", is_person_address: false},
-            {name: "Registered Office (UK)", is_person_address: false},
-            {name: "Trading Office (UK)", is_person_address: false}
-     ])
+          { name: "Main Address (Corporate HQ)", is_person_address: false },
+          { name: "Country HQ", is_person_address: false },
+          { name: "Regional HQ", is_person_address: false },
+          { name: "Manufacturing Facility", is_person_address: false },
+          { name: "Distribution Facility", is_person_address: false },
+          { name: "Storage Facility (Warehouse)", is_person_address: false },
+          { name: "Registered Office (UK)", is_person_address: false },
+          { name: "Trading Office (UK)", is_person_address: false }
+        ])
 
     Domains::Companies::EmployeeType.create(
-        [{employee: "Management", definition: "A type of employee classification that can include top-level, mid-level, and first-line management."},
-        {employee: "Exempt", definition: "Employees who are paid a salary of at least $684 per week and work in an exempt profession. Exempt employees are not subject to the same tracking requirements as non-exempt employees, such as tracking hours, overtime, and meal periods."},
-        {employee: "Non-Exempt", definition: "Employees who are paid an hourly rate and are subject to minimum wage."},
-        {employee: "Full-Time", definition: "Employees who are regularly scheduled to work 40 hours per week. Full-time employees are eligible for benefits like paid time off and medical insurance."},
-        {employee: "Part-Time", definition: "Employees who are regularly scheduled to work more than 20 hours but less than 40 hours per week."},
-        {employee: "Contract", definition: "Employees who have a clearly defined time period of employment."},
-        {employee: "Independent Contractor", definition: "Also known as freelancers, independent contractors are considered self-employed and are responsible for their own taxes."},
-        {employee: "Temporary", definition: "Employees who work full- or part-time for a period of no more than 90 days."},
-        {employee: "On-Call", definition: "Employees who are not regularly scheduled but are employed as needed by the company."},
-        {employee: "Volunteer/Intern", definition: "Employees who are employed for a specific period of time, such as a school semester."}]
+        [{ employee: "Management", definition: "A type of employee classification that can include top-level, mid-level, and first-line management." },
+         { employee: "Exempt", definition: "Employees who are paid a salary of at least $684 per week and work in an exempt profession. Exempt employees are not subject to the same tracking requirements as non-exempt employees, such as tracking hours, overtime, and meal periods." },
+         { employee: "Non-Exempt", definition: "Employees who are paid an hourly rate and are subject to minimum wage." },
+         { employee: "Full-Time", definition: "Employees who are regularly scheduled to work 40 hours per week. Full-time employees are eligible for benefits like paid time off and medical insurance." },
+         { employee: "Part-Time", definition: "Employees who are regularly scheduled to work more than 20 hours but less than 40 hours per week." },
+         { employee: "Contract", definition: "Employees who have a clearly defined time period of employment." },
+         { employee: "Independent Contractor", definition: "Also known as freelancers, independent contractors are considered self-employed and are responsible for their own taxes." },
+         { employee: "Temporary", definition: "Employees who work full- or part-time for a period of no more than 90 days." },
+         { employee: "On-Call", definition: "Employees who are not regularly scheduled but are employed as needed by the company." },
+         { employee: "Volunteer/Intern", definition: "Employees who are employed for a specific period of time, such as a school semester." }]
     )
 
     Domains::Classifications::ProductCategorySource.create(
-        [{code: "AMZ", description: "Amazon"},
-        {code: "GPC" , description: "Global Product Classification"}]
+        [{ code: "AMZ", description: "Amazon" },
+         { code: "GPC", description: "Global Product Classification" }]
     )
 
 
@@ -184,7 +184,7 @@ csv.each do |row|
 
         
         s = Domains::Classifications::Family.new
-        s.segment_id = Segment.find_by(title: last_segment_title)&.id
+        s.segment_id = Domains::Classifications::Segment.find_by(title: last_segment_title)&.id
         s.code = row['FamilyCode']
         last_family_title = row['FamilyTitle'].strip
         s.title = last_family_title
@@ -194,7 +194,7 @@ csv.each do |row|
         
         
         r = Domains::Classifications::Klass.new
-        r.family_id = Family.find_by(title: last_family_title)&.id
+        r.family_id = Domains::Classifications::Family.find_by(title: last_family_title)&.id
         r.code = row['ClassCode']
         last_class_title = row['ClassTitle'].strip
         r.title = last_class_title
@@ -203,7 +203,7 @@ csv.each do |row|
         r.save
         
         q = Domains::Classifications::Brick.new
-        q.klass_id = Klass.find_by(title: last_class_title)&.id
+        q.klass_id = Domains::Classifications::Klass.find_by(title: last_class_title)&.id
         q.code = row['BrickCode']
         last_brick_title = row['BrickTitle'].strip
         q.title = last_brick_title
@@ -223,7 +223,7 @@ csv.each do |row|
         s.save
 
         r = Domains::Classifications::Klass.new
-        r.family_id = Family.find_by(title: last_family_title)&.id
+        r.family_id = Domains::Classifications::Family.find_by(title: last_family_title)&.id
         r.code = row['ClassCode']
         last_class_title = row['ClassTitle'].strip
         r.title = last_class_title
@@ -232,7 +232,7 @@ csv.each do |row|
         r.save
 
         q = Domains::Classifications::Brick.new
-        q.klass_id = Klass.find_by(title: last_class_title)&.id
+        q.klass_id = Domains::Classifications::Klass.find_by(title: last_class_title)&.id
         q.code = row['BrickCode']
         last_brick_title = row['BrickTitle'].strip
         q.title = last_brick_title
@@ -243,7 +243,7 @@ csv.each do |row|
     elsif row['ClassTitle']&.strip != last_class_title
 
         r = Domains::Classifications::Klass.new
-        r.family_id = Family.find_by(title: last_family_title)&.id
+        r.family_id = Domains::Classifications::Family.find_by(title: last_family_title)&.id
         r.code = row['ClassCode']
         last_class_title = row['ClassTitle'].strip
         r.title = last_class_title
@@ -253,7 +253,7 @@ csv.each do |row|
 
 
         q = Domains::Classifications::Brick.new
-        q.klass_id = Klass.find_by(title: last_class_title)&.id
+        q.klass_id = Domains::Classifications::Klass.find_by(title: last_class_title)&.id
         q.code = row['BrickCode']
         last_brick_title = row['BrickTitle'].strip
         q.title = last_brick_title
@@ -264,7 +264,7 @@ csv.each do |row|
     elsif row['BrickTitle']&.strip != last_brick_title 
 
         q = Domains::Classifications::Brick.new
-        q.klass_id = Klass.find_by(title: last_class_title)&.id
+        q.klass_id = Domains::Classifications::Klass.find_by(title: last_class_title)&.id
         q.code = row['BrickCode'] 
         last_brick_title = row['BrickTitle'].strip     
         q.title = last_brick_title
