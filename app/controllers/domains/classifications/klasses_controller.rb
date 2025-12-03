@@ -26,12 +26,13 @@ class Domains::Classifications::KlassesController < ApplicationController
   def search
     if params[:q].present?
       query = "%#{params[:q]}%"
-      companies = Domains::Classifications::Klass
-                  .where("title ILIKE ? OR code ILIKE ?", query, query)
-                  .limit(20)
+      @klasses = Domains::Classifications::Klass
+                 .where("title ILIKE ? OR code::text ILIKE ?", query, query)
+                 .limit(20)
     else
-      companies = Domains::Classifications::Klass.none
+      @klasses = Domains::Classifications::Klass.none
     end
+    render json: @klasses.select(:id, :code, :title)
   end
 
   def by_family

@@ -2,6 +2,7 @@ module Domains
   module Classifications
       class Brick < ApplicationRecord
         attr_accessor :search_query
+
         belongs_to :klass, class_name: "Domains::Classifications::Klass"
         belongs_to :product_category_source, class_name: "Domains::Classifications::ProductCategorySource"
         has_many :products, class_name: "Domains::Products::Product"
@@ -19,32 +20,25 @@ module Domains
         def self.index_data(product_category_source_id, klass_id, search_query, page)
           klass = nil
           bricks = Domains::Classifications::Brick.where(nil)
-          if product_category_source_id.present?
-            bricks = bricks.where(product_category_source_id: product_category_source_id)                                  
-          end 
+          bricks = bricks.where(product_category_source_id: product_category_source_id) if product_category_source_id.present? 
           if klass_id.present?
             klass = Domains::Classifications::Klass.find(klass_id)
             bricks = bricks.where(klass_id: klass_id) 
           end
-          if search_query.present?
-            search_query = "%#{search_query}%"
-            query = "code ILIKE :query OR " \
-                    "title ILIKE :query"
-            bricks = bricks.where(query, query: search_query)
-          end
+          bricks = bricks.where("bricks.title ILIKE ?", "%#{search_query}%") if search_query.present?
           bricks = bricks.includes(:klass)
-                            .references(:klass)                                         
-                            .paginate(page: page, per_page: 15)
-                            .order("klasses.title ASC, bricks.title ASC")
+                         .references(:klass)                                         
+                         .paginate(page: page, per_page: 15)
+                         .order("klasses.title ASC, bricks.title ASC")
           [klass, bricks]
         end
 
         def self.search_by_title(query)
           search_result = if query.present?
               Domains::Classifications::Brick.where("title ILIKE ?", "%#{query}%")
-                      else
+                          else
               Domains::Classifications::Brick.none
-                      end
+                          end
 
           klasses = Domains::Classifications::Klass.includes(family: [:segment]).where(id: search_result&.map(&:klass_id))
           klasses_h = klasses&.group_by(&:id)
@@ -56,16 +50,15 @@ module Domains
             segment = family.segment
 
             result << {
-                id: brick.id,
+              id: brick.id,
                 code: brick.code,
                 title: brick.title,
                 klass: { id: klass.id, code: klass.code, title: klass.title },              
                 family: { id: family.id, code: family.code, title: family.title },
                 segment: { id: segment.id, code: segment.code, title: segment.title }
-              } 
+            } 
           end
           result
-
         end
 
       end

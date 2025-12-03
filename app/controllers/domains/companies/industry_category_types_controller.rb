@@ -17,14 +17,14 @@ class Domains::Companies::IndustryCategoryTypesController < ApplicationControlle
   def search
     if params[:q].present?
       query = "%#{params[:q]}%"
-      companies = Domains::Companies::IndustryCategoryType
+      @companies = Domains::Companies::IndustryCategoryType
                   .where("title ILIKE ? OR category_code ILIKE ?", query, query)
                   .limit(20)
     else
-      companies = Domains::Companies::IndustryCategoryType.none
+      @companies = Domains::Companies::IndustryCategoryType.none
     end
   
-    render json: companies.select(:id, :category_code, :title)
+    render json: @companies.select(:id, :category_code, :title)
   end
 
   # GET /industry_category_types/new
