@@ -11,6 +11,8 @@ class Domains::Classifications::BricksController < ApplicationController
                                                 params[:klass_id], params[:search_query], params[:page])
     @klass = result[0]
     @bricks = result[1]
+    @search_query = params[:search_query]
+    @product_category_source = @product_category_sources.select { |pc| pc.id == params[:product_category_source_id] }
   end
 
   # GET /bricks/1 or /bricks/1.json

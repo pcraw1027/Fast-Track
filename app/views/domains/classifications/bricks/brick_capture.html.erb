@@ -69,5 +69,7 @@
 
 <%= link_to 'Back', domains_classifications_bricks_path(
                                       page: params[:page], 
-                                      product_category_source_id: params[:product_category_source_id]), class: "btn btn-outline-info btn-sm" %>
+                                      klass_id: params[:klass_id],
+                                      search_query: params[:search_query],
+                                      p_cat_id: params[:product_category_source_id]), class: "btn btn-outline-info btn-sm" %>
 </div>

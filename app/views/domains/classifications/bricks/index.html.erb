@@ -3,35 +3,54 @@
 
 <%= form_with url: domains_classifications_bricks_path, method: :get, local: true do |form| %>
   <div class="row">
+
     <div class="col-md-3">
       <div class="form-group">
         <%= form.label :product_category_source_id %>
-        <%= form.collection_select :product_category_source_id, @product_category_sources, :id, :code, class: "form-control" %>
+        <%= form.collection_select :product_category_source_id,
+                                   @product_category_sources,
+                                   :id,
+                                   :code,
+                                   { selected: @product_category_source_id },
+                                   { class: "form-control" } %>
       </div>
     </div>
 
     <div class="col-md-3">
       <div class="form-group">
         <%= form.label :klass_id, "Filter by Class" %>
-        <%= form.select :klass_id, [["#{@klass&.code&.to_s} - #{@klass&.title&.to_s}", @klass&.id]],
-          { prompt: "Search for a klass" },
-          data: { controller: "klass-select" }
-        %>
+        <%= form.select :klass_id,
+                    (@klass.present? ? [[ @klass.title, @klass.id ]] : []),
+                    {
+                      prompt: "Search for a klass",
+                      selected: @klass&.id
+                    },
+                    {
+                      data: { controller: "klass-select" }
+                    } %>
       </div>
     </div>
+
 
     <div class="col-md-3">
       <div class="form-group">
         <%= form.label :search_query, "Brick Title" %>
-        <%= form.text_field :search_query, class: "form-control" %>
+        <%= form.text_field :search_query,
+                            value: @search_query,
+                            class: "form-control" %>
       </div>
     </div>
 
-    <div class="col-md-2">
-      <%= form.submit "Apply filter", class: "btn btn-outline-success mt-md-4" %>
+    <div class="col-md-2 d-flex">
+      <%= form.submit "Apply filter",
+            class: "btn btn-outline-success w-100",
+            style: "height: 40px; margin-top: 30px" %>
     </div>
+
+
   </div>
 <% end %>
+
 
 <table class="table table-striped table-bordered table-hover table-sm container-fluid">
   <thead class="thead-dark">
@@ -59,6 +78,7 @@
         <td><%= link_to 'Edit', edit_domains_classifications_brick_path(brick) %></td>
 <td><%= link_to 'Add', brick_capture_path(klass_id: brick.klass_id,
                                       page: params[:page], 
+                                      search_query: params[:search_query],
                                       p_cat_id: brick.product_category_source_id), class: "btn btn-outline-secondary btn-sm" %></td>
         <td><%= button_to 'Delete', brick, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-outline-danger btn-sm" %></td>
       </tr>
