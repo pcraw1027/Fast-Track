@@ -74,8 +74,16 @@
         <td><%= brick.klass.code %></td>
         <td><%= brick.klass.title %></td>
         <td><%= brick.product_category_source.code %></td>
-        <td><%= link_to 'View', brick, class: "btn btn-outline-info btn-sm" %></td>
-        <td><%= link_to 'Edit', edit_domains_classifications_brick_path(brick) %></td>
+        <td><%= link_to 'View', domains_classifications_brick_path(id: brick.id,
+                                        klass_id: params[:klass_id],
+                                      page: params[:page], 
+                                      search_query: params[:search_query],
+                                      p_cat_id: params[:product_category_source_id] ), class: "btn btn-outline-info btn-sm" %></td>
+        <td><%= link_to 'Edit', edit_domains_classifications_brick_path(id: brick.id,
+                                        klass_id: params[:klass_id],
+                                      page: params[:page], 
+                                      search_query: params[:search_query],
+                                      p_cat_id: params[:product_category_source_id] ) %></td>
 <td><%= link_to 'Add', brick_capture_path(klass_id: brick.klass_id,
                                       page: params[:page], 
                                       search_query: params[:search_query],
@@ -101,4 +109,7 @@
         </form>
 </nav>
 
-<%= link_to 'New Brick', new_domains_classifications_brick_path, class: "action-btn" %>
+<%= link_to 'New Brick', new_domains_classifications_brick_path(page: params[:page], 
+                                      klass_id: params[:klass_id],
+                                      search_query: params[:search_query],
+                                      p_cat_id: params[:product_category_source_id]), class: "action-btn" %>
