@@ -10,7 +10,7 @@ module Domains
         #this helps in bulk creation for bricks. Not a reall association as it's not being used
         has_many :attribute_titles, class_name: "Domains::Classifications::AttributeTitle"
 
-        accepts_nested_attributes_for :attribute_titles, reject_if: :all_blank
+        accepts_nested_attributes_for :attribute_titles
 
         validates :code, uniqueness: { scope: :klass,
         message: "should be unique to segment" }

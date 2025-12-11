@@ -1,6 +1,6 @@
 <div class="container">
 <h3>Add Bricks</h3>
-<%= form_for(@brick, url: create_bulk_bricks_path, html: { method: :post }) do |form| %>
+<%= form_for(@brick, url: create_bulk_bricks_path, html: { method: :post, data: { turbo: false }}) do |form| %>
 
   <% if @brick.errors.any? %>
     <div id="error_explanation">
@@ -17,24 +17,26 @@
   <%= form.hidden_field :klass_id, value: @klass.id %>
   <%= form.hidden_field :product_category_source_id, value: @product_category_source.id %>
 
+  <%= form.hidden_field :page, value: params[:page] %>
+    <%= form.hidden_field :search_query, value: params[:search_query] %>
 
 <div class="row">
 <div class = "col-md-4">
         <div class = "form-group">
             <label class="form-label">Class Title: </label>
-            <input value="<%= @klass.title%>" class="form-control" readonly />
+            <input name="displaytitle" value="<%= @klass.title%>" class="form-control" readonly />
         </div>
     </div>
     <div class = "col-md-4">
         <div class = "form-group">
             <label class="form-label">Class Code: </label>
-            <input value="<%= @klass.code%>" class="form-control" readonly />
+            <input name="displaycode" value="<%= @klass.code%>" class="form-control" readonly />
         </div>
     </div>
      <div class = "col-md-4">
         <div class = "form-group">
             <label class="form-label">Product Category Source: </label>
-            <input value="<%= @product_category_source.description%>" class="form-control" readonly />
+            <input name="displaycat" value="<%= @product_category_source.description%>" class="form-control" readonly />
         </div>
     </div>
 </div>

@@ -7,8 +7,9 @@ class Domains::Classifications::BricksController < ApplicationController
   def index
     @product_category_sources = Domains::Classifications::ProductCategorySource.all
     @brick = Domains::Classifications::Brick.new
+    page = params[:page].blank? ? 1 : params[:page]
     result = Domains::Classifications::Brick.index_data(params[:product_category_source_id],  
-                                                params[:klass_id], params[:search_query], params[:page])
+                                                params[:klass_id], params[:search_query], page)
     @klass = result[0]
     @bricks = result[1]
     @search_query = params[:search_query]
@@ -70,15 +71,25 @@ class Domains::Classifications::BricksController < ApplicationController
         if error_message
           format.html do 
             redirect_to brick_capture_path(klass_id: brick_params[:klass_id], 
+                                      page: params[:domains_classifications_brick][:page], 
+                                      search_query: params[:domains_classifications_brick][:search_query],
                                       p_cat_id: brick_params[:product_category_source_id]), 
                                       status: :unprocessable_entity, alert: error_message 
           end
         else
-          format.html { redirect_to domains_classifications_bricks_path, notice: "Submitted titles created." }
+          format.html { redirect_to domains_classifications_bricks_path(
+                                      klass_id: brick_params[:klass_id],
+                                      page: params[:domains_classifications_brick][:page], 
+                                      search_query: params[:domains_classifications_brick][:search_query],
+                                      p_cat_id: brick_params[:product_category_source_id]
+
+          ), notice: "Submitted titles created." }
         end
       end
     end 
   end
+
+
 
   # PATCH/PUT /bricks/1 or /bricks/1.json
   def update
@@ -98,7 +109,13 @@ class Domains::Classifications::BricksController < ApplicationController
     @brick.destroy
 
     respond_to do |format|
-      format.html { redirect_to domains_classifications_bricks_path, status: :see_other, notice: "Brick was successfully destroyed." }
+      format.html { redirect_to domains_classifications_bricks_path(
+                                      klass_id: params[:klass_id],
+                                      page: params[:page], 
+                                      search_query: params[:search_query],
+                                      p_cat_id: params[:product_category_source_id]
+
+          ), status: :see_other, notice: "Brick was successfully deleted." }
       format.json { head :no_content }
     end
   end

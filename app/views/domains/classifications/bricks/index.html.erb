@@ -87,8 +87,12 @@
 <td><%= link_to 'Add', brick_capture_path(klass_id: brick.klass_id,
                                       page: params[:page], 
                                       search_query: params[:search_query],
-                                      p_cat_id: brick.product_category_source_id), class: "btn btn-outline-secondary btn-sm" %></td>
-        <td><%= button_to 'Delete', brick, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-outline-danger btn-sm" %></td>
+                                      p_cat_id: brick.product_category_source_id), data: { turbolinks: false } , class: "btn btn-outline-secondary btn-sm" %></td>
+        <td><%= button_to 'Delete', domains_classifications_brick_path(id: brick.id,
+                                        klass_id: params[:klass_id],
+                                      page: params[:page], 
+                                      search_query: params[:search_query],
+                                      p_cat_id: params[:product_category_source_id] ), method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-outline-danger btn-sm" %></td>
       </tr>
     <% end %>
   </tbody>
