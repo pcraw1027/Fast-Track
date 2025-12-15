@@ -1,7 +1,7 @@
 class Domains::Classifications::BricksController < ApplicationController
   before_action :set_brick, only: %i[ show edit update destroy ]
   before_action :set_dropdowns, only: %i[ new edit create]
-  before_action :authenticate_user!, only: %i[ new edit update create destroy]
+  before_action :authenticate_user!, only: %i[ new edit update create destroy brick_capture create_bulk]
 
   # GET /bricks or /bricks.json
   def index
@@ -80,13 +80,14 @@ class Domains::Classifications::BricksController < ApplicationController
                                       status: :unprocessable_entity, alert: error_message 
           end
         else
-          format.html { redirect_to domains_classifications_bricks_path(
-                                      klass_id: brick_params[:klass_id],
-                                      page: params[:domains_classifications_brick][:page], 
-                                      search_query: params[:domains_classifications_brick][:search_query],
-                                      p_cat_id: brick_params[:product_category_source_id]
-
-          ), notice: "Submitted titles created." }
+          format.html do 
+            redirect_to domains_classifications_bricks_path(
+              klass_id: brick_params[:klass_id],
+              page: params[:domains_classifications_brick][:page], 
+              search_query: params[:domains_classifications_brick][:search_query],
+              p_cat_id: brick_params[:product_category_source_id]
+            ), notice: "Submitted titles created."
+          end
         end
       end
     end 

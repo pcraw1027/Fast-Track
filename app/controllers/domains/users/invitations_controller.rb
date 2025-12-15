@@ -56,7 +56,6 @@ class Domains::Users::InvitationsController < ApplicationController
   # DELETE /invitations/1 or /invitations/1.json
   def destroy
     @invitation.destroy
-
     respond_to do |format|
       format.html { redirect_to domains_users_invitations_path, status: :see_other, notice: "Invitation was successfully destroyed." }
       format.json { head :no_content }

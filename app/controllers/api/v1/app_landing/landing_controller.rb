@@ -16,9 +16,7 @@ class Api::V1::AppLanding::LandingController < Api::V1::BaseController
     page = params[:page] || 1
     per_page = params[:per_page] || 20
     per_page = 20 if per_page.to_i > 20
-    rs = recent_scan_products(per_page, page)
-    logger.info "******************  #{rs.inspect}"
-    render json: rs, status: :ok
+    render json: recent_scan_products(per_page, page), status: :ok
   end
 
   def open_activity_stats

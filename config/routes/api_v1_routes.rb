@@ -64,7 +64,6 @@ module ApiV1Routes
           end
         end
 
-
         namespace :website_data, path: "", as: "" do
           post 'contact_us', to: 'website_messages#contact_us'
           post 'join_us', to: 'website_messages#join_us'
@@ -72,6 +71,18 @@ module ApiV1Routes
 
         namespace :users, path: "", as: "" do
           put 'update_profile', to: 'users#update' 
+          put 'turn_on_scan_to_list_mode', to: 'users#turn_on_scan_to_list_mode'
+          put 'turn_off_scan_to_list_mode', to: 'users#turn_off_scan_to_list_mode'          
+          get 'get_user_default_list', to: 'users#get_user_default_list'  
+          get 'my_lists', to: 'lists#my_lists'     
+               
+          resources :lists, only: [:update, :destroy, :show, :create] do
+            member do 
+              put :make_default
+              delete :remove_list_resource
+              get :list_resources
+            end
+          end
         end
 
       end

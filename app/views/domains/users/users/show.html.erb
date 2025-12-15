@@ -35,7 +35,10 @@
   <%= @user.invite_code %>
 </p>
 
-
+<p>
+  <strong>Scan to list mode:</strong>
+  <%= @user.scan_to_list_mode %>
+</p>
 
 
 <%if current_user.id == @user.id %>

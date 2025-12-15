@@ -33,30 +33,41 @@
         <%= form.text_field :last_name, class: "form-control" %>
     </div>
 
-    <div class="form-group">
-        <%= form.label :country %><br />
-        <%= form.text_field :country, autocomplete: "country", class: "form-control", required:"required" %>
+        <div class="form-group">
+            <%= form.label :country %><br />
+            <%= form.text_field :country, autocomplete: "country", class: "form-control", required:"required" %>
         </div>
 
         <div class="form-group">
-        <%= form.label :postal_code %><br />
-        <%= form.text_field :postal_code, autocomplete: "postal_code", class: "form-control", required:"required" %>
+            <%= form.label :postal_code %><br />
+            <%= form.text_field :postal_code, autocomplete: "postal_code", class: "form-control", required:"required" %>
         </div>
 
 
         <div class="form-group">
-        <%= form.label :role %><br />
-        <%= form.select :role, Domains::Users::User.roles.keys.map { |k| [k.titleize, k] }, {}, class: "form-control" %>
+            <%= form.label :role %><br />
+            <%= form.select :role, Domains::Users::User.roles.keys.map { |k| [k.titleize, k] }, {}, class: "form-control" %>
         </div>
 
-    <div class="form-group">
-        <%= form.label :status %>
-        <%= form.select :status, Domains::Users::User.statuses.keys.map { |k| [k.titleize, k] }, {}, class: "form-control" %>
-    </div>
+        <div class="form-group">
+            <%= form.label :scan_to_list_mode %><br />
 
-    <div class="actions">
-        <%= form.submit "Submit", class: 'action-btn' %>
-    </div>
+            <%= form.radio_button :scan_to_list_mode, true %>
+            <%= form.label :scan_to_list_mode, "Yes", value: true %>
+
+            <%= form.radio_button :scan_to_list_mode, false %>
+            <%= form.label :scan_to_list_mode, "No", value: false %>
+        </div>
+
+        
+        <div class="form-group">
+            <%= form.label :status %>
+            <%= form.select :status, Domains::Users::User.statuses.keys.map { |k| [k.titleize, k] }, {}, class: "form-control" %>
+        </div>
+
+        <div class="actions">
+            <%= form.submit "Submit", class: 'action-btn' %>
+        </div>
 
     <% end %>
 <% else %>

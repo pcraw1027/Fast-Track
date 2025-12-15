@@ -86,6 +86,11 @@ class Domains::Products::ProductsController < ApplicationController
         pv.save!
         upgrade_pit_to_level_1(@product.id, pit_record&.level, company_id)
         Domains::CroupierCore::Scan.resolve(barcode, @product.id)
+        Domains::Users::ListRoutine.resolve_resource(
+          resource_id: @product.id, resource_type: "Domains::Products::Product", barcode: barcode
+          )
+
+          
         Domains::CroupierCore::UploadRecord.resolve(barcode)
         format.html do
  redirect_to product_capture_interface_path(barcode: barcode, level: params[:level]), 
