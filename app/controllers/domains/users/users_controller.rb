@@ -52,7 +52,7 @@ class Domains::Users::UsersController < ApplicationController
     end
 
     def user_params
-    params.require(:domains_users_user).permit(:first_name, :last_name, :role, :status, :country, :postal_code)
+      params.require(:domains_users_user).permit(:first_name, :last_name, :role, :status, :country, :postal_code, :scan_to_list_mode)
     end
 
 

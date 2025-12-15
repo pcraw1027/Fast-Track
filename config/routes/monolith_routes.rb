@@ -38,6 +38,7 @@ module MonolithRoutes
             namespace :users do
               resources :invitations
               resources :users
+              resources :lists
             end
 
             namespace :croupier_core do

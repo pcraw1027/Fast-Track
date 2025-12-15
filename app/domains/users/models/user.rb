@@ -82,21 +82,24 @@ module Domains
               end
 
               def send_welcome_email
+                create_default_list(self.id)
                 UserMailer.welcome_email(self).deliver_later
+              end
+
+              def create_default_list(user_id)
+                Domains::Users::ListRoutine.new(user_id: user_id).spawn_default
               end
 
               def remove_avatar_from_s3
                 return if avatar.blank?
 
                   avatar.remove!
-                
               end
 
               def remove_photo_from_s3
                 return if photo.blank?
 
                   photo.remove!
-                
               end
               
 
@@ -104,3 +107,4 @@ module Domains
   end
 end
 
+# Domains::Users::User.all.map{|u| Domains::Users::ListRoutine.new(user_id: u.id).spawn_default}

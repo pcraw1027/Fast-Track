@@ -27,26 +27,28 @@ class Domains::CroupierCore::ScansController < ApplicationController
     finder_claims = Domains::CroupierCore::Operations::ProductFinder.call!(barcode: scan_params[:barcode])
     if finder_claims.payload
       @scan = Domains::CroupierCore::Scan.create(user_id: current_user.id, product_id: finder_claims.payload.id, 
-      scan_date: Time.zone.today, barcode: scan_params[:barcode], product_exists: true)
+      scan_date: Time.zone.today, barcode: scan_params[:barcode], product_exists: true,
+      lat: scan_params[:lat], lng: scan_params[:lng], address: scan_params[:address])
       Domains::CroupierCore::Operations::IncrPitCitProdCount.call!(barcode: scan_params[:barcode])
     else
 
       @scan = Domains::CroupierCore::Scan.create(user_id: current_user.id, 
-      scan_date: Time.zone.today, barcode: scan_params[:barcode], product_exists: false)
+      scan_date: Time.zone.today, barcode: scan_params[:barcode], product_exists: false,
+      lat: scan_params[:lat], lng: scan_params[:lng], address: scan_params[:address])
         
       if @scan.id
             @brc_intrf_claims = Domains::CroupierCore::Operations::BarcodeInterface
                                 .call!(barcode: scan_params[:barcode], 
               source: "Scan", asin: scan_params[:asin], user_id: current_user.id)
             if scan_params[:uploads].present?
-              Domains::CroupierCore::Operations::UploadTrigger.call!(barcode: scan_params[:barcode], 
+              Domains::CroupierCore::Operations::UploadTrigger.call!(
+                  barcode: scan_params[:barcode], 
                   scan_id: @scan.id, 
                   user_id: current_user.id, 
                   asin: scan_params[:asin],
                   brand: upload_record_params[:brand],
                   upload_params: scan_params[:uploads].except(:brand))
             end 
-
       end
       
     end
@@ -97,8 +99,10 @@ class Domains::CroupierCore::ScansController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def scan_params
-      params.require(:domains_croupier_core_scan).permit(:barcode, :asin, upload: [:product_name, :company_name, :brand, 
-                                                                                   :remarks, { media_attributes: [:id, :file, :media_type, :position, :_destroy] }])
+      params.require(:domains_croupier_core_scan).permit(:barcode, :asin,
+      :lat, :lng, :address,
+       upload: [:product_name, :company_name, :brand, :remarks, 
+       { media_attributes: [:id, :file, :media_type, :position, :_destroy] }])
     end
 end
 

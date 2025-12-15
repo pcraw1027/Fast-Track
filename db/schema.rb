@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_11_19_181102) do
+ActiveRecord::Schema.define(version: 2025_12_11_051606) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -312,6 +312,35 @@ ActiveRecord::Schema.define(version: 2025_11_19_181102) do
     t.index ["product_category_source_id"], name: "index_klasses_on_product_category_source_id"
   end
 
+  create_table "list_resources", force: :cascade do |t|
+    t.string "listable_type"
+    t.bigint "listable_id"
+    t.bigint "list_id", null: false
+    t.string "barcode"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["list_id"], name: "index_list_resources_on_list_id"
+    t.index ["listable_id", "listable_type", "barcode"], name: "index_list_res_on_listable_and_barcode"
+    t.index ["listable_id", "listable_type", "list_id"], name: "index_list_res_on_listable_and_list", unique: true
+    t.index ["listable_type", "listable_id"], name: "index_list_res_on_listableid_and_type"
+    t.index ["listable_type", "listable_id"], name: "index_list_resources_on_listable"
+  end
+
+  create_table "lists", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "name"
+    t.integer "list_type", default: 0, null: false
+    t.boolean "default", default: false, null: false
+    t.text "description"
+    t.boolean "snapshot_aggregate", default: false, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id", "default"], name: "index_lists_on_user_id_and_default"
+    t.index ["user_id", "name"], name: "index_lists_on_user_id_and_name", unique: true
+    t.index ["user_id"], name: "index_list_res_on_user"
+    t.index ["user_id"], name: "index_lists_on_user_id"
+  end
+
   create_table "media", force: :cascade do |t|
     t.string "mediaable_type", null: false
     t.bigint "mediaable_id", null: false
@@ -458,6 +487,10 @@ ActiveRecord::Schema.define(version: 2025_11_19_181102) do
     t.boolean "product_exists"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.decimal "lat", precision: 10, scale: 6
+    t.decimal "lng", precision: 10, scale: 6
+    t.string "address"
+    t.index ["lat", "lng"], name: "index_scans_on_lat_and_lng"
     t.index ["product_id", "id"], name: "index_scans_on_product_id_and_id"
     t.index ["product_id"], name: "index_scans_on_product_id"
     t.index ["user_id", "barcode", "created_at"], name: "index_scans_user_barcode_created_at_filtered", order: { created_at: :desc }, where: "(product_exists = true)"
@@ -521,6 +554,7 @@ ActiveRecord::Schema.define(version: 2025_11_19_181102) do
     t.string "last_name", default: ""
     t.boolean "app_notify_on", default: true, null: false
     t.boolean "email_notify_on", default: true, null: false
+    t.boolean "scan_to_list_mode", default: false, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["username"], name: "index_users_on_username", unique: true
@@ -571,6 +605,8 @@ ActiveRecord::Schema.define(version: 2025_11_19_181102) do
   add_foreign_key "invitations", "users", column: "invited_by_id"
   add_foreign_key "klasses", "families"
   add_foreign_key "klasses", "product_category_sources"
+  add_foreign_key "list_resources", "lists"
+  add_foreign_key "lists", "users"
   add_foreign_key "people", "country_references"
   add_foreign_key "people", "ethnicity_types"
   add_foreign_key "people", "gender_types"

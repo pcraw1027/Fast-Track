@@ -19,6 +19,7 @@ module Domains
       accepts_nested_attributes_for :media
 
       has_many :reviews, as: :reviewable, class_name: "Domains::Features::Reviewable::Review", dependent: :destroy
+      has_many :list_resources, as: :listable, class_name: "Domains::Features::Listable::ListResource", dependent: :destroy
       has_many :product_attributes, class_name: "Domains::Classifications::ProductAttribute", dependent: :destroy
       has_many :product_variants, class_name: "Domains::Products::ProductVariant", dependent: :destroy
       has_many :pit_records, class_name: "Domains::CroupierCore::PitRecord", dependent: :destroy

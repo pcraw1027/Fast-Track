@@ -1,0 +1,35 @@
+
+
+<p>
+  <strong>User:</strong>
+  <a href="/users/<%= @list.user_id %>"><%= @list.user.username %> </a>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @list.name %>
+</p>
+
+<p>
+  <strong>List Type:</strong>
+  <%= @list.list_type %>
+</p>
+
+<p>
+  <strong>Default:</strong>
+  <%= @list.default %>
+</p>
+
+
+<p>
+  <strong>Description:</strong>
+  <%= @list.description %>
+</p>
+
+<p>
+  <strong>Snapshot aggregate:</strong>
+  <%= @list.snapshot_aggregate %>
+</p>
+
+<%= link_to 'Edit', edit_domains_users_list_path(@list) %> |
+<%= link_to 'Back', domains_users_lists_path %>
