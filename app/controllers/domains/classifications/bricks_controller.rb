@@ -45,10 +45,10 @@ class Domains::Classifications::BricksController < ApplicationController
     respond_to do |format|
       if @brick.save
         format.html { redirect_to domains_classifications_brick_path(id: @brick.id,
-                                        klass_id: paramsparams[:domains_classifications_brick][:k_id],
-                                      page: paramsparams[:domains_classifications_brick][:page], 
-                                      search_query: paramsparams[:domains_classifications_brick][:search_query],
-                                      p_cat_id: paramsparams[:domains_classifications_brick][:p_cat_id] ), notice: "Brick was successfully created." }
+                                        klass_id: params[:domains_classifications_brick][:k_id],
+                                      page: params[:domains_classifications_brick][:page], 
+                                      search_query: params[:domains_classifications_brick][:search_query],
+                                      p_cat_id: params[:domains_classifications_brick][:p_cat_id] ), notice: "Brick was successfully created." }
         format.json { render :show, status: :created, location: @brick }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -67,7 +67,7 @@ class Domains::Classifications::BricksController < ApplicationController
     error_message = nil
     begin
       convert_brick_params
-    rescue CustomError => e
+    rescue => e
       error_message = e.message
     ensure
       respond_to do |format|
@@ -76,7 +76,7 @@ class Domains::Classifications::BricksController < ApplicationController
             redirect_to brick_capture_path(klass_id: brick_params[:klass_id], 
                                       page: params[:domains_classifications_brick][:page], 
                                       search_query: params[:domains_classifications_brick][:search_query],
-                                      p_cat_id: brick_params[:p_cat_id]), 
+                                      p_cat_id: brick_params[:product_category_source_id]), 
                                       status: :unprocessable_entity, alert: error_message 
           end
         else
@@ -84,7 +84,7 @@ class Domains::Classifications::BricksController < ApplicationController
                                       klass_id: brick_params[:klass_id],
                                       page: params[:domains_classifications_brick][:page], 
                                       search_query: params[:domains_classifications_brick][:search_query],
-                                      p_cat_id: brick_params[:p_cat_id]
+                                      p_cat_id: brick_params[:product_category_source_id]
 
           ), notice: "Submitted titles created." }
         end
@@ -99,10 +99,10 @@ class Domains::Classifications::BricksController < ApplicationController
     respond_to do |format|
       if @brick.update(brick_params)
         format.html { redirect_to domains_classifications_brick_path(id: @brick.id,
-                                        klass_id: paramsparams[:domains_classifications_brick][:k_id],
-                                      page: paramsparams[:domains_classifications_brick][:page], 
-                                      search_query: paramsparams[:domains_classifications_brick][:search_query],
-                                      p_cat_id: paramsparams[:domains_classifications_brick][:p_cat_id] ), notice: "Brick was successfully updated." }
+                                        klass_id: params[:domains_classifications_brick][:k_id],
+                                      page: params[:domains_classifications_brick][:page], 
+                                      search_query: params[:domains_classifications_brick][:search_query],
+                                      p_cat_id: params[:domains_classifications_brick][:p_cat_id] ), notice: "Brick was successfully updated." }
         format.json { render :show, status: :ok, location: @brick }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -152,7 +152,7 @@ class Domains::Classifications::BricksController < ApplicationController
             klass_id: brick_params[:klass_id],
             code: code,
             title: brick_attributes[:title],
-            product_category_source_id: brick_params[:p_cat_id]
+            product_category_source_id: brick_params[:product_category_source_id]
           )
           code += 1
       end
