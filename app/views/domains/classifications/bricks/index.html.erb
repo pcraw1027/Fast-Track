@@ -6,8 +6,8 @@
 
     <div class="col-md-3">
       <div class="form-group">
-        <%= form.label :product_category_source_id %>
-        <%= form.collection_select :product_category_source_id,
+        <%= form.label :p_cat_id %>
+        <%= form.collection_select :p_cat_id,
                                    @product_category_sources,
                                    :id,
                                    :code,
@@ -78,13 +78,13 @@
                                         klass_id: params[:klass_id],
                                       page: params[:page], 
                                       search_query: params[:search_query],
-                                      p_cat_id: params[:product_category_source_id] ), class: "btn btn-outline-info btn-sm" %></td>
+                                      p_cat_id: params[:p_cat_id] ), class: "btn btn-outline-info btn-sm" %></td>
         <td><%= link_to 'Edit', edit_domains_classifications_brick_path(id: brick.id,
-                                        klass_id: params[:klass_id],
+                                      klass_id: params[:klass_id],
                                       page: params[:page], 
                                       search_query: params[:search_query],
-                                      p_cat_id: params[:product_category_source_id] ) %></td>
-<td><%= link_to 'Add', brick_capture_path(klass_id: brick.klass_id,
+                                      p_cat_id: params[:p_cat_id] ) %></td>
+        <td><%= link_to 'Add', brick_capture_path(klass_id: brick.klass_id,
                                       page: params[:page], 
                                       search_query: params[:search_query],
                                       p_cat_id: brick.product_category_source_id), data: { turbolinks: false } , class: "btn btn-outline-secondary btn-sm" %></td>
@@ -92,7 +92,7 @@
                                         klass_id: params[:klass_id],
                                       page: params[:page], 
                                       search_query: params[:search_query],
-                                      p_cat_id: params[:product_category_source_id] ), method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-outline-danger btn-sm" %></td>
+                                      p_cat_id: params[:p_cat_id] ), method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-outline-danger btn-sm" %></td>
       </tr>
     <% end %>
   </tbody>
@@ -116,4 +116,4 @@
 <%= link_to 'New Brick', new_domains_classifications_brick_path(page: params[:page], 
                                       klass_id: params[:klass_id],
                                       search_query: params[:search_query],
-                                      p_cat_id: params[:product_category_source_id]), class: "action-btn" %>
+                                      p_cat_id: params[:p_cat_id]), class: "action-btn" %>

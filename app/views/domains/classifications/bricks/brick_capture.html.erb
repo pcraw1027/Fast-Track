@@ -15,7 +15,7 @@
   <% end %>
 
   <%= form.hidden_field :klass_id, value: @klass.id %>
-  <%= form.hidden_field :product_category_source_id, value: @product_category_source.id %>
+  <%= form.hidden_field :p_cat_id, value: @product_category_source.id %>
 
   <%= form.hidden_field :page, value: params[:page] %>
     <%= form.hidden_field :search_query, value: params[:search_query] %>
@@ -73,5 +73,5 @@
                                       page: params[:page], 
                                       klass_id: params[:klass_id],
                                       search_query: params[:search_query],
-                                      p_cat_id: params[:product_category_source_id]), class: "btn btn-outline-info btn-sm" %>
+                                      p_cat_id: params[:p_cat_id]), class: "btn btn-outline-info btn-sm" %>
 </div>

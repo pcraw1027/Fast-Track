@@ -11,6 +11,12 @@
     </div>
   <% end %>
 
+  <%= form.hidden_field :k_id, value: params[:klass_id] %>
+  <%= form.hidden_field :p_cat_id, value: params[:p_cat_id] %>
+
+  <%= form.hidden_field :page, value: params[:page] %>
+  <%= form.hidden_field :search_query, value: params[:search_query] %>
+
   <div class="form-group">
     <%= form.label :code %>
     <%= form.number_field :code %>
