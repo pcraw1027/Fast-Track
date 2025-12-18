@@ -1,5 +1,5 @@
 class Api::V1::Users::ListsController < Api::V1::BaseController
-  before_action :authenticate_user!, only: %i[ create update destroy my_lists list_resources make_default remove_list_resource]
+  before_action :authenticate_user!
   before_action :set_list, only: %i[ update destroy ]
 
   def show
@@ -10,8 +10,8 @@ class Api::V1::Users::ListsController < Api::V1::BaseController
   def remove_list_resource
     Domains::Users::ListRoutine.new(
       user_id: current_user.id, list_id: params[:id]
-      ).remove_list_resource(resource_id: params[:resource_id])
-    render json: {message: "Resource removal processed succesfully"}, status: :ok    
+      ).remove_list_resource(resource_id: params[:resource_id], resource_type: "Domains::Products::Product")
+    render json: {message: "Resource removal processed successfully"}, status: :ok    
   end
 
   def my_lists
@@ -39,10 +39,55 @@ class Api::V1::Users::ListsController < Api::V1::BaseController
     render json: resources, status: :ok
   end
 
+  def resource_lists
+    page = params[:page] || 1
+    per_page = params[:per_page] || 20
+    per_page = 20 if per_page.to_i > 20
+    list_type = params[:list_type].blank? ? "Domains::Products::Product" : Domains::Features::Listable::ListResource::LISTABLE_TYPE_MAP.fetch(
+      params[:list_type])
+
+    resources = Domains::Users::List.load_resource_lists(
+      per_page: per_page, page: page,listable_id: params[:resource_id], 
+      listable_type: list_type, user_id: current_user.id)
+    
+    render json: resources, status: :ok
+  end
+
+  def add_to_list
+      Domains::Users::ListRoutine.new(user_id: current_user.id,
+              list_id: params[:id]).add_list_resource(
+                barcode: params[:barcode], 
+                resource_type: "Domains::Products::Product", resource_id: params[:resource_id]
+                )
+      
+    render json: {message: "Resource added to list successfully"}, status: :ok
+  end
+
+  def change_list
+    Domains::Users::ListRoutine.new(
+    user_id: current_user.id, list_id: params[:old_list_id]
+    ).remove_list_resource(resource_id: params[:resource_id],
+      resource_type: "Domains::Products::Product")
+    Domains::Users::ListRoutine.new(user_id: current_user.id,
+    list_id: params[:new_list_id]).add_list_resource(
+      barcode: params[:barcode], 
+      resource_type: "Domains::Products::Product", resource_id: params[:resource_id]
+      )
+    render json: {message: "List change processed successfully"}, status: :ok     
+  end
+
+  def remove_from_user_lists
+    Domains::Users::ListRoutine.new(
+    user_id: current_user.id
+    ).remove_from_user_lists(resource_id: params[:resource_id], 
+    resource_type: "Domains::Products::Product")
+    render json: {message: "List change processed successfully"}, status: :ok     
+  end
+
   def make_default
     begin
         Domains::Users::ListRoutine.new(user_id: current_user.id, list_id: params[:id]).make_default!
-        render json: {message: "list is made default succesfully"}, status: :ok    
+        render json: {message: "list is made default successfully"}, status: :ok    
     rescue => e
         render json: { error: e.message }, status: :bad_request 
     end
@@ -65,7 +110,7 @@ class Api::V1::Users::ListsController < Api::V1::BaseController
       
     rescue => e
         render json: {
-          message: "List couldn't be created successfully. #{e.message}"
+          message: "List couldn't be created successsfully. #{e.message}"
         }, status: :unprocessable_entity
     end
   end
@@ -80,7 +125,7 @@ class Api::V1::Users::ListsController < Api::V1::BaseController
 
   def destroy
     @list.destroy
-    render json: {message: "list deleted succesfully"}, status: :ok 
+    render json: {message: "list deleted successfully"}, status: :ok 
   end
 
 

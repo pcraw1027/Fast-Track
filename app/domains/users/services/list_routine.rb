@@ -54,11 +54,19 @@ module Domains
         else
           return if Domains::Features::Listable::ListResource.find_by(attrs)
         end
-        Domains::Features::Listable::ListResource.create(attrs)
+        Domains::Features::Listable::ListResource.create!(attrs)
       end
 
-      def remove_list_resource(resource_id:)
-        Domains::Features::Listable::ListResource.where(listable_id: resource_id,
+      def remove_from_user_lists(resource_id:, resource_type:)
+        Domains::Features::Listable::ListResource
+        .where(listable_type: resource_type, listable_id: resource_id)
+        .where(list_id: Domains::Users::List.where(user_id: @user_id).select(:id))
+        .delete_all
+      end
+
+      def remove_list_resource(resource_id:, resource_type:)
+        Domains::Features::Listable::ListResource.where(
+          listable_id: resource_id, listable_type: resource_type,
           list_id: @list_id.presence || default_list_id).delete_all
       end
 

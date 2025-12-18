@@ -5,7 +5,7 @@ class Api::V1::CroupierCore::ScansController < Api::V1::BaseController
     scan = Domains::CroupierCore::Scan.includes(:product).find(params[:id])
     render json: {
       scan: scan,
-                  product: scan.product
+      product: scan.product
     }, status: :ok
   end
 

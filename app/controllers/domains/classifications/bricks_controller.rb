@@ -157,7 +157,6 @@ class Domains::Classifications::BricksController < ApplicationController
           )
           code += 1
       end
-    
     end
   
   def nested_brick_params

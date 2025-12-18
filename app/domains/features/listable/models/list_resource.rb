@@ -12,6 +12,8 @@ module Domains
         belongs_to :listable, polymorphic: true, optional: true
         belongs_to :list, class_name: "Domains::Users::List"
 
+        
+
         def self.load_data(per_page:, page:, list_id:, listable_type:nil)
           page     = page.to_i.positive? ? page.to_i : 1
           per_page = per_page.to_i.positive? ? per_page.to_i : 10

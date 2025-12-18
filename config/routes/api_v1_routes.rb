@@ -74,13 +74,17 @@ module ApiV1Routes
           put 'turn_on_scan_to_list_mode', to: 'users#turn_on_scan_to_list_mode'
           put 'turn_off_scan_to_list_mode', to: 'users#turn_off_scan_to_list_mode'          
           get 'get_user_default_list', to: 'users#get_user_default_list'  
-          get 'my_lists', to: 'lists#my_lists'     
-               
+          get 'my_lists', to: 'lists#my_lists'
+          get 'resource_lists', to: 'lists#resource_lists'
+          put 'change_list', to: 'lists#change_list'
+          delete 'remove_from_user_lists', to: 'lists#remove_from_user_lists'     
+              
           resources :lists, only: [:update, :destroy, :show, :create] do
             member do 
               put :make_default
               delete :remove_list_resource
               get :list_resources
+              post :add_to_list
             end
           end
         end
