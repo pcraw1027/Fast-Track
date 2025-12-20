@@ -76,6 +76,7 @@ module ApiV1Routes
           get 'get_user_default_list', to: 'users#get_user_default_list'  
           get 'my_lists', to: 'lists#my_lists'
           get 'resource_lists', to: 'lists#resource_lists'
+          get 'listed_products', to: 'lists#listed_products'
           put 'change_list', to: 'lists#change_list'
           delete 'remove_from_user_lists', to: 'lists#remove_from_user_lists'     
               

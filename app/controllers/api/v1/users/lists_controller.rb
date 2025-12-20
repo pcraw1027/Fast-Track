@@ -39,6 +39,18 @@ class Api::V1::Users::ListsController < Api::V1::BaseController
     render json: resources, status: :ok
   end
 
+  def listed_products
+    page = params[:page] || 1
+    per_page = params[:per_page] || 20
+    per_page = 20 if per_page.to_i > 20
+
+    products = Domains::Features::Listable::ListResource.listed_products(
+      user_id: current_user.id, page: page, per_page: per_page)
+    render json: products, status: :ok
+  end
+
+  
+
   def resource_lists
     page = params[:page] || 1
     per_page = params[:per_page] || 20
