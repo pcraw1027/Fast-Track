@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_12_11_051606) do
+ActiveRecord::Schema.define(version: 2025_12_21_193646) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -321,7 +321,6 @@ ActiveRecord::Schema.define(version: 2025_12_11_051606) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["list_id"], name: "index_list_resources_on_list_id"
     t.index ["listable_id", "listable_type", "barcode"], name: "index_list_res_on_listable_and_barcode"
-    t.index ["listable_id", "listable_type", "list_id"], name: "index_list_res_on_listable_and_list", unique: true
     t.index ["listable_type", "listable_id"], name: "index_list_res_on_listableid_and_type"
     t.index ["listable_type", "listable_id"], name: "index_list_resources_on_listable"
   end
