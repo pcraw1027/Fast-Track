@@ -73,11 +73,13 @@ module Domains
                         product_ids.push(rs.listable.id)
                         hash[:product_id] = rs.listable.id
                       else
-                        hash[:resource_detail] = rs.listable
+                        hash[:product_id] = nil
                       end
                       hash
                     end
-           
+          
+          records = records.reject { |rc| rc[:product_id].blank? }
+
           if product_ids.any?
               products_hash = self.product_data(product_ids)
               records = records.map do |rec|
@@ -85,9 +87,7 @@ module Domains
                 res[:product_details] = products_hash[rec[:product_id]] if rec[:product_id]
                 res
               end
-
           end
-
 
           PaginatedResult.new(records, per_page, page, total_count)
         end
