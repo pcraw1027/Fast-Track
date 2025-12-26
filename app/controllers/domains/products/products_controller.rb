@@ -5,18 +5,29 @@ class Domains::Products::ProductsController < ApplicationController
 
   # GET /products or /products.json
   def index
+    p "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
+    p Domains::Products::Product::ORDER_BY[params[:order_by]]
+    p params[:order_by]
     @products = if params[:q].present?
                 Domains::Products::Product.includes(:company, :segment, :family, :klass, :brick, product_variants: :media)
                                           .where("name ILIKE ?", "%#{params[:q]}%")
                                           .paginate(page: params[:page], per_page: 15)
                                           .order(updated_at: :desc, id: :desc)
                 else
-                Domains::Products::Product.includes(:company, :segment, :family, :klass, :brick, :product_variants, product_variants: :media)
-                                          .all
-                                          .paginate(page: params[:page], per_page: 15)
-                                          .order(updated_at: :desc, id: :desc)
+                Domains::Products::Product
+                                      .eager_load(
+                                        :company,
+                                        :segment,
+                                        :family,
+                                        :klass,
+                                        :brick,
+                                        :product_variants,
+                                        product_variants: :media
+                                      )
+                                      .paginate(page: params[:page], per_page: 15)
+                                      .order(Domains::Products::Product::ORDER_BY[params[:order_by]])
+
                 end
-     
   end
 
   

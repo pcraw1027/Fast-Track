@@ -5,6 +5,14 @@ module Domains
 
       self.table_name = "products"
       attr_accessor :media, :barcode, :level, :new_company_name, :asin, :brick_search
+
+      ORDER_BY = {
+      "" => "products.updated_at DESC, products.id DESC",
+      nil => "products.updated_at DESC, products.id DESC",
+      "product_name" => "products.name ASC, segments.title ASC, families.title ASC, klasses.title ASC, bricks.title ASC",
+      "company_name" => "companies.name ASC, products.name ASC, segments.title ASC, families.title ASC, klasses.title ASC, bricks.title ASC",
+      "product_category" => "segments.title ASC, families.title ASC, klasses.title ASC, bricks.title ASC, products.name ASC"
+      }
       
       belongs_to :company, class_name: "Domains::Companies::Company", optional: true
       belongs_to :segment, class_name: "Domains::Classifications::Segment", optional: true
@@ -25,7 +33,7 @@ module Domains
       has_many :pit_records, class_name: "Domains::CroupierCore::PitRecord", dependent: :destroy
       
 
-      default_scope -> { order(name: :asc) }
+      #default_scope -> { order(name: :asc) }
 
       def self.searchable_fields
         %i[name description]

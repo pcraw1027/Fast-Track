@@ -45,7 +45,7 @@ module Domains
           result = []
 
           search_result.each do |brick|
-            klass = klasses_h[brick.klass_id]
+            klass = klasses_h[brick.klass_id].first
             family = klass.family
             segment = family.segment
 
