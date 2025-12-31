@@ -105,7 +105,8 @@ alert: @brc_intrf_claims.error.message)
 
   def pit_interface
     pits = Domains::CroupierCore::PitRecord.with_products
-
+    @pit_records_unknowns = []
+    @pit_records_supervisories = []
     @pit_records_0s = []
     @pit_records_1s = []
     @pit_records_2s = []
@@ -113,6 +114,13 @@ alert: @brc_intrf_claims.error.message)
     @pit_records_4s = []
 
     pits.each do |pit|
+      if pit.supervisory?
+        @pit_records_supervisories.push(pit) 
+        next
+      elsif pit.unknown?
+        @pit_records_unknowns.push(pit)
+        next
+      end
       @pit_records_0s.push(pit) if !pit.product&.level_1_flag || pit.product_id.blank?
       @pit_records_1s.push(pit) if !pit.product&.level_2_flag && pit.product&.level_1_flag
       @pit_records_2s.push(pit) if !pit.product&.level_3_flag && pit.product&.level_1_flag

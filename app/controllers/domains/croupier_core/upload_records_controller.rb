@@ -10,6 +10,14 @@ class Domains::CroupierCore::UploadRecordsController < ApplicationController
                                                          )
   end
 
+  def link_barcode
+    @upload_records = Domains::CroupierCore::UploadRecord.includes(:user, :scan)
+                                                          .where(barcode: params[:barcode])
+                                                         .all.paginate(page: params[:page], per_page: 15).order(
+                                                           created_at: :desc, id: :desc
+                                                         )
+  end
+
   # GET /upload_records/1 or /upload_records/1.json
   def show
     @upload_record = Domains::CroupierCore::UploadRecord.includes(:user, :scan).find(params[:id])

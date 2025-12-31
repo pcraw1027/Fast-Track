@@ -54,7 +54,7 @@ module Domains
           offset   = (page - 1) * per_page
 
           base_query = includes(:listable)
-                       .where(list_id: list_id)
+                       .where(list_id: list_id, listable_type: "Domains::Products::Product")
 
           total_count = base_query.count
 
@@ -65,20 +65,15 @@ module Domains
                     .limit(per_page)
                     .offset(offset)
                     .map do |rs|
-                      hash = {
-                        resource: rs
-                      }
                        
-                      if rs.listable_type == "Domains::Products::Product"
-                        product_ids.push(rs.listable.id)
-                        hash[:product_id] = rs.listable.id
-                      else
-                        hash[:product_id] = nil
-                      end
-                      hash
+                      product_ids.push(rs.listable.id)
+
+                      {
+                        resource: rs,
+                        product_id: rs.listable.id
+                      }
                     end
-          
-          records = records.reject { |rc| rc[:product_id].blank? }
+
 
           if product_ids.any?
               products_hash = self.product_data(product_ids)

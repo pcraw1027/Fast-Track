@@ -52,6 +52,58 @@
     <!-- Option 2: Separate Popper and Bootstrap JS -->
 
 <script>
+
+document.getElementById("google-gimini-btn").addEventListener("click", async function (e) {
+  e.preventDefault(); // prevent form submit
+
+  const googlegiminikey = document.getElementById("googlegiminikey").value;
+  const barcode = document.getElementById("product-barcode").value;
+  const productName = document.getElementById("product-name").value;
+  const descriptionField = document.getElementById("google-gimini-description");
+
+  if (!barcode && !productName) {
+    alert("Please provide at least a barcode or product name.");
+    return;
+  }
+
+
+  descriptionField.value = "Generating description…";
+
+  const API_KEY = googlegiminikey;
+  const MODEL = "gemini-2.5-flash";
+  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
+
+  const prompt = `Provide a single paragraph, concise, and nicely summarized Product Description similar to Google AI Mode response for barcode ${barcode}${productName ? ` and product name "${productName}"` : ""}.`;
+
+  try {
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        contents: [
+          {
+            parts: [{ text: prompt }]
+          }
+        ]
+      })
+    });
+
+    const data = await response.json();
+    console.log(data)
+    const text =
+      data.candidates?.[0]?.content?.parts?.[0]?.text ||
+      "No description generated.";
+
+    descriptionField.value = text;
+  } catch (error) {
+    console.error("Gemini API Error:", error);
+    descriptionField.value = "Error generating description.";
+  }
+});
+
+
   function handleSearch() {
     var query = document.getElementById('search-input').value.trim();
     var path = window.location.pathname;
@@ -82,6 +134,9 @@
 
 
   <script>
+
+
+
       document.addEventListener('DOMContentLoaded', function () {
         let addBtn = document.getElementById('add-media-field');
         let mediaFields = document.getElementById('media-fields');

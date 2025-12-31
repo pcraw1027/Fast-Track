@@ -4,7 +4,7 @@ module Domains
       include Searchable
 
       self.table_name = "products"
-      attr_accessor :media, :barcode, :level, :new_company_name, :asin, :brick_search
+      attr_accessor :media, :barcode, :level, :new_company_name, :asin, :brick_search, :capture_status
 
       ORDER_BY = {
       "" => "products.updated_at DESC, products.id DESC",

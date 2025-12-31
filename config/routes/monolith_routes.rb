@@ -3,6 +3,7 @@ module MonolithRoutes
     router.instance_exec do
       root to: "domains/home/home#index", controller: 'domains/home/home'
   
+      get '/link_barcode', to: 'domains/croupier_core/upload_records#link_barcode', controller: 'domains/croupier_core/upload_records'
       get '/product_capture_interface', to: 'domains/croupier_core/pit_records#product_capture', controller: 'domains/croupier_core/pit_records'
       get '/company_capture_interface', to: 'domains/croupier_core/cit_records#company_capture', controller: 'domains/croupier_core/cit_records'
       get '/brick_capture', to: 'domains/classifications/bricks#brick_capture', controller: 'domains/classifications/bricks'

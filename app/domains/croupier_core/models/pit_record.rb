@@ -6,6 +6,14 @@ module Domains
         self.table_name = "pit_records"
         attr_accessor :name
 
+        enum capture_status: { accessible: 0, supervisory: 1, unknown: 2 }
+
+        CAPTURE_STATUS = {
+          "accessible"   => 0,
+          "supervisory"  => 1,
+          "unknown"      => 2
+        }
+      
         belongs_to :product, class_name: "Domains::Products::Product", optional: true
         has_many :pit_level_users, class_name: "Domains::CroupierCore::PitLevelUser", dependent: :destroy
         default_scope -> { order(product_activity_count: :desc, updated_at: :desc) }

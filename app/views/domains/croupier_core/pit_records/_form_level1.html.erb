@@ -13,16 +13,19 @@
     </div>
   <% end %>
 
-<%= form.hidden_field :barcode, value: pit_record.barcode %>
+<%= form.hidden_field :created_at, value: Rails.application.credentials.google_gimini_api_key, 
+                      id: "googlegiminikey" %>
+<%= form.hidden_field :barcode, value: pit_record.barcode, id: "product-barcode" %>
 <%= form.hidden_field :level, value: params[:level] %>
 
 <div class="row">
   <div class="col-md-8">
     <div class="form-group">
       <%= form.label :name %>
-      <%= form.text_field :name, class: "form-control", required: true %>
+      <%= form.text_field :name, class: "form-control", required: true, id: "product-name" %>
     </div>
   </div>
+
   <div class="col-md-4">
     <div class="form-group">
     <%= form.label :size %>
@@ -30,9 +33,39 @@
   </div>
   </div>
 </div>
+
+
+
+<div class="row">
+<div class="col-md-4"></div>
+  <div class="col-md-4">
+      <%= link_to 'Link upload', 
+      link_barcode_path(barcode: pit_record.barcode), target: "_blank" %>
+  </div>
+
+   <div class="col-md-4">
+      <div class="form-group" style: "height: 40px; margin-top: 30px">
+        <%= form.label :capture_status %>
+        <%= form.select :capture_status,
+            options_for_select(
+              [
+                ["Select an Option", "accessible"],
+                ["Requires Supervisory", "supervisory"],
+                ["Unknown", "unknown"]
+              ],
+              pit_record.capture_status
+            ),
+            {},
+            class: "form-control"
+        %>
+      </div>
+    </div>
+
+  </div>
+
+
+
    
-
-
    <div class="row">
     <div class="col-md-8">
       <div class="form-group">
@@ -65,8 +98,25 @@
 
 <div class="form-group">
   <%= form.label :description %>
-  <%= form.text_area :description, class: "form-control", required: true, rows: 5 %>
+  <%= form.text_area :description, class: "form-control", required: true, rows: 5,
+     id: "google-gimini-description" %>
 </div>
+
+ <div class="row">
+    <div class="col-md-8">
+    </div>
+
+    <div class="col-md-4">
+      <div class="form-group" >
+      
+      <button id="google-gimini-btn" class="status-active">
+          <img src="<%= asset_path('google-gemini-new-rainbow-colours.jpg') %>" 
+            alt="Ask Google Gemini" width="50%" height="30%"/>
+        </button>
+     </div>
+    </div>
+
+  </div>
   
   
   <div class="row">

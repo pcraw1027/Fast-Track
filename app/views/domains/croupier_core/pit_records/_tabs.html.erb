@@ -2,7 +2,13 @@
    
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item">
-            <a class="nav-link theme-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Level 1</a>
+            <a class="nav-link theme-link active" id="supervisors-tab" data-toggle="tab" href="#supervisors" role="tab" aria-controls="supervisors" aria-selected="true">Supervisory</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link theme-link" id="unknowns-tab" data-toggle="tab" href="#unknowns" role="tab" aria-controls="unknowns" aria-selected="false">Unknown</a>
+        </li>
+         <li class="nav-item">
+            <a class="nav-link theme-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Level 1</a>
         </li>
         <li class="nav-item">
             <a class="nav-link theme-link" id="attributes-tab" data-toggle="tab" href="#attributes" role="tab" aria-controls="attributes" aria-selected="false">Level 2</a>
@@ -19,7 +25,15 @@
 
     </ul>
     <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+        <div class="tab-pane fade show active" id="supervisors" role="tabpanel" aria-labelledby="supervisors-tab">
+             <%= render partial: "supervisor", locals: {pit_records_supervisories: pit_records_supervisories} %>
+        </div>
+
+        <div class="tab-pane fade" id="unknowns" role="tabpanel" aria-labelledby="unknowns-tab">
+             <%= render partial: "unknown", locals: {pit_records_unknowns: pit_records_unknowns} %>
+        </div>
+
+        <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
              <%= render partial: "level0", locals: {pit_records_0s: pit_records_0s} %>
         </div>
         <div class="tab-pane fade" id="attributes" role="tabpanel" aria-labelledby="attributes-tab">
