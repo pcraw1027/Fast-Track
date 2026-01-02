@@ -107,6 +107,7 @@ alert: @brc_intrf_claims.error.message)
     pits = Domains::CroupierCore::PitRecord.with_products
     @pit_records_unknowns = []
     @pit_records_supervisories = []
+    @pit_records_reviews = []
     @pit_records_0s = []
     @pit_records_1s = []
     @pit_records_2s = []
@@ -114,11 +115,14 @@ alert: @brc_intrf_claims.error.message)
     @pit_records_4s = []
 
     pits.each do |pit|
-      if pit.supervisory?
+      if pit.S?
         @pit_records_supervisories.push(pit) 
         next
-      elsif pit.unknown?
+      elsif pit.U?
         @pit_records_unknowns.push(pit)
+        next
+      elsif pit.R?
+        @pit_records_reviews.push(pit)
         next
       end
       @pit_records_0s.push(pit) if !pit.product&.level_1_flag || pit.product_id.blank?
@@ -145,7 +149,9 @@ alert: @brc_intrf_claims.error.message)
 
   # POST /pit_records or /pit_records.json
   def create
-    @pit_record = Domains::CroupierCore::PitRecord.new(pit_record_params)
+    attrs = pit_record_params
+    attrs.merge!(capture_status: Domains::CroupierCore::PitRecord::CAPTURE_STATUS[pit_record_params[:capture_status]])
+    @pit_record = Domains::CroupierCore::PitRecord.new(attrs)
 
     respond_to do |format|
       if @pit_record.save
@@ -161,7 +167,9 @@ alert: @brc_intrf_claims.error.message)
   # PATCH/PUT /pit_records/1 or /pit_records/1.json
   def update
     respond_to do |format|
-      if @pit_record.update(pit_record_params)
+      attrs = pit_record_params
+      attrs.merge!(capture_status: Domains::CroupierCore::PitRecord::CAPTURE_STATUS[pit_record_params[:capture_status]])
+      if @pit_record.update(attrs)
         format.html { redirect_to @pit_record, notice: "Pit record was successfully updated." }
         format.json { render :show, status: :ok, location: @pit_record }
       else
@@ -193,7 +201,7 @@ alert: @brc_intrf_claims.error.message)
     # Only allow a list of trusted parameters through.
     def pit_record_params
       params.require(:domains_croupier_core_pit_record).permit(:product_activity_count, :barcode, :asin, 
-        :level, :source, :product_id, :mid)
+        :level, :source, :product_id, :mid, :capture_status)
     end
 
 end

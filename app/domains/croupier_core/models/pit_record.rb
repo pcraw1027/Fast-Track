@@ -6,12 +6,13 @@ module Domains
         self.table_name = "pit_records"
         attr_accessor :name
 
-        enum capture_status: { accessible: 0, supervisory: 1, unknown: 2 }
+        enum capture_status: { Blank: 0, S: 1, U: 2, R: 3 }
 
         CAPTURE_STATUS = {
-          "accessible"   => 0,
-          "supervisory"  => 1,
-          "unknown"      => 2
+          "Blank"   => 0,
+          "S"  => 1,
+          "U"      => 2,
+          "R"      => 3
         }
       
         belongs_to :product, class_name: "Domains::Products::Product", optional: true

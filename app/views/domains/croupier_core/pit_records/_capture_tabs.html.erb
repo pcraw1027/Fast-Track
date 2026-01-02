@@ -5,17 +5,61 @@
             <!-- Accordion Item 1 -->
             <div class="card">
             <div class="card-header" id="headingOne">
-                <h5 class="mb-0">
-                <button
-                    class="btn theme-link btn-block text-left m-0 p-0 font-weight-bold collapsed"
-                    data-toggle="collapse"
-                    data-target="#collapseOne"
-                    aria-expanded="<%= params[:level] == '1' ? 'true' : 'false' %>"
-                    aria-controls="collapseOne"
+       
+                    
+            <div class="row">
+            <div class="col-md-4">
+            <h5 class="mb-0">
+            <button
+            class="btn theme-link btn-block text-left m-0 p-0 font-weight-bold collapsed"
+                data-toggle="collapse"
+                data-target="#collapseOne"
+                aria-expanded="<%= params[:level] == '1' ? 'true' : 'false' %>"
+                aria-controls="collapseOne"
                 >
-                    Level 1 (Base Data) <%= 'True' if product.level_1_flag %> <%= 'False' if !product.level_1_flag %>
+                Level 1 (Base Data) <%= 'True' if product.level_1_flag %> <%= 'False' if !product.level_1_flag %>
                 </button>
                 </h5>
+                
+                </div>
+                
+                <div class="col-md-2">
+                    <%= link_to 'Link upload', 
+                    link_barcode_path(barcode: pit_record.barcode), target: "_blank" %>
+                </div>
+                
+                <div class="col-md-6">
+                <%= form_for(product, url: update_pit_status_path, html: { method: :put, multipart: true }) do |form| %>
+
+                                <%= form.hidden_field :barcode, value: pit_record.barcode, id: "product-barcode" %>
+                                <%= form.hidden_field :level, value: params[:level] %>
+
+                                <%= form.hidden_field :pit_record_id, value: pit_record.id %>
+                                <div class="d-flex"">
+                                    <%= form.label :capture_status, "Status: " %>
+                                    <%= form.select :capture_status,
+                                        options_for_select(
+                                        [
+                                            ["Select an Option", "blank"],
+                                            ["Status R", "R"],
+                                            ["Status S", "S"],
+                                            ["Status U", "U"]
+                                        ],
+                                        pit_record.capture_status
+                                        ),
+                                        {},
+                                        class: "form-control", style:"margin-left: 15px;"
+                                    %>
+
+                                    <%= form.submit "Update", class: 'status-active' %>
+
+                                </div>  
+                                <%end%>                           
+                        </div> 
+
+                              
+                    </div>
+                </div>
             </div>
 
             <div

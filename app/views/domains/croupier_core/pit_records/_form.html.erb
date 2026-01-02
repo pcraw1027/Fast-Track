@@ -11,43 +11,85 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= form.label :barcode %>
-    <%= form.text_field :barcode %>
+  <div class="row">
+    <div class="col-md-4">
+        <div class="form-group">
+        <%= form.label :barcode %>
+        <%= form.text_field :barcode, class: "form-control" %>
+      </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+          <%= form.label :asin %>
+          <%= form.text_field :asin, class: "form-control" %>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+          <%= form.label :level %>
+          <%= form.number_field :level, class: "form-control" %>
+      </div>
+    </div>
   </div>
 
-  <div class="field">
-    <%= form.label :asin %>
-    <%= form.text_field :asin %>
+  
+
+  <div class="row">
+    <div class="col-md-4">
+          <div class="form-group">
+            <%= form.label :product_activity_count %>
+            <%= form.number_field :product_activity_count, class: "form-control" %>
+          </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+          <%= form.label :source %>
+          <%= form.text_field :source, class: "form-control" %>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group" style: "height: 40px; margin-top: 30px">
+                                <%= form.label :capture_status %>
+                                <%= form.select :capture_status,
+                                    options_for_select(
+                                    [
+                                        ["Select an Option", "blank"],
+                                        ["Status R", "R"],
+                                        ["Status S", "S"],
+                                        ["Status U", "U"]
+                                    ],
+                                    pit_record.capture_status
+                                    ),
+                                    {},
+                                    class: "form-control"
+                                %>
+                            </div>
+    </div>
   </div>
 
-  <div class="field">
-    <%= form.label :level %>
-    <%= form.number_field :level %>
-  </div>
+ 
 
 
-  <div class="field">
-    <%= form.label :product_activity_count %>
-    <%= form.number_field :product_activity_count %>
+
+   <div class="row">
+    <div class="col-md-6">
+         <div class="form-group">
+          <%= form.label :product_id %>
+          <%= form.text_field :product_id, class: "form-control" %>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+          <%= form.label :mid %>
+          <%= form.text_field :mid, class: "form-control" %>
+        </div>
+    </div>
   </div>
   
-  <div class="field">
-    <%= form.label :source %>
-    <%= form.text_field :source %>
-  </div>
 
-  <div class="field">
-    <%= form.label :product_id %>
-    <%= form.text_field :product_id %>
-  </div>
-
-  <div class="field">
-    <%= form.label :mid %>
-    <%= form.text_field :mid %>
-  </div>
+  
 
   <div class="actions">
-    <%= form.submit %>
+    <%= form.submit "Submit", class: 'action-btn' %>
   </div>
 <% end %>

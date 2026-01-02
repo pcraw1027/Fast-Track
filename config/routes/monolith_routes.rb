@@ -19,6 +19,7 @@ module MonolithRoutes
       get '/bricks_by_klass', to: 'domains/classifications/bricks#by_klass', controller: 'domains/classifications/bricks'
       get '/bricks_by_title_search', to: 'domains/classifications/bricks#by_title_search', controller: 'domains/classifications/bricks'
       post '/insert_product', to: 'domains/products/products#update_to_level_one', controller: 'domains/products/products'
+      put '/update_pit_status', to: 'domains/products/products#update_pit_status', controller: 'domains/products/products'
       delete '/destroy_media', to: 'domains/products/product_variants#destroy_media', controller: 'domains/products/product_variants'
       get '/companies_search', to: 'domains/companies/companies#search', controller: 'domains/companies/companies'
       post '/insert_company', to: 'domains/companies/companies#insert_company', controller: 'domains/companies/companies'

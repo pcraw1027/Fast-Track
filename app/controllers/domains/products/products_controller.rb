@@ -27,6 +27,17 @@ class Domains::Products::ProductsController < ApplicationController
                 end
   end
 
+
+
+  def update_pit_status
+    barcode = product_variant_params[:barcode]&.strip
+    pit_record = Domains::CroupierCore::PitRecord.find_by(barcode: barcode)
+
+    pit_record.update(capture_status: Domains::CroupierCore::PitRecord::CAPTURE_STATUS[params[:domains_products_product][:capture_status]])
+    redirect_to(product_capture_interface_path(barcode: barcode, level: params[:level]), 
+    notice: "Product status was successfully updated.")
+      
+  end
   
   def update_to_level_one
     error = ""
@@ -78,7 +89,6 @@ class Domains::Products::ProductsController < ApplicationController
       variant_exist.update(product_variant_params) if product_variant_params.present?
       if @product.update(serialized_params)
         upgrade_pit_to_level_1(@product.id, pit_record&.level, company_id)
-        pit_record.update(capture_status: Domains::CroupierCore::PitRecord::CAPTURE_STATUS[params[:domains_products_product][:capture_status]])
         redirect_to(product_capture_interface_path(barcode: barcode, level: params[:level]), 
         notice: "Product was successfully updated.")
         return
@@ -99,7 +109,7 @@ class Domains::Products::ProductsController < ApplicationController
         Domains::CroupierCore::Scan.resolve(barcode, @product.id)
         Domains::Users::ListRoutine.resolve_resource(
           resource_id: @product.id, resource_type: "Domains::Products::Product", barcode: barcode
-          )
+        )
 
           
         Domains::CroupierCore::UploadRecord.resolve(barcode)

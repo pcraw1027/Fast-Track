@@ -33,38 +33,6 @@
   </div>
   </div>
 </div>
-
-
-
-<div class="row">
-<div class="col-md-4"></div>
-  <div class="col-md-4">
-      <%= link_to 'Link upload', 
-      link_barcode_path(barcode: pit_record.barcode), target: "_blank" %>
-  </div>
-
-   <div class="col-md-4">
-      <div class="form-group" style: "height: 40px; margin-top: 30px">
-        <%= form.label :capture_status %>
-        <%= form.select :capture_status,
-            options_for_select(
-              [
-                ["Select an Option", "accessible"],
-                ["Requires Supervisory", "supervisory"],
-                ["Unknown", "unknown"]
-              ],
-              pit_record.capture_status
-            ),
-            {},
-            class: "form-control"
-        %>
-      </div>
-    </div>
-
-  </div>
-
-
-
    
    <div class="row">
     <div class="col-md-8">

@@ -46,17 +46,32 @@ module Domains
           per_page = per_page.to_i.positive? ? per_page.to_i : 10
           offset   = (page - 1) * per_page
 
-          base_query = where(user_id: user_id, list_type: list_type)
+          base_query =
+            left_joins(:list_resources)
+              .where(
+                user_id: user_id,
+                list_type: list_type,
+                list_resources: { listable_type: "Domains::Products::Product" }
+              )
+              .distinct
 
-          total_count = base_query.count
+          total_count = base_query.count(:id)
 
-          records = base_query
-                    .order(default: :desc, updated_at: :desc)
-                    .limit(per_page)
-                    .offset(offset)
+          records =
+            base_query
+              .order(default: :desc, updated_at: :desc)
+              .limit(per_page)
+              .offset(offset)
+              .includes(:list_resources)
+              .map do |list|
+                res = list.as_json
+                res[:product_counts] = list.list_resources.size
+                res
+              end
 
           PaginatedResult.new(records, per_page, page, total_count)
         end
+
 
     end
   end
