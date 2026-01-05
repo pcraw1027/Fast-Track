@@ -53,24 +53,28 @@ module Domains
                 list_type: list_type,
                 list_resources: { listable_type: "Domains::Products::Product" }
               )
-              .distinct
+              .group("lists.id")
+              .select(
+                "lists.*",
+                "COUNT(list_resources.id) AS product_counts"
+              )
 
-          total_count = base_query.count(:id)
+          total_count = where(user_id: user_id, list_type: list_type).count
 
           records =
             base_query
               .order(default: :desc, updated_at: :desc)
               .limit(per_page)
               .offset(offset)
-              .includes(:list_resources)
               .map do |list|
                 res = list.as_json
-                res[:product_counts] = list.list_resources.size
+                res[:product_counts] = list.product_counts.to_i
                 res
               end
 
           PaginatedResult.new(records, per_page, page, total_count)
         end
+
 
 
     end
