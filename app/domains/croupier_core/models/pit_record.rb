@@ -36,17 +36,19 @@ module Domains
 end
 
 
-# products=Domains::Products::Product.includes(:product_variants).where(name: "Unknown Product")
-# products.each do |prd|
-#   pvs = prd.product_variants
-#   pvs.each do |pv|
-#     Domains::CroupierCore::PitRecord.find_by(barcode: pv.barcode).destroy
-#     mid = Domains::CroupierCore::Operations::MidExtractor.call!(barcode: pv.barcode).payload
-#     cit_rec = Domains::CroupierCore::CitRecord.find_by(mid: mid)
+products=Domains::Products::Product.includes(:product_variants).where(name: "Unknown Product")
+products.each do |prd|
+  pvs = prd.product_variants
+  pvs.each do |pv|
+    Domains::CroupierCore::PitRecord.find_by(barcode: pv.barcode)&.destroy
+    mid = Domains::CroupierCore::Operations::MidExtractor.call!(barcode: pv.barcode).payload
+    cit_rec = Domains::CroupierCore::CitRecord.find_by(mid: mid)
 
-#     cit_rec.destroy if cit_rec
-#     Domains::CroupierCore::BitRecord.find_by(barcode: pv.barcode).destroy
-#     Domains::CroupierCore::Scan.where(barcode: pv.barcode).delete_all
-#     Domains::CroupierCore::UploadRecord.where(barcode: pv.barcode).delete_all
-#   end
-# end
+    cit_rec.destroy if cit_rec
+    Domains::CroupierCore::BitRecord.find_by(barcode: pv.barcode)&.destroy
+    #remove upload first before scan
+    Domains::CroupierCore::UploadRecord.where(barcode: pv.barcode).delete_all
+    Domains::CroupierCore::Scan.where(barcode: pv.barcode).delete_all
+  end
+  prd.destroy
+end

@@ -18,7 +18,6 @@ module Domains
 
           def lookup_pit_rec(pit)
             temp_dir = Rails.root.join("tmp", "media_ups_item_db_image", Time.now.to_i.to_s)
-            puts "temp_dir=====>: #{temp_dir}"
             FileUtils.mkdir_p(temp_dir)
             begin
                 pit.update(capture_status: 4)
@@ -39,7 +38,6 @@ module Domains
 
                     product = Domains::Products::Product.create!(
                         name: product_data[:title],
-                        asin: product_data[:brand],
                         description: description
                     )
 
@@ -54,14 +52,14 @@ module Domains
                         if File.exist?(image_path)
                             puts "*************  File Path Exists!!!"
                             pv.media.create!(
-                            file: File.open(image_path),
-                            media_type: :image,
-                            position: 0
-                        )
+                                file: File.open(image_path),
+                                media_type: :image,
+                                position: 0
+                            )
                         end
                     end
 
-                    pit.update(capture_status: 0, product_id: product.id)
+                    pit.update(capture_status: 0, asin: product_data[:brand], product_id: product.id)
                    end
                 rescue => e
                     puts "Error: #{e.message}"

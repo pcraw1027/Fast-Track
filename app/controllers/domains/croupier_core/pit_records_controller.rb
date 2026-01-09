@@ -54,7 +54,6 @@ alert: @brc_intrf_claims.error.message)
     @klass = Domains::Classifications::Klass.new
     @brick = Domains::Classifications::Brick.new
     @company_name = ''
-    company_added = false
 
     @segments = []
 
@@ -73,7 +72,6 @@ alert: @brc_intrf_claims.error.message)
         if @pit_record&.product_id
              
           @product = @pit_record.product
-          company_added = true if @product.company_id
           @product.product_category_source_id = product_category_source_id
           @segment = Domains::Classifications::Segment.find(@product.segment_id) if @product.segment_id 
           @family = Domains::Classifications::Family.find(@product.family_id) if @product.family_id
@@ -88,12 +86,7 @@ alert: @brc_intrf_claims.error.message)
             @product.barcode = variants.barcode
             variants.media.build
             @product.media = variants.media
-          end 
-          unless company_added
-            mid = CroupierCore::MidExtractor.call!(barcode: params[:barcode].strip).payload
-            cit_rec = Domains::CroupierCore::CitRecord.find_by(mid: mid)
-            @company_name = cit_rec&.company_name
-          end     
+          end      
         end
       else
         @pit_record = Domains::CroupierCore::PitRecord.new
