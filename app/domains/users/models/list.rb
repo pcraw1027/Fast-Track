@@ -37,7 +37,7 @@ module Domains
                     .limit(per_page)
                     .offset(offset)
 
-          PaginatedResult.new(records, per_page, page, total_count)
+                     PaginatedResult.new(records, per_page, page, total_count)
       end
       
 
@@ -46,18 +46,27 @@ module Domains
           per_page = per_page.to_i.positive? ? per_page.to_i : 10
           offset   = (page - 1) * per_page
 
-          base_query =
-            left_joins(:list_resources)
-              .where(
-                user_id: user_id,
-                list_type: list_type,
-                list_resources: { listable_type: "Domains::Products::Product" }
-              )
-              .group("lists.id")
-              .select(
-                "lists.*",
-                "COUNT(list_resources.id) AS product_counts"
-              )
+         base_query =
+                      Domains::Users::List
+                        .left_joins(:list_resources)
+                        .unscope(where: :list_resources)
+                        .where(
+                          user_id: user_id,
+                          list_type: list_type
+                        )
+                        .group("lists.id")
+                        .select(
+                          "lists.*",
+                          <<~SQL
+                            COUNT(
+                              CASE
+                                WHEN list_resources.listable_type = 'Domains::Products::Product'
+                                THEN list_resources.id
+                              END
+                            ) AS product_counts
+                          SQL
+                        )
+
 
           total_count = where(user_id: user_id, list_type: list_type).count
 

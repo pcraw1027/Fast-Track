@@ -31,9 +31,6 @@ module Domains
                 updates[:company_id] = company_id if company_id.present?
               
                 record.update(updates)
-              
-          
-           
         end
       
       end

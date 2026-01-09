@@ -106,6 +106,7 @@ alert: @brc_intrf_claims.error.message)
   def pit_interface
     pits = Domains::CroupierCore::PitRecord.with_products
     @pit_records_unknowns = []
+    @pit_records_requested = []
     @pit_records_supervisories = []
     @pit_records_reviews = []
     @pit_records_0s = []
@@ -120,6 +121,9 @@ alert: @brc_intrf_claims.error.message)
         next
       elsif pit.U?
         @pit_records_unknowns.push(pit)
+        next
+      elsif pit.Q?
+        @pit_records_requested.push(pit)
         next
       elsif pit.R?
         @pit_records_reviews.push(pit)

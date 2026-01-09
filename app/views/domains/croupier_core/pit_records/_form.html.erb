@@ -53,10 +53,12 @@
                                 <%= form.select :capture_status,
                                     options_for_select(
                                     [
-                                        ["Select an Option", "blank"],
+                                        ["Status Blank", "Blank"],
                                         ["Status R", "R"],
                                         ["Status S", "S"],
-                                        ["Status U", "U"]
+                                        ["Status U", "U"],
+                                        ["Status Q", "Q"],
+                                        ["Status N", "N"]
                                     ],
                                     pit_record.capture_status
                                     ),
