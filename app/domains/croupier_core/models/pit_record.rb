@@ -52,3 +52,18 @@ end
 #   end
 #   prd.destroy
 # end
+
+
+# products=Domains::Products::Product.includes(:product_variants).where(size: nil, company_id: nil)
+# products.each do |prd|
+#   pvs = prd.product_variants
+#   pvs.each do |pv|
+#     pit = Domains::CroupierCore::PitRecord.find_by(barcode: pv.barcode)
+#     pit.update(capture_status: 0, product_id: nil)
+#   end
+#   begin
+#     prd.destroy
+#   rescue=>e
+#     p e.message
+#   end
+# end

@@ -14,7 +14,7 @@ export default class extends Controller {
   
   initialize() {
     if (!this.hasBrickTarget) return;
-
+    this.brickCache = {};
     if (!this.brickSearchSelect && this.hasBrickSearchTarget) {
       this.brickSearchSelect = new TomSelect(this.brickSearchTarget, {
         placeholder: "Search a brick title",
@@ -33,7 +33,6 @@ export default class extends Controller {
             fetch(`/bricks_by_title_search?q=${encodeURIComponent(query)}`)
               .then(response => response.json())
               .then(json => {
-                this.brickCache = {} 
                 json.sort((a, b) => a.title.localeCompare(b.title));
                 json.forEach(brick => this.brickCache[brick.id] = brick)
                 return json.map((brick) => ({

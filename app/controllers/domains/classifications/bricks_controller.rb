@@ -27,6 +27,7 @@ class Domains::Classifications::BricksController < ApplicationController
 
   def by_title_search
     result = Domains::Classifications::Brick.search_by_title(params[:q])
+    logger.info "********************* #{result.inspect}"
      render json: result
   end
 

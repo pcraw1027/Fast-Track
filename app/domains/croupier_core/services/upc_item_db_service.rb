@@ -59,7 +59,7 @@ module Domains
                         end
                     end
 
-                    pit.update(capture_status: 0, asin: product_data[:brand], product_id: product.id)
+                    pit.update(capture_status: 3, asin: product_data[:brand], product_id: product.id)
                    end
                 rescue => e
                     puts "Error: #{e.message}"
