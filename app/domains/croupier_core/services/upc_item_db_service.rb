@@ -10,11 +10,27 @@ module Domains
 
           def call
             pit_recs = Domains::CroupierCore::PitRecord.for_lookup(100)
-            pit_recs.each do |pit|
-                lookup_pit_rec(pit)
-                sleep 12 # 5 request per minutes safety (12s spacing)
+
+            pit_recs.each_with_index do |pit, index|
+                begin
+                    lookup_pit_rec(pit)
+
+                rescue Faraday::TooManyRequestsError, Net::HTTPTooManyRequests => e
+                    Rails.logger.warn "UPCitemDB rate limited. Waiting before retry..."
+
+                    sleep 30
+                    retry
+
+                rescue StandardError => e
+                    Rails.logger.error "Lookup failed for PitRecord #{pit.id}: #{e.message}"
+                end
+
+                unless index == pit_recs.size - 1
+                    sleep 15 # 4 requests/minute safety
+                end
             end
           end
+
 
           def lookup_pit_rec(pit)
             temp_dir = Rails.root.join("tmp", "media_ups_item_db_image", Time.now.to_i.to_s)
@@ -82,6 +98,9 @@ module Domains
 
             request = Net::HTTP::Get.new(uri.request_uri)
             request['Accept'] = 'application/json'
+            request['User-Agent'] = 'FastTrack/1.0 (contact: pcraw1027@gmail.com)'
+            request['Accept-Language'] = 'en-US'
+            request['Connection'] = 'keep-alive'
 
             response = http.request(request)
 

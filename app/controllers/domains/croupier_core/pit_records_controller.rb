@@ -6,18 +6,39 @@ only: %i[ new edit update create destroy pit_interface product_capture_interface
   # GET /pit_records or /pit_records.json
   def index
     @pit_records = Domains::CroupierCore::PitRecord.all.paginate(page: params[:page], per_page: 15)
-                                                   .order(created_at: :desc, id: :desc)
+                                                   .order(updated_at: :desc, id: :desc)
   end
 
   def next_pit_record
-    pit_record = Domains::CroupierCore::PitRecord.where(level: params[:level])
-                                                 .order(product_activity_count: :desc)
-                                                 .limit(1).first
+    pit_record = nil
+    pits = Domains::CroupierCore::PitRecord.with_products
+
+    pits.each do |pit|
+      
+       if !pit.product&.level_1_flag || pit.product_id.blank? && params[:level].to_i == 1
+        pit_record = pit
+        break
+       elsif !pit.product&.level_2_flag && pit.product&.level_1_flag && params[:level].to_i == 2
+         pit_record = pit
+         break
+       elsif !pit.product&.level_3_flag && pit.product&.level_1_flag && params[:level].to_i == 3
+         pit_record = pit
+         break
+       elsif !pit.product&.level_4_flag && pit.product&.level_1_flag
+          pit_record = pit
+          break
+       elsif !pit.product&.level_5_flag && pit.product&.level_1_flag
+          pit_record = pit
+          break
+       end
+    end
+
     if pit_record
         redirect_to(product_capture_interface_path(barcode: pit_record.barcode, level: params[:level]))
     else
         redirect_to(pit_interface_path, alert: "No more PIT Level #{params[:level]} records!")
     end
+
   end
 
   def invoke_bit_pit_triggers
