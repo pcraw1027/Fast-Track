@@ -19,7 +19,7 @@ module Domains
       belongs_to :family, class_name: "Domains::Classifications::Family", optional: true
       belongs_to :klass, class_name: "Domains::Classifications::Klass", optional: true
       belongs_to :brick, class_name: "Domains::Classifications::Brick", optional: true
-      belongs_to :product_category_source, class_name: "Domains::Classifications::ProductCategorySource"
+      belongs_to :product_category_source, class_name: "Domains::Classifications::ProductCategorySource", optional: true
       
       #false association, media is assiociated with product_variant directly. This is just to allow us to pass 
       #media as part of product attributes on create and update

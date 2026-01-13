@@ -24,10 +24,10 @@ only: %i[ new edit update create destroy pit_interface product_capture_interface
        elsif !pit.product&.level_3_flag && pit.product&.level_1_flag && params[:level].to_i == 3
          pit_record = pit
          break
-       elsif !pit.product&.level_4_flag && pit.product&.level_1_flag
+       elsif !pit.product&.level_4_flag && pit.product&.level_1_flag && params[:level].to_i == 4
           pit_record = pit
           break
-       elsif !pit.product&.level_5_flag && pit.product&.level_1_flag
+       elsif !pit.product&.level_5_flag && pit.product&.level_1_flag && params[:level].to_i == 5
           pit_record = pit
           break
        end
