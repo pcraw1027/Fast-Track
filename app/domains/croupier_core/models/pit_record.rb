@@ -31,6 +31,43 @@ module Domains
 
         validates :barcode, uniqueness: true
 
+        def self.next_pit_record(level)
+          pit_record = nil
+          pits = Domains::CroupierCore::PitRecord.with_products
+
+          pits.each do |pit|
+            if pit.S? && level == "s"
+              pit_record = pit
+              break
+            elsif pit.U? && level == "u"
+              pit_record = pit
+              break
+            elsif pit.Q? && level == "q"
+              pit_record = pit
+              break
+            elsif pit.R? && level == "r"
+              pit_record = pit
+              break
+            elsif !pit.product&.level_1_flag || pit.product_id.blank? && level.to_i == 1
+              pit_record = pit
+              break
+            elsif !pit.product&.level_2_flag && pit.product&.level_1_flag && level.to_i == 2
+              pit_record = pit
+              break
+            elsif !pit.product&.level_3_flag && pit.product&.level_1_flag && level.to_i == 3
+              pit_record = pit
+              break
+            elsif !pit.product&.level_4_flag && pit.product&.level_1_flag && level.to_i == 4
+                pit_record = pit
+                break
+            elsif !pit.product&.level_5_flag && pit.product&.level_1_flag && level.to_i == 5
+                pit_record = pit
+                break
+            end
+          end
+          pit_record
+        end
+
       end
   end
 end

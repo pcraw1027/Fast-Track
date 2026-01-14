@@ -10,28 +10,7 @@ only: %i[ new edit update create destroy pit_interface product_capture_interface
   end
 
   def next_pit_record
-    pit_record = nil
-    pits = Domains::CroupierCore::PitRecord.with_products
-
-    pits.each do |pit|
-      
-       if !pit.product&.level_1_flag || pit.product_id.blank? && params[:level].to_i == 1
-        pit_record = pit
-        break
-       elsif !pit.product&.level_2_flag && pit.product&.level_1_flag && params[:level].to_i == 2
-         pit_record = pit
-         break
-       elsif !pit.product&.level_3_flag && pit.product&.level_1_flag && params[:level].to_i == 3
-         pit_record = pit
-         break
-       elsif !pit.product&.level_4_flag && pit.product&.level_1_flag && params[:level].to_i == 4
-          pit_record = pit
-          break
-       elsif !pit.product&.level_5_flag && pit.product&.level_1_flag && params[:level].to_i == 5
-          pit_record = pit
-          break
-       end
-    end
+    pit_record = Domains::CroupierCore::PitRecord.next_pit_record(params[:level])
 
     if pit_record
         redirect_to(product_capture_interface_path(barcode: pit_record.barcode, level: params[:level]))

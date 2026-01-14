@@ -87,6 +87,7 @@ class Domains::Products::ProductsController < ApplicationController
       @product = variant_exist.product
       variant_exist.update(product_variant_params) if product_variant_params.present?
       if @product.update(serialized_params)
+        pit_record.update(capture_status: 0)
         upgrade_pit_to_level_1(@product.id, pit_record&.level, company_id)
         redirect_to(product_capture_interface_path(barcode: barcode, level: params[:level]), 
         notice: "Product was successfully updated.")
@@ -102,6 +103,7 @@ class Domains::Products::ProductsController < ApplicationController
         pv.barcode = pv.barcode.strip
         pv.product_id = @product.id
         pv.save!
+        pit_record.update(capture_status: 0)
         upgrade_pit_to_level_1(@product.id, pit_record&.level, company_id)
         Domains::CroupierCore::Scan.resolve(barcode, @product.id)
         Domains::Users::ListRoutine.resolve_resource(
