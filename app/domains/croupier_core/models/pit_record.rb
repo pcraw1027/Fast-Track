@@ -48,7 +48,7 @@ module Domains
             elsif pit.R? && level == "r"
               pit_record = pit
               break
-            elsif !pit.product&.level_1_flag || pit.product_id.blank? && level.to_i == 1
+            elsif !pit.product&.level_1_flag && pit.product_id.blank? && level.to_i == 1
               pit_record = pit
               break
             elsif !pit.product&.level_2_flag && pit.product&.level_1_flag && level.to_i == 2
