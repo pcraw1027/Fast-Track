@@ -20,9 +20,9 @@ only: %i[ new edit update create destroy insert_company update_to_level_two upda
   def insert_company
     if company_params[:industry_category_type_id].blank? 
         respond_to_invalid_entries("industry category type is required", 
-      company_capture_interface_path(mid: company_params[:mid]))  
+      company_capture_interface_path(mid: company_params[:mid], level: params[:domains_companies_company][:level]))  
     elsif params[:domains_companies_company][:new_company_name].blank? && params[:domains_companies_company][:name].blank? && params[:domains_companies_company][:id].blank? && !params[:domains_companies_company][:company_id]&.to_s&.match?(/^\d+$/)
-      respond_to_invalid_entries("company name is required", company_capture_interface_path(mid: company_params[:mid])) 
+      respond_to_invalid_entries("company name is required", company_capture_interface_path(mid: company_params[:mid], level: params[:domains_companies_company][:level])) 
     elsif (params[:domains_companies_company][:company_id].present? && params[:domains_companies_company][:company_id]&.to_s&.match?(/^\d+$/)) || (params[:domains_companies_company][:id].present? && params[:domains_companies_company][:id]&.to_s&.match?(/^\d+$/)) || params[:domains_companies_company][:name].present?
        update_company
     else
@@ -39,14 +39,14 @@ only: %i[ new edit update create destroy insert_company update_to_level_two upda
               Domains::CroupierCore::Operations::UpgradeCitLevel
                 .call!(mid: mid, company_id: @company.id, user_id: current_user.id, level: 1)
               format.html do
-                redirect_to company_capture_interface_path(mid: mid, filter_by: params[:domains_companies_company][:filter_by]), 
+                redirect_to company_capture_interface_path(mid: mid, filter_by: params[:domains_companies_company][:filter_by], level: params[:domains_companies_company][:level]), 
                 notice: "Company was successfully created."
               end
               format.json { render :show, status: :created, location: @company }
              else
               msg = @company.errors.map { |er| "#{er.attribute} #{er.message}" }.join(", ")
               format.html do
- redirect_to company_capture_interface_path(mid: mid, filter_by: params[:domains_companies_company][:filter_by]), alert: msg
+ redirect_to company_capture_interface_path(mid: mid, filter_by: params[:domains_companies_company][:filter_by], level: params[:domains_companies_company][:level]), alert: msg
               end
               format.json { render json: @company.errors, status: :unprocessable_entity }
              end
@@ -62,13 +62,13 @@ only: %i[ new edit update create destroy insert_company update_to_level_two upda
         Domains::CroupierCore::Operations::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, 
         user_id: current_user.id, level: 2)
         format.html do
- redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:domains_companies_company][:filter_by]), 
+ redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:domains_companies_company][:filter_by], level: params[:domains_companies_company][:level]), 
 notice: "company was successfully updated."
         end
         format.json { render :show, status: :ok, location: @company }
     rescue StandardError => e
         format.html do
- redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:domains_companies_company][:filter_by]), 
+ redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:domains_companies_company][:filter_by], level: params[:domains_companies_company][:level]), 
 alert: e.message
         end
         format.json { render json: @company.errors, status: :unprocessable_entity }
@@ -85,13 +85,13 @@ alert: e.message
         Domains::CroupierCore::Operations::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, 
 user_id: current_user.id, level: 3)
         format.html do
- redirect_to(company_capture_interface_path(mid: company_params[:mid], filter_by: params[:domains_companies_company][:filter_by]), 
+ redirect_to(company_capture_interface_path(mid: company_params[:mid], filter_by: params[:domains_companies_company][:filter_by], level: params[:domains_companies_company][:level]), 
 notice: "Company was successfully updated.") and return
         end
         format.json { render :show, status: :created, location: @company }
      rescue StandardError => e
         format.html do
- redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:domains_companies_company][:filter_by]), 
+ redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:domains_companies_company][:filter_by], level: params[:domains_companies_company][:level]), 
 alert: e.message
         end
         format.json { render json: @company.errors, status: :unprocessable_entity }
@@ -108,13 +108,13 @@ alert: e.message
         Domains::CroupierCore::Operations::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, 
 user_id: current_user.id, level: 4)
         format.html do
- redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:domains_companies_company][:filter_by]), 
+ redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:domains_companies_company][:filter_by], level: params[:domains_companies_company][:level]), 
 notice: "Company was successfully updated."
         end
         format.json { render :show, status: :created, location: @company }
      rescue StandardError => e
         format.html do
- redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:domains_companies_company][:filter_by]), 
+ redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:domains_companies_company][:filter_by], level: params[:domains_companies_company][:level]), 
 alert: e.message
         end
         format.json { render json: @company.errors, status: :unprocessable_entity }
@@ -131,13 +131,13 @@ alert: e.message
         Domains::CroupierCore::Operations::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, 
 user_id: current_user.id, level: 5)
         format.html do
- redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:domains_companies_company][:filter_by]), 
+ redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:domains_companies_company][:filter_by], level: params[:domains_companies_company][:level]), 
 notice: "Company was successfully updated."
         end
         format.json { render :show, status: :created, location: @company }
      rescue StandardError => e
         format.html do
- redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:domains_companies_company][:filter_by]), 
+ redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:domains_companies_company][:filter_by], level: params[:domains_companies_company][:level]), 
 alert: e.message
         end
         format.json { render json: @company.errors, status: :unprocessable_entity }

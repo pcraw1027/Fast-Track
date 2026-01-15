@@ -53,8 +53,7 @@ alert: @brc_intrf_claims.error.message)
     @family = Domains::Classifications::Family.new
     @klass = Domains::Classifications::Klass.new
     @brick = Domains::Classifications::Brick.new
-    @company_name = ''
-
+   
     @segments = []
 
     return unless params[:barcode]

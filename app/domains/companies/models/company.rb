@@ -3,7 +3,7 @@ module Domains
       class Company < ApplicationRecord
         include Searchable
 
-        attr_accessor :mid, :photo, :email, :phone, :contact_name, :new_company_name, :company_id
+        attr_accessor :mid, :photo, :email, :phone, :contact_name, :new_company_name, :company_id, :level
 
         belongs_to :industry_category_type, optional: true
         mount_uploader :logo, Uploaders::LogoUploader

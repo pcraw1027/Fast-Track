@@ -61,7 +61,7 @@ class Domains::Products::ProductsController < ApplicationController
     if product_params[:company_id]&.to_s&.match?(/^\d+$/)
       company = Domains::Companies::Company.find_by(id: product_params[:company_id])
       unless company
-        respond_to_invalid_entries("Company not found", product_capture_interface_path(barcode: barcode))
+        respond_to_invalid_entries("Company not found", product_capture_interface_path(barcode: barcode, level: params[:domains_products_product][:level]))
         return
       end
       company_id = company.id
@@ -75,7 +75,7 @@ class Domains::Products::ProductsController < ApplicationController
         company_id = Domains::Companies::Company.spawn_new_instance(cit_rec, company_name, current_user.id)
         serialized_params[:company_id] = company_id
       rescue StandardError => e
-        redirect_to(product_capture_interface_path(barcode: barcode), alert: e.message)
+        redirect_to(product_capture_interface_path(barcode: barcode, level: params[:domains_products_product][:level]), alert: e.message)
         return
       end
     end
@@ -89,7 +89,7 @@ class Domains::Products::ProductsController < ApplicationController
       if @product.update(serialized_params)
         pit_record.update(capture_status: 0)
         upgrade_pit_to_level_1(@product.id, pit_record&.level, company_id)
-        redirect_to(product_capture_interface_path(barcode: barcode, level: params[:level]), 
+        redirect_to(product_capture_interface_path(barcode: barcode, level: params[:domains_products_product][:level]), 
         notice: "Product was successfully updated.")
         return
       end
@@ -113,14 +113,14 @@ class Domains::Products::ProductsController < ApplicationController
           
         Domains::CroupierCore::UploadRecord.resolve(barcode)
         format.html do
- redirect_to product_capture_interface_path(barcode: barcode, level: params[:level]), 
+ redirect_to product_capture_interface_path(barcode: barcode, level: params[:domains_products_product][:level]), 
 notice: "Product successfully added"
         end
         format.json { render :show, status: :created, location: @product }
       else
         error = @product.errors.map { |er| "#{er.attribute} #{er.message}" }.join(", ")
         format.html do
- redirect_to product_capture_interface_path(barcode: barcode, level: params[:level]), alert: error
+ redirect_to product_capture_interface_path(barcode: barcode, level: params[:domains_products_product][:level]), alert: error
         end
         format.json { render json: @product.errors, status: :unprocessable_entity }
       end

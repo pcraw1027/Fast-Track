@@ -8,8 +8,9 @@ module Domains
   module CroupierCore
     class UpcItemDbService < ApplicationService
 
-          def call
-            pit_recs = Domains::CroupierCore::PitRecord.for_lookup(100)
+          def call(count:)
+
+            pit_recs = Domains::CroupierCore::PitRecord.for_lookup(count)
 
             pit_recs.each_with_index do |pit, index|
                 begin
@@ -51,10 +52,22 @@ module Domains
 
                     description = generate_product_description(barcode: pit.barcode, 
                                                                 product_name: product_data[:title])
+                    
+                    company_id = nil
+                    company = Domains::Companies::Company.find_by(name: product_data[:brand])
+                    if company 
+                        company_id = company.id
+                    else
+                        mid = Domains::CroupierCore::Operations::MidExtractor.call!(barcode: pit.barcode).payload
+                        cit_rec = Domains::CroupierCore::CitRecord.find_by(mid: mid)
+                        admin = Domains::Users::User.find_by(email: "oshanani@gmail.com")
+                        company_id = Domains::Companies::Company.spawn_new_instance(cit_rec, product_data[:brand], admin.id)
+                    end
 
                     product = Domains::Products::Product.create!(
                         name: product_data[:title],
-                        description: description
+                        description: description,
+                        company_id: company_id
                     )
 
                     #process and store product image
@@ -75,7 +88,7 @@ module Domains
                         end
                     end
 
-                    pit.update(capture_status: 3, asin: product_data[:brand], product_id: product.id)
+                    pit.update(capture_status: 3, product_id: product.id)
                    end
                 rescue => e
                     puts "Error: #{e.message}"

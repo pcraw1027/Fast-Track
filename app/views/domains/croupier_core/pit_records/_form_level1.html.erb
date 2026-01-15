@@ -109,24 +109,6 @@
  
 <%= form.hidden_field :product_category_source_id, value: product.product_category_source_id %>
 
-<%if product.company_id.blank? && !product.name.blank? %>
- <div class="row">
-    <div class="col-md-8">
-       <div class="form-group">
-        <label>Entered Brand/Company Name</label>
-
-        <input value="<%= @company_name %>" class="form-control" readonly="true"/>
-      </div>
-    </div>
-
-    <div class="col-md-4">
-      <div class = "form-group">
-     </div>
-    </div>
-  </div>
-
- <%end%>
-
  
 
   <div class="actions text-center">

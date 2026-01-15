@@ -1,7 +1,7 @@
 module Domains
   module Products
     class Product < ApplicationRecord
-      include Searchable
+      #include Searchable
 
       self.table_name = "products"
       attr_accessor :media, :barcode, :level, :new_company_name, :asin, :brick_search, :capture_status
@@ -39,9 +39,9 @@ module Domains
         %i[name description]
       end
 
-      define_search_mappings!
+      #define_search_mappings!
 
-      index_name "product_search_index"
+      #index_name "product_search_index"
 
       def level_1_flag
         name.present? && description.present? && company_id.present?
