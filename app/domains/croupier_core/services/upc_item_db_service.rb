@@ -183,7 +183,7 @@ module Domains
 
                 response = http.request(request)
                 data = JSON.parse(response.body)
-
+                p "GIMI DATA: #{data.inspect}"
                 data.dig('candidates', 0, 'content', 'parts', 0, 'text') ||
                     'No description generated.'
                 rescue JSON::ParserError, Net::HTTPError => e

@@ -137,14 +137,14 @@ notice: "Product successfully added"
         Domains::CroupierCore::Operations::UpgradePitLevel.call!(barcode: barcode, 
         product_id: @product.id, asin: nil, user_id: current_user.id, level: 2) 
         format.html do
- redirect_to product_capture_interface_path(barcode: barcode, level: params[:level]), 
+ redirect_to product_capture_interface_path(barcode: barcode, level: params[:domains_products_product][:level]), 
 notice: "Product was successfully updated."
         end
         format.json { render :show, status: :ok, location: @product }
       else
         error = @product.errors.map { |er| "#{er.attribute} #{er.message}" }.join(", ")
             format.html do
- redirect_to product_capture_interface_path(barcode: barcode, level: params[:level]), alert: error
+ redirect_to product_capture_interface_path(barcode: barcode, level: params[:domains_products_product][:level]), alert: error
             end
         format.json { render json: @product.errors, status: :unprocessable_entity }
       end
@@ -168,7 +168,7 @@ notice: "Product was successfully updated."
   def edit
     variant = Domains::Products::ProductVariant.find_by(product_id: params[:id])
     if variant
-        redirect_to(product_capture_interface_path(barcode: variant.barcode, level: 0))
+        redirect_to(product_capture_interface_path(barcode: variant.barcode, level: 1))
     else
       redirect_to(domains_products_products_path, alert: "product has no variant! Simply delete this product and create a new one")
     end
