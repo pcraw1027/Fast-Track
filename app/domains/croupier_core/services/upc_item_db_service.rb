@@ -64,7 +64,7 @@ module Domains
                         company_id = Domains::Companies::Company.spawn_new_instance(cit_rec, product_data[:brand], admin.id)
                     end
 
-                    p_title = product_data[:title].split.map(&:capitalize).join(" ")
+                    p_title = product_data[:title].split(" ").map(&:capitalize).join(" ")
 
 
                     product = Domains::Products::Product.create!(
