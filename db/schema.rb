@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_01_09_104054) do
+ActiveRecord::Schema.define(version: 2026_01_16_152559) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -91,6 +91,15 @@ ActiveRecord::Schema.define(version: 2026_01_09_104054) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["klass_id"], name: "index_bricks_on_klass_id"
     t.index ["product_category_source_id"], name: "index_bricks_on_product_category_source_id"
+  end
+
+  create_table "capture_histories", force: :cascade do |t|
+    t.string "third_party_source"
+    t.integer "status", default: 0, null: false
+    t.string "barcode"
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "cit_level_users", force: :cascade do |t|

@@ -121,6 +121,7 @@
           Croupier147
         </a>
         <div class="dropdown-menu bg-light-green">
+          <%= link_to "Capture History", domains_croupier_core_capture_histories_path, class: "nav-link" %>
           <%= link_to "About Us", home_about_path, class:"nav-link" %>
           <%if current_user %>
               <%= link_to "Website Messages", domains_website_data_website_messages_path, class:"nav-link" %>

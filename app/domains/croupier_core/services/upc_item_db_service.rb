@@ -64,8 +64,11 @@ module Domains
                         company_id = Domains::Companies::Company.spawn_new_instance(cit_rec, product_data[:brand], admin.id)
                     end
 
+                    p_title = product_data[:title].split.map(&:capitalize).join(" ")
+
+
                     product = Domains::Products::Product.create!(
-                        name: product_data[:title],
+                        name: p_title,
                         description: description,
                         company_id: company_id
                     )
@@ -89,6 +92,12 @@ module Domains
                     end
 
                     pit.update(capture_status: 3, product_id: product.id)
+
+                    Domains::CroupierCore::CaptureHistory.create!(
+                        third_party_source: "PUC Item DB", status: 1, 
+                        barcode: pit.barcode, name: p_title
+                    )
+
                    end
                 rescue => e
                     puts "Error: #{e.message}"

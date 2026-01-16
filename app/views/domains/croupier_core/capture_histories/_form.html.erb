@@ -1,0 +1,37 @@
+<%= form_with(model: capture_history) do |form| %>
+  <% if capture_history.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(capture_history.errors.count, "error") %> prohibited this capture_history from being saved:</h2>
+
+      <ul>
+        <% capture_history.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :third_party_source %>
+    <%= form.text_field :third_party_source %>
+  </div>
+
+  <div class="field">
+    <%= form.label :status %>
+    <%= form.text_field :status %>
+  </div>
+
+  <div class="field">
+    <%= form.label :barcode %>
+    <%= form.text_field :barcode %>
+  </div>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

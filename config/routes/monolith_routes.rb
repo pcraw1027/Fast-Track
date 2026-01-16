@@ -49,7 +49,7 @@ module MonolithRoutes
               resources :upload_records
               resources :bit_records
               resources :scans
-              # additional routes
+              resources :capture_histories
               
             end
 
