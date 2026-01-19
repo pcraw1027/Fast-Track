@@ -55,8 +55,7 @@ class Api::V1::Users::ListsController < Api::V1::BaseController
     page = params[:page] || 1
     per_page = params[:per_page] || 20
     per_page = 20 if per_page.to_i > 20
-    list_type = params[:list_type].blank? ? "Domains::Products::Product" : Domains::Features::Listable::ListResource::LISTABLE_TYPE_MAP.fetch(
-      params[:list_type])
+    list_type = params[:list_type].blank? ? "Domains::Products::Product" : Domains::Features::Listable::ListResource::LISTABLE_TYPE_MAP[params[:list_type]]
 
     resources = Domains::Users::List.load_resource_lists(
       per_page: per_page, page: page,listable_id: params[:resource_id], 

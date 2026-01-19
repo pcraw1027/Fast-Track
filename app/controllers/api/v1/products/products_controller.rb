@@ -5,35 +5,19 @@ class Api::V1::Products::ProductsController < Api::V1::BaseController
      Domains::Products::Product.find(params[:id])&.increment!(:searches)
      render json: { message: "increment success!" }, status: :ok
   end
-  
-  def show
-    product = Domains::Products::Product.includes(:company, product_variants: [:media]).find(params[:id])
-    company = product.company
-    company_name = company.name if company
-    rating_distribution = Domains::Features::Reviewable::Review.rating_distribution_for(product)
-    review_stats = Domains::Features::Reviewable::Review.stats_for(product)
-    scans = Domains::CroupierCore::Scan.where(product_id: product.id).count
-    
-    variant_data = product.product_variants&.map do |v|
-      {
-        "product_variant" => v,
-        "media" => v.media
-      }
-    end
 
-    render json: {
-      product: product,
-      scans: scans,
-      company_name: company_name,
-      company_snapshot: company&.company_snapshot,
-      product_variants: variant_data,
-      rating_distribution: rating_distribution,
-      review_stats: review_stats
-    }, status: :ok
-    
+  def show
+    product_data = Domains::Products::Product.with_display_data(params[:id])
+    render json: product_data, status: :ok
   end
 
-
+  def alternative_products
+    page = params[:page] || 1
+    per_page = params[:per_page] || 10
+    per_page = 10 if per_page.to_i > 10
+    results = Domains::Products::Product.alternative_products(id: params[:id], page: page, per_page: per_page)
+    render json: results, status: :ok
+  end
 
   def search
     query = params[:q].to_s.strip
@@ -95,12 +79,6 @@ class Api::V1::Products::ProductsController < Api::V1::BaseController
 
     total_hits = search_results.response['hits']['total']['value']
     total_pages = (total_hits.to_f / per_page).ceil
-
-    Rails.logger.debug "***********************************************"
-    Rails.logger.debug "total_hits #{total_hits.inspect} *********************"
-    Rails.logger.debug "total_pages #{total_pages.inspect} ************************************"
-    
-    
 
     records = parse_multimodel_response(search_results)
 

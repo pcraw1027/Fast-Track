@@ -63,6 +63,88 @@ module Domains
         false
       end
 
+      def self.alternative_products(id:, page:, per_page:)
+        page     = page.to_i.positive? ? page.to_i : 1
+        per_page = per_page.to_i.positive? ? per_page.to_i : 10
+        offset   = (page - 1) * per_page
+        product = find(id)
+
+        if product.brick_id.blank?
+          return PaginatedResult.new([], per_page, page, 0)
+        else
+
+          base_query = Domains::Products::Product
+                      .includes(:company, product_variants: [:media])
+                      .where.not(id: id)
+                      .where(brick_id: product.brick_id)
+
+          total_count = base_query.count
+    
+          name = ActiveRecord::Base.sanitize_sql_like(product.name)
+          quoted_name = ActiveRecord::Base.connection.quote(name)
+
+          records = base_query
+                    .order(
+                      Arel.sql(
+                        <<~SQL
+                          (
+                            CASE
+                              WHEN name ILIKE #{quoted_name} THEN 3
+                              WHEN name ILIKE #{quoted_name} || '%' THEN 2
+                              WHEN name ILIKE '%' || #{quoted_name} || '%' THEN 1
+                              ELSE 0
+                            END
+                          ) DESC
+                        SQL
+                      )
+                    )
+                    .limit(per_page)
+                    .offset(offset)
+                    .map do |rs|
+                      company_name = rs.company.name if rs.company
+                      variant_data = rs.product_variants&.map do |v|
+                          {
+                            "product_variant" => v,
+                            "media" => v.media
+                          }
+                      end
+                      {
+                        product_details: rs,
+                        company_name: company_name,
+                        product_variants: variant_data
+                      }
+                    end
+
+            return PaginatedResult.new(records, per_page, page, total_count)
+          end
+      end
+
+      def self.with_display_data(id)
+        product = includes(:company, product_variants: [:media]).find(id)
+        company = product.company
+        company_name = company.name if company
+        rating_distribution = Domains::Features::Reviewable::Review.rating_distribution_for(product)
+        review_stats = Domains::Features::Reviewable::Review.stats_for(product)
+        scans = Domains::CroupierCore::Scan.where(product_id: product.id).count
+        
+        variant_data = product.product_variants&.map do |v|
+          {
+            "product_variant" => v,
+            "media" => v.media
+          }
+        end
+
+        {
+            product: product,
+            scans: scans,
+            company_name: company_name,
+            company_snapshot: company&.company_snapshot,
+            product_variants: variant_data,
+            rating_distribution: rating_distribution,
+            review_stats: review_stats
+        }
+      end
+
     end
   end
 end
