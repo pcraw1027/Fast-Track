@@ -74,7 +74,6 @@ module Domains
         else
 
           base_query = Domains::Products::Product
-                      .includes(:company, product_variants: [:media])
                       .where.not(id: id)
                       .where(brick_id: product.brick_id)
 
@@ -83,7 +82,7 @@ module Domains
           name = ActiveRecord::Base.sanitize_sql_like(product.name)
           quoted_name = ActiveRecord::Base.connection.quote(name)
 
-          records = base_query
+          products = base_query
                     .order(
                       Arel.sql(
                         <<~SQL
@@ -100,20 +99,21 @@ module Domains
                     )
                     .limit(per_page)
                     .offset(offset)
-                    .map do |rs|
-                      company_name = rs.company.name if rs.company
-                      variant_data = rs.product_variants&.map do |v|
-                          {
-                            "product_variant" => v,
-                            "media" => v.media
-                          }
-                      end
-                      {
-                        product_details: rs,
-                        company_name: company_name,
-                        product_variants: variant_data
-                      }
-                    end
+
+            product_ids = products.map(&:id)
+            product_scan_counts = Domains::CroupierCore::RawQueryModule.get_scan_count(product_ids)
+
+            #load product_variants data
+            product_variants = Domains::CroupierCore::RawQueryModule.unscoped_products_with_assoc("product_id", product_ids)
+
+              
+          records = product_variants.map do |pv|
+              {
+                scan_count: product_scan_counts[pv.product_id] || 0,
+                product_variant: pv,
+                media: pv.media
+              }
+          end      
 
             return PaginatedResult.new(records, per_page, page, total_count)
           end

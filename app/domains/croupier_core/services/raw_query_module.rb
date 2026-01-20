@@ -105,20 +105,10 @@ module Domains
 
           total_count = ActiveRecord::Base.connection.select_value(count_query).to_i
         
-            ids = product_ids.map(&:to_i).join(", ")
+          product_scan_counts = get_scan_count(product_ids)
 
-            scan_counts_query = <<-SQL.squish
-              SELECT product_id, COUNT(*) AS scan_count
-              FROM scans
-              WHERE product_id IN (#{ids})
-              GROUP BY product_id
-            SQL
-
-            scan_counts = ActiveRecord::Base.connection.exec_query(scan_counts_query)
-            product_scan_counts = scan_counts.to_a.to_h { |r| [r["product_id"], r["scan_count"]] }
-
-            #load product_variants data
-            product_variants = unscoped_products_with_assoc("product_id", product_ids)
+          #load product_variants data
+          product_variants = unscoped_products_with_assoc("product_id", product_ids)
               
           records = product_variants.map do |pv|
               {
@@ -241,22 +231,10 @@ module Domains
 
           total_count = ActiveRecord::Base.connection.select_value(count_query).to_i
 
-            product_scan_counts = {}
-            if product_ids.any?
-              scan_counts_query = <<-SQL.squish
-                SELECT product_id, COUNT(*) AS scan_count
-                FROM scans
-                WHERE product_id IN (#{product_ids.join(',')})
-                GROUP BY product_id
-              SQL
+          product_scan_counts = get_scan_count(product_ids)
 
-              scan_counts = ActiveRecord::Base.connection.exec_query(scan_counts_query)
-              product_scan_counts = scan_counts.rows.to_h
-
-            end
-
-            #load product_variants data
-            product_variants = unscoped_products_with_assoc("product_id", product_ids)
+          #load product_variants data
+          product_variants = unscoped_products_with_assoc("product_id", product_ids)
 
               
           records = product_variants.map do |pv|
@@ -268,6 +246,20 @@ module Domains
           end
 
           PaginatedResult.new(records, per_page, page, total_count)
+        end
+
+
+        def self.get_scan_count(product_ids)
+            return {} if product_ids.blank?
+            scan_counts_query = <<-SQL.squish
+              SELECT product_id, COUNT(*) AS scan_count
+              FROM scans
+              WHERE product_id IN (#{product_ids.join(',')})
+              GROUP BY product_id
+            SQL
+
+              scan_counts = ActiveRecord::Base.connection.exec_query(scan_counts_query)
+              scan_counts.rows.to_h
         end
 
         def self.unscoped_products_with_assoc(attribute_key, values)

@@ -104,3 +104,14 @@ end
 #     p e.message
 #   end
 # end
+
+# pits = Domains::CroupierCore::PitRecord.where(capture_status: 5)
+# cnt=0
+# pits.each do |pt|
+#   pv = Domains::Products::ProductVariant.find_by(barcode: pt.barcode)
+#   if pv
+#     pt.update(product_id: pv.product_id)
+#     cnt += 1
+#     p cnt
+#   end
+# end

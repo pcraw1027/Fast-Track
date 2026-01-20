@@ -36,6 +36,9 @@ module Domains
           def lookup_pit_rec(pit)
             temp_dir = Rails.root.join("tmp", "media_ups_item_db_image", Time.now.to_i.to_s)
             FileUtils.mkdir_p(temp_dir)
+            asin = nil
+            p_title = ""
+
             begin
                 pit.update(capture_status: 4)
                 product_data = lookup_upc_item_db(pit.barcode)
@@ -54,7 +57,7 @@ module Domains
                                                                 product_name: product_data[:title])
                     
                     company_id = nil
-                    asin = nil
+                    
                     company = Domains::Companies::Company.find_by(name: product_data[:brand])
                     if company 
                         company_id = company.id
@@ -103,7 +106,18 @@ module Domains
                    end
                 rescue => e
                     puts "Error: #{e.message}"
-                    pit.update(capture_status: 5)
+                      pv = Domains::Products::ProductVariant.find_by(barcode: pit.barcode)
+                      if pv
+                        pit.update(capture_status: 3, asin: asin, product_id: pv.product_id)
+
+                        Domains::CroupierCore::CaptureHistory.create!(
+                            third_party_source: "PUC Item DB", status: 1, 
+                            barcode: pit.barcode, name: p_title
+                        )
+                      else
+                        pit.update(capture_status: 5)
+                      end
+
                 ensure
                     if Dir.exist?(temp_dir)
                         FileUtils.remove_entry_secure(temp_dir)
