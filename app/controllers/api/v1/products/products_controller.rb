@@ -14,7 +14,7 @@ class Api::V1::Products::ProductsController < Api::V1::BaseController
   def alternative_products
     page = params[:page] || 1
     per_page = params[:per_page] || 10
-    per_page = 10 if per_page.to_i > 10
+    per_page = 20 if per_page.to_i > 20
     results = Domains::Products::Product.alternative_products(id: params[:id], page: page, per_page: per_page)
     render json: results, status: :ok
   end
