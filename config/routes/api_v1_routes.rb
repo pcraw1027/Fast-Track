@@ -40,7 +40,7 @@ module ApiV1Routes
           resources :products, only: [:show] do 
             member do
               put :increment_search
-              get :alternative_products
+              get :similar_products
             end
           end
         end

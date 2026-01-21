@@ -63,7 +63,7 @@ module Domains
         false
       end
 
-      def self.alternative_products(id:, page:, per_page:)
+      def self.similar_products(id:, page:, per_page:)
         page     = page.to_i.positive? ? page.to_i : 1
         per_page = per_page.to_i.positive? ? per_page.to_i : 10
         offset   = (page - 1) * per_page
