@@ -83,6 +83,7 @@ alert: @brc_intrf_claims.error.message)
           variants = Domains::Products::ProductVariant.find_by(barcode: @pit_record.barcode)
           if variants
             @product.barcode = variants.barcode
+            variants.media.build
             @product.media = variants.media
           end      
         end

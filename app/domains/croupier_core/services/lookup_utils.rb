@@ -58,9 +58,9 @@ module Domains
                         barcode: pit.barcode,
                         product_id: product.id
                     )
-                    if !product_data[:image_url].blank?
+                    if product_data[:image_url]
                         image_path = process_remote_file(
-                            image_url: image_url, temp_dir: temp_dir)
+                            remote_url: product_data[:image_url], temp_dir: temp_dir)
                         puts "*************  image_path: #{image_path}"
                         if File.exist?(image_path)
                             puts "*************  File Path Exists!!!"
