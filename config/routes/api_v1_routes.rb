@@ -31,6 +31,8 @@ module ApiV1Routes
         namespace :croupier_core, path: "", as: "" do
           get 'my_scans', to: 'scans#my_scans'
           get 'my_uploads', to: 'upload_records#my_uploads'
+          post 'resolve_requested_lookups', to: 'pit_records#resolve_requested_lookups'
+          get 'barcodes_for_lookup', to: 'pit_records#barcodes_for_lookup'
           resources :upload_records, only: [:create]
           resources :scans, only: [:show, :create]
         end

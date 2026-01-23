@@ -15,7 +15,7 @@
 
           <% product_variant.media.each do |media| %>
             <% if media.image? && media.file.present? %>
-              <%= image_tag media.file.url %>
+              <%= image_tag media.file.url, style: "width: 200px; height: 200px;" %>
             <% elsif media.video? && media.file.present? %>
               <video controls>
                 <source src="<%= media.file.url %>" type="video/mp4">
