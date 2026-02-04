@@ -100,6 +100,7 @@ alert: @brc_intrf_claims.error.message)
     @pit_records_unknowns = []
     @pit_records_requested = []
     @pit_records_supervisories = []
+    @pit_records_not_availables = []
     @pit_records_reviews = []
     @pit_records_0s = []
     @pit_records_1s = []
@@ -119,6 +120,9 @@ alert: @brc_intrf_claims.error.message)
         next
       elsif pit.R?
         @pit_records_reviews.push(pit)
+        next
+      elsif pit.N?
+        @pit_records_not_availables.push(pit)
         next
       end
       @pit_records_0s.push(pit) if !pit.product&.level_1_flag || pit.product_id.blank?

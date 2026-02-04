@@ -1,6 +1,7 @@
 module Domains
   module CroupierCore
     module RawQueryModule
+
         def self.my_scan_products(per_page, page, current_user_id)
             per_page = per_page.to_i
             page = page.to_i
@@ -96,7 +97,7 @@ module Domains
           product_ids_query = ActiveRecord::Base.sanitize_sql_array([sql, per_page, offset])
           product_ids = ActiveRecord::Base.connection.select_values(product_ids_query)
 
-          # 2. Total count of unique products with scans
+          #2. Total count of unique products with scans
           count_query = <<-SQL.squish
             SELECT COUNT(DISTINCT scans.product_id)
             FROM scans
@@ -263,36 +264,80 @@ module Domains
         end
 
         def self.unscoped_products_with_assoc(attribute_key, values)
-          order_clause = Arel.sql(
-            "CASE #{values.each_with_index.map do |v, i|
-    "WHEN #{attribute_key} = #{ActiveRecord::Base.connection.quote(v)} THEN #{i}"
-            end.join(' ')} ELSE #{values.length} END"
-          )
+            connection = ActiveRecord::Base.connection
+            qualified_attr = qualified_attribute(attribute_key)
+            quoted_values = values.map { |v| connection.quote(v) }.join(', ')
 
-          Domains::Products::ProductVariant.unscoped
-                                           .includes(:media)
-                                           .left_outer_joins(:media, product: [:company, :reviews])
-                                           .select(
-                                             'product_variants.*',
-                'products.id AS product_id',
-                'products.name AS product_name',
-                'products.description AS product_description',
-                'products.searches AS searches',
-                'products.company_id AS product_company_id',
-                'companies.name AS company_name',
-                'AVG(reviews.rating) AS avrg_rating'
-                                           )
-                                           .where("#{attribute_key}": values)
-                                           .group(
-                                             'products.id',
-                'products.name',
-                'products.description',
-                'products.company_id',
-                'product_variants.id',
-                'companies.name'
-                                           )
-                                           .order(order_clause)
-        end
+            order_clause = Arel.sql(
+              "CASE #{values.each_with_index.map do |v, i|
+                "WHEN #{qualified_attr} = #{connection.quote(v)} THEN #{i}"
+              end.join(' ')} ELSE #{values.length} END"
+            )
+
+            capture_status_sql =
+              if attribute_key.to_s == "barcode"
+                <<~SQL.squish
+                  MAX(
+                    CASE
+                      WHEN pit_records.barcode IN (#{quoted_values})
+                      THEN pit_records.capture_status
+                    END
+                  ) AS capture_status
+                SQL
+              else
+                <<~SQL.squish
+                  MAX(
+                    CASE
+                      WHEN pit_records.product_id IN (#{quoted_values})
+                      THEN pit_records.capture_status
+                    END
+                  ) AS capture_status
+                SQL
+              end
+
+            results = Domains::Products::ProductVariant.unscoped
+                  .includes(:media)
+                  .left_outer_joins(:media, product: [:company, :reviews, :pit_records])
+                  .select(
+                    'product_variants.*',
+                    'products.id AS product_id',
+                    'products.name AS product_name',
+                    'products.description AS product_description',
+                    'products.searches AS searches',
+                    'products.company_id AS product_company_id',
+                    'companies.name AS company_name',
+                    capture_status_sql,
+                    'AVG(reviews.rating) AS avrg_rating'
+                  )
+                  .where(Arel.sql("#{qualified_attr} IN (#{quoted_values})"))
+                  .group(
+                    'products.id',
+                    'products.name',
+                    'products.company_id',
+                    'product_variants.id',
+                    "#{qualified_attr}",
+                    'companies.name'
+                  )
+                  .order(order_clause)
+              results.reject{|rs| [1,3].include?(rs.capture_status)}
+          end
+
+
+
+          def self.qualified_attribute(attribute_key)
+            case attribute_key.to_s
+            when "product_id"
+              "pit_records.product_id"
+            when "barcode"
+              "pit_records.barcode"
+            else
+              raise ArgumentError, "Unsupported attribute_key: #{attribute_key}"
+            end
+          end
+
+      
     end
   end
 end
+
+

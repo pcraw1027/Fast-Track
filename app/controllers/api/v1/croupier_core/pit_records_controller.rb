@@ -17,7 +17,8 @@ class Api::V1::CroupierCore::PitRecordsController < Api::V1::BaseController
     def resolve_requested_lookups
         begin
             Domains::CroupierCore::UpcItemResolveService.call!(
-                product_data_attributes: lookup_params[:attributes]
+                product_data_attributes: lookup_params[:attributes],
+                unfound_barcodes: lookup_params[:unfound_barcodes]
             )
             render json: {message: "Records resolved successfully!"}, status: :ok
          rescue => e
@@ -31,7 +32,8 @@ class Api::V1::CroupierCore::PitRecordsController < Api::V1::BaseController
 
     def lookup_params
         params.require(:product_data).permit(
-                { attributes: [:barcode, :title, :brand, :image_url] }
+                { attributes: [:barcode, :title, :brand, :image_url] },
+                { unfound_barcodes: []}
         )
     end
 

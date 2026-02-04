@@ -6,23 +6,23 @@ class Domains::Products::ProductsController < ApplicationController
   # GET /products or /products.json
   def index
     @products = if params[:q].present?
-                Domains::Products::Product.includes(:company, :segment, :family, :klass, :brick, product_variants: :media)
-                                          .where("name ILIKE ?", "%#{params[:q]}%")
-                                          .paginate(page: params[:page], per_page: 15)
-                                          .order(updated_at: :desc, id: :desc)
+                      Domains::Products::Product.includes(:company, :segment, :family, :klass, :brick, product_variants: :media)
+                          .where("name ILIKE ?", "%#{params[:q]}%")
+                          .paginate(page: params[:page], per_page: 15)
+                          .order(updated_at: :desc, id: :desc)
                 else
-                Domains::Products::Product
-                                      .eager_load(
-                                        :company,
-                                        :segment,
-                                        :family,
-                                        :klass,
-                                        :brick,
-                                        :product_variants,
-                                        product_variants: :media
-                                      )
-                                      .paginate(page: params[:page], per_page: 15)
-                                      .order(Domains::Products::Product::ORDER_BY[params[:order_by]])
+                      Domains::Products::Product
+                          .eager_load(
+                            :company,
+                            :segment,
+                            :family,
+                            :klass,
+                            :brick,
+                            :product_variants,
+                            product_variants: :media
+                          )
+                          .paginate(page: params[:page], per_page: 15)
+                          .order(Domains::Products::Product::ORDER_BY[params[:order_by]])
 
                 end
   end
@@ -47,7 +47,7 @@ class Domains::Products::ProductsController < ApplicationController
     company_name = params[:domains_products_product][:new_company_name]
 
     if error.present?
-      respond_to_invalid_entries(error, product_capture_interface_path(barcode: barcode))
+      respond_to_invalid_entries(error, product_capture_interface_path(barcode: barcode, level: params[:domains_products_product][:level]))
       return
     end
 
@@ -109,7 +109,6 @@ class Domains::Products::ProductsController < ApplicationController
         Domains::Users::ListRoutine.resolve_resource(
           resource_id: @product.id, resource_type: "Domains::Products::Product", barcode: barcode
         )
-
           
         Domains::CroupierCore::UploadRecord.resolve(barcode)
         format.html do

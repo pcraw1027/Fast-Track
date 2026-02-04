@@ -13,10 +13,12 @@ module Domains
 
       self.table_name = "product_variants"
       
+      def has_image?
+        media.exists?
+      end
 
     end
   end
 end
-
 
 

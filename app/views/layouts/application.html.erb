@@ -91,7 +91,7 @@ document.getElementById("google-gimini-btn").addEventListener("click", async fun
     });
 
     const data = await response.json();
-    console.log(data)
+  
     const text =
       data.candidates?.[0]?.content?.parts?.[0]?.text ||
       "No description generated.";

@@ -21,9 +21,11 @@
 <div class="row">
   <div class="col-md-8">
     <div class="form-group">
-      <%= form.label :name %>
-      <%= form.text_field :name, class: "form-control", required: true, id: "product-name" %>
-    </div>
+    <%= form.label :name %>
+    <%= form.text_area :name, class: "form-control", required: true, rows: 2,
+      id: "product-name" %>
+  </div>
+
   </div>
 
   <div class="col-md-4">
@@ -47,7 +49,7 @@
     <%= form.fields_for :media do |mf| %>
       <div class="media-upload">
         <% if mf.object.file.present? %>
-          <%= image_tag mf.object.file.url(:thumb) if mf.object.image? %>
+          <%= image_tag mf.object.file.url(:thumb), style: "width: 150px; height: 150px;" if mf.object.image? %>
    
         <% end %>
 
@@ -78,9 +80,11 @@
       <div class="form-group" >
       
       <button id="google-gimini-btn" class="status-active">
-          <img src="<%= asset_path('google-gemini-new-rainbow-colours.jpg') %>" 
+          
+      <img src="<%= asset_path('google-gemini-new-rainbow-colours.jpg') %>" 
             alt="Ask Google Gemini" width="50%" height="30%"/>
-        </button>
+            
+      </button>
      </div>
     </div>
 

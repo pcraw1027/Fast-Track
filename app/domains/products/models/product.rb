@@ -37,14 +37,19 @@ module Domains
 
       def self.searchable_fields
         %i[name description]
-      end
+      end 
 
       define_search_mappings!
 
       index_name "product_search_index"
 
+      def has_image?
+        product_variants.joins(:media).exists?
+      end
+
+
       def level_1_flag
-        name.present? && description.present? && company_id.present?
+        name.present? && description.present? && company_id.present? && has_image?
       end
 
       def level_2_flag
@@ -148,5 +153,7 @@ module Domains
     end
   end
 end
+
+
 
 

@@ -14,10 +14,10 @@
             class="btn theme-link btn-block text-left m-0 p-0 font-weight-bold collapsed"
                 data-toggle="collapse"
                 data-target="#collapseOne"
-                aria-expanded="<%= params[:level] == '1' ? 'true' : 'false' %>"
+                aria-expanded="<%= ['1', 'r', 's', 'q', 'n', 'u'].include?(params[:level]) ? 'true' : 'false' %>"
                 aria-controls="collapseOne"
                 >
-                Level 1 (Base Data) <%= 'True' if product.level_1_flag %> <%= 'False' if !product.level_1_flag %>
+                Level 1 (Base Data) <%= 'True' if product.level_1_flag && !["N", "R", "S", "Q", "U"].include?(pit_record.capture_status) %> <%= 'False' if !product.level_1_flag || ["N", "R", "S", "Q", "U"].include?(pit_record.capture_status) %>
                 </button>
                 </h5>
                 
@@ -40,7 +40,7 @@
                                     <%= form.select :capture_status,
                                         options_for_select(
                                         [
-                                            ["Status Bank", "Blank"],
+                                            ["Status Blank", "Blank"],
                                             ["Status R", "R"],
                                             ["Status S", "S"],
                                             ["Status U", "U"],
@@ -66,7 +66,7 @@
 
             <div
                 id="collapseOne"
-                class="<%= params[:level] == '1' ? '' : 'collapse' %>"
+                class="<%= ['1', 'r', 's', 'q', 'n', 'u'].include?(params[:level])  ? '' : 'collapse' %>"
                 aria-labelledby="headingOne"
                 data-parent="#accordion"
             >
@@ -87,7 +87,7 @@
                     aria-expanded="<%= params[:level] == '2' ? 'true' : 'false' %>"
                     aria-controls="collapseTwo"
                 >
-                    Level 2 (Product Category) <%= 'True' if product.level_2_flag %> <%= 'False' if !product.level_2_flag %>
+                    Level 2 (Product Category) <%= 'True' if product.level_2_flag && !["N", "R", "S", "Q", "U"].include?(pit_record.capture_status) %> <%= 'False' if !product.level_2_flag || ["N", "R", "S", "Q", "U"].include?(pit_record.capture_status)  %>
                 </button>
                 </h5>
             </div>
@@ -99,7 +99,7 @@
                 data-parent="#accordion"
             >
                 <div class="card-body">
-                    <%if product.level_1_flag %>
+                    <%if product.level_1_flag && !["N", "R", "S", "Q", "U"].include?(pit_record.capture_status)%>
                         <%= render partial: "domains/croupier_core/pit_records/form_level2", locals: {product: product, segments: segments, pit_record: pit_record} %>
                     <%else%>
                         <h5>Level 1 data is required!</h5>
@@ -131,7 +131,7 @@
                 data-parent="#accordion"
             >
                 <div class="card-body">
-                    <%if product.level_1_flag %>
+                    <%if product.level_1_flag && !["N", "R", "S", "Q", "U"].include?(pit_record.capture_status)%>
                         <%= render partial: "domains/croupier_core/pit_records/form_level3", locals: {product: product} %>
                         
                     <%else%>
@@ -165,7 +165,7 @@
                 data-parent="#accordion"
             >
                 <div class="card-body">
-                    <%if product.level_1_flag %>
+                    <%if product.level_1_flag && !["N", "R", "S", "Q", "U"].include?(pit_record.capture_status)%>
                         <%= render partial: "domains/croupier_core/pit_records/form_level4", locals: {product: product} %>
                         
                     <%else%>
@@ -198,7 +198,7 @@
                 data-parent="#accordion"
             >
                 <div class="card-body">
-                    <%if product.level_1_flag %>
+                    <%if product.level_1_flag && !["N", "R", "S", "Q", "U"].include?(pit_record.capture_status)%>
                         <%= render partial: "domains/croupier_core/pit_records/form_level5", locals: {product: product} %>
                         
                     <%else%>

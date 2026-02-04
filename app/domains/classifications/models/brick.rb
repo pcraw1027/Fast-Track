@@ -34,11 +34,11 @@ module Domains
         end
 
         def self.search_by_title(query)
-          search_result = if query.present?
-              Domains::Classifications::Brick.where("title ILIKE ?", "%#{query}%")
-                          else
-              Domains::Classifications::Brick.none
-                          end
+          search_result = []
+          product_cat_id = Domains::Classifications::ProductCategorySource.find_by(code: 'AMZ').id 
+          search_result = Domains::Classifications::Brick.where(product_category_source_id: product_cat_id)
+          
+          search_result = search_result.where("title ILIKE ?", "%#{query}%") if query.present?
 
           klasses = Domains::Classifications::Klass.includes(family: [:segment]).where(id: search_result&.map(&:klass_id))
           klasses_h = klasses&.group_by(&:id)
@@ -65,3 +65,15 @@ module Domains
   end
 end
 
+
+# product_cat_id = Domains::Classifications::ProductCategorySource.find_by(code: 'GPC').id 
+# search_result = Domains::Classifications::Brick.where(product_category_source_id: product_cat_id)
+# products = Domains::Products::Product.where(brick_id: search_result&.map(&:id))
+# products.update_all(
+#       segment_id: nil,
+#       family_id:nil, 
+#       klass_id: nil, 
+#       brick_id:nil
+# )
+
+      

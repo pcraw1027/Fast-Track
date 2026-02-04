@@ -57,8 +57,20 @@ class Api::V1::AppLanding::LandingController < Api::V1::BaseController
     total_scans_monthly = Domains::CroupierCore::Scan.where(created_at: start_date..end_date).count
     total_uploads = Domains::CroupierCore::UploadRecord.count
     total_uploads_monthly = Domains::CroupierCore::UploadRecord.where(created_at: start_date..end_date).count
-    total_products = Domains::Products::Product.count
-    total_products_monthly = Domains::Products::Product.where(created_at: start_date..end_date).count
+    
+    total_products = Domains::Products::Product
+                      .left_outer_joins(:pit_records)
+                      .where.not(pit_records: { capture_status: [1, 3] })
+                      .distinct
+                      .count
+
+    total_products_monthly = Domains::Products::Product
+                                .left_outer_joins(:pit_records)
+                                .where.not(pit_records: { capture_status: [1, 3] })
+                                .where(products: { created_at: start_date..end_date })
+                                .distinct
+                                .count
+
     total_companies = Domains::Companies::Company.count
     total_companies_monthly = Domains::Companies::Company.where(created_at: start_date..end_date).count
     [

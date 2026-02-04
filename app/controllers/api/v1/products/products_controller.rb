@@ -149,6 +149,7 @@ class Api::V1::Products::ProductsController < Api::V1::BaseController
           searches: pv.searches,
           product_company_id: pv.product_company_id,
           company_name: pv.company_name,
+          capture_status: pv.capture_status,
           media: pv.media&.map { |m| { file: m.file&.url } }
       
       }

@@ -1,6 +1,7 @@
   <h3>Product Import Triger (PIT)</h3>
 
   <%= render partial: 'domains/croupier_core/pit_records/tabs', locals: { 
+                                                pit_records_not_availables: @pit_records_not_availables,
                                                 pit_records_unknowns: @pit_records_unknowns,
                                                 pit_records_requested: @pit_records_requested,
                                                 pit_records_reviews: @pit_records_reviews,

@@ -33,7 +33,8 @@ module Domains
                     
                     company_id = nil
                     
-                    company = Domains::Companies::Company.find_by(name: product_data[:brand])
+                    company = Domains::Companies::Company.find_by("LOWER(name) = ?", product_data[:brand].to_s.strip.downcase)
+
                     if company 
                         company_id = company.id
                     else
@@ -75,7 +76,7 @@ module Domains
                     pit.update(capture_status: 3, product_id: product.id, asin: asin)
 
                     Domains::CroupierCore::CaptureHistory.create!(
-                        third_party_source: "PUC Item DB", status: 1, 
+                        third_party_source: "UPC Item DB", status: 1, 
                         barcode: pit.barcode, name: p_title
                     )
 
@@ -87,7 +88,7 @@ module Domains
                         pit.update(capture_status: 3, asin: asin, product_id: pv.product_id)
 
                         Domains::CroupierCore::CaptureHistory.create!(
-                            third_party_source: "PUC Item DB", status: 1, 
+                            third_party_source: "UPC Item DB", status: 1, 
                             barcode: pit.barcode, name: p_title
                         )
                       else

@@ -2,6 +2,9 @@
    
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item">
+            <a class="nav-link theme-link" id="not-availables-tab" data-toggle="tab" href="#not-availables" role="tab" aria-controls="not-availables" aria-selected="true">Status N</a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link theme-link" id="reviews-tab" data-toggle="tab" href="#reviews" role="tab" aria-controls="reviews" aria-selected="true">Status R</a>
         </li>
         <li class="nav-item">
@@ -30,7 +33,13 @@
         </li>
 
     </ul>
+  
+
     <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade" id="not-availables" role="tabpanel" aria-labelledby="not-availables-tab">
+            <%= render partial: "not_available", locals: {pit_records_not_availables: pit_records_not_availables} %>
+        </div>
+
         <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
             <%= render partial: "review", locals: {pit_records_reviews: pit_records_reviews} %>
         </div>

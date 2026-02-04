@@ -6,7 +6,7 @@ module Domains
         self.table_name = "pit_records"
         attr_accessor :name
 
-        enum capture_status: { Blank: 0, S: 1, U: 2, R: 3, Q: 4, N: 5}
+        enum capture_status: { Blank: 0, S: 1, U: 2, R: 3, Q: 4, N: 5 }
 
         CAPTURE_STATUS = {
           "Blank"   => 0,
@@ -21,7 +21,7 @@ module Domains
         has_many :pit_level_users, class_name: "Domains::CroupierCore::PitLevelUser", dependent: :destroy
         default_scope -> { order(product_activity_count: :desc, updated_at: :desc) }
         scope :by_level, ->(pit_level) { includes(product: :company, pit_level_users: :user).where(level: pit_level) }
-        scope :with_products, -> { includes(:product, :pit_level_users) }
+        scope :with_products, -> { includes(:pit_level_users, product: :product_variants) }
         scope :for_lookup, ->(limit = 100) {
                           where.not(capture_status: capture_statuses.values_at(:S, :U, :R, :Q, :N))
                             .where(product_id: nil)
@@ -115,3 +115,5 @@ end
 #     p cnt
 #   end
 # end
+
+#Domains::CroupierCore::PitRecord.where(capture_status: 4).update_all(capture_status: 0)
