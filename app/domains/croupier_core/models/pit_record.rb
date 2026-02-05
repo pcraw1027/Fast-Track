@@ -33,39 +33,55 @@ module Domains
 
         def self.next_pit_record(level)
           pit_record = nil
-          pits = Domains::CroupierCore::PitRecord.with_products
+          page = 1
+          pits = Domains::CroupierCore::PitRecord
+            .includes(:pit_level_users, product: :product_variants)
+            .paginate(page: page, per_page: 20)
+          
+          while pit_record.blank? && pits.exists?
 
-          pits.each do |pit|
-            if pit.S? && level == "s"
-              pit_record = pit
-              break
-            elsif pit.U? && level == "u"
-              pit_record = pit
-              break
-            elsif pit.Q? && level == "q"
-              pit_record = pit
-              break
-            elsif pit.R? && level == "r"
-              pit_record = pit
-              break
-            elsif !pit.product&.level_1_flag && pit.product_id.blank? && level.to_i == 1
-              pit_record = pit
-              break
-            elsif !pit.product&.level_2_flag && pit.product&.level_1_flag && level.to_i == 2
-              pit_record = pit
-              break
-            elsif !pit.product&.level_3_flag && pit.product&.level_1_flag && level.to_i == 3
-              pit_record = pit
-              break
-            elsif !pit.product&.level_4_flag && pit.product&.level_1_flag && level.to_i == 4
+            pits.each do |pit|
+              if pit.S? && level == "s"
                 pit_record = pit
                 break
-            elsif !pit.product&.level_5_flag && pit.product&.level_1_flag && level.to_i == 5
+              elsif pit.U? && level == "u"
                 pit_record = pit
                 break
+              elsif pit.Q? && level == "q"
+                pit_record = pit
+                break
+              elsif pit.R? && level == "r"
+                pit_record = pit
+                break
+              elsif pit.N? && level == "n"
+                pit_record = pit
+                break
+              elsif !pit.product&.level_1_flag && pit.product_id.blank? && level.to_i == 1
+                pit_record = pit
+                break
+              elsif !pit.product&.level_2_flag && pit.product&.level_1_flag && level.to_i == 2
+                pit_record = pit
+                break
+              elsif !pit.product&.level_3_flag && pit.product&.level_1_flag && level.to_i == 3
+                pit_record = pit
+                break
+              elsif !pit.product&.level_4_flag && pit.product&.level_1_flag && level.to_i == 4
+                  pit_record = pit
+                  break
+              elsif !pit.product&.level_5_flag && pit.product&.level_1_flag && level.to_i == 5
+                  pit_record = pit
+                  break
+              end
             end
+
+            page += 1
+            pits = Domains::CroupierCore::PitRecord
+            .includes(:pit_level_users, product: :product_variants)
+            .paginate(page: page, per_page: 20)
           end
+
           pit_record
+          
         end
 
       end

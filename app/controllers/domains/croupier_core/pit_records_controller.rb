@@ -90,13 +90,14 @@ alert: @brc_intrf_claims.error.message)
       else
         @pit_record = Domains::CroupierCore::PitRecord.new
         flash[:message] = "Pit Record with barcode not found"
-      end
-
-    
+      end  
   end
 
+
   def pit_interface
-    pits = Domains::CroupierCore::PitRecord.with_products
+    @pits = Domains::CroupierCore::PitRecord
+      .includes(:pit_level_users, product: :product_variants)
+      .paginate(page: params[:page], per_page: 50)
     @pit_records_unknowns = []
     @pit_records_requested = []
     @pit_records_supervisories = []
@@ -108,7 +109,7 @@ alert: @brc_intrf_claims.error.message)
     @pit_records_3s = []
     @pit_records_4s = []
 
-    pits.each do |pit|
+    @pits.each do |pit|
       if pit.S?
         @pit_records_supervisories.push(pit) 
         next

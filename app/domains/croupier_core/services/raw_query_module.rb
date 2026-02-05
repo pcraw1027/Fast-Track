@@ -319,9 +319,8 @@ module Domains
                     'companies.name'
                   )
                   .order(order_clause)
-              results.reject{|rs| [1,3].include?(rs.capture_status)}
+              results.reject{|rs| rs.capture_status != 0 }
           end
-
 
 
           def self.qualified_attribute(attribute_key)
