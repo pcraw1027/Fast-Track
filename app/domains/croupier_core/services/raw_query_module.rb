@@ -14,7 +14,7 @@ module Domains
                               .where(
                                 "products.name IS NOT NULL AND products.name != '' AND
                                 products.description IS NOT NULL AND products.description != '' AND
-                                products.company_id IS NOT NULL"
+                                products.company_id IS NOT NULL AND media.id IS NOT NULL"
                               )
                               .distinct
                               .order(scans: { created_at: :desc })
@@ -37,7 +37,7 @@ module Domains
                               .where(
                                 "products.name IS NOT NULL AND products.name != '' AND
                                 products.description IS NOT NULL AND products.description != '' AND
-                                products.company_id IS NOT NULL"
+                                products.company_id IS NOT NULL AND media.id IS NOT NULL"
                               )
                               .count("DISTINCT scans.product_id")
 
@@ -78,7 +78,7 @@ module Domains
                               .where(
                                 "products.name IS NOT NULL AND products.name != '' AND
                                 products.description IS NOT NULL AND products.description != '' AND
-                                products.company_id IS NOT NULL"
+                                products.company_id IS NOT NULL AND media.id IS NOT NULL"
                               )
                               .distinct
                               .order(scans: { created_at: :desc })
@@ -94,7 +94,7 @@ module Domains
                         .where(
                           "products.name IS NOT NULL AND products.name != '' AND
                           products.description IS NOT NULL AND products.description != '' AND
-                          products.company_id IS NOT NULL"
+                          products.company_id IS NOT NULL AND media.id IS NOT NULL"
                         )
                         .count("DISTINCT scans.product_id")
         
@@ -128,7 +128,7 @@ module Domains
                               .where(
                                 "products.name IS NOT NULL AND products.name != '' AND
                                 products.description IS NOT NULL AND products.description != '' AND
-                                products.company_id IS NOT NULL"
+                                products.company_id IS NOT NULL AND media.id IS NOT NULL"
                               )
                               .select("scans.product_id AS product_id, COUNT(scans.id) AS scans_count")
                               .group("scans.product_id")
@@ -145,7 +145,7 @@ module Domains
                               .where(
                                 "products.name IS NOT NULL AND products.name != '' AND
                                 products.description IS NOT NULL AND products.description != '' AND
-                                products.company_id IS NOT NULL"
+                                products.company_id IS NOT NULL AND media.id IS NOT NULL"
                               )
                               .count("DISTINCT scans.product_id")
 
@@ -181,37 +181,41 @@ module Domains
 
       
         def self.unscoped_products_with_assoc(attribute_key, values)
-              qualified_attr =
-                case attribute_key.to_s
-                when "product_id" then "pit_records.product_id"
-                when "barcode"    then "pit_records.barcode"
-                else
-                  raise ArgumentError, "Unsupported attribute_key: #{attribute_key}"
-                end
+            qualified_attr =
+              case attribute_key.to_s
+              when "product_id" then "pit_records.product_id"
+              when "barcode"    then "pit_records.barcode"
+              else
+                raise ArgumentError, "Unsupported attribute_key: #{attribute_key}"
+              end
 
-              Domains::Products::ProductVariant.unscoped
-                .includes(:media)
-                .left_joins(product: [:company, :reviews, :pit_records])
-                .where("#{qualified_attr} IN (?)", values)
-                .where(pit_records: { capture_status: 0 })
-                .select(
-                  "product_variants.*",
-                  "products.id AS product_id",
-                  "products.name AS product_name",
-                  "products.description AS product_description",
-                  "products.searches AS searches",
-                  "products.company_id AS product_company_id",
-                  "companies.name AS company_name",
-                  "AVG(reviews.rating) AS avg_rating"
-                )
-                .group(
-                  "product_variants.id",
-                  "products.id",
-                  "companies.id"
-                )
-                .order(Arel.sql("array_position(ARRAY[?]::varchar[], #{qualified_attr})"), values)
+            Domains::Products::ProductVariant.unscoped
+              .joins(:media) 
+              .left_joins(product: [:company, :reviews, :pit_records])
+              .where("#{qualified_attr} IN (?)", values)
+              .where(pit_records: { capture_status: 0 })
+              .where.not(products: { company_id: nil, name: nil, description: nil }) 
+              .select(
+                "product_variants.*",
+                "products.id AS product_id",
+                "products.name AS product_name",
+                "products.description AS product_description",
+                "products.searches AS searches",
+                "products.company_id AS product_company_id",
+                "companies.name AS company_name",
+                "AVG(reviews.rating) AS avg_rating"
+              )
+              .group(
+                "product_variants.id",
+                "products.id",
+                "companies.id"
+              )
+              .order(
+                Arel.sql("array_position(ARRAY[?], #{qualified_attr})"),
+                values
+              )
+          end
 
-            end
       
     end
   end
