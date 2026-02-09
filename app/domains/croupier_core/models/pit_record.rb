@@ -37,13 +37,13 @@ module Domains
                       .where(capture_status: 0)
                       .where.not(products: product_exempt_clause)
                       .distinct
-                      .paginate(page: page, per_page: 3)
+                      .paginate(page: page, per_page: 15)
         end
 
         def self.pit_interface_capture_status_lookup(page, status)
             includes(:pit_level_users, product: [:company, :product_variants])
             where(capture_status: status)
-            .paginate(page: page, per_page: 3)
+            .paginate(page: page, per_page: 15)
         end
 
         def self.next_pit_record(level)
