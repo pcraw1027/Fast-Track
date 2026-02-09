@@ -58,28 +58,25 @@ class Api::V1::AppLanding::LandingController < Api::V1::BaseController
     total_uploads = Domains::CroupierCore::UploadRecord.count
     total_uploads_monthly = Domains::CroupierCore::UploadRecord.where(created_at: start_date..end_date).count
     
-    total_products =  Domains::CroupierCore::PitRecord
-                            .left_joins(product: { product_variants: :media })
-                            .where(capture_status: 0)
-                            .where(
-                               "pit_records.product_id IS NOT NULL AND products.name IS NOT NULL AND products.name != '' AND
-                                products.description IS NOT NULL AND products.description != '' AND
-                                products.company_id IS NOT NULL AND media.id IS NOT NULL"
-                            )
-                            .distinct
-                            .count
+    total_products =  total_products = Domains::CroupierCore::PitRecord
+                                        .joins(product: { product_variants: :media }) # enforce has media
+                                        .where(capture_status: 0)
+                                        .where.not(
+                                          products: { id: nil, name: [nil, ""], description: [nil, ""], company_id: nil }
+                                        )
+                                        .distinct
+                                        .count("pit_records.product_id")
+
 
     total_products_monthly = Domains::CroupierCore::PitRecord
-                            .left_joins(product: { product_variants: :media })
-                            .where(capture_status: 0)
-                            .where(
-                               "pit_records.product_id IS NOT NULL AND products.name IS NOT NULL AND products.name != '' AND
-                                products.description IS NOT NULL AND products.description != '' AND
-                                products.company_id IS NOT NULL AND media.id IS NOT NULL"
-                            )
-                            .where(products: { created_at: start_date..end_date })
-                            .distinct
-                            .count
+                                        .joins(product: { product_variants: :media }) # enforce has media
+                                        .where(capture_status: 0)
+                                        .where.not(
+                                          products: { id: nil, name: [nil, ""], description: [nil, ""], company_id: nil }
+                                          )
+                                        .where(products: { created_at: start_date..end_date })
+                                        .distinct
+                                        .count("pit_records.product_id")
 
     total_companies = Domains::Companies::Company.count
     total_companies_monthly = Domains::Companies::Company.where(created_at: start_date..end_date).count

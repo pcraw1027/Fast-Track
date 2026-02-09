@@ -14,7 +14,7 @@ module Domains
                               .where(
                                 "products.name IS NOT NULL AND products.name != '' AND
                                 products.description IS NOT NULL AND products.description != '' AND
-                                products.company_id IS NOT NULL AND media.id IS NOT NULL"
+                                products.company_id IS NOT NULL"
                               )
                               .distinct
                               .order(scans: { created_at: :desc })
@@ -37,7 +37,7 @@ module Domains
                               .where(
                                 "products.name IS NOT NULL AND products.name != '' AND
                                 products.description IS NOT NULL AND products.description != '' AND
-                                products.company_id IS NOT NULL AND media.id IS NOT NULL"
+                                products.company_id IS NOT NULL"
                               )
                               .count("DISTINCT scans.product_id")
 
@@ -78,7 +78,7 @@ module Domains
                               .where(
                                 "products.name IS NOT NULL AND products.name != '' AND
                                 products.description IS NOT NULL AND products.description != '' AND
-                                products.company_id IS NOT NULL AND media.id IS NOT NULL"
+                                products.company_id IS NOT NULL"
                               )
                               .distinct
                               .order(scans: { created_at: :desc })
@@ -94,7 +94,7 @@ module Domains
                         .where(
                           "products.name IS NOT NULL AND products.name != '' AND
                           products.description IS NOT NULL AND products.description != '' AND
-                          products.company_id IS NOT NULL AND media.id IS NOT NULL"
+                          products.company_id IS NOT NULL"
                         )
                         .count("DISTINCT scans.product_id")
         
@@ -128,7 +128,7 @@ module Domains
                               .where(
                                 "products.name IS NOT NULL AND products.name != '' AND
                                 products.description IS NOT NULL AND products.description != '' AND
-                                products.company_id IS NOT NULL AND media.id IS NOT NULL"
+                                products.company_id IS NOT NULL"
                               )
                               .select("scans.product_id AS product_id, COUNT(scans.id) AS scans_count")
                               .group("scans.product_id")
@@ -145,7 +145,7 @@ module Domains
                               .where(
                                 "products.name IS NOT NULL AND products.name != '' AND
                                 products.description IS NOT NULL AND products.description != '' AND
-                                products.company_id IS NOT NULL AND media.id IS NOT NULL"
+                                products.company_id IS NOT NULL"
                               )
                               .count("DISTINCT scans.product_id")
 
