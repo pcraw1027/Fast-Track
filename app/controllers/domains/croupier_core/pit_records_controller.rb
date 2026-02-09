@@ -92,46 +92,79 @@ alert: @brc_intrf_claims.error.message)
         flash[:message] = "Pit Record with barcode not found"
       end  
   end
+  
+ def pit_records_unknowns
+    pit_records_unknowns = Domains::CroupierCore::PitRecord
+                          .pit_interface_capture_status_lookup(params[:page], 2)
+    render partial: "domains/croupier_core/pit_records/unknown", locals: { pit_records_unknowns: pit_records_unknowns }
+  end
 
+  def pit_records_requested
+    pit_records_requested = Domains::CroupierCore::PitRecord
+            .pit_interface_capture_status_lookup(params[:page], 4)
+
+    render partial: "domains/croupier_core/pit_records/requested", locals: { pit_records_requested: pit_records_requested }
+  end
+
+  def pit_records_supervisories
+    pit_records_supervisories = Domains::CroupierCore::PitRecord
+            .pit_interface_capture_status_lookup(params[:page], 1)
+
+    render partial: "domains/croupier_core/pit_records/supervisor", locals: { pit_records_supervisories: pit_records_supervisories }
+  end
+
+  def pit_records_not_availables
+    pit_records_not_availables = Domains::CroupierCore::PitRecord
+            .pit_interface_capture_status_lookup(params[:page], 5)
+
+    render partial: "domains/croupier_core/pit_records/not_available", locals: { pit_records_not_availables: pit_records_not_availables }
+  end
+
+  def pit_records_reviews
+    pit_records_reviews = Domains::CroupierCore::PitRecord
+            .pit_interface_capture_status_lookup(params[:page], 3)
+    
+    render partial: "domains/croupier_core/pit_records/review", locals: { pit_records_reviews: pit_records_reviews }
+  end
+
+
+  def pit_records_0s
+      pit_records_0s = Domains::CroupierCore::PitRecord
+                        .pit_interface_capture_level_lookup(params[:page], {
+                          name: [nil, ""],
+                          description: [nil, ""],
+                          company_id: nil
+                        })
+    p "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
+    p "pit_records_0s +++++++ #{pit_records_0s.inspect}"
+        render partial: "domains/croupier_core/pit_records/level0", locals: { pit_records_0s: pit_records_0s }
+  end
+
+  def pit_records_1s
+    pit_records_1s = Domains::CroupierCore::PitRecord
+                        .pit_interface_capture_level_lookup(params[:page], {
+                          brick_id: nil,
+                          klass_id: nil,
+                          family_id: nil,
+                          segment_id: nil
+                        })
+
+    render partial: "domains/croupier_core/pit_records/level1", locals: { pit_records_1s: pit_records_1s }
+  end
+
+  def pit_records_2s
+    render partial: "domains/croupier_core/pit_records/level2", locals: { pit_records_2s: [] }
+  end
+
+  def pit_records_3s
+    render partial: "domains/croupier_core/pit_records/level3", locals: { pit_records_3s: [] }
+  end
+
+  def pit_records_4s
+    render partial: "domains/croupier_core/pit_records/level4", locals: { pit_records_4s: [] }
+  end
 
   def pit_interface
-    @pits = Domains::CroupierCore::PitRecord
-      .includes(:pit_level_users, product: :product_variants)
-      .paginate(page: params[:page], per_page: 50)
-    @pit_records_unknowns = []
-    @pit_records_requested = []
-    @pit_records_supervisories = []
-    @pit_records_not_availables = []
-    @pit_records_reviews = []
-    @pit_records_0s = []
-    @pit_records_1s = []
-    @pit_records_2s = []
-    @pit_records_3s = []
-    @pit_records_4s = []
-
-    @pits.each do |pit|
-      if pit.S?
-        @pit_records_supervisories.push(pit) 
-        next
-      elsif pit.U?
-        @pit_records_unknowns.push(pit)
-        next
-      elsif pit.Q?
-        @pit_records_requested.push(pit)
-        next
-      elsif pit.R?
-        @pit_records_reviews.push(pit)
-        next
-      elsif pit.N?
-        @pit_records_not_availables.push(pit)
-        next
-      end
-      @pit_records_0s.push(pit) if !pit.product&.level_1_flag || pit.product_id.blank?
-      @pit_records_1s.push(pit) if !pit.product&.level_2_flag && pit.product&.level_1_flag
-      @pit_records_2s.push(pit) if !pit.product&.level_3_flag && pit.product&.level_1_flag
-      @pit_records_3s.push(pit) if !pit.product&.level_4_flag && pit.product&.level_1_flag
-      @pit_records_4s.push(pit) if !pit.product&.level_5_flag && pit.product&.level_1_flag
-    end
   end
 
   # GET /pit_records/1 or /pit_records/1.json

@@ -21,7 +21,7 @@ module Domains
         has_many :pit_level_users, class_name: "Domains::CroupierCore::PitLevelUser", dependent: :destroy
         default_scope -> { order(product_activity_count: :desc, updated_at: :desc) }
         scope :by_level, ->(pit_level) { includes(product: :company, pit_level_users: :user).where(level: pit_level) }
-        scope :with_products, -> { includes(:pit_level_users, product: :product_variants) }
+  
         scope :for_lookup, ->(limit = 100) {
                           where.not(capture_status: capture_statuses.values_at(:S, :U, :R, :Q, :N))
                             .where(product_id: nil)
@@ -31,12 +31,26 @@ module Domains
 
         validates :barcode, uniqueness: true
 
+        def self.pit_interface_capture_level_lookup(page, product_exempt_clause)
+                      joins(product: { product_variants: :media })
+                      .includes(:pit_level_users, product: [:company, :product_variants])
+                      .where(capture_status: 0)
+                      .where.not(products: product_exempt_clause)
+                      .distinct
+                      .paginate(page: page, per_page: 3)
+        end
+
+        def self.pit_interface_capture_status_lookup(page, status)
+            includes(:pit_level_users, product: [:company, :product_variants])
+            where(capture_status: status)
+            .paginate(page: page, per_page: 3)
+        end
+
         def self.next_pit_record(level)
           pit_record = nil
           page = 1
-          pits = Domains::CroupierCore::PitRecord
-            .includes(:pit_level_users, product: :product_variants)
-            .paginate(page: page, per_page: 20)
+          pits = includes(:pit_level_users, product: [:company, :product_variants])
+                  .paginate(page: page, per_page: 20)
           
           while pit_record.blank? && pits.exists?
 
@@ -75,9 +89,8 @@ module Domains
             end
 
             page += 1
-            pits = Domains::CroupierCore::PitRecord
-            .includes(:pit_level_users, product: :product_variants)
-            .paginate(page: page, per_page: 20)
+            pits = includes(:pit_level_users, product: [:company, :product_variants])
+                    .paginate(page: page, per_page: 20)
           end
 
           pit_record

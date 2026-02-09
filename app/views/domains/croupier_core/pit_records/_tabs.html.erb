@@ -1,26 +1,34 @@
 <div class="container mt-0">
-   
+
+
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item">
-            <a class="nav-link theme-link" id="not-availables-tab" data-toggle="tab" href="#not-availables" role="tab" aria-controls="not-availables" aria-selected="true">Status N</a>
+            <a class="nav-link theme-link" id="not-availables-tab" data-toggle="tab" href="#not-availables" role="tab" 
+            aria-controls="not-availables" aria-selected="true" data-url="<%= pit_records_not_availables_path %>">Status N</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link theme-link" id="reviews-tab" data-toggle="tab" href="#reviews" role="tab" aria-controls="reviews" aria-selected="true">Status R</a>
+            <a class="nav-link theme-link" id="reviews-tab" data-toggle="tab" href="#reviews" role="tab" 
+            aria-controls="reviews" aria-selected="true" data-url="<%= pit_records_reviews_path %>" >Status R</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link theme-link" id="supervisors-tab" data-toggle="tab" href="#supervisors" role="tab" aria-controls="supervisors" aria-selected="true">Status S</a>
+            <a class="nav-link theme-link" id="supervisors-tab" data-toggle="tab" href="#supervisors" role="tab" 
+            aria-controls="supervisors" aria-selected="true" data-url="<%= pit_records_supervisories_path %>" >Status S</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link theme-link" id="unknowns-tab" data-toggle="tab" href="#unknowns" role="tab" aria-controls="unknowns" aria-selected="false">Status U</a>
+            <a class="nav-link theme-link" id="unknowns-tab" data-toggle="tab" href="#unknowns" role="tab" 
+            aria-controls="unknowns" aria-selected="false" data-url="<%= pit_records_unknowns_path %>">Status U</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link theme-link" id="requested-tab" data-toggle="tab" href="#requested" role="tab" aria-controls="requested" aria-selected="false">Status Q</a>
+            <a class="nav-link theme-link" id="requested-tab" data-toggle="tab" href="#requested" role="tab" 
+            aria-controls="requested" aria-selected="false" data-url="<%= pit_records_requested_path %>">Status Q</a>
         </li>
          <li class="nav-item">
-            <a class="nav-link theme-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Level 1</a>
+            <a class="nav-link theme-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" 
+            aria-controls="home" aria-selected="true" data-url="<%= pit_records_0s_path %>">Level 1</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link theme-link" id="attributes-tab" data-toggle="tab" href="#attributes" role="tab" aria-controls="attributes" aria-selected="false">Level 2</a>
+            <a class="nav-link theme-link" id="attributes-tab" data-toggle="tab" href="#attributes" role="tab" 
+            aria-controls="attributes" aria-selected="false" data-url="<%= pit_records_1s_path %>">Level 2</a>
         </li>
         <li class="nav-item">
             <a class="nav-link theme-link" id="relationships-tab" data-toggle="tab" href="#relationships" role="tab" aria-controls="relationships" aria-selected="false">Level 3</a>
@@ -37,39 +45,39 @@
 
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade" id="not-availables" role="tabpanel" aria-labelledby="not-availables-tab">
-            <%= render partial: "not_available", locals: {pit_records_not_availables: pit_records_not_availables} %>
+            <div class="tab-content-body"></div>
         </div>
 
         <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
-            <%= render partial: "review", locals: {pit_records_reviews: pit_records_reviews} %>
+            <div class="tab-content-body"></div>
         </div>
 
         <div class="tab-pane fade" id="supervisors" role="tabpanel" aria-labelledby="supervisors-tab">
-             <%= render partial: "supervisor", locals: {pit_records_supervisories: pit_records_supervisories} %>
+             <div class="tab-content-body"></div>
         </div>
 
         <div class="tab-pane fade" id="unknowns" role="tabpanel" aria-labelledby="unknowns-tab">
-             <%= render partial: "unknown", locals: {pit_records_unknowns: pit_records_unknowns} %>
+             <div class="tab-content-body"></div>
         </div>
 
         <div class="tab-pane fade" id="requested" role="tabpanel" aria-labelledby="requested-tab">
-             <%= render partial: "requested", locals: {pit_records_requested: pit_records_requested} %>
+             <div class="tab-content-body"></div>
         </div>
 
         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-             <%= render partial: "level0", locals: {pit_records_0s: pit_records_0s} %>
+             <div class="tab-content-body"></div>
         </div>
         <div class="tab-pane fade" id="attributes" role="tabpanel" aria-labelledby="attributes-tab">
-             <%= render partial: "level1", locals: {pit_records_1s: pit_records_1s} %>
+            <div class="tab-content-body"></div>
         </div>
         <div class="tab-pane fade" id="relationships" role="tabpanel" aria-labelledby="relationships-tab">
-            <%= render partial: "level2", locals: {pit_records_2s: pit_records_2s} %>
+            <div class="card-header">No data for this PIT level yet</div>
         </div>
         <div class="tab-pane fade" id="contacts" role="tabpanel" aria-labelledby="contacts-tab">
-            <%= render partial: "level3", locals: {pit_records_3s: pit_records_3s} %>
+            <div class="card-header">No data for this PIT level yet</div>
         </div>
         <div class="tab-pane fade" id="ethnicity" role="tabpanel" aria-labelledby="ethnicity-tab">
-            <%= render partial: "level4", locals: {pit_records_4s: pit_records_4s} %>
+           <div class="card-header">No data for this PIT level yet</div>
         </div>
       
     </div>

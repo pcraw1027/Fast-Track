@@ -1,31 +1,5 @@
   <h3>Product Import Triger (PIT)</h3>
 
-  <%= render partial: 'domains/croupier_core/pit_records/tabs', locals: { 
-                                                pit_records_not_availables: @pit_records_not_availables,
-                                                pit_records_unknowns: @pit_records_unknowns,
-                                                pit_records_requested: @pit_records_requested,
-                                                pit_records_reviews: @pit_records_reviews,
-                                                pit_records_supervisories: @pit_records_supervisories,
-                                                pit_records_0s: @pit_records_0s,
-                                                pit_records_1s: @pit_records_1s,
-                                                pit_records_2s: @pit_records_2s,
-                                                pit_records_3s: @pit_records_3s,
-                                                pit_records_4s: @pit_records_4s,
-                                                pit_records_5s: @pit_records_5s}%>
+  <%= render partial: 'domains/croupier_core/pit_records/tabs' %>
 
 
-<br/><br/>
-
-<nav aria-label="Page navigation" class="pagination-form">
-    <%= will_paginate @pits, renderer: BootstrapPagination::Rails,
-      class: 'pagination justify-content-center' %>
-
-        <form method="get" action="/pit_interface">
-
-          <div class="form-group">
-             <input name="page" class="ml-2 jumpto-field" type="number" placeholder="Page #"/>
-             <input class="btn btn-outline-success" type="submit" value="Goto page" />
-          </div>
-
-        </form>
-</nav>

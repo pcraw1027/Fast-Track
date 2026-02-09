@@ -2,7 +2,17 @@ module MonolithRoutes
   def self.extended(router)
     router.instance_exec do
       root to: "domains/home/home#index", controller: 'domains/home/home'
-  
+
+
+      get '/pit_records_unknowns', to: 'domains/croupier_core/pit_records#pit_records_unknowns', controller: 'domains/croupier_core/pit_records'
+      get '/pit_records_requested', to: 'domains/croupier_core/pit_records#pit_records_requested', controller: 'domains/croupier_core/pit_records'
+      get '/pit_records_supervisories', to: 'domains/croupier_core/pit_records#pit_records_supervisories', controller: 'domains/croupier_core/pit_records'
+      get '/pit_records_not_availables', to: 'domains/croupier_core/pit_records#pit_records_not_availables', controller: 'domains/croupier_core/pit_records'
+      get '/pit_records_reviews', to: 'domains/croupier_core/pit_records#pit_records_reviews', controller: 'domains/croupier_core/pit_records'
+      get '/pit_records_0s', to: 'domains/croupier_core/pit_records#pit_records_0s', controller: 'domains/croupier_core/pit_records'
+      get '/pit_records_1s', to: 'domains/croupier_core/pit_records#pit_records_1s', controller: 'domains/croupier_core/pit_records'
+
+
       get '/link_barcode', to: 'domains/croupier_core/upload_records#link_barcode', controller: 'domains/croupier_core/upload_records'
       get '/product_capture_interface', to: 'domains/croupier_core/pit_records#product_capture', controller: 'domains/croupier_core/pit_records'
       get '/company_capture_interface', to: 'domains/croupier_core/cit_records#company_capture', controller: 'domains/croupier_core/cit_records'
