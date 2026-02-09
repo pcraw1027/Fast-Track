@@ -31,14 +31,41 @@ module Domains
 
         validates :barcode, uniqueness: true
 
-        def self.pit_interface_capture_level_lookup(page, product_exempt_clause)
-                      joins(product: { product_variants: :media })
-                      .includes(:pit_level_users, product: [:company, :product_variants])
-                      .where(capture_status: 0)
-                      .where.not(products: product_exempt_clause)
-                      .distinct
-                      .paginate(page: page, per_page: 15)
+        def self.pit_interface_capture_level_1(page)
+          left_joins(product: { product_variants: :media })
+            .where(capture_status: 0)
+            .where(
+              "pit_records.product_id IS NULL
+              OR products.name IS NULL
+              OR products.name = ''
+              OR products.description IS NULL
+              OR products.description = ''
+              OR products.company_id IS NULL
+              OR media.id IS NULL"
+            )
+            .distinct
+            .paginate(page: page, per_page: 15)
         end
+
+        def self.pit_interface_capture_level_2(page)
+          joins(product: { product_variants: :media })
+            .where(capture_status: 0)
+            .where.not(product_id: nil)
+            .where(
+              "products.name IS NOT NULL AND products.name != '' AND
+              products.description IS NOT NULL AND products.description != '' AND
+              products.company_id IS NOT NULL"
+            )
+            .where(
+              "products.segment_id IS NULL OR
+              products.family_id IS NULL OR
+              products.klass_id IS NULL OR
+              products.brick_id IS NULL"
+            )
+            .distinct
+            .paginate(page: page, per_page: 15)
+        end
+
 
         def self.pit_interface_capture_status_lookup(page, status)
             includes(:pit_level_users, product: [:company, :product_variants])

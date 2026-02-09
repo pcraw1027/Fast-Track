@@ -130,17 +130,25 @@ class Api::V1::Products::ProductsController < Api::V1::BaseController
       
     end
 
-    
+    product_hash = Domains::Products::Product
+                    .where(id: product_ids)
+                    .select { |prd| prd.level_1_flag }
+                    .index_by(&:id)
+                    .transform_values { true }
+
+
     product_with_variants = Domains::CroupierCore::RawQueryModule.unscoped_products_with_assoc("product_id", product_ids)
 
     products = product_with_variants.map do |pv|
+
+      return nil unless product_hash[pv.product_id]
 
       descr = if matches["#{product_type}-#{pv.product_id}"]["description"]&.length&.positive?
                   truncate_highlighted(matches["#{product_type}-#{pv.product_id}"]["description"][0])
               else
                   truncate_snippet(pv.product_description)
               end
-
+      
 
       {
         id: pv.product_id,
@@ -149,12 +157,11 @@ class Api::V1::Products::ProductsController < Api::V1::BaseController
           searches: pv.searches,
           product_company_id: pv.product_company_id,
           company_name: pv.company_name,
-          capture_status: pv.capture_status,
           media: pv.media&.map { |m| { file: m.file&.url } }
       
       }
     end
-    { companies: mapped_companies, products: products } 
+    { companies: mapped_companies, products: products.compact! } 
   end
 
 

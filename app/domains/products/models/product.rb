@@ -33,6 +33,20 @@ module Domains
       has_many :pit_records, class_name: "Domains::CroupierCore::PitRecord", dependent: :destroy
       
 
+      scope :level_1_complete, -> {
+        joins(product_variants: :media)
+          .where.not(name: [nil, ""], description: [nil, ""], company_id: nil)
+      }
+
+      scope :level_2_incomplete, -> {
+        where(
+          "segment_id IS NULL
+          OR family_id IS NULL
+          OR klass_id IS NULL
+          OR brick_id IS NULL"
+        )
+      }
+
       #default_scope -> { order(name: :asc) }
 
       def self.searchable_fields

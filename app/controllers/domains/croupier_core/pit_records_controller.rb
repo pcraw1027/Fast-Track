@@ -59,7 +59,7 @@ alert: @brc_intrf_claims.error.message)
     return unless params[:barcode]
 
       @pit_record = Domains::CroupierCore::PitRecord.find_by(barcode: params[:barcode].strip)
-
+    
       if @pit_record
         product_category_sources = Domains::Classifications::ProductCategorySource.all
         product_category_source_id = product_category_sources.find { |p| p.code == 'AMZ' }&.id 
@@ -130,24 +130,14 @@ alert: @brc_intrf_claims.error.message)
 
   def pit_records_0s
       pit_records_0s = Domains::CroupierCore::PitRecord
-                        .pit_interface_capture_level_lookup(params[:page], {
-                          name: [nil, ""],
-                          description: [nil, ""],
-                          company_id: nil
-                        })
-    p "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
-    p "pit_records_0s +++++++ #{pit_records_0s.inspect}"
+                        .pit_interface_capture_level_1(params[:page])
+
         render partial: "domains/croupier_core/pit_records/level0", locals: { pit_records_0s: pit_records_0s }
   end
 
   def pit_records_1s
     pit_records_1s = Domains::CroupierCore::PitRecord
-                        .pit_interface_capture_level_lookup(params[:page], {
-                          brick_id: nil,
-                          klass_id: nil,
-                          family_id: nil,
-                          segment_id: nil
-                        })
+                        .pit_interface_capture_level_2(params[:page])
 
     render partial: "domains/croupier_core/pit_records/level1", locals: { pit_records_1s: pit_records_1s }
   end
