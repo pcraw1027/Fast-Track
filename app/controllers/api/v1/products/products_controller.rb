@@ -152,7 +152,7 @@ class Api::V1::Products::ProductsController < Api::V1::BaseController
       
       }
     end
-    { companies: mapped_companies, products: products.compact! } 
+    { companies: mapped_companies, products: products } 
   end
 
 

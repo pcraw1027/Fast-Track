@@ -9,15 +9,16 @@ module Domains
 
             recent_scan_data = Domains::CroupierCore::Scan
                               .joins(product: { product_variants: :media }) 
-                              .where(product_exists: true, user_id: current_user)
+                              .where(product_exists: true, user_id: current_user_id)
                               .where.not(scans: { product_id: nil })
                               .where(
                                 "products.name IS NOT NULL AND products.name != '' AND
                                 products.description IS NOT NULL AND products.description != '' AND
                                 products.company_id IS NOT NULL"
-                              )
+                                )
+                              .select("scans.*")
                               .distinct
-                              .order(scans: { created_at: :desc })
+                              .order("scans.created_at DESC")
                               .limit(per_page)
                               .offset(offset)
 
@@ -32,14 +33,14 @@ module Domains
             
             total_count = Domains::CroupierCore::Scan
                               .joins(product: { product_variants: :media }) 
-                              .where(product_exists: true, user_id: current_user)
+                              .where(product_exists: true, user_id: current_user_id)
                               .where.not(scans: { product_id: nil })
                               .where(
                                 "products.name IS NOT NULL AND products.name != '' AND
                                 products.description IS NOT NULL AND products.description != '' AND
                                 products.company_id IS NOT NULL"
                               )
-                              .count("DISTINCT scans.product_id")
+                              .count("DISTINCT scans.id")
 
             #scan_map = recent_scans.index_by(&:barcode)
             barcode_hash = {} 
@@ -72,16 +73,16 @@ module Domains
 
           product_ids_query = Domains::CroupierCore::Scan
                               .joins(product: { product_variants: :media }) 
-                              .select("scans.product_id as product_id")
                               .where(product_exists: true)
                               .where.not(scans: { product_id: nil })
                               .where(
                                 "products.name IS NOT NULL AND products.name != '' AND
                                 products.description IS NOT NULL AND products.description != '' AND
                                 products.company_id IS NOT NULL"
-                              )
+                                )
+                              .select("scans.*")
                               .distinct
-                              .order(scans: { created_at: :desc })
+                              .order("scans.created_at DESC")
                               .limit(per_page)
                               .offset(offset)
 
@@ -96,7 +97,7 @@ module Domains
                           products.description IS NOT NULL AND products.description != '' AND
                           products.company_id IS NOT NULL"
                         )
-                        .count("DISTINCT scans.product_id")
+                        .count("DISTINCT scans.id")
         
           product_scan_counts = get_scan_count(product_ids)
 
@@ -121,7 +122,7 @@ module Domains
           offset = (page - 1) * per_page
 
 
-          product_ids_query = Domains::CroupierCore::Scan
+          product_ids_query = Domains::CroupierCore::Scan.unscoped
                               .joins(product: { product_variants: :media })
                               .where(product_exists: true)
                               .where.not(scans: { product_id: nil })
@@ -131,7 +132,7 @@ module Domains
                                 products.company_id IS NOT NULL"
                               )
                               .select("scans.product_id AS product_id, COUNT(scans.id) AS scans_count")
-                              .group("scans.product_id")
+                              .group("scans.product_id, scans.created_at")
                               .order("scans_count DESC")
                              
 
@@ -147,7 +148,7 @@ module Domains
                                 products.description IS NOT NULL AND products.description != '' AND
                                 products.company_id IS NOT NULL"
                               )
-                              .count("DISTINCT scans.product_id")
+                              .count("DISTINCT scans.id")
 
           product_scan_counts = get_scan_count(product_ids)
 
@@ -162,7 +163,7 @@ module Domains
               }
           end
 
-          PaginatedResult.new(records, per_page, page, total_count)
+          PaginatedResult.new(records.sort_by { |rec| -(rec[:scan_count] || 0) }, per_page, page, total_count)
         end
 
 
@@ -188,7 +189,16 @@ module Domains
               else
                 raise ArgumentError, "Unsupported attribute_key: #{attribute_key}"
               end
-
+            
+            array_type =
+                  case attribute_key.to_s
+                  when "product_id" then "bigint[]"
+                  when "barcode"    then "text[]"
+                  end
+            order_sql = ActiveRecord::Base.send(
+                            :sanitize_sql_array,
+                            ["array_position(ARRAY[?]::#{array_type}, #{qualified_attr})", values]
+                          )
             Domains::Products::ProductVariant.unscoped
               .joins(:media) 
               .left_joins(product: [:company, :reviews, :pit_records])
@@ -208,12 +218,11 @@ module Domains
               .group(
                 "product_variants.id",
                 "products.id",
+                "#{qualified_attr}",
                 "companies.id"
               )
-              .order(
-                Arel.sql("array_position(ARRAY[?], #{qualified_attr})"),
-                values
-              )
+              .order(Arel.sql(order_sql))
+              
           end
 
       
