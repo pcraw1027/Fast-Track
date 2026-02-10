@@ -20,6 +20,7 @@ class Api::V1::AppLanding::LandingController < Api::V1::BaseController
   end
 
   def open_activity_stats
+    activity_stats = Domains::CroupierCore::ActivityStats.current_stats
     render json: {
       recent_scans: recent_scan_products(10, 1).records,
       activity_stats: activity_stats
@@ -29,6 +30,7 @@ class Api::V1::AppLanding::LandingController < Api::V1::BaseController
 
   def landing_metrics
     my_scan_products = Domains::CroupierCore::RawQueryModule.my_scan_products(10, 1, current_user.id)
+    activity_stats = Domains::CroupierCore::ActivityStats.current_stats
     render json: {
       my_scans: my_scan_products.records,
         recent_scans: recent_scan_products(10, 1).records,
@@ -49,61 +51,6 @@ class Api::V1::AppLanding::LandingController < Api::V1::BaseController
   def recent_scan_products(per_page, page)
     Domains::CroupierCore::RawQueryModule.recent_scan_products(per_page, page)
   end
-
-  def activity_stats
-    start_date = Time.current.beginning_of_month
-    end_date = Time.current.end_of_month
-    total_scans = Domains::CroupierCore::Scan.count
-    total_scans_monthly = Domains::CroupierCore::Scan.where(created_at: start_date..end_date).count
-    total_uploads = Domains::CroupierCore::UploadRecord.count
-    total_uploads_monthly = Domains::CroupierCore::UploadRecord.where(created_at: start_date..end_date).count
-    
-    total_products =  total_products = Domains::CroupierCore::PitRecord
-                                        .joins(product: { product_variants: :media }) # enforce has media
-                                        .where(capture_status: 0)
-                                        .where.not(
-                                          products: { id: nil, name: [nil, ""], description: [nil, ""], company_id: nil }
-                                        )
-                                        .distinct
-                                        .count("pit_records.product_id")
-
-
-    total_products_monthly = Domains::CroupierCore::PitRecord
-                                        .joins(product: { product_variants: :media }) # enforce has media
-                                        .where(capture_status: 0)
-                                        .where.not(
-                                          products: { id: nil, name: [nil, ""], description: [nil, ""], company_id: nil }
-                                          )
-                                        .where(products: { created_at: start_date..end_date })
-                                        .distinct
-                                        .count("pit_records.product_id")
-
-    total_companies = Domains::Companies::Company.count
-    total_companies_monthly = Domains::Companies::Company.where(created_at: start_date..end_date).count
-    [
-      {
-        type: "scans",
-        currentMonth: total_scans_monthly,
-        overall: total_scans
-      },
-      {
-        type: "uploads",
-        currentMonth: total_uploads_monthly,
-        overall: total_uploads
-      },
-      {
-        type: "products",
-        currentMonth: total_products_monthly,
-        overall: total_products
-      },
-      {
-        type: "companies",
-        currentMonth: total_companies_monthly,
-        overall: total_companies
-      }
-    ]
-  end
-
   
 
 end

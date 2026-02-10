@@ -27,8 +27,6 @@ class Domains::Products::ProductsController < ApplicationController
                 end
   end
 
-
-
   def update_pit_status
     barcode = product_variant_params[:barcode]&.strip
     pit_record = Domains::CroupierCore::PitRecord.find_by(barcode: barcode)

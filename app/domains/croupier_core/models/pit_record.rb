@@ -82,6 +82,8 @@ module Domains
           while pit_record.blank? && pits.exists?
 
             pits.each do |pit|
+              excluded_states = pit.S? || pit.U? || pit.Q? || pit.R? || pit.N?
+
               if pit.S? && level == "s"
                 pit_record = pit
                 break
@@ -97,10 +99,10 @@ module Domains
               elsif pit.N? && level == "n"
                 pit_record = pit
                 break
-              elsif !pit.product&.level_1_flag && pit.product_id.blank? && level.to_i == 1
+              elsif !pit.product&.level_1_flag && pit.product_id.blank? && level.to_i == 1 && !excluded_states
                 pit_record = pit
                 break
-              elsif !pit.product&.level_2_flag && pit.product&.level_1_flag && level.to_i == 2
+              elsif !pit.product&.level_2_flag && pit.product&.level_1_flag && level.to_i == 2 && !excluded_states
                 pit_record = pit
                 break
               elsif !pit.product&.level_3_flag && pit.product&.level_1_flag && level.to_i == 3
