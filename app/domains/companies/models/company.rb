@@ -42,7 +42,7 @@ module Domains
         index_name "company_search_index"
 
         def level_1_flag
-          name.present? && industry_category_type_id.present? #&& !established.blank?
+          name.present? && industry_category_type_id.present? && logo.present?
         end
 
         def level_2_flag

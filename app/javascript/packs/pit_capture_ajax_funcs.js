@@ -33,23 +33,23 @@ document.addEventListener("turbolinks:load", () => {
   if (activeTab) activeTab.click()
 })
 
-document.addEventListener("click", event => {
-  const link = event.target.closest(".pagination a")
-  if (!link) return
+if (window.location.pathname === "/pit_interface") {
+  document.addEventListener("click", event => {
+    const link = event.target.closest(".custom-paginate a");
+    if (!link) return;
 
-  event.preventDefault()
+    event.preventDefault();
 
-  fetch(link.href, {
-    headers: { "X-Requested-With": "XMLHttpRequest" }
-  })
-    .then(res => res.text())
-    .then(html => {
-      link.closest(".tab-content-body").innerHTML = html
+    fetch(link.href, {
+      headers: { "X-Requested-With": "XMLHttpRequest" }
     })
-})
+      .then(res => res.text())
+      .then(html => {
+        link.closest(".tab-content-body").innerHTML = html;
+      });
+  });
 
-
-document.addEventListener("submit", event => {
+  document.addEventListener("submit", event => {
   const form = event.target
   if (!form.matches(".jump-to-form")) return
 
@@ -65,3 +65,8 @@ document.addEventListener("submit", event => {
       form.closest(".tab-content-body").innerHTML = html
     })
 })
+
+
+}
+
+

@@ -101,14 +101,17 @@ class Domains::Products::ProductsController < ApplicationController
         pv.barcode = pv.barcode.strip
         pv.product_id = @product.id
         pv.save!
-        pit_record.update(capture_status: 0)
-        upgrade_pit_to_level_1(@product.id, pit_record&.level, company_id)
-        Domains::CroupierCore::Scan.resolve(barcode, @product.id)
-        Domains::Users::ListRoutine.resolve_resource(
-          resource_id: @product.id, resource_type: "Domains::Products::Product", barcode: barcode
-        )
-          
-        Domains::CroupierCore::UploadRecord.resolve(barcode)
+        
+        if @product.level_1_flag
+          pit_record.update(capture_status: 0)
+          upgrade_pit_to_level_1(@product.id, pit_record&.level, company_id)
+          Domains::CroupierCore::Scan.resolve(barcode, @product.id)
+          Domains::Users::ListRoutine.resolve_resource(
+            resource_id: @product.id, resource_type: "Domains::Products::Product", barcode: barcode
+          )  
+          Domains::CroupierCore::UploadRecord.resolve(barcode)
+        end
+
         format.html do
  redirect_to product_capture_interface_path(barcode: barcode, level: params[:domains_products_product][:level]), 
 notice: "Product successfully added"

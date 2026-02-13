@@ -80,7 +80,7 @@
       remote: true,
       renderer: BootstrapPagination::Rails,
       params: { controller: "domains/croupier_core/pit_records", action: "pit_records_1s" }, 
-      class: 'pagination justify-content-center' %>
+      class: 'pagination justify-content-center custom-paginate' %>
 
         <%= form_with url: pit_records_1s_path,
               method: :get,

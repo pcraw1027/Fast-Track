@@ -47,6 +47,7 @@ module Domains
             .paginate(page: page, per_page: 15)
         end
 
+
         def self.pit_interface_capture_level_2(page)
           joins(product: { product_variants: :media })
             .where(capture_status: 0)
@@ -75,55 +76,41 @@ module Domains
 
         def self.next_pit_record(level)
           pit_record = nil
-          page = 1
-          pits = includes(:pit_level_users, product: [:company, :product_variants])
-                  .paginate(page: page, per_page: 20)
           
-          while pit_record.blank? && pits.exists?
-
-            pits.each do |pit|
-              excluded_states = pit.S? || pit.U? || pit.Q? || pit.R? || pit.N?
-
-              if pit.S? && level == "s"
-                pit_record = pit
-                break
-              elsif pit.U? && level == "u"
-                pit_record = pit
-                break
-              elsif pit.Q? && level == "q"
-                pit_record = pit
-                break
-              elsif pit.R? && level == "r"
-                pit_record = pit
-                break
-              elsif pit.N? && level == "n"
-                pit_record = pit
-                break
-              elsif !pit.product&.level_1_flag && pit.product_id.blank? && level.to_i == 1 && !excluded_states
-                pit_record = pit
-                break
-              elsif !pit.product&.level_2_flag && pit.product&.level_1_flag && level.to_i == 2 && !excluded_states
-                pit_record = pit
-                break
-              elsif !pit.product&.level_3_flag && pit.product&.level_1_flag && level.to_i == 3
-                pit_record = pit
-                break
-              elsif !pit.product&.level_4_flag && pit.product&.level_1_flag && level.to_i == 4
-                  pit_record = pit
-                  break
-              elsif !pit.product&.level_5_flag && pit.product&.level_1_flag && level.to_i == 5
-                  pit_record = pit
-                  break
-              end
-            end
-
-            page += 1
-            pits = includes(:pit_level_users, product: [:company, :product_variants])
-                    .paginate(page: page, per_page: 20)
+          if level == "s"
+            pit_record = pit_by_level_capture(1)
+          elsif level == "u"
+            pit_record = pit_by_level_capture(2)
+          elsif level == "q"
+            pit_record = pit_by_level_capture(4)
+          elsif level == "r"
+            pit_record = pit_by_level_capture(3)
+          elsif level == "n"
+            pit_record = pit_by_level_capture(5)
+          elsif level.to_i == 1 
+            recs = pit_interface_capture_level_1(1)
+            pit_record = recs[0] if recs.any?
+          elsif level.to_i == 2
+            recs = pit_interface_capture_level_2(1)
+            pit_record = recs[0] if recs.any?
           end
 
           pit_record
+
+        end
+
+
+        private
+
+
+        def self.pit_by_level_capture(status)
+          pit_record = nil
+          pits = includes(:pit_level_users, product: [:company, :product_variants])
+              where(capture_status: status)
+              .paginate(page: 1, per_page: 1)
           
+          pit_record = pits[0] if pits.any?
+          pit_record
         end
 
       end
