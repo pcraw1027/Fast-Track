@@ -95,34 +95,34 @@ alert: @brc_intrf_claims.error.message)
   
  def pit_records_unknowns
     pit_records_unknowns = Domains::CroupierCore::PitRecord
-                          .pit_interface_capture_status_lookup(params[:page], 2)
+                          .pit_interface_capture_status_lookup(page: params[:page], per_page: 15, status: 2)
     render partial: "domains/croupier_core/pit_records/unknown", locals: { pit_records_unknowns: pit_records_unknowns }
   end
 
   def pit_records_requested
     pit_records_requested = Domains::CroupierCore::PitRecord
-            .pit_interface_capture_status_lookup(params[:page], 4)
+            .pit_interface_capture_status_lookup(page: params[:page], per_page: 15, status: 4)
 
     render partial: "domains/croupier_core/pit_records/requested", locals: { pit_records_requested: pit_records_requested }
   end
 
   def pit_records_supervisories
     pit_records_supervisories = Domains::CroupierCore::PitRecord
-            .pit_interface_capture_status_lookup(params[:page], 1)
+            .pit_interface_capture_status_lookup(page: params[:page], per_page: 15, status: 1)
 
     render partial: "domains/croupier_core/pit_records/supervisor", locals: { pit_records_supervisories: pit_records_supervisories }
   end
 
   def pit_records_not_availables
     pit_records_not_availables = Domains::CroupierCore::PitRecord
-            .pit_interface_capture_status_lookup(params[:page], 5)
+            .pit_interface_capture_status_lookup(page: params[:page], per_page: 15, status: 5)
 
     render partial: "domains/croupier_core/pit_records/not_available", locals: { pit_records_not_availables: pit_records_not_availables }
   end
 
   def pit_records_reviews
     pit_records_reviews = Domains::CroupierCore::PitRecord
-            .pit_interface_capture_status_lookup(params[:page], 3)
+            .pit_interface_capture_status_lookup(page: params[:page], per_page: 15, status: 3)
     
     render partial: "domains/croupier_core/pit_records/review", locals: { pit_records_reviews: pit_records_reviews }
   end
@@ -130,14 +130,14 @@ alert: @brc_intrf_claims.error.message)
 
   def pit_records_0s
       pit_records_0s = Domains::CroupierCore::PitRecord
-                        .pit_interface_capture_level_1(params[:page])
+                        .pit_interface_capture_level_1(page: params[:page], per_page: 15)
 
         render partial: "domains/croupier_core/pit_records/level0", locals: { pit_records_0s: pit_records_0s }
   end
 
   def pit_records_1s
     pit_records_1s = Domains::CroupierCore::PitRecord
-                        .pit_interface_capture_level_2(params[:page])
+                        .pit_interface_capture_level_2(page: params[:page], per_page: 15)
 
     render partial: "domains/croupier_core/pit_records/level1", locals: { pit_records_1s: pit_records_1s }
   end

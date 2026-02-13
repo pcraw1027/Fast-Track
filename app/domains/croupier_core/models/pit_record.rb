@@ -31,7 +31,7 @@ module Domains
 
         validates :barcode, uniqueness: true
 
-        def self.pit_interface_capture_level_1(page)
+        def self.pit_interface_capture_level_1(page:, per_page:)
           left_joins(product: { product_variants: :media })
             .where(capture_status: 0)
             .where(
@@ -44,11 +44,11 @@ module Domains
               OR media.id IS NULL"
             )
             .distinct
-            .paginate(page: page, per_page: 15)
+            .paginate(page: page, per_page: per_page)
         end
 
 
-        def self.pit_interface_capture_level_2(page)
+        def self.pit_interface_capture_level_2(page:, per_page:)
           joins(product: { product_variants: :media })
             .where(capture_status: 0)
             .where.not(product_id: nil)
@@ -64,53 +64,44 @@ module Domains
               products.brick_id IS NULL"
             )
             .distinct
-            .paginate(page: page, per_page: 15)
+            .paginate(page: page, per_page: per_page)
         end
 
 
-        def self.pit_interface_capture_status_lookup(page, status)
+        def self.pit_interface_capture_status_lookup(page:, per_page:, status:)
             includes(:pit_level_users, product: [:company, :product_variants])
             where(capture_status: status)
-            .paginate(page: page, per_page: 15)
+            .paginate(page: page, per_page: per_page)
         end
 
         def self.next_pit_record(level)
           pit_record = nil
           
           if level == "s"
-            pit_record = pit_by_level_capture(1)
+            recs = pit_interface_capture_status_lookup(page: 1, per_page: 1, status: 1)
+            pit_record = recs[0] if recs.any?
           elsif level == "u"
-            pit_record = pit_by_level_capture(2)
+            recs = pit_interface_capture_status_lookup(page: 1, per_page: 1, status: 2)
+            pit_record = recs[0] if recs.any?
           elsif level == "q"
-            pit_record = pit_by_level_capture(4)
+            recs = pit_interface_capture_status_lookup(page: 1, per_page: 1, status: 4)
+            pit_record = recs[0] if recs.any?
           elsif level == "r"
-            pit_record = pit_by_level_capture(3)
+            recs = pit_interface_capture_status_lookup(page: 1, per_page: 1, status: 3)
+            pit_record = recs[0] if recs.any?
           elsif level == "n"
-            pit_record = pit_by_level_capture(5)
+            recs = pit_interface_capture_status_lookup(page: 1, per_page: 1, status: 5)
+            pit_record = recs[0] if recs.any?
           elsif level.to_i == 1 
-            recs = pit_interface_capture_level_1(1)
+            recs = pit_interface_capture_level_1(page:1, per_page: 1)
             pit_record = recs[0] if recs.any?
           elsif level.to_i == 2
-            recs = pit_interface_capture_level_2(1)
+            recs = pit_interface_capture_level_2(page:1, per_page: 1)
             pit_record = recs[0] if recs.any?
           end
 
           pit_record
 
-        end
-
-
-        private
-
-
-        def self.pit_by_level_capture(status)
-          pit_record = nil
-          pits = includes(:pit_level_users, product: [:company, :product_variants])
-              where(capture_status: status)
-              .paginate(page: 1, per_page: 1)
-          
-          pit_record = pits[0] if pits.any?
-          pit_record
         end
 
       end
