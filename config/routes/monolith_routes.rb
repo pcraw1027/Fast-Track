@@ -3,7 +3,6 @@ module MonolithRoutes
     router.instance_exec do
       root to: "domains/home/home#index", controller: 'domains/home/home'
 
-
       get '/pit_records_unknowns', to: 'domains/croupier_core/pit_records#pit_records_unknowns', controller: 'domains/croupier_core/pit_records'
       get '/pit_records_requested', to: 'domains/croupier_core/pit_records#pit_records_requested', controller: 'domains/croupier_core/pit_records'
       get '/pit_records_supervisories', to: 'domains/croupier_core/pit_records#pit_records_supervisories', controller: 'domains/croupier_core/pit_records'
@@ -12,6 +11,13 @@ module MonolithRoutes
       get '/pit_records_0s', to: 'domains/croupier_core/pit_records#pit_records_0s', controller: 'domains/croupier_core/pit_records'
       get '/pit_records_1s', to: 'domains/croupier_core/pit_records#pit_records_1s', controller: 'domains/croupier_core/pit_records'
 
+      get '/cit_records_unknowns', to: 'domains/croupier_core/cit_records#cit_records_unknowns', controller: 'domains/croupier_core/cit_records'
+      get '/cit_records_requested', to: 'domains/croupier_core/cit_records#cit_records_requested', controller: 'domains/croupier_core/cit_records'
+      get '/cit_records_supervisories', to: 'domains/croupier_core/cit_records#cit_records_supervisories', controller: 'domains/croupier_core/cit_records'
+      get '/cit_records_not_availables', to: 'domains/croupier_core/cit_records#cit_records_not_availables', controller: 'domains/croupier_core/cit_records'
+      get '/cit_records_reviews', to: 'domains/croupier_core/cit_records#cit_records_reviews', controller: 'domains/croupier_core/cit_records'
+      get '/cit_records_0s', to: 'domains/croupier_core/cit_records#cit_records_0s', controller: 'domains/croupier_core/cit_records'
+      get '/cit_records_1s', to: 'domains/croupier_core/cit_records#cit_records_1s', controller: 'domains/croupier_core/cit_records'
 
       get '/link_barcode', to: 'domains/croupier_core/upload_records#link_barcode', controller: 'domains/croupier_core/upload_records'
       get '/product_capture_interface', to: 'domains/croupier_core/pit_records#product_capture', controller: 'domains/croupier_core/pit_records'
@@ -30,6 +36,7 @@ module MonolithRoutes
       get '/bricks_by_title_search', to: 'domains/classifications/bricks#by_title_search', controller: 'domains/classifications/bricks'
       post '/insert_product', to: 'domains/products/products#update_to_level_one', controller: 'domains/products/products'
       put '/update_pit_status', to: 'domains/products/products#update_pit_status', controller: 'domains/products/products'
+      put '/update_cit_status', to: 'domains/companies/companies#update_cit_status', controller: 'domains/companies/companies'
       delete '/destroy_media', to: 'domains/products/product_variants#destroy_media', controller: 'domains/products/product_variants'
       get '/companies_search', to: 'domains/companies/companies#search', controller: 'domains/companies/companies'
       post '/insert_company', to: 'domains/companies/companies#insert_company', controller: 'domains/companies/companies'

@@ -9,13 +9,11 @@ class Domains::Products::ProductVariantsController < ApplicationController
       image_path = Rails.root.join("lib/seeds/prod_images/011111396487.jpg")
       return unless File.exist?(image_path)
 
-                @product_variant.media.create!(
-                  file: File.open(image_path),
-                  media_type: :image,
-                  position: 0
-                )
-      
-    
+      @product_variant.media.create!(
+        file: File.open(image_path),
+        media_type: :image,
+        position: 0
+      )
   end
   
   

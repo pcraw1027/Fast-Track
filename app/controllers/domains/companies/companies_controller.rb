@@ -2,7 +2,7 @@ class Domains::Companies::CompaniesController < ApplicationController
   before_action :set_company, only: %i[ show update destroy ]
   before_action :set_dropdowns, only: %i[ new ]
   before_action :authenticate_user!, 
-only: %i[ new edit update create destroy insert_company update_to_level_two update_to_level_three]
+only: %i[ new edit update create destroy insert_company update_to_level_two update_to_level_three update_cit_status]
 
   # GET /companies or /companies.json
   def index
@@ -14,6 +14,15 @@ only: %i[ new edit update create destroy insert_company update_to_level_two upda
                 Domains::Companies::Company.all.paginate(page: params[:page], per_page: 15).order(created_at: :desc, id: :desc)
                  end
     
+  end
+
+
+  def update_cit_status
+    cit_record = Domains::CroupierCore::CitRecord.find_by(mid: company_params[:mid]&.strip)
+
+    cit_record.update(capture_status: Domains::CroupierCore::CitRecord::CAPTURE_STATUS[params[:domains_companies_company][:capture_status]])
+    redirect_to(company_capture_interface_path(mid: company_params[:mid]&.strip, level: params[:domains_companies_company][:level], filter_by: params[:domains_companies_company][:filter_by]), 
+    notice: "CIT status was successfully updated.")
   end
 
 

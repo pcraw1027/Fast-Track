@@ -8,7 +8,7 @@ import Turbolinks from "turbolinks"
 import * as ActiveStorage from "@rails/activestorage"
 import "channels"
 import "../controllers"
-import "./pit_capture_ajax_funcs"
+import "./pit_cit_capture_ajax_directives"
 
 import $ from "jquery";
 import jQuery from "jquery";

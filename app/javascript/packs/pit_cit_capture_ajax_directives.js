@@ -13,8 +13,15 @@ document.addEventListener("turbolinks:load", () => {
       if (container.dataset.loaded === "true") return
 
       container.innerHTML = "<div class='spinner-border'></div>"
+      const urlObj = new URL(window.location.href);
+      const filter_by = urlObj.searchParams.get("filter_by");
 
-      fetch(url, {
+      let apiUrl = url;
+      if(filter_by){
+          apiUrl += `?filter_by=${filter_by}`
+      }
+
+      fetch(apiUrl, {
         headers: { "X-Requested-With": "XMLHttpRequest" }
       })
         .then(res => res.text())
@@ -33,14 +40,23 @@ document.addEventListener("turbolinks:load", () => {
   if (activeTab) activeTab.click()
 })
 
-if (window.location.pathname === "/pit_interface") {
+if (window.location.pathname === "/pit_interface" || window.location.pathname === "/cit_interface") {
   document.addEventListener("click", event => {
     const link = event.target.closest(".custom-paginate a");
     if (!link) return;
 
     event.preventDefault();
 
-    fetch(link.href, {
+    const url = new URL(window.location.href);
+    const filter_by = url.searchParams.get("filter_by");
+
+   let apiUrl = link.href;
+   if(filter_by){
+      apiUrl += `?filter_by=${filter_by}`
+   }
+
+
+    fetch(apiUrl, {
       headers: { "X-Requested-With": "XMLHttpRequest" }
     })
       .then(res => res.text())

@@ -10,37 +10,9 @@ class Domains::CroupierCore::CitRecordsController < ApplicationController
                                                    )
   end
 
+
   def next_cit_record
-    classify_cit_records
-    cits = case (params[:level].to_i - 1)
-           when 0
-      @cit_records_0s
-           when 1
-      @cit_records_1s
-           when 2
-      @cit_records_2s
-           when 3
-      @cit_records_3s
-           when 4
-      @cit_records_4s
-           else
-      @cit_records_0s
-           end
-
-    cit_record = nil
-
-    if params[:previous_rec_id]
-      index = cits.index { |cit_rec| cit_rec.id == params[:previous_rec_id].to_i }
-      cit_record = if index && cits.length > index + 1
-        cits[index + 1]
-                   elsif index
-        cits[index]
-                   else
-        cits[0]
-                   end
-    else
-      cit_record = cits[0]
-    end
+    cit_record = Domains::CroupierCore::CitRecord.next_cit_record(level: params[:level], filter_by: params[:filter_by])
 
     if cit_record
       redirect_to(company_capture_interface_path(mid: cit_record.mid, level: params[:level], 
@@ -88,11 +60,80 @@ filter_by: params[:filter_by]))
     @company_relationship_types_subsidiaries = filtered
   end
 
-
-
   def cit_interface
-    classify_cit_records
   end
+
+  def cit_records_unknowns
+    cit_records_unknowns = Domains::CroupierCore::CitRecord
+                          .cit_interface_capture_status_lookup(page: params[:page], per_page: 15, status: 2)
+    render partial: "domains/croupier_core/cit_records/unknown", locals: { cit_records_unknowns: cit_records_unknowns }
+  end
+
+  def cit_records_requested
+    cit_records_requested = Domains::CroupierCore::CitRecord
+            .cit_interface_capture_status_lookup(page: params[:page], per_page: 15, status: 4)
+
+    render partial: "domains/croupier_core/cit_records/requested", locals: { cit_records_requested: cit_records_requested }
+  end
+
+  def cit_records_supervisories
+    cit_records_supervisories = Domains::CroupierCore::CitRecord
+            .cit_interface_capture_status_lookup(page: params[:page], per_page: 15, status: 1)
+
+    render partial: "domains/croupier_core/cit_records/supervisor", locals: { cit_records_supervisories: cit_records_supervisories }
+  end
+
+  def cit_records_not_availables
+    cit_records_not_availables = Domains::CroupierCore::CitRecord
+            .cit_interface_capture_status_lookup(page: params[:page], per_page: 3, status: 5)
+
+    render partial: "domains/croupier_core/cit_records/not_available", locals: { cit_records_not_availables: cit_records_not_availables }
+  end
+
+  def cit_records_reviews
+    cit_records_reviews = Domains::CroupierCore::CitRecord
+            .cit_interface_capture_status_lookup(page: params[:page], per_page: 15, status: 3)
+    
+    render partial: "domains/croupier_core/cit_records/review", locals: { cit_records_reviews: cit_records_reviews }
+  end
+
+
+
+  def cit_records_0s
+    cit_records_0s = Domains::CroupierCore::CitRecord
+                      .apply_level_filter(level: 1, page: params[:page], per_page: 3, filter_by: params[:filter_by])
+
+        render partial: "domains/croupier_core/cit_records/level0", locals: { cit_records_0s: cit_records_0s }
+  end
+
+  def cit_records_1s
+     cit_records_1s = Domains::CroupierCore::CitRecord
+                         .apply_level_filter(level: 2, page: params[:page], per_page: 15, filter_by: params[:filter_by])
+
+    render partial: "domains/croupier_core/cit_records/level1", locals: { cit_records_1s: cit_records_1s }
+  end
+
+  def cit_records_2s
+    cit_records_2s = Domains::CroupierCore::CitRecord
+                         .apply_level_filter(level: 3, page: params[:page], per_page: 15, filter_by: params[:filter_by])
+
+    render partial: "domains/croupier_core/cit_records/level2", locals: { cit_records_2s: cit_records_2s }
+  end
+
+  def cit_records_3s
+    cit_records_3s = Domains::CroupierCore::CitRecord
+                         .apply_level_filter(level: 4, page: params[:page], per_page: 15, filter_by: params[:filter_by])
+
+    render partial: "domains/croupier_core/cit_records/level3", locals: { cit_records_3s: cit_records_3s }
+  end
+
+  def cit_records_4s
+    cit_records_4s = Domains::CroupierCore::CitRecord
+                         .apply_level_filter(level: 5, page: params[:page], per_page: 15, filter_by: params[:filter_by])
+
+    render partial: "domains/croupier_core/cit_records/level4", locals: { cit_records_4s: cit_records_4s }
+  end
+
 
   # GET /cit_records/1 or /cit_records/1.json
   def show
@@ -149,42 +190,15 @@ filter_by: params[:filter_by]))
   private
 
 
-  def classify_cit_records
-    cits = case params[:filter_by]
-           when "parent"
-      Domains::CroupierCore::CitRecord.for_parent_companies
-           when "subsidiary"
-      Domains::CroupierCore::CitRecord.for_child_only_companies
-           when "all"
-      Domains::CroupierCore::CitRecord.with_company_and_level_users
-           else
-      Domains::CroupierCore::CitRecord.for_companies_with_products
-           end
-    
-    @cit_records_0s = []
-    @cit_records_1s = []
-    @cit_records_2s = []
-    @cit_records_3s = []
-    @cit_records_4s = []
-
-    cits.each do |cit|
-        @cit_records_0s.push(cit) if !cit.company&.level_1_flag || cit.company_id.blank?
-        @cit_records_1s.push(cit) if !cit.company&.level_2_flag && cit.company&.level_1_flag
-        @cit_records_2s.push(cit) if !cit.company&.level_3_flag && cit.company&.level_1_flag
-        @cit_records_3s.push(cit) if !cit.company&.level_4_flag && cit.company&.level_1_flag
-        @cit_records_4s.push(cit) if !cit.company&.level_5_flag && cit.company&.level_1_flag
-    end
-    
+  # Use callbacks to share common setup or constraints between actions.
+  def set_cit_record
+    @cit_record = Domains::CroupierCore::CitRecord.find(params[:id] || params[:cit_record_id])
   end
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_cit_record
-      @cit_record = Domains::CroupierCore::CitRecord.find(params[:id] || params[:cit_record_id])
-    end
+  # Only allow a list of trusted parameters through.
+  def cit_record_params
+    params.require(:domains_croupier_core_cit_record).permit(:product_activity_count, :mid, :level, 
+    :product_orphan_count, :source, :company_id)
+  end
 
-    # Only allow a list of trusted parameters through.
-    def cit_record_params
-      params.require(:domains_croupier_core_cit_record).permit(:product_activity_count, :mid, :level, 
-      :product_orphan_count, :source, :company_id)
-    end
 end

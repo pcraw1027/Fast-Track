@@ -33,7 +33,7 @@ class Domains::Products::ProductsController < ApplicationController
 
     pit_record.update(capture_status: Domains::CroupierCore::PitRecord::CAPTURE_STATUS[params[:domains_products_product][:capture_status]])
     redirect_to(product_capture_interface_path(barcode: barcode, level: params[:domains_products_product][:level]), 
-    notice: "Product status was successfully updated.")
+    notice: "PIT status was successfully updated.")
   end
   
   def update_to_level_one

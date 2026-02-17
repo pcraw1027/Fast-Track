@@ -30,8 +30,7 @@ module Domains
         p_title  = ""
 
         begin
-          # If resolution is not forced, mark PIT as "in progress"
-          # and fetch product data from UPC Item DB
+          # If not resolving fetch product data from UPC Item DB
           unless to_resolve
             pit.update(capture_status: 4)
             product_data =
