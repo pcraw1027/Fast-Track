@@ -85,7 +85,7 @@ filter_by: params[:filter_by]))
 
   def cit_records_not_availables
     cit_records_not_availables = Domains::CroupierCore::CitRecord
-            .cit_interface_capture_status_lookup(page: params[:page], per_page: 3, status: 5)
+            .cit_interface_capture_status_lookup(page: params[:page], per_page: 15, status: 5)
 
     render partial: "domains/croupier_core/cit_records/not_available", locals: { cit_records_not_availables: cit_records_not_availables }
   end
@@ -101,7 +101,7 @@ filter_by: params[:filter_by]))
 
   def cit_records_0s
     cit_records_0s = Domains::CroupierCore::CitRecord
-                      .apply_level_filter(level: 1, page: params[:page], per_page: 3, filter_by: params[:filter_by])
+                      .apply_level_filter(level: 1, page: params[:page], per_page: 15, filter_by: params[:filter_by])
 
         render partial: "domains/croupier_core/cit_records/level0", locals: { cit_records_0s: cit_records_0s }
   end

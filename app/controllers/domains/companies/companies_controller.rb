@@ -40,13 +40,17 @@ only: %i[ new edit update create destroy insert_company update_to_level_two upda
           mid = company_params[:mid]
           respond_to do |format|
              if @company.save
+              
               if company_params[:mid].blank?
                 mid = Domains::CroupierCore::CitRecord.generate_mid(@company.id)
                 Domains::CroupierCore::CitRecordHandler.update_or_create(nil, mid: mid, source: "Company Import",
                                 user_id: current_user.id, company_id: @company.id, brand: nil)
               end
-              Domains::CroupierCore::Operations::UpgradeCitLevel
-                .call!(mid: mid, company_id: @company.id, user_id: current_user.id, level: 1)
+              if @company.level_1_flag
+                cit_record.update(capture_status: 0)
+                Domains::CroupierCore::Operations::UpgradeCitLevel
+                  .call!(mid: mid, company_id: @company.id, user_id: current_user.id, level: 1)
+              end
               format.html do
                 redirect_to company_capture_interface_path(mid: mid, filter_by: params[:domains_companies_company][:filter_by], level: params[:domains_companies_company][:level]), 
                 notice: "Company was successfully created."
@@ -68,8 +72,10 @@ only: %i[ new edit update create destroy insert_company update_to_level_two upda
     respond_to do |format|
       
         @company.update!(company_params.except(:mid))
-        Domains::CroupierCore::Operations::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, 
-        user_id: current_user.id, level: 2)
+        if @company.level_2_flag
+          Domains::CroupierCore::Operations::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, 
+          user_id: current_user.id, level: 2)
+        end
         format.html do
  redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:domains_companies_company][:filter_by], level: params[:domains_companies_company][:level]), 
 notice: "company was successfully updated."
@@ -91,8 +97,10 @@ alert: e.message
       
         convert_child_params
         convert_parent_params
-        Domains::CroupierCore::Operations::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, 
-user_id: current_user.id, level: 3)
+        if @company.level_3_flag
+          Domains::CroupierCore::Operations::UpgradeCitLevel.call!(mid: company_params[:mid], 
+          company_id: @company.id, user_id: current_user.id, level: 3)
+        end
         format.html do
  redirect_to(company_capture_interface_path(mid: company_params[:mid], filter_by: params[:domains_companies_company][:filter_by], level: params[:domains_companies_company][:level]), 
 notice: "Company was successfully updated.") and return
@@ -114,8 +122,10 @@ alert: e.message
      respond_to do |format|
       
         convert_company_contact_params
+        if @company.level_4_flag
         Domains::CroupierCore::Operations::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, 
-user_id: current_user.id, level: 4)
+              user_id: current_user.id, level: 4)
+        end
         format.html do
  redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:domains_companies_company][:filter_by], level: params[:domains_companies_company][:level]), 
 notice: "Company was successfully updated."
@@ -138,7 +148,7 @@ alert: e.message
       
         @company.update!(company_snapshot_params)
         Domains::CroupierCore::Operations::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: @company.id, 
-user_id: current_user.id, level: 5)
+user_id: current_user.id, level: 5) if @company.level_5_flag
         format.html do
  redirect_to company_capture_interface_path(mid: company_params[:mid], filter_by: params[:domains_companies_company][:filter_by], level: params[:domains_companies_company][:level]), 
 notice: "Company was successfully updated."
@@ -249,16 +259,25 @@ filter_by: params[:filter_by]))
 
             sys_gen_mid = Domains::CroupierCore::CitRecord.generate_mid(company.id)
 
-            Domains::CroupierCore::CitRecordHandler.update_or_create(nil, mid: sys_gen_mid, source: "Company Import", 
+            cit_record = Domains::CroupierCore::CitRecordHandler.update_or_create(nil, mid: sys_gen_mid, source: "Company Import", 
                             user_id: current_user.id, company_id: company.id, brand: nil)
-
-            Domains::CroupierCore::Operations::UpgradeCitLevel.call!(mid: sys_gen_mid, company_id: company.id, 
-                          user_id: current_user.id, level: 1)
+            if company.level_1_flag
+              cit_record.update(capture_status: 0) 
+              Domains::CroupierCore::Operations::UpgradeCitLevel.call!(mid: sys_gen_mid, company_id: company.id, 
+                            user_id: current_user.id, level: 1) 
+            end
 
          else
-            Domains::CroupierCore::Operations::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: company.id, 
-            user_id: current_user.id, level: 1)
+            cit_record = Domains::CroupierCore::CitRecord.find_by(mid: company_params[:mid])
+            if company.level_1_flag
+              cit_record.update(capture_status: 0) if cit_record
+              Domains::CroupierCore::Operations::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: company.id, 
+              user_id: current_user.id, level: 1)
+            end
          end
+         
+         
+                
         
         format.html do
  redirect_to edit_domains_companies_company_path(id: company.id, level: params[:domains_companies_company][:level], filter_by: params[:domains_companies_company][:filter_by]), 

@@ -85,8 +85,10 @@ class Domains::Products::ProductsController < ApplicationController
       @product = variant_exist.product
       variant_exist.update(product_variant_params) if product_variant_params.present?
       if @product.update(serialized_params)
-        pit_record.update(capture_status: 0)
-        upgrade_pit_to_level_1(@product.id, pit_record&.level, company_id)
+        if @product.level_1_flag
+            pit_record.update(capture_status: 0)
+            upgrade_pit_to_level_1(@product.id, pit_record&.level, company_id)
+        end
         redirect_to(product_capture_interface_path(barcode: barcode, level: params[:domains_products_product][:level]), 
         notice: "Product was successfully updated.")
         return
@@ -133,9 +135,9 @@ notice: "Product successfully added"
     barcode = product_variant_params[:barcode]&.strip
     respond_to do |format|
       if @product.update!(product_params)
-        Domains::CroupierCore::PitRecord.find_by(barcode: barcode)
+      
         Domains::CroupierCore::Operations::UpgradePitLevel.call!(barcode: barcode, 
-        product_id: @product.id, asin: nil, user_id: current_user.id, level: 2) 
+        product_id: @product.id, asin: nil, user_id: current_user.id, level: 2) if @product.level_2_flag
         format.html do
  redirect_to product_capture_interface_path(barcode: barcode, level: params[:domains_products_product][:level]), 
 notice: "Product was successfully updated."

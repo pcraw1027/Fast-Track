@@ -2,7 +2,6 @@ module Domains
   module CroupierCore
       class UpcItemDbLookupJob < ApplicationJob
         queue_as :default
-
         def perform
           return if already_ran_today?
           begin
@@ -10,6 +9,7 @@ module Domains
             log "********************************"
             log "Processing UpcItemDbLookup"
             log "********************************"
+            #Domains::CroupierCore::CitLevel1Service.call!(count: 5)
             Domains::CroupierCore::UpcItemDbService.call!(count: 100)
           rescue => e
             log "❌ Error processing UpcItemDbLookup: #{e.message}"
