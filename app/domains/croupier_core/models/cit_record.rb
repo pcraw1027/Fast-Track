@@ -64,31 +64,36 @@ module Domains
         }
 
       scope :level_2, lambda {
-              joins(company: :addresses)
-              .includes(:company)
-              .distinct
-            }
-
-      scope :level_3, lambda {
-              joins(:company)
-                .where(<<~SQL)
-                  EXISTS (
+              level_1
+              .where(<<~SQL)
+                  NOT EXISTS (
                     SELECT 1
-                    FROM parent_relationships
-                    WHERE parent_relationships.company_id = companies.id
-                  )
-                  OR EXISTS (
-                    SELECT 1
-                    FROM child_relationships
-                    WHERE child_relationships.company_id = companies.id
+                    FROM addresses
+                    WHERE addresses.addressable_id = companies.id
                   )
                 SQL
             }
 
+      scope :level_3, lambda {
+              level_1
+              .where(<<~SQL)
+                NOT EXISTS (
+                  SELECT 1
+                  FROM parent_relationships
+                  WHERE parent_relationships.company_id = companies.id
+                )
+                AND NOT EXISTS (
+                  SELECT 1
+                  FROM child_relationships
+                  WHERE child_relationships.company_id = companies.id
+                )
+              SQL
+            }
+
       scope :level_4, lambda {
-              joins(:company)
+              level_1
                 .where(<<~SQL)
-                  EXISTS (
+                  NOT EXISTS (
                     SELECT 1
                     FROM company_contacts
                     WHERE company_contacts.company_id = companies.id
@@ -99,23 +104,22 @@ module Domains
 
 
      scope :level_5, lambda {
-            joins(:company)
-              .where(<<~SQL)
-                EXISTS (
-                  SELECT 1
-                  FROM company_snapshots
-                  WHERE company_snapshots.company_id = companies.id
-                    AND (
-                      company_snapshots.employee_demographics_transparency != 'none'
-                      OR company_snapshots.employee_demographics_performance != 'none'
-                      OR company_snapshots.projected_culture_and_identity != 'none'
-                      OR company_snapshots.mgmt_composition_transparency != 'none'
-                      OR company_snapshots.mgmt_composition_performance != 'none'
-                    )
-                )
-              SQL
+              level_1
+                .where(<<~SQL)
+                  NOT EXISTS (
+                    SELECT 1
+                    FROM company_snapshots
+                    WHERE company_snapshots.company_id = companies.id
+                      AND (
+                        company_snapshots.employee_demographics_transparency != 'none'
+                        OR company_snapshots.employee_demographics_performance != 'none'
+                        OR company_snapshots.projected_culture_and_identity != 'none'
+                        OR company_snapshots.mgmt_composition_transparency != 'none'
+                        OR company_snapshots.mgmt_composition_performance != 'none'
+                      )
+                  )
+                SQL
           }
-
 
       # helper class methods
       def self.cit_interface_capture_level_1(page:, per_page:)
