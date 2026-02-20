@@ -1,6 +1,13 @@
 // app/javascript/packs/tabs.js
 document.addEventListener("turbolinks:load", () => {
-  document.querySelectorAll(".nav-tabs a").forEach(tab => {
+
+  const activeTab = document.querySelector(".nav-tabs a.active")
+  if (activeTab) activeTab.click()
+
+
+  if (window.location.pathname === "/pit_interface" || window.location.pathname === "/cit_interface") {
+
+   document.querySelectorAll(".nav-tabs a").forEach(tab => {
     tab.addEventListener("click", event => {
       const url = tab.dataset.url;
       if (!url) return
@@ -30,17 +37,9 @@ document.addEventListener("turbolinks:load", () => {
           container.dataset.loaded = "true"
         })
     })
-  })
-})
+  });
 
-
-
-document.addEventListener("turbolinks:load", () => {
-  const activeTab = document.querySelector(".nav-tabs a.active")
-  if (activeTab) activeTab.click()
-})
-
-if (window.location.pathname === "/pit_interface" || window.location.pathname === "/cit_interface") {
+  
   document.addEventListener("click", event => {
     const link = event.target.closest(".custom-paginate a");
     if (!link) return;
@@ -82,7 +81,10 @@ if (window.location.pathname === "/pit_interface" || window.location.pathname ==
     })
 })
 
-
 }
+
+
+
+});
 
 
