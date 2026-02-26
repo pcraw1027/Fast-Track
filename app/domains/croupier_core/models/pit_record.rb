@@ -67,7 +67,6 @@ module Domains
             .paginate(page: page, per_page: per_page)
         end
 
-
         def self.pit_interface_capture_status_lookup(page:, per_page:, status:)
             includes(:pit_level_users, product: [:company, :product_variants])
             where(capture_status: status)

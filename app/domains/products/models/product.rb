@@ -82,6 +82,28 @@ module Domains
         false
       end
 
+      def self.products_cit_capture_level_1(page:, per_page:)
+            joins(company: :cit_records)
+            .where.not(company_id: nil)
+            .where.not(segment_id: nil)
+            .where.not(family_id: nil)
+            .where.not(klass_id: nil)
+            .where.not(brick_id: nil)
+            .where(cit_records: { capture_status: 0 })
+            .where("companies.name IS NOT NULL AND companies.name != ''")
+            .where(
+              "companies.industry_category_type_id IS NULL OR
+              companies.logo IS NULL OR
+              companies.website IS NULL OR
+              companies.established IS NULL OR
+              companies.black_owned IS NULL OR
+              companies.female_owned IS NULL"
+            )
+            .includes(:brick, company: :cit_records )
+            .distinct
+            .paginate(page: page, per_page: per_page)
+      end
+
       def self.similar_products(id:, page:, per_page:)
         page     = page.to_i.positive? ? page.to_i : 1
         per_page = per_page.to_i.positive? ? per_page.to_i : 10

@@ -88,6 +88,7 @@ class Domains::Products::ProductsController < ApplicationController
         if @product.level_1_flag
             pit_record.update(capture_status: 0)
             upgrade_pit_to_level_1(@product.id, pit_record&.level, company_id)
+            Domains::Users::PushNotifyJob.perform_later(@product.id)
         end
         redirect_to(product_capture_interface_path(barcode: barcode, level: params[:domains_products_product][:level]), 
         notice: "Product was successfully updated.")
@@ -112,6 +113,7 @@ class Domains::Products::ProductsController < ApplicationController
             resource_id: @product.id, resource_type: "Domains::Products::Product", barcode: barcode
           )  
           Domains::CroupierCore::UploadRecord.resolve(barcode)
+          Domains::Users::PushNotifyJob.perform_later(@product.id)
         end
 
         format.html do
@@ -136,8 +138,11 @@ notice: "Product successfully added"
     respond_to do |format|
       if @product.update!(product_params)
       
-        Domains::CroupierCore::Operations::UpgradePitLevel.call!(barcode: barcode, 
-        product_id: @product.id, asin: nil, user_id: current_user.id, level: 2) if @product.level_2_flag
+        if @product.level_2_flag
+          Domains::CroupierCore::Operations::UpgradePitLevel.call!(barcode: barcode, 
+                                        product_id: @product.id, asin: nil, user_id: current_user.id, level: 2) 
+          Domains::Users::PushNotifyJob.perform_later(@product.id)
+        end
         format.html do
  redirect_to product_capture_interface_path(barcode: barcode, level: params[:domains_products_product][:level]), 
 notice: "Product was successfully updated."

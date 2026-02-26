@@ -8,7 +8,7 @@ module Domains
 
 
       # Ensures temporary files are always cleaned up.
-      def self.resolve_records(cit:, company:)
+      def self.resolve_records(cit:, company:, brick:)
 
         # Temporary directory for image downloads
         temp_dir = Rails.root.join(
@@ -21,7 +21,7 @@ module Domains
         begin
            company_data =
               Domains::CroupierCore::GoogleGeminiCitLookup
-                .generate_company_data(company_name: company.name)
+                .generate_company_data(company_name: company.name, brick_title: brick.title)
 
           # If no product data is found, mark cIT as failed
           if company_data.nil? || company_data["naics"].blank?
@@ -31,7 +31,6 @@ module Domains
             # Log retrieved metadata
             puts "company data found:"
             puts "#{company_data.inspect}"
-
             
             ind = Domains::Companies::IndustryCategoryType.find_by(category_code: company_data["naics"])
             company.industry_category_type_id = ind.id if ind

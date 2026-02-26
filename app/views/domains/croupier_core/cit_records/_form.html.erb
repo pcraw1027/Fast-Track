@@ -45,8 +45,30 @@
 <%= form.label :product_orphan_count %>
     <%= form.number_field :product_orphan_count, class: "form-control" %>
   </div>
+</div>
 
+<div class="form-row">
 
+        <div class="form-group col-md-6" style: "height: 40px; margin-top: 30px">
+                                <%= form.label :capture_status %>
+                                <%= form.select :capture_status,
+                                    options_for_select(
+                                    [
+                                        ["Status Blank", "Blank"],
+                                        ["Status R", "R"],
+                                        ["Status S", "S"],
+                                        ["Status U", "U"],
+                                        ["Status Q", "Q"],
+                                        ["Status N", "N"]
+                                    ],
+                                    cit_record.capture_status
+                                    ),
+                                    {},
+                                    class: "form-control"
+                                %>
+                            </div>
+
+</div>
 
 
   <div class="actions">

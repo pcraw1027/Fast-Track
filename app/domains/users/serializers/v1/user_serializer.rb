@@ -6,7 +6,7 @@ module Domains
 
         attributes :id, :email, :username, :country, :invite_code, :postal_code, :role,
                    :status, :photo, :avatar, :first_name, :last_name, :app_notify_on, 
-                   :email_notify_on, :scan_to_list_mode
+                   :email_notify_on, :scan_to_list_mode, :notification_settings, :device_token
       end
     end
   end

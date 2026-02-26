@@ -27,14 +27,51 @@ status: :ok
     current_user.update(scan_to_list_mode: false)
     render json: { user: current_user, message: "successfully turned off scan to list mode" }, status: :ok
   end
+
+  def update_notification_settings
+    permitted = notification_settings_params.to_h
+
+    merged_settings = current_user.notification_settings.deep_merge(permitted)
+
+    if current_user.update(notification_settings: merged_settings)
+      render json: {
+        success: true,
+        notification_settings: current_user.notification_settings
+      }
+    else
+      render json: {
+        success: false,
+        errors: current_user.errors.full_messages
+      }, status: :unprocessable_entity
+    end
+  end
   
 
   private
 
 
   def user_params
-    params.require(:user).permit(:username, :first_name, :last_name, :app_notify_on, 
+    params.require(:user).permit(:username, :first_name, :last_name, :app_notify_on, :device_token,
                                   :email_notify_on, :country, :postal_code, :scan_to_list_mode)
+  end
+
+   def notification_settings_params
+        params.require(:notification_settings).permit(
+          :allow_notifications,
+          :allow_push,
+          :allow_email,
+          frequency: [
+            :croupier_recommended,
+            :individual,
+            :weekly
+          ],
+          notification_types: [
+            :scanned_available_product,
+            :new_alternative_product,
+            :snapshot_update,
+            :useful_ratings_reviews
+          ]
+        )
   end
 
 

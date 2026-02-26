@@ -198,7 +198,7 @@ filter_by: params[:filter_by]))
   # Only allow a list of trusted parameters through.
   def cit_record_params
     params.require(:domains_croupier_core_cit_record).permit(:product_activity_count, :mid, :level, 
-    :product_orphan_count, :source, :company_id)
+    :product_orphan_count, :source, :company_id, :capture_status)
   end
 
 end

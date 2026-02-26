@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_02_14_122404) do
+ActiveRecord::Schema.define(version: 2026_02_24_061728) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -567,7 +567,10 @@ ActiveRecord::Schema.define(version: 2026_02_14_122404) do
     t.boolean "app_notify_on", default: true, null: false
     t.boolean "email_notify_on", default: true, null: false
     t.boolean "scan_to_list_mode", default: false, null: false
+    t.string "device_token"
+    t.jsonb "notification_settings", default: {"frequency" => {"weekly" => false, "individual" => false, "croupier_recommended" => true}, "allow_push" => false, "allow_email" => false, "notification_types" => {"snapshot_update" => false, "useful_ratings_reviews" => false, "new_alternative_product" => false, "scanned_available_product" => true}, "allow_notifications" => false}, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["notification_settings"], name: "index_users_on_notification_settings", opclass: :jsonb_path_ops, using: :gin
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["username"], name: "index_users_on_username", unique: true
   end

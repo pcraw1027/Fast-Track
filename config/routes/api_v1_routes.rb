@@ -74,6 +74,7 @@ module ApiV1Routes
 
         namespace :users, path: "", as: "" do
           put 'update_profile', to: 'users#update' 
+          put 'update_notification_settings', to: 'users#update_notification_settings' 
           put 'turn_on_scan_to_list_mode', to: 'users#turn_on_scan_to_list_mode'
           put 'turn_off_scan_to_list_mode', to: 'users#turn_off_scan_to_list_mode'          
           get 'get_user_default_list', to: 'users#get_user_default_list'  

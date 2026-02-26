@@ -17,32 +17,48 @@ module Domains
       # - Handles rate limiting and logs errors
       def call(count:)
         # Step 1: Fetch CitRecords ready for UPC lookup
-        cit_recs = Domains::CroupierCore::CitRecord.cit_interface_capture_level_1(page: 1, per_page: count)
-
+        #cit_recs = Domains::CroupierCore::CitRecord.cit_interface_capture_level_1(page: 1, per_page: count)
+        level2_products = Domains::Products::Product.products_cit_capture_level_1(page: 1, per_page: count)
         # Step 2: Iterate over each citRecord
-        cit_recs.each_with_index do |cit, index|
-          begin
-            # Attempt to resolve product data for the current citRecord
-            Domains::CroupierCore::CitLookupUtils.resolve_records(cit: cit, company: cit.company)
+        level2_products.each_with_index do |product, index|
 
-          # Step 3: Handle API rate limiting from UPC Item DB
-          rescue Faraday::TooManyRequestsError, Net::HTTPTooManyRequests => e
-            Rails.logger.warn "UPCitemDB rate limited. Waiting before retry..."
-            
-            sleep 30   # wait 30 seconds before retrying
-            retry      # retry the same citRecord after wait
+          p "%%%%%%%%%%%%%%%%%%%%%%"
+          p product.name
+          p product.brick.title
+          p "%%%%%%%%%%%%%%%%%%%%%%"
 
-          # Step 4: Catch all other errors for logging
-          rescue StandardError => e
-            Rails.logger.error "Lookup failed for citRecord #{cit.id}: #{e.message}"
+          cit_recs = product.company.cit_records
+
+          cit_recs.each do |cit|
+                begin
+                # Attempt to resolve product data for the currenproductRecord
+
+                Domains::CroupierCore::CitLookupUtils.resolve_records(cit: cit, company: product.company, brick: product.brick)
+
+                # Step 3: Handle API rate limiting from UPC Item DB
+                rescue Faraday::TooManyRequestsError, Net::HTTPTooManyRequests => e
+                  Rails.logger.warn "UPCitemDB rate limited. Waiting before retry..."
+                  
+                  sleep 30   # wait 30 seconds before retrying
+                  retry      # retry the same citRecord after wait
+
+                # Step 4: Catch all other errors for logging
+                rescue StandardError => e
+                  Rails.logger.error "Lookup failed for citRecord #{cit.id}: #{e.message}"
+                end
           end
+
+          
 
           # Step 5: Introduce delay between requests to avoid hitting rate limits
           # Skip delay after the last record
-          unless index == cit_recs.size - 1
+          unless index == level2_products.size - 1
             sleep 15   # roughly 4 requests per minute
           end
+
         end
+
+
       end         
 
     end

@@ -8,7 +8,7 @@ module Domains
     module GoogleGeminiCitLookup
 
       
-      def self.generate_company_data(company_name:)
+      def self.generate_company_data(company_name:, brick_title:)
         raise ArgumentError, "Company name required" if company_name.blank?
         # Step 1: Specify the AI model to use
         model = 'gemini-2.5-flash'
@@ -24,23 +24,25 @@ module Domains
         # Step 4: Prepare the prompt for the AI
         # - Instructs the model to generate a single, concise paragraph description
         prompt = <<~PROMPT.strip
-            Return structured company data as valid JSON only.
+            Return structured company data as valid JSON data. 
+            Provide company details including official website domain and verified logo URL. Only return real, accessible URLs.
 
             Company Name: #{company_name}
+            #{brick_title} manufacturer
 
-            Required JSON format:
+            Required JSON format: 
 
             {
-            "naics": "6 digit string",
-            "website": "string",
-            "year_established": "4 digit string",
-            "logo_url": "string",
-            "address": "string",
-            "parent_company": "string",
-            "brands": "brand1 // brand2",
-            "ceo": "First Middle Last // Title",
-            "black_owned": "Yes or No",
-            "woman_owned": "Yes or No"
+              "naics": "6-digit NAICS code as string",
+              "website": "string",
+              "year_established": "4 digit string",
+              "logo_url": "string",
+              "address": "string",
+              "parent_company": "string",
+              "brands": "brand1 // brand2",
+              "ceo": "First Middle Last // Title",
+              "black_owned": "Yes or No",
+              "woman_owned": "Yes or No"
             }
 
             Rules:
