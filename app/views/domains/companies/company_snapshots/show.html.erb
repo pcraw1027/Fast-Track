@@ -29,6 +29,18 @@
   <%= @company_snapshot.mgmt_composition_performance %>
 </p>
 
+
+<p>
+  <strong>Created at:</strong>
+  <%= @company_snapshot.created_at %>
+  </p>
+
+  <p>
+  <strong>Updated at:</strong>
+  <%= @company_snapshot.updated_at %>
+  </p>
+
+
 <%= link_to 'Edit', edit_domains_companies_company_snapshot_path(@company_snapshot) %> |
 <%= link_to 'Back', domains_companies_company_snapshots_path %>
 

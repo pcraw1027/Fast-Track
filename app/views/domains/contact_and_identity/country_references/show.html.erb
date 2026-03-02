@@ -10,5 +10,15 @@
   <%= @country_reference.country %>
 </p>
 
+<p>
+  <strong>Created at:</strong>
+  <%= @country_reference.created_at %>
+  </p>
+
+  <p>
+  <strong>Updated at:</strong>
+  <%= @country_reference.updated_at %>
+  </p>  
+
 <%= link_to 'Edit', edit_domains_contact_and_identity_country_reference_path(@country_reference) %> |
 <%= link_to 'Back', domains_contact_and_identity_country_references_path %>

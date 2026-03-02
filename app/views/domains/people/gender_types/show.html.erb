@@ -10,5 +10,15 @@
   <%= @gender_type.definition %>
 </p>
 
+<p>
+  <strong>Created at:</strong>
+  <%= @gender_type.created_at %>
+  </p>
+
+  <p>
+  <strong>Updated at:</strong>
+  <%= @gender_type.updated_at %>
+  </p>  
+
 <%= link_to 'Edit', edit_domains_people_gender_type_path(@gender_type) %> |
 <%= link_to 'Back', domains_people_gender_types_path %>

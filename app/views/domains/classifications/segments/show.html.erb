@@ -21,5 +21,15 @@
   <%= @segment.product_category_source.description %>
 </p>
 
+<p>
+  <strong>Created at:</strong>
+  <%= @segment.created_at %>
+  </p>
+
+  <p>
+  <strong>Updated at:</strong>
+  <%= @segment.updated_at %>
+  </p>  
+
 <%= link_to 'Edit', edit_domains_classifications_segment_path(@segment) %> |
 <%= link_to 'Back', domains_classifications_segments_path %>

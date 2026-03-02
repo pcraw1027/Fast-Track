@@ -36,6 +36,9 @@ module Domains
 
         # Step 5: Build the request payload in JSON format
         payload = {
+          generationConfig: {
+            temperature: 0.0
+          },
           contents: [
             {
               parts: [{ text: prompt }]

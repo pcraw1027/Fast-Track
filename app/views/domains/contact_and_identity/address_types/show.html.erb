@@ -10,5 +10,15 @@
   <%= @address_type.is_person_address %>
 </p>
 
+<p>
+  <strong>Created at:</strong>
+  <%= @address_type.created_at %>
+  </p>
+
+  <p>
+  <strong>Updated at:</strong>
+  <%= @address_type.updated_at %>
+  </p>  
+
 <%= link_to 'Edit', edit_domains_contact_and_identity_address_type_path(@address_type) %> |
 <%= link_to 'Back', domains_contact_and_identity_address_types_path %>

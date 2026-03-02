@@ -10,5 +10,15 @@
   <%= @product_category_source.description %>
 </p>
 
+<p>
+  <strong>Created at:</strong>
+  <%= @product_category_source.created_at %>
+  </p>
+
+  <p>
+  <strong>Updated at:</strong>
+  <%= @product_category_source.updated_at %>
+  </p>
+
 <%= link_to 'Edit', edit_domains_classifications_product_category_source_path(@product_category_source) %> |
 <%= link_to 'Back', domains_classifications_product_category_sources_path %>

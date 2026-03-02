@@ -15,5 +15,15 @@
   <%= @person_social_site.social_site&.site %>
 </p>
 
+<p>
+  <strong>Created at:</strong>
+  <%= @person_social_site.created_at %>
+  </p>
+
+  <p>
+  <strong>Updated at:</strong>
+  <%= @person_social_site.updated_at %>
+  </p>  
+
 <%= link_to 'Edit', edit_domains_socials_person_social_site_path(@person_social_site) %> |
 <%= link_to 'Back', domains_socials_person_social_sites_path %>

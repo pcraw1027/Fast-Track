@@ -27,5 +27,15 @@
   <%= @family.product_category_source.description %>
 </p>
 
+<p>
+  <strong>Created at:</strong>
+  <%= @family.created_at %>
+  </p>
+
+  <p>
+  <strong>Updated at:</strong>
+  <%= @family.updated_at %>
+  </p>  
+
 <%= link_to 'Edit', edit_domains_classifications_family_path(@family) %> |
 <%= link_to 'Back', domains_classifications_families_path %>

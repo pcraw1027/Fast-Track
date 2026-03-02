@@ -27,5 +27,15 @@
   <%= @klass.product_category_source.description %>
 </p>
 
+<p>
+  <strong>Created at:</strong>
+  <%= @klass.created_at %>
+  </p>
+
+  <p>
+  <strong>Updated at:</strong>
+  <%= @klass.updated_at %>
+  </p>  
+
 <%= link_to 'Edit', edit_domains_classifications_klass_path(@klass) %> |
 <%= link_to 'Back', domains_classifications_klasses_path %>

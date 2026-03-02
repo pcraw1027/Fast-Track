@@ -39,5 +39,15 @@
   <%= @address.country_reference_id %>
 </p>
 
+<p>
+  <strong>Created at:</strong>
+  <%= @address.created_at %>
+  </p>
+
+  <p>
+  <strong>Updated at:</strong>
+  <%= @address.updated_at %>
+  </p>  
+
 <%= link_to 'Edit', edit_domains_contact_and_identity_address_path(@address) %> |
 <%= link_to 'Back', domains_contact_and_identity_addresses_path %>

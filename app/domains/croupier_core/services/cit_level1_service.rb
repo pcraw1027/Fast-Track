@@ -21,6 +21,7 @@ module Domains
         level2_products = Domains::Products::Product.products_cit_capture_level_1(page: 1, per_page: count)
         # Step 2: Iterate over each citRecord
         level2_products.each_with_index do |product, index|
+          next if product.company.level_1_flag
 
           p "%%%%%%%%%%%%%%%%%%%%%%"
           p product.name
@@ -32,7 +33,7 @@ module Domains
           cit_recs.each do |cit|
                 begin
                 # Attempt to resolve product data for the currenproductRecord
-
+                
                 Domains::CroupierCore::CitLookupUtils.resolve_records(cit: cit, company: product.company, brick: product.brick)
 
                 # Step 3: Handle API rate limiting from UPC Item DB

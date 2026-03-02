@@ -10,5 +10,16 @@
   <%= @company_relationship_type.definition %>
 </p>
 
+<p>
+  <strong>Created at:</strong>
+  <%= @company_relationship_type.created_at %>
+  </p>
+
+  <p>
+  <strong>Updated at:</strong>
+  <%= @company_relationship_type.updated_at %>
+  </p>
+
+
 <%= link_to 'Edit', edit_domains_companies_company_relationship_type_path(@company_relationship_type) %> |
 <%= link_to 'Back', domains_companies_company_relationship_types_path %>

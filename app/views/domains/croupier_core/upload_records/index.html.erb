@@ -21,7 +21,7 @@
         <td><%= upload_record.scan.barcode if upload_record.scan %></td>
         <td><%= upload_record.user.username if upload_record.user %></td>
         <td><%= upload_record.resolve_status %></td>
-        <td><%= upload_record.date %></td>
+        <td><%= upload_record.date.strftime("%m/%d/%Y") %></td>
         <td><%= upload_record.barcode %></td>
         <td><%= upload_record.product_name %></td>
         <td><%= upload_record.company_name %></td>

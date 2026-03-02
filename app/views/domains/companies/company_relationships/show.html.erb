@@ -15,5 +15,15 @@
   <%= @company_relationship.child_company.name %>
 </p>
 
+<p>
+  <strong>Created at:</strong>
+  <%= @company_relationship.created_at %>
+  </p>
+
+  <p>
+  <strong>Updated at:</strong>
+  <%= @company_relationship.updated_at %>
+  </p>
+
 <%= link_to 'Edit', edit_domains_companies_company_relationship_path(@company_relationship) %> |
 <%= link_to 'Back', domains_companies_company_relationships_path %>

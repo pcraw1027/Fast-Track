@@ -12,12 +12,17 @@
 <p>
   <strong>User:</strong>
 
-  <a href="/users/<%= @scan.user_id %>"><%= @scan.user.username %> </a>
+  <a href="/domains/users/users/<%= @scan.user_id %>"><%= @scan.user.username %> </a>
+</p>
+
+<p>
+  <strong>Scanned at:</strong>
+  <%= @scan.created_at %>
 </p>
 
 <p>
   <strong>Scan date:</strong>
-  <%= @scan.scan_date %>
+  <%= @scan.scan_date.strftime("%m/%d/%Y") %>
 </p>
 
 <p>

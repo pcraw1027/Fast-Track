@@ -5,7 +5,7 @@
     <tr>
       <th>Product</th>
       <th>User</th>
-      <th>Scan date</th>
+      <th>Scaned at</th>
       <th>Barcode</th>
       <th>Lat</th>
       <th>Lng</th>
@@ -22,7 +22,7 @@
       <tr>
         <td><%= scan.product_id %></td>
         <td><%= scan.user.username if scan.user%></td>
-        <td><%= scan.scan_date %></td>
+        <td><%= scan.created_at %></td>
         <td><%= scan.barcode %></td>
         
         <td><%= scan.lat %></td>

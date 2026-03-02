@@ -9,5 +9,16 @@
   <%= @social_site.site %>
 </p>
 
+
+<p>
+  <strong>Created at:</strong>
+  <%= @social_site.created_at %>
+  </p>
+
+  <p>
+  <strong>Updated at:</strong>
+  <%= @social_site.updated_at %>
+  </p>  
+
 <%= link_to 'Edit', edit_domains_socials_social_site_path(@social_site) %> |
 <%= link_to 'Back', domains_socials_social_sites_path %>

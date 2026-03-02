@@ -119,7 +119,7 @@ module Domains
                       )
                   )
                 SQL
-          }
+          }                 
 
       # helper class methods
       def self.cit_interface_capture_level_1(page:, per_page:)

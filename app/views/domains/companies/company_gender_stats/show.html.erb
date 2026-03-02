@@ -25,5 +25,15 @@
   <%= @company_gender_stat.percentage %>
 </p>
 
+<p>
+  <strong>Created at:</strong>
+  <%= @company_gender_stat.created_at %>
+  </p>
+
+  <p>
+  <strong>Updated at:</strong>
+  <%= @company_gender_stat.updated_at %>
+  </p>
+
 <%= link_to 'Edit', edit_domains_companies_company_gender_stat_path(@company_gender_stat) %> |
 <%= link_to 'Back', domains_companies_company_gender_stats_path %>

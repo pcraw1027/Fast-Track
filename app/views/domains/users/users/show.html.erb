@@ -41,6 +41,17 @@
 </p>
 
 
+ <p>
+    <strong>Created at:</strong>
+    <%= @user.created_at %>
+  </p>
+
+  <p>
+    <strong>Updated at:</strong>
+    <%= @user.updated_at %>
+  </p>    
+
+
 <%if current_user.id == @user.id %>
 
         <%= link_to edit_user_registration_path(current_user) do %>

@@ -4,12 +4,12 @@
 
 <p>
   <strong>Scan:</strong>
-  <a href="/scans/<%= @upload_record.scan_id %>"><%= @upload_record.scan.barcode %> - <%= time_ago_in_words(@upload_record.scan.scan_date) %> ago</a>
+  <a href="/domains/croupier_core/scans/<%= @upload_record.scan_id %>"><%= @upload_record.scan.barcode %> - <%= time_ago_in_words(@upload_record.scan.scan_date) %> ago</a>
 </p>
 
 <p>
   <strong>User:</strong>
-  <a href="/users/<%= @upload_record.user_id %>"><%= @upload_record.user.username %> </a>
+  <a href="/domains/users/users/<%= @upload_record.user_id %>"><%= @upload_record.user.username %> </a>
 </p>
 
 <p>

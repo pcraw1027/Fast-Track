@@ -7,7 +7,7 @@
   
       <p>
         <strong>Established:</strong>
-        <%= @company.created_at.strftime("%Y") %>
+        <%= @company.established.strftime("%Y") %>
       </p>
       <p class="lead">
         <%= @company.industry_category_type&.title %>
@@ -51,6 +51,18 @@
         <strong>Diversity report:</strong>
         <%= link_to @company.diversity_report %>
       </p>
+
+        <p>
+            <strong>Created at:</strong>
+            <%= @company.created_at %>
+          </p>
+
+          <p>
+            <strong>Updated at:</strong>
+            <%= @company.updated_at %>
+          </p>    
+
+
       <div>
         <p><strong>Company Snapshot:</strong></p>
       

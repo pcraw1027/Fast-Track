@@ -27,6 +27,16 @@
   <%= @brick.product_category_source.description %>
 </p>
 
+<p>
+  <strong>Created at:</strong>
+  <%= @brick.created_at %>
+  </p>
+
+  <p>
+  <strong>Updated at:</strong>
+  <%= @brick.updated_at %>
+  </p>  
+
 <%= link_to 'Edit', edit_domains_classifications_brick_path(@brick) %> |
 <%= link_to 'Back', domains_classifications_bricks_path(page: params[:page], 
                                       klass_id: params[:klass_id],

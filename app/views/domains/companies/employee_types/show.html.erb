@@ -9,6 +9,15 @@
   <strong>Definition:</strong>
   <%= @employee_type.definition %>
 </p>
+<p>
+  <strong>Created at:</strong>
+  <%= @employee_type.created_at %>
+  </p>
+
+  <p>
+  <strong>Updated at:</strong>
+  <%= @employee_type.updated_at %>
+  </p>
 
 <%= link_to 'Edit', edit_domains_companies_employee_type_path(@employee_type) %> |
 <%= link_to 'Back', domains_companies_employee_types_path %>

@@ -152,3 +152,16 @@ end
 # end
 
 #Domains::CroupierCore::PitRecord.where(capture_status: 4).update_all(capture_status: 0)
+
+
+      #  Domains::CroupierCore::PitRecord
+      #   .where(
+      #     id: Domains::CroupierCore::PitRecord
+      #       .joins(:pit_level_users)
+      #       .where(pit_level_users: { level: 0 })
+      #       .where(capture_status: 0)
+      #       .where.not(product_id: nil)
+      #       .group(:id)
+      #       .having("COUNT(pit_level_users.id) = 1")
+      #   )
+      #   .update_all(capture_status: 3)

@@ -30,5 +30,15 @@
   <%= @product_attribute.product_category_source.code %>
 </p>
 
+<p>
+  <strong>Created at:</strong>
+  <%= @product_attribute.created_at %>
+  </p>
+
+  <p>
+  <strong>Updated at:</strong>
+  <%= @product_attribute.updated_at %>
+  </p>
+
 <%= link_to 'Edit', edit_domains_classifications_product_attribute_path(@product_attribute) %> |
 <%= link_to 'Back', domains_classifications_product_attributes_path %>

@@ -35,5 +35,17 @@
   <%= @company_contact.phone %>
 </p>
 
+
+<p>
+  <strong>Created at:</strong>
+  <%= @company_contact.created_at %>
+  </p>
+
+  <p>
+  <strong>Updated at:</strong>
+  <%= @company_contact.updated_at %>
+  </p>
+
+
 <%= link_to 'Edit', edit_domains_companies_company_contact_path(@company_contact) %> |
 <%= link_to 'Back', domains_companies_company_contacts_path %>
