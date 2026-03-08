@@ -20,7 +20,6 @@ module FastTrack
     #
     config.time_zone = 'America/New_York'
     config.active_record.default_timezone = :utc
-    # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
   
     # Ignore "category" subfolders inside each domain (models, services, jobs, policies, etc.)

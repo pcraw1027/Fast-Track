@@ -47,7 +47,6 @@ module Domains
             .paginate(page: page, per_page: per_page)
         end
 
-
         def self.pit_interface_capture_level_2(page:, per_page:)
           joins(product: { product_variants: :media })
             .where(capture_status: 0)
@@ -165,3 +164,21 @@ end
       #       .having("COUNT(pit_level_users.id) = 1")
       #   )
       #   .update_all(capture_status: 3)
+
+
+      # Domains::CroupierCore::PitRecord.joins(product: { product_variants: :media })
+      #       .where(capture_status: 3)
+      #       .where.not(product_id: nil)
+      #       .where(
+      #         "products.name IS NOT NULL AND products.name != '' AND
+      #         products.description IS NOT NULL AND products.description != '' AND
+      #         products.company_id IS NOT NULL"
+      #       )
+      #       .where(
+      #         "products.segment_id IS NOT NULL AND
+      #         products.family_id IS NOT NULL AND
+      #         products.klass_id IS NOT NULL AND
+      #         products.brick_id IS NOT NULL"
+      #       )
+      #       .distinct
+      #       .update_all(capture_status: 0)

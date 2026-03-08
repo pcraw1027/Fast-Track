@@ -32,8 +32,15 @@ module Domains
             puts "company data found:"
             puts "#{company_data.inspect}"
             
-            ind = Domains::Companies::IndustryCategoryType.find_by(category_code: company_data["naics"])
+            naics = company_data["naics"]
+            naics = naics&.to_s&.gsub(/\s+/, "")&.rjust(6, "0")
+
+            ind = Domains::Companies::IndustryCategoryType.find_by(
+              category_code: naics
+            )
+
             company.industry_category_type_id = ind.id if ind
+
             company.website = company_data["website"]
             company.black_owned = company_data["black_owned"] == "Yes" ? true : false
             company.female_owned = company_data["woman_owned"] == "Yes" ? true : false

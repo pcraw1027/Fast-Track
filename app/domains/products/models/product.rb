@@ -100,7 +100,7 @@ module Domains
               companies.female_owned IS NULL"
             )
             .includes(:brick, company: :cit_records )
-            .distinct
+            .select("DISTINCT products.company_id")
             .paginate(page: page, per_page: per_page)
       end
 

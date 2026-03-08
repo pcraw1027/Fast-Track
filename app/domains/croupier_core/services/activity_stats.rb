@@ -100,19 +100,42 @@ module Domains
                 company_id: nil
               }
             )
-            .where(products: { created_at: start_date..end_date })
+            .where(products: { updated_at: start_date..end_date })
             .count("DISTINCT pit_records.product_id")
 
         # -----------------------------------
         # COMPANIES
         # -----------------------------------
-        total_companies =
-          Domains::Companies::Company.count
+        total_companies = Domains::CroupierCore::CitRecord
+                            .joins(:company) 
+                            .where(capture_status: 0)
+                            .where.not(
+                              companies: {
+                                id: nil,
+                                name: [nil, ""],
+                                industry_category_type_id: nil,
+                                logo: nil
+                              }
+                            )
+                            .count("DISTINCT cit_records.company_id")
 
-        total_companies_monthly =
-          Domains::Companies::Company
-            .where(created_at: start_date..end_date)
-            .count
+        # -----------------------------------
+        # COMPANIES (current month)
+        # -----------------------------------
+
+        total_companies_monthly =  Domains::CroupierCore::CitRecord
+                            .joins(:company) 
+                            .where(capture_status: 0)
+                            .where.not(
+                              companies: {
+                                id: nil,
+                                name: [nil, ""],
+                                industry_category_type_id: nil,
+                                logo: nil
+                              }
+                            )
+                            .where(companies: { updated_at: start_date..end_date })
+                            .count("DISTINCT cit_records.company_id")
 
         # -----------------------------------
         # Final response payload

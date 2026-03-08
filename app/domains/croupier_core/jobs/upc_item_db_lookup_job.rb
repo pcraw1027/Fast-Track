@@ -9,7 +9,7 @@ module Domains
             log "********************************"
             log "Processing UpcItemDbLookup"
             log "********************************"
-            #Domains::CroupierCore::CitLevel1Service.call!(count: 5)
+            #Domains::CroupierCore::CitLevel1Service.call!(count: 20)
             Domains::CroupierCore::UpcItemDbService.call!(count: 100)
           rescue => e
             log "❌ Error processing UpcItemDbLookup: #{e.message}"

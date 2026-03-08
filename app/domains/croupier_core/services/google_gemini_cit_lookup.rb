@@ -25,7 +25,8 @@ module Domains
         # - Instructs the model to generate a single, concise paragraph description
         prompt = <<~PROMPT.strip
             Return structured company data as valid JSON data. 
-            Provide company details including official website domain and verified logo URL. Only return real, accessible URLs.
+            Provide company details including official website domain and associated industry standard NAICS code. Only return real, accessible URLs.
+            Your answer will be evaluated for accuracy, relevance and completeness.
 
             Company Name: #{company_name}
             #{brick_title} manufacturer
@@ -49,6 +50,7 @@ module Domains
             - No commentary
             - No markdown
             - Valid JSON only
+            - Be accurate, relevant and complete
         PROMPT
 
         # Step 5: Build the request payload in JSON format
@@ -91,3 +93,14 @@ module Domains
     end
   end
 end
+
+
+# Domains::Companies::Company.where(id:[1359, 1820, 1821, 1049, 1815, 1814, 1403, 1400, 1395, 1392])
+# .update_all(industry_category_type_id: nil)
+
+# cm=Domains::Companies::Company.includes(:cit_records).where(id:[1359, 1820, 1821, 1049, 1815, 1814, 1403, 1400, 1395, 1392])
+# cm.each do |c|
+#   c.cit_records.each do |cr|
+#     cr.update(capture_status: 0)
+#   end
+# end
