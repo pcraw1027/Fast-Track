@@ -23,34 +23,15 @@ module Domains
         # Counts all valid scans tied to valid products
         # DISTINCT is required due to join fan-out (variants, media, pit_records)
         total_scans =
-          Domains::CroupierCore::Scan
-            .joins(product: [{ product_variants: :media }, :pit_records])
-            .where(pit_records: { capture_status: 0 })
-            .where(product_exists: true)
-            .where.not(scans: { product_id: nil })
-            .where(
-              "products.name IS NOT NULL AND products.name != '' AND
-               products.description IS NOT NULL AND products.description != '' AND
-               products.company_id IS NOT NULL"
-            )
-            .count("DISTINCT scans.id")
+          Domains::CroupierCore::Scan.count()
 
         # -----------------------------------
         # SCANS (current month)
         # -----------------------------------
         total_scans_monthly =
           Domains::CroupierCore::Scan
-            .joins(product: [{ product_variants: :media }, :pit_records])
-            .where(pit_records: { capture_status: 0 })
-            .where(product_exists: true)
-            .where.not(scans: { product_id: nil })
-            .where(
-              "products.name IS NOT NULL AND products.name != '' AND
-               products.description IS NOT NULL AND products.description != '' AND
-               products.company_id IS NOT NULL"
-            )
             .where(created_at: start_date..end_date)
-            .count("DISTINCT scans.id")
+            .count()
 
         # -----------------------------------
         # UPLOADS

@@ -24,8 +24,14 @@ module Domains
         # Step 4: Prepare the prompt for the AI
         # - Instructs the model to generate a single, concise paragraph description
         prompt = <<~PROMPT.strip
-            Return structured company data as valid JSON data. 
-            Provide company details including official website domain and associated industry standard NAICS code. Only return real, accessible URLs.
+            - Provide a single 6-digit NAICS code, excluding AI generated verbiage and punctuations, that best applies to the company name #{company_name} the maker of #{brick_title}
+            - Provide the website address, excluding AI generated verbiage and punctuations, for the company name #{company_name} the maker of #{brick_title}
+            - Provide the 4-digit year of establishment, excluding AI generated verbiage and punctuations, for the company name #{company_name} the maker of #{brick_title}
+            - Provide the publicly available company logo for the company name #{company_name} the maker of #{brick_title}
+            - Answer Yes or No, excluding AI generated verbiage and punctuations, to whether the following company is black owned #{company_name} the maker of #{brick_title}
+            - Answer Yes or No, excluding AI generated verbiage and punctuations, to whether the following company is woman owned #{company_name} the maker of #{brick_title}
+
+            Return structured company data as valid JSON data. Only return real, and accessible URLs.
             Your answer will be evaluated for accuracy, relevance and completeness.
 
             Company Name: #{company_name}
@@ -38,10 +44,6 @@ module Domains
               "website": "string",
               "year_established": "4 digit string",
               "logo_url": "string",
-              "address": "string",
-              "parent_company": "string",
-              "brands": "brand1 // brand2",
-              "ceo": "First Middle Last // Title",
               "black_owned": "Yes or No",
               "woman_owned": "Yes or No"
             }
