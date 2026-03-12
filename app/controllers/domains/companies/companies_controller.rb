@@ -1,5 +1,5 @@
 class Domains::Companies::CompaniesController < ApplicationController
-  before_action :set_company, only: %i[ show update destroy ]
+  before_action :set_company, only: %i[ update destroy ]
   before_action :set_dropdowns, only: %i[ new ]
   before_action :authenticate_user!, 
 only: %i[ new edit update create destroy insert_company update_to_level_two update_to_level_three update_cit_status]
@@ -166,6 +166,7 @@ alert: e.message
 
 
   def show
+    @company = Domains::Companies::Company.includes(:industry_category_type).find(params[:id])
     @products = Domains::Products::Product.where(company_id: params[:id])
     @product_attributes = Domains::Classifications::ProductAttribute.where(company_id: params[:id])
     @company_relationships = Domains::Companies::CompanyRelationship.where(

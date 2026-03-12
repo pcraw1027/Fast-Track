@@ -42,6 +42,13 @@
         <%= @company.total_employees %>
       </p>
       
+      <%if @company.industry_category_type%>
+        <p>
+          <strong>Display Industry Type:</strong>
+          <%= @company.industry_category_type.category_code %> - <%= @company.industry_category_type.title %>
+        </p>
+      <%end%>
+
       <p>
         <strong>Display Industry Category:</strong>
         <%= @company.sector %>
