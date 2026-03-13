@@ -5,10 +5,12 @@
         <%= @company.name %>
       </h3>
   
+   
       <p>
         <strong>Established:</strong>
-        <%= @company.established.strftime("%Y") %>
+        <%= @company.established&.strftime("%Y") %>
       </p>
+      
       <p class="lead">
         <%= @company.industry_category_type&.title %>
       </p>
