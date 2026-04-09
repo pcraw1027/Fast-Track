@@ -7,11 +7,11 @@ module Domains
       attr_accessor :media, :barcode, :level, :new_company_name, :asin, :brick_search, :capture_status
 
       ORDER_BY = {
-      "" => "products.updated_at DESC, products.id DESC",
-      nil => "products.updated_at DESC, products.id DESC",
-      "product_name" => "products.name ASC, segments.title ASC, families.title ASC, klasses.title ASC, bricks.title ASC",
-      "company_name" => "companies.name ASC, products.name ASC, segments.title ASC, families.title ASC, klasses.title ASC, bricks.title ASC",
-      "product_category" => "segments.title ASC, families.title ASC, klasses.title ASC, bricks.title ASC, products.name ASC"
+        "" => "products.updated_at DESC, products.id DESC",
+        nil => "products.updated_at DESC, products.id DESC",
+        "product_name" => "products.name ASC, segments.title ASC, families.title ASC, klasses.title ASC, bricks.title ASC",
+        "company_name" => "companies.name ASC, products.name ASC, segments.title ASC, families.title ASC, klasses.title ASC, bricks.title ASC",
+        "product_category" => "segments.title ASC, families.title ASC, klasses.title ASC, bricks.title ASC, products.name ASC"
       }
       
       belongs_to :company, class_name: "Domains::Companies::Company", optional: true
@@ -81,6 +81,23 @@ module Domains
       def level_5_flag
         false
       end
+
+      # def self.products_cit_capture_level_1(page:, per_page:)
+      #       joins(company: :cit_records)
+      #       .where('id IN (?)', [7746, 7745])
+      #       .where("companies.name IS NOT NULL AND companies.name != ''")
+      #       .where(
+      #         "companies.industry_category_type_id IS NULL OR
+      #         companies.logo IS NULL OR
+      #         companies.website IS NULL OR
+      #         companies.established IS NULL OR
+      #         companies.black_owned IS NULL OR
+      #         companies.female_owned IS NULL"
+      #       )
+      #       .includes(:klass, :brick, company: :cit_records )
+      #       .select("DISTINCT ON (products.company_id) products.*")
+      #       .order("products.company_id, products.id")
+      # end
 
       def self.products_cit_capture_level_1(page:, per_page:)
             joins(company: :cit_records)

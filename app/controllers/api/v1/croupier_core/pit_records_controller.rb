@@ -6,7 +6,6 @@ class Api::V1::CroupierCore::PitRecordsController < Api::V1::BaseController
      pit_recs = Domains::CroupierCore::PitRecord.for_lookup(count)
         if pit_recs.any?
             barcodes = pit_recs.map(&:barcode)
-            p barcodes
             pit_recs.update_all(capture_status: 4)
             render json: barcodes, status: :ok
         else

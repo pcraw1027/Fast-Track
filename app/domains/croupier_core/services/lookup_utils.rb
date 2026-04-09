@@ -49,14 +49,6 @@ module Domains
             puts "Image URL: #{product_data[:image_url]}"
             puts "Brand: #{product_data[:brand]}"
 
-            # Generate AI-powered product description
-            description =
-              Domains::CroupierCore::GoogleGeminiLookup
-                .generate_product_description(
-                  barcode: pit.barcode,
-                  product_name: product_data[:title]
-                )
-
             # Attempt to resolve company by normalized brand name
             company_id = nil
             company =
@@ -84,7 +76,6 @@ module Domains
             product =
               Domains::Products::Product.create!(
                 name: p_title,
-                description: description,
                 company_id: company_id
               )
 
@@ -126,6 +117,7 @@ module Domains
               barcode: pit.barcode,
               name: p_title
             )
+            return {product: product, barcode: pit.barcode}
           end
 
         rescue => e
@@ -149,9 +141,11 @@ module Domains
               barcode: pit.barcode,
               name: p_title
             )
+            return {product: pv.product, barcode: pv.barcode}
           else
             # No fallback possible → mark PIT as failed
             pit.update(capture_status: 5)
+            return nil
           end
 
         ensure

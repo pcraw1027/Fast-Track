@@ -14,6 +14,8 @@ module Domains
       # - Resolves product data for all found barcodes using LookupUtils
       def call(product_data_attributes: [], unfound_barcodes: [])
 
+        products = []
+
         # Step 1: Handle barcodes that were not found
         if unfound_barcodes.any?
           # Update all corresponding PitRecords to indicate failed capture
@@ -36,14 +38,33 @@ module Domains
 
           # Step 3: Iterate through each product data and resolve the corresponding PitRecord
           product_data_attributes.each do |product_data|
-            Domains::CroupierCore::LookupUtils.resolve_records(
+            product = Domains::CroupierCore::LookupUtils.resolve_records(
               pit: pit_hash[product_data[:barcode]]&.first,  # Take first PitRecord if multiple exist
               product_data: product_data,                     # Provide pre-fetched product data
               to_resolve: true                                # Flag to indicate resolution is from provided data
             )
+
+            products << product if product.present?
           end
         end
+        # Gemini batch processing
+        results = Domains::CroupierCore::GoogleGeminiLookup.generate_batch_descriptions(
+                      products: products
+                  )
 
+        updates = results
+                  .select { |r| r[:success] }
+                  .map    { |r| { id: r[:product].id, description: r[:description] } }
+
+          if updates.any?
+            values = updates.map { |u| "(#{u[:id]}, #{ActiveRecord::Base.connection.quote(u[:description])})" }.join(', ')
+            ActiveRecord::Base.connection.execute(
+              "UPDATE products SET description = v.description
+              FROM (VALUES #{values}) AS v(id, description)
+              WHERE products.id = v.id"
+            )
+          end
+          
       end
 
     end

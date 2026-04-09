@@ -18,13 +18,14 @@ module Domains
       def call(count:)
         # Step 1: Fetch PitRecords ready for UPC lookup
         pit_recs = Domains::CroupierCore::PitRecord.for_lookup(count)
+        products = []
 
         # Step 2: Iterate over each PitRecord
         pit_recs.each_with_index do |pit, index|
           begin
             # Attempt to resolve product data for the current PitRecord
-            Domains::CroupierCore::LookupUtils.resolve_records(pit: pit)
-
+            product = Domains::CroupierCore::LookupUtils.resolve_records(pit: pit)
+            products << product if product.present?
           # Step 3: Handle API rate limiting from UPC Item DB
           rescue Faraday::TooManyRequestsError, Net::HTTPTooManyRequests => e
             Rails.logger.warn "UPCitemDB rate limited. Waiting before retry..."
@@ -43,6 +44,24 @@ module Domains
             sleep 15   # roughly 4 requests per minute
           end
         end
+
+        # Gemini batch processing
+        results = Domains::CroupierCore::GoogleGeminiLookup.generate_batch_descriptions(
+                      products: products
+                  )
+
+        updates = results
+                  .select { |r| r[:success] }
+                  .map    { |r| { id: r[:product].id, description: r[:description] } }
+
+          if updates.any?
+            values = updates.map { |u| "(#{u[:id]}, #{ActiveRecord::Base.connection.quote(u[:description])})" }.join(', ')
+            ActiveRecord::Base.connection.execute(
+              "UPDATE products SET description = v.description
+              FROM (VALUES #{values}) AS v(id, description)
+              WHERE products.id = v.id"
+            )
+          end
       end         
 
     end
