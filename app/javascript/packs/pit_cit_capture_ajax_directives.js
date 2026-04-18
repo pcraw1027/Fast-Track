@@ -2,7 +2,11 @@
 document.addEventListener("turbolinks:load", () => {
 
   const activeTab = document.querySelector(".nav-tabs a.active")
-  if (activeTab) activeTab.click()
+  if (activeTab) {
+    setTimeout(function() {
+      activeTab.click();
+    }, 100);
+  }
 
 
   if (window.location.pathname === "/pit_interface" || window.location.pathname === "/cit_interface") {
