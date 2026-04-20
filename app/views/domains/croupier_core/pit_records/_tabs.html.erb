@@ -1,82 +1,82 @@
 <div class="container mt-0">
 
 
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
+   <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item">
-            <a class="nav-link theme-link" id="not-availables-tab" data-toggle="tab" href="#not-availables" role="tab" 
-            aria-controls="not-availables" aria-selected="true" data-url="<%= pit_records_not_availables_path %>">Status N</a>
+            <a class="<%= params[:level] == 'n' ? 'nav-link theme-link active' : 'nav-link theme-link' %>" id="not-availables-tab" data-toggle="tab" href="#not-availables" role="tab" 
+            aria-controls="not-availables" aria-selected="<%= params[:level] == 'n' %>" data-url="<%= cit_records_not_availables_path %>">Status N</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link theme-link" id="reviews-tab" data-toggle="tab" href="#reviews" role="tab" 
-            aria-controls="reviews" aria-selected="true" data-url="<%= pit_records_reviews_path %>" >Status R</a>
+            <a class="<%= params[:level] == 'r' ? 'nav-link theme-link active' : 'nav-link theme-link' %>" id="reviews-tab" data-toggle="tab" href="#reviews" role="tab" 
+            aria-controls="reviews" aria-selected="<%= params[:level] == 'r' %>" data-url="<%= cit_records_reviews_path %>" >Status R</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link theme-link" id="supervisors-tab" data-toggle="tab" href="#supervisors" role="tab" 
-            aria-controls="supervisors" aria-selected="true" data-url="<%= pit_records_supervisories_path %>" >Status S</a>
+            <a class="<%= params[:level] == 's' ? 'nav-link theme-link active' : 'nav-link theme-link' %>" id="supervisors-tab" data-toggle="tab" href="#supervisors" role="tab" 
+            aria-controls="supervisors" aria-selected="<%= params[:level] == 's' %>" data-url="<%= cit_records_supervisories_path %>" >Status S</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link theme-link" id="unknowns-tab" data-toggle="tab" href="#unknowns" role="tab" 
-            aria-controls="unknowns" aria-selected="false" data-url="<%= pit_records_unknowns_path %>">Status U</a>
+            <a class="<%= params[:level] == 'u' ? 'nav-link theme-link active' : 'nav-link theme-link' %>" id="unknowns-tab" data-toggle="tab" href="#unknowns" role="tab" 
+            aria-controls="unknowns" aria-selected="<%= params[:level] == 'u' %>" data-url="<%= cit_records_unknowns_path %>">Status U</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link theme-link" id="requested-tab" data-toggle="tab" href="#requested" role="tab" 
-            aria-controls="requested" aria-selected="false" data-url="<%= pit_records_requested_path %>">Status Q</a>
+            <a class="<%= params[:level] == 'q' ? 'nav-link theme-link active' : 'nav-link theme-link' %>" id="requested-tab" data-toggle="tab" href="#requested" role="tab" 
+            aria-controls="requested" aria-selected="<%= params[:level] == 'q' %>" data-url="<%= cit_records_requested_path %>">Status Q</a>
         </li>
          <li class="nav-item">
-            <a class="nav-link theme-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" 
-            aria-controls="home" aria-selected="true" data-url="<%= pit_records_0s_path %>">Level 1</a>
+            <a class="<%= params[:level] == '1' || params[:level].blank? ? 'nav-link theme-link active' : 'nav-link theme-link' %>" id="home-tab" data-toggle="tab" href="#home" role="tab" 
+            aria-controls="home" aria-selected="<%= params[:level] == '1' || params[:level].blank? %>" data-url="<%= cit_records_0s_path %>">Level 1</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link theme-link" id="attributes-tab" data-toggle="tab" href="#attributes" role="tab" 
-            aria-controls="attributes" aria-selected="false" data-url="<%= pit_records_1s_path %>">Level 2</a>
+            <a class="<%= params[:level] == '2' ? 'nav-link theme-link active' : 'nav-link theme-link' %>" id="attributes-tab" data-toggle="tab" href="#attributes" role="tab" 
+            aria-controls="attributes" aria-selected="<%= params[:level] == '2' %>" data-url="<%= cit_records_1s_path %>">Level 2</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link theme-link" id="relationships-tab" data-toggle="tab" href="#relationships" role="tab" aria-controls="relationships" aria-selected="false">Level 3</a>
+            <a class="<%= params[:level] == '3' ? 'nav-link theme-link active' : 'nav-link theme-link' %>" id="relationships-tab" data-toggle="tab" href="#relationships" role="tab" aria-controls="relationships" aria-selected="<%= params[:level] == '3' %>">Level 3</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link theme-link" id="contacts-tab" data-toggle="tab" href="#contacts" role="tab" aria-controls="contacts" aria-selected="false">Level 4</a>
+            <a class="<%= params[:level] == '4' ? 'nav-link theme-link active' : 'nav-link theme-link' %>" id="contacts-tab" data-toggle="tab" href="#contacts" role="tab" aria-controls="contacts" aria-selected="<%= params[:level] == '4' %>">Level 4</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link theme-link" id="ethnicity-tab" data-toggle="tab" href="#ethnicity" role="tab" aria-controls="ethnicity" aria-selected="false">Level 5</a>
+            <a class="<%= params[:level] == '5' ? 'nav-link theme-link active' : 'nav-link theme-link' %>" id="ethnicity-tab" data-toggle="tab" href="#ethnicity" role="tab" aria-controls="ethnicity" aria-selected="<%= params[:level] == '5' %>">Level 5</a>
         </li>
 
     </ul>
   
 
     <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade" id="not-availables" role="tabpanel" aria-labelledby="not-availables-tab">
+        <div class="tab-pane fade <%= params[:level] == 'n' ? 'show active' : '' %>" id="not-availables" role="tabpanel" aria-labelledby="not-availables-tab">
             <div class="tab-content-body">No data for this PIT level yet</div>
         </div>
 
-        <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
+        <div class="tab-pane fade <%= params[:level] == 'r' ? 'show active' : '' %>" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
             <div class="tab-content-body">No data for this PIT level yet</div>
         </div>
 
-        <div class="tab-pane fade" id="supervisors" role="tabpanel" aria-labelledby="supervisors-tab">
+        <div class="tab-pane fade <%= params[:level] == 's' ? 'show active' : '' %>" id="supervisors" role="tabpanel" aria-labelledby="supervisors-tab">
              <div class="tab-content-body">No data for this PIT level yet</div>
         </div>
 
-        <div class="tab-pane fade" id="unknowns" role="tabpanel" aria-labelledby="unknowns-tab">
+        <div class="tab-pane fade <%= params[:level] == 'u' ? 'show active' : '' %>" id="unknowns" role="tabpanel" aria-labelledby="unknowns-tab">
              <div class="tab-content-body">No data for this PIT level yet</div>
         </div>
 
-        <div class="tab-pane fade" id="requested" role="tabpanel" aria-labelledby="requested-tab">
+        <div class="tab-pane fade <%= params[:level] == 'q' ? 'show active' : '' %>" id="requested" role="tabpanel" aria-labelledby="requested-tab">
              <div class="tab-content-body">No data for this PIT level yet</div>
         </div>
 
-        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+        <div class="tab-pane fade <%= params[:level] == '1' || params[:level].blank? ? 'show active' : '' %>" id="home" role="tabpanel" aria-labelledby="home-tab">
              <div class="tab-content-body">No data for this PIT level yet</div>
         </div>
-        <div class="tab-pane fade" id="attributes" role="tabpanel" aria-labelledby="attributes-tab">
+        <div class="tab-pane fade <%= params[:level] == '2' ? 'show active' : '' %>" id="attributes" role="tabpanel" aria-labelledby="attributes-tab">
             <div class="tab-content-body">No data for this PIT level yet</div>
         </div>
-        <div class="tab-pane fade" id="relationships" role="tabpanel" aria-labelledby="relationships-tab">
+        <div class="tab-pane fade <%= params[:level] == '3' ? 'show active' : '' %>" id="relationships" role="tabpanel" aria-labelledby="relationships-tab">
             <div class="tab-content-body">No data for this PIT level yet</div>
         </div>
-        <div class="tab-pane fade" id="contacts" role="tabpanel" aria-labelledby="contacts-tab">
+        <div class="tab-pane fade <%= params[:level] == '4' ? 'show active' : '' %>" id="contacts" role="tabpanel" aria-labelledby="contacts-tab">
             <div class="tab-content-body">No data for this PIT level yet</div>
         </div>
-        <div class="tab-pane fade" id="ethnicity" role="tabpanel" aria-labelledby="ethnicity-tab">
+        <div class="tab-pane fade <%= params[:level] == '5' ? 'show active' : '' %>" id="ethnicity" role="tabpanel" aria-labelledby="ethnicity-tab">
            <div class="tab-content-body">No data for this PIT level yet</div>
         </div>
       
