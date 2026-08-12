@@ -109,7 +109,5 @@ end
 gem 'rack', '~> 2.2.19'
 gem 'uri', '>= 1.0.4'
 gem 'concurrent-ruby', '1.3.4'
-gem 'aws-sdk-s3'
-
-gem 'activerecord-postgis-adapter', '~> 7.1'
+gem "aws-sdk-s3"
 
