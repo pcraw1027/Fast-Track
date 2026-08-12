@@ -7,6 +7,8 @@
     <tr>
       <th>Name</th>
       <th>Is person address</th>
+      <th>Scannable</th>
+      
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -15,7 +17,8 @@
     <% @address_types.each do |address_type| %>
       <tr>
         <td><%= address_type.name %></td>
-        <td><%= address_type.is_person_address %></td>
+        <td><%= address_type.is_person_address? ? 'Yes' : 'No' %></td>
+         <td><%= address_type.scannable? ? 'Yes' : 'No' %></td>
         <td><%= link_to 'Show', address_type %></td>
         <td><%= link_to 'Edit', edit_domains_contact_and_identity_address_type_path(address_type) %></td>
         <td><%= link_to 'Destroy', address_type, method: :delete, data: { confirm: 'Are you sure?' } %></td>

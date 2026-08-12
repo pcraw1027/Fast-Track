@@ -1,0 +1,47 @@
+<div class="jumbotron">
+  <div class="row">
+    <div class="col">
+
+
+<p>
+  <strong>Mapping type:</strong>
+  <%= @industry_category_type_mapping.mapping_type&.titleize %>
+</p>
+
+<p>
+  <strong>Category code type (From):</strong>
+  <%= @industry_category_type_mapping.category_code_type_from&.title || "" %>
+</p>
+
+<p>
+  <strong>Category code type (From) ID:</strong>
+  <%= @industry_category_type_mapping.category_code_type_from_id %>
+</p>
+
+<p>
+  <strong>Category code type (To):</strong>
+  <%= @industry_category_type_mapping.category_code_type_to&.title || "" %>
+</p>
+
+<p>
+  <strong>Category code type (To) ID:</strong>
+  <%= @industry_category_type_mapping.category_code_type_to_id %>
+</p>
+
+<p>
+  <strong>Created at:</strong>
+  <%= @industry_category_type_mapping.created_at %>
+  </p>
+
+  <p>
+  <strong>Updated at:</strong>
+  <%= @industry_category_type_mapping.updated_at %>
+  </p>
+
+<%= link_to 'Edit', edit_domains_companies_industry_category_type_mapping_path(@industry_category_type_mapping) %> |
+<%= link_to 'Back', domains_companies_industry_category_type_mappings_path %>
+
+  </div>
+
+    </div>
+  </div>

@@ -22,11 +22,15 @@ class Api::V1::CroupierCore::ScansController < Api::V1::BaseController
     if finder_claims.payload
       @scan = Domains::CroupierCore::Scan.create!(user_id: current_user.id, product_id: finder_claims.payload.id, 
       scan_date: Time.zone.today, barcode: scan_params[:barcode], product_exists: true,
+      scan_mode: scan_params[:scan_mode],
+      address_id: scans_params[:address_id],
       lat: scan_params[:lat], lng: scan_params[:lng], address: scan_params[:address])
       Domains::CroupierCore::Operations::IncrPitCitProdCount.call!(barcode: scan_params[:barcode])
     else
       @scan = Domains::CroupierCore::Scan.create!(user_id: current_user.id, 
       scan_date: Time.zone.today, barcode: scan_params[:barcode], product_exists: false,
+      scan_mode: scan_params[:scan_mode],
+      address_id: scans_params[:address_id],
       lat: scan_params[:lat], lng: scan_params[:lng], address: scan_params[:address]
       )
         
@@ -64,8 +68,10 @@ class Api::V1::CroupierCore::ScansController < Api::V1::BaseController
       end
   end
 
+  
 
   private
+
 
 
   def save_to_list(product_id: nil)
@@ -86,7 +92,7 @@ class Api::V1::CroupierCore::ScansController < Api::V1::BaseController
 
   def scan_params
     params.require(:scan).permit(
-      :barcode, :asin, :lat, :lng, :address,
+      :barcode, :asin, :lat, :lng, :address, :scan_mode, :address_id,
             upload: [:product_name, :company_name, :brand, 
             :remarks, { media_attributes: [:id, :file, :media_type, :position, :_destroy] }]
     )

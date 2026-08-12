@@ -1,4 +1,6 @@
-
+<div class="jumbotron">
+  <div class="row">
+    <div class="col">
 
 <p>
   <strong>Category Code:</strong>
@@ -16,6 +18,12 @@
 </p>
 
 <p>
+  <strong>Linkedin version:</strong>
+  <%= @industry_category_type.linkedin_version %>
+</p>
+
+
+<p>
   <strong>Created at:</strong>
   <%= @industry_category_type.created_at %>
   </p>
@@ -27,3 +35,8 @@
 
 <%= link_to 'Edit', edit_domains_companies_industry_category_type_path(@industry_category_type) %> |
 <%= link_to 'Back', domains_companies_industry_category_types_path %>
+
+  </div>
+
+    </div>
+  </div>

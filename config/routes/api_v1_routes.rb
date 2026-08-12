@@ -29,6 +29,8 @@ module ApiV1Routes
         end
 
         namespace :croupier_core, path: "", as: "" do
+          get 'bn_activity_stats', to: 'bn_tools#activity_stats'
+          get 'nearby_addresses', to: 'bn_tools#nearby_addresses'
           get 'my_scans', to: 'scans#my_scans'
           get 'my_uploads', to: 'upload_records#my_uploads'
           post 'resolve_requested_lookups', to: 'pit_records#resolve_requested_lookups'

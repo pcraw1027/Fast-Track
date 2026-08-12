@@ -1,5 +1,5 @@
 class Domains::ContactAndIdentity::AddressesController < ApplicationController
-  before_action :set_address, only: %i[ show edit update destroy ]
+  before_action :set_address, only: %i[ edit update destroy ]
   before_action :authenticate_user!, only: %i[ new edit update create destroy]
 
   # GET /addresses or /addresses.json
@@ -10,6 +10,7 @@ class Domains::ContactAndIdentity::AddressesController < ApplicationController
 
   # GET /addresses/1 or /addresses/1.json
   def show
+    @address = Domains::ContactAndIdentity::Address.includes(:address_type).find(params[:id])
   end
 
   # GET /addresses/new
@@ -71,6 +72,8 @@ class Domains::ContactAndIdentity::AddressesController < ApplicationController
     # Only allow a list of trusted parameters through.
     def address_params
       params.require(:domains_contact_and_identity_address).permit(:address_type_id, :addressable_id, 
-      :address1, :address2, :city, :state,  :postal_code, :country_reference_id)
+      :address1, :address2, :city, :state,  :postal_code, :country_reference_id,
+      :easy_scan, :symbology, :scanned, :lat, :lng, :site_location_name)
     end
+    
 end

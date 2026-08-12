@@ -15,6 +15,17 @@
   <a href="/domains/users/users/<%= @scan.user_id %>"><%= @scan.user.username %> </a>
 </p>
 
+
+<p>
+  <strong>Scan mode:</strong>
+  <%= @scan.scan_mode %>
+</p>
+
+<p>
+  <strong>Address ID:</strong>
+  <%= @scan.address_id %>
+</p>
+
 <p>
   <strong>Scanned at:</strong>
   <%= @scan.created_at %>

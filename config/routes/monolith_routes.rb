@@ -98,9 +98,17 @@ module MonolithRoutes
                 put :update_to_level_three
                 put :update_to_level_four
                 put :update_to_level_five
+                post :locations_import
                 resources :products
               end
-              resources :industry_category_types
+              resources :industry_category_type_mappings
+              resources :industry_category_types do 
+                collection do
+                  post :upload_linkedin_v_data
+                  post :upload_linkedin_mappings
+                end
+              end
+
               resources :company_snapshots
               resources :company_gender_stats
               resources :company_ethnicity_stats

@@ -10,16 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_02_24_061728) do
+ActiveRecord::Schema.define(version: 2026_08_02_143933) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "postgis"
 
   create_table "address_types", force: :cascade do |t|
     t.string "name"
     t.boolean "is_person_address", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "scannable", default: false, null: false
   end
 
   create_table "addresses", force: :cascade do |t|
@@ -34,10 +36,18 @@ ActiveRecord::Schema.define(version: 2026_02_24_061728) do
     t.string "postal_code"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "easy_scan", default: false, null: false
+    t.string "symbology", default: "None", null: false
+    t.string "site_location_name"
+    t.integer "scanned", default: 0, null: false
+    t.decimal "lat", precision: 10, scale: 6
+    t.decimal "lng", precision: 10, scale: 6
+    t.geography "lonlat", limit: {srid: 4326, type: "st_point", geographic: true}
     t.index ["address_type_id"], name: "index_addresses_on_address_type_id"
     t.index ["addressable_type", "addressable_id"], name: "index_addresses_on_addressable"
     t.index ["addressable_type", "addressable_id"], name: "index_addresses_on_addressable_type_and_addressable_id"
     t.index ["country_reference_id"], name: "index_addresses_on_country_reference_id"
+    t.index ["lonlat"], name: "index_addresses_on_lonlat", using: :gist
   end
 
   create_table "allowlisted_jwts", force: :cascade do |t|
@@ -131,11 +141,6 @@ ActiveRecord::Schema.define(version: 2026_02_24_061728) do
     t.string "name"
     t.string "logo"
     t.bigint "industry_category_type_id"
-    t.string "address_1"
-    t.string "address_2"
-    t.string "city"
-    t.string "state"
-    t.string "country"
     t.date "established"
     t.string "website"
     t.string "diversity_report"
@@ -144,10 +149,11 @@ ActiveRecord::Schema.define(version: 2026_02_24_061728) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "sector", default: ""
-    t.string "postal_code"
     t.bigint "searches", default: 0, null: false
     t.boolean "black_owned", default: false, null: false
     t.boolean "female_owned", default: false, null: false
+    t.boolean "easy_scan", default: false, null: false
+    t.string "symbology", default: "None", null: false
     t.index ["industry_category_type_id"], name: "index_companies_on_industry_category_type_id"
   end
 
@@ -286,12 +292,23 @@ ActiveRecord::Schema.define(version: 2026_02_24_061728) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "industry_category_type_mappings", force: :cascade do |t|
+    t.integer "mapping_type", null: false
+    t.bigint "category_code_type_from_id", null: false
+    t.bigint "category_code_type_to_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["category_code_type_from_id"], name: "index_ind_c_t_m_on_category_code_type_from_id"
+    t.index ["category_code_type_to_id"], name: "index_ind_c_t_m_on_category_code_type_to_id"
+  end
+
   create_table "industry_category_types", force: :cascade do |t|
     t.string "category_code"
     t.string "title"
     t.integer "naics_year"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "linkedin_version"
     t.index ["category_code"], name: "index_industry_category_types_on_category_code", unique: true
   end
 
@@ -502,10 +519,14 @@ ActiveRecord::Schema.define(version: 2026_02_24_061728) do
     t.decimal "lat", precision: 10, scale: 6
     t.decimal "lng", precision: 10, scale: 6
     t.string "address"
+    t.integer "scan_mode", default: 0, null: false
+    t.bigint "address_id"
+    t.index ["address_id"], name: "index_scans_on_address_id"
     t.index ["lat", "lng"], name: "index_scans_on_lat_and_lng"
     t.index ["product_id", "id"], name: "index_scans_on_product_id_and_id"
     t.index ["product_id"], name: "index_scans_on_product_id"
     t.index ["user_id", "barcode", "created_at"], name: "index_scans_user_barcode_created_at_filtered", order: { created_at: :desc }, where: "(product_exists = true)"
+    t.index ["user_id", "scan_mode"], name: "idx_scans_user_bn_with_address", where: "(address_id IS NOT NULL)"
     t.index ["user_id"], name: "index_scans_on_user_id"
   end
 

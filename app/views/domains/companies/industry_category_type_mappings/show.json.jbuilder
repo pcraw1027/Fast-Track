@@ -1,0 +1,1 @@
+json.partial! "industry_category_type_mappings/industry_category_type_mapping", industry_category_type_mapping: @industry_category_type_mapping

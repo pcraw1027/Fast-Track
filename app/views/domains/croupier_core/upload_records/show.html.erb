@@ -42,17 +42,22 @@
   <%= @upload_record.remarks %>
 </p>
 
-<% @upload_record.media.each do |media| %>
-            <% if media.image? %>
-              <%= image_tag media.file.thumb.url %>
-            <% elsif media.video? %>
-              <video controls>
-                <source src="<%= media.file.url %>" type="video/mp4">
-              </video>
-            <% else %>
-              <%= link_to 'Download file', media.file.url %>
-            <% end %>
+
+  <% @upload_record.media.each do |media| %>
+  <% if media.image? %>
+    <% if (thumb_url = media.file&.thumb&.url.presence) %>
+      <%= image_tag thumb_url %>
+    <% end %>
+
+  <% elsif media.video? %>
+    <% if (video_url = media.file&.url.presence) %>
+      <video controls>
+        <source src="<%= video_url %>" type="video/mp4">
+      </video>
+    <% end %>
   <% end %>
+<% end %>
+
 
 </div>
 </div>

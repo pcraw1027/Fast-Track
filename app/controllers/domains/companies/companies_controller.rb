@@ -1,8 +1,7 @@
 class Domains::Companies::CompaniesController < ApplicationController
   before_action :set_company, only: %i[ update destroy ]
   before_action :set_dropdowns, only: %i[ new ]
-  before_action :authenticate_user!, 
-only: %i[ new edit update create destroy insert_company update_to_level_two update_to_level_three update_cit_status]
+  before_action :authenticate_user!, only: %i[ new edit update create destroy insert_company update_to_level_two update_to_level_three update_cit_status]
 
   # GET /companies or /companies.json
   def index
@@ -25,6 +24,40 @@ only: %i[ new edit update create destroy insert_company update_to_level_two upda
     notice: "CIT status was successfully updated.")
   end
 
+  def locations_import
+    file = params[:file]
+
+    unless file.present? && file.content_type == 'text/csv'
+      return redirect_to company_capture_interface_path(mid: params[:mid], filter_by: params[:filter_by], level: [:level]), alert: 'Please upload a valid CSV file.'
+    end
+
+    begin
+      CSV.foreach(file.path, headers: true) do |row|
+        Domains::ContactAndIdentity::Address.create!(
+          address_type_id:    row['Address_Type_Id']&.to_i,
+          addressable_id:     row['Adressable_Id']&.to_i,
+          addressable_type: "Domains::Companies::Company",
+          site_location_name: row['Site_Location_Name'],
+          address1:           row['Adress1'],
+          address2:           row['Address2'],
+          city:               row['City'],
+          state:              row['State'],
+          postal_code:        row['Postal_Code'],
+          country_reference_id: row['Country_Code'],
+          lat:                row['Lat']&.to_f,
+          lng:                row['Lng']&.to_f,
+          scanned:            row['Scanned']&.strip&.downcase == 'none' ? 0 : 1,
+          easy_scan:          row['Easy_Scan']&.strip&.downcase == 'yes',
+          symbology:          row['Symbology']
+        )
+      end
+
+      redirect_to company_capture_interface_path(mid:params[:mid], filter_by: params[:filter_by], level: params[:level]),  notice: 'Locations imported successfully.'
+    rescue StandardError => e
+      redirect_to company_capture_interface_path(mid: params[:mid], filter_by: params[:filter_by], level: params[:level]), alert: "Error importing CSV: #{e.message}"
+    end
+  end
+
 
   def insert_company
     if company_params[:industry_category_type_id].blank? 
@@ -38,30 +71,33 @@ only: %i[ new edit update create destroy insert_company update_to_level_two upda
           @company = Domains::Companies::Company.new(company_params.except(:mid, :id))
           @company.name = params[:domains_companies_company][:new_company_name]
           mid = company_params[:mid]
+          cit_record = nil
           respond_to do |format|
              if @company.save
               
-              if company_params[:mid].blank?
-                mid = Domains::CroupierCore::CitRecord.generate_mid(@company.id)
-                Domains::CroupierCore::CitRecordHandler.update_or_create(nil, mid: mid, source: "Company Import",
-                                user_id: current_user.id, company_id: @company.id, brand: nil)
-              end
-              if @company.level_1_flag
-                cit_record.update(capture_status: 0)
-                Domains::CroupierCore::Operations::UpgradeCitLevel
-                  .call!(mid: mid, company_id: @company.id, user_id: current_user.id, level: 1)
-              end
-              format.html do
-                redirect_to company_capture_interface_path(mid: mid, filter_by: params[:domains_companies_company][:filter_by], level: params[:domains_companies_company][:level]), 
-                notice: "Company was successfully created."
-              end
-              format.json { render :show, status: :created, location: @company }
+                  if company_params[:mid].blank?
+                    mid = Domains::CroupierCore::CitRecord.generate_mid(@company.id)
+                    cit_record = Domains::CroupierCore::CitRecordHandler.update_or_create(nil, mid: mid, source: "Company Import",
+                                    user_id: current_user.id, company_id: @company.id, brand: nil)
+                  else
+                    cit_record = Domains::CroupierCore::CitRecord.find_by(mid: mid)
+                  end
+                  if @company.level_1_flag
+                    cit_record.update(capture_status: 0)
+                    Domains::CroupierCore::Operations::UpgradeCitLevel
+                      .call!(mid: mid, company_id: @company.id, user_id: current_user.id, level: 1)
+                  end
+                  format.html do
+                    redirect_to company_capture_interface_path(mid: mid, filter_by: params[:domains_companies_company][:filter_by], level: params[:domains_companies_company][:level]), 
+                    notice: "Company was successfully created."
+                  end
+                  format.json { render :show, status: :created, location: @company }
              else
-              msg = @company.errors.map { |er| "#{er.attribute} #{er.message}" }.join(", ")
-              format.html do
- redirect_to company_capture_interface_path(mid: mid, filter_by: params[:domains_companies_company][:filter_by], level: params[:domains_companies_company][:level]), alert: msg
-              end
-              format.json { render json: @company.errors, status: :unprocessable_entity }
+                  msg = @company.errors.map { |er| "#{er.attribute} #{er.message}" }.join(", ")
+                  format.html do
+                      redirect_to company_capture_interface_path(mid: mid, filter_by: params[:domains_companies_company][:filter_by], level: params[:domains_companies_company][:level]), alert: msg
+                  end
+                  format.json { render json: @company.errors, status: :unprocessable_entity }
              end
           end
     end
@@ -433,8 +469,10 @@ parent_attributes[:parent_company_id])
             :industry_category_type_id,  
             :black_owned, :female_owned, :established, :website, :diversity_report, 
             :diversity_score, :total_employees,
+            :easy_scan, :symbology,
             addresses_attributes: [:id, :address_type_id, :addressable_id, :address1, :address2, :city, 
-                                   :state, :postal_code, :country_reference_id, :_destroy])
+                                   :state, :postal_code, :country_reference_id, :site_location_name,
+                                   :easy_scan, :symbology, :scanned, :lat, :lng, :_destroy])
       prm[:established] = (Date.new(prm[:established].to_i) if prm[:established].present? && prm[:established].match?(/\A\d{4}\z/))
       prm
   end

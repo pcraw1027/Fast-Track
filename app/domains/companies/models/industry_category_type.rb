@@ -8,7 +8,7 @@ module Domains
             private
 
             def normalize_category_code
-            self.category_code = category_code&.to_s&.gsub(/\s+/, "")
+                self.category_code = category_code&.to_s&.gsub(/\s+/, "")
             end
 
         end

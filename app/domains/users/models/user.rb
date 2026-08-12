@@ -11,7 +11,7 @@ module Domains
                     :jwt_authenticatable, jwt_revocation_strategy: self
 
               validate :password_complexity
-              enum role: { user: 0, admin: 1 }
+              enum role: { user: 0, admin: 1, barcode_ninja: 2, barcode_ninja_manager: 3 }
               enum status: { active: 0, suspended: 1, deleted: 2 }
 
               scope :push_enabled, -> {

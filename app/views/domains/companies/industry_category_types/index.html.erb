@@ -5,6 +5,8 @@
       <th>Category Code</th>
       <th>Title</th>
       <th>NAICS Year</th>
+      <th>Linkedin Version</th>
+      
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -15,6 +17,7 @@
         <td><%= industry_category_type.category_code %></td>
         <td><%= industry_category_type.title %></td>
         <td><%= industry_category_type.naics_year %></td>
+        <td><%= industry_category_type.linkedin_version %></td>        
         <td><%= link_to 'Show', industry_category_type %></td>
         <td><%= link_to 'Edit', edit_domains_companies_industry_category_type_path(industry_category_type) %></td>
         <td><%= button_to 'Delete', industry_category_type, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-outline-danger btn-sm" %></td>

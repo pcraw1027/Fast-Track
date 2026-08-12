@@ -1,12 +1,19 @@
 
+
 <p>
   <strong>Address type:</strong>
-  <%= @address.address_type_id %>
+
+  <a href="/domains/contact_and_identity/address_types/<%= @address.address_type_id %>"><%= @address.address_type.name %> </a>
 </p>
 
 <p>
   <strong>Addressable:</strong>
   <%= @address.addressable_id %>
+</p>
+
+<p>
+  <strong>Site Location Name:</strong>
+  <%= @address.site_location_name %>
 </p>
 
 <p>
@@ -36,8 +43,36 @@
 
 <p>
   <strong>Country:</strong>
-  <%= @address.country_reference_id %>
+
+  <a href="/domains/contact_and_identity/country_references/<%= @address.country_reference_id %>"><%= @address.country_reference.country_code %> </a>
 </p>
+
+
+<p>
+  <strong>Easy scan:</strong>
+  <%= @address.easy_scan? ? 'Yes' : 'No' %>
+</p>
+
+<p>
+  <strong>Symbology:</strong>
+  <%= @address.symbology %>
+</p>
+
+<p>
+  <strong>Scanned status:</strong>
+  <%= @address.scanned&.to_s&.titleize %>
+</p>
+
+<p>
+  <strong>Latitude:</strong>
+  <%= @address.lat %>
+</p>
+
+<p>
+  <strong>Longitude:</strong>
+  <%= @address.lng %>
+</p>
+
 
 <p>
   <strong>Created at:</strong>

@@ -7,7 +7,12 @@
 
 <p>
   <strong>Is person address:</strong>
-  <%= @address_type.is_person_address %>
+  <%= @address_type.is_person_address? ? 'Yes' : 'No' %>
+</p>
+
+<p>
+  <strong>Scannable:</strong>
+  <%= @address_type.scannable? ? 'Yes' : 'No' %>
 </p>
 
 <p>

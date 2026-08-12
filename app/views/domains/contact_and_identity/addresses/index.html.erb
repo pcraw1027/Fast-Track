@@ -5,11 +5,15 @@
       <th>Address type</th>
       <th>Addressable</th>
       <th>Address1</th>
-      <th>Address2</th>
       <th>City</th>
-      <th>State</th>
+      <th>Site Location Name</th>
       <th>Postal code</th>
       <th>Country</th>
+      <th>Easy scan</th>
+      <th>Symbology</th>
+      <th>Scanned status</th>
+      <th>Latitude</th>
+      <th>Longitude</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -20,11 +24,15 @@
         <td><%= address.address_type_id %></td>
         <td><%= address.addressable_id %></td>
         <td><%= address.address1 %></td>
-        <td><%= address.address2 %></td>
         <td><%= address.city %></td>
-        <td><%= address.state %></td>
+        <td><%= address.site_location_name %></td>
         <td><%= address.postal_code %></td>
         <td><%= address.country_reference_id %></td>
+        <td><%= address.easy_scan? ? 'Yes' : 'No' %></td>
+        <td><%= address.symbology %></td>
+        <td><%= address.scanned&.to_s&.titleize %></td>
+        <td><%= address.lat %></td>
+        <td><%= address.lng %></td>
         <td><%= link_to 'Show', address %></td>
         <td><%= link_to 'Edit', edit_domains_contact_and_identity_address_path(address) %></td>
         <td><%= link_to 'Destroy', address, method: :delete, data: { confirm: 'Are you sure?' } %></td>

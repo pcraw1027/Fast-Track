@@ -58,6 +58,67 @@
   </div>
 
 
+
+
+
+<div class="row">
+     <div class = "col-md-4">
+        <div class = "form-group">
+        <%= f.label :easy_scan, class:"form-label" %>
+        <%= f.select :easy_scan, [['Yes', true], ['No', false]], { selected: false }, class: "form-control" %>
+        </div>
+
+    </div>
+
+ 
+    <div class = "col-md-4">
+        <div class = "form-group">
+            <%= f.label :symbology, class:"form-label" %>
+      <%= f.select :symbology, 
+        Domains::CroupierCore::Operations::BarcodeInterface::SUPPORTED_SYMBOLOGIES.map { |key, label| [label, key] }, 
+        {}, 
+        class: "form-control" %>
+        </div>
+    </div>
+
+    <div class = "col-md-4">
+        <div class = "form-group">
+            <%= f.label :scanned, class:"form-label" %>
+                <%= f.select :scanned, Domains::ContactAndIdentity::Address.scanneds.keys.map { |k| [k.titleize, k] }, {}, class: "form-control" %>
+        </div>
+    </div>
+
+  </div>
+
+
+
+
+
+  <div class="row">
+
+  <div class = "col-md-4">
+        <div class = "form-group">
+            <%= f.label :site_location_name, class:"form-label" %>
+            <%= f.text_field :site_location_name, class:"form-control" %>
+        </div>
+    </div>
+  
+    <div class = "col-md-4">
+        <div class = "form-group">
+            <%= f.label :lat, class:"form-label" %>
+            <%= f.number_field :lat, step: "0.000001", class: "form-control", placeholder: "e.g. 37.774929" %>
+        </div>
+    </div>
+    <div class = "col-md-4">
+        <div class = "form-group">
+            <%= f.label :lng, class:"form-label" %>
+            <%= f.number_field :lng, step: "0.000001", class: "form-control", placeholder: "e.g. -122.419416" %>
+        </div>
+    </div>
+
+  </div>
+
+  
   <i class="fas fa-trash" style="color: #ff0000;"></i> <%= link_to_remove_association "remove address", f, class: "btn btn-outline-danger btn-sm" %>
 <br/><br/>
 </div>

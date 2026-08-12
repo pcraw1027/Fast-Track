@@ -5,11 +5,11 @@ module Domains
 
         attr_accessor :mid, :photo, :email, :phone, :contact_name, :new_company_name, :company_id, :level, :filter_by, :capture_status
 
-        belongs_to :industry_category_type, optional: true
+        belongs_to :industry_category_type, class_name: "Domains::Companies::IndustryCategoryType", optional: true
         mount_uploader :logo, Uploaders::LogoUploader
-        has_many :parent_relationships, foreign_key: :child_company_id, class_name: "Domains::Companies::CompanyRelationship"
+        has_many :parent_relationships, foreign_key: :child_company_id, class_name: "Domains::Companies::CompanyRelationship", dependent: :destroy
         has_many :parent_companies, through: :parent_relationships
-        has_many :child_relationships, foreign_key: :parent_company_id, class_name: "Domains::Companies::CompanyRelationship"
+        has_many :child_relationships, foreign_key: :parent_company_id, class_name: "Domains::Companies::CompanyRelationship", dependent: :destroy
         has_many :child_companies, through: :child_relationships
         has_many :company_contacts, class_name: "Domains::Companies::CompanyContact", dependent: :destroy
         has_many :company_ethnicity_stats, class_name: "Domains::Companies::CompanyEthnicityStat", dependent: :destroy

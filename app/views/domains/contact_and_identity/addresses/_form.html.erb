@@ -11,45 +11,80 @@
     </div>
   <% end %>
 
-  <div class="field">
+  <div class="field form-group">
     <%= form.label :address_type_id %>
     <%= form.text_field :address_type_id %>
   </div>
 
-  <div class="field">
+  <div class="field form-group">
     <%= form.label :addressable_id %>
     <%= form.text_field :addressable_id %>
   </div>
 
-  <div class="field">
+  <div class="field form-group">
     <%= form.label :address1 %>
     <%= form.text_field :address1 %>
   </div>
 
-  <div class="field">
+  <div class="field form-group">
+    <%= form.label :site_location_name %>
+    <%= form.text_field :site_location_name %>
+  </div>
+
+  
+
+  <div class="field form-group">
     <%= form.label :address2 %>
     <%= form.text_field :address2 %>
   </div>
 
-  <div class="field">
+  <div class="field form-group">
     <%= form.label :city %>
     <%= form.text_field :city %>
   </div>
 
-  <div class="field">
+  <div class="field form-group">
     <%= form.label :state %>
     <%= form.text_field :state %>
   </div>
 
-  <div class="field">
+  <div class="field form-group">
     <%= form.label :postal_code %>
     <%= form.text_field :postal_code %>
   </div>
 
-  <div class="field">
+  <div class="field form-group">
     <%= form.label :country %>
     <%= form.text_field :country %>
   </div>
+
+  <div class = "form-group field">
+      <%= form.label :easy_scan %>
+      <%= form.select :easy_scan, [['Yes', true], ['No', false]], { selected: false }, class: "form-control" %>
+    </div>
+
+    <div class="form-group field">
+      <%= form.label :symbology %><br>
+      <%= form.select :symbology, 
+        Domains::CroupierCore::Operations::BarcodeInterface::SUPPORTED_SYMBOLOGIES.map { |key, label| [label, key] }, 
+        {}, 
+        class: "form-control" %>
+  </div>
+
+  <div class="field form-group">
+    <%= form.label :scanned %>
+    <%= form.select :scanned, ContactAndIdentity::Addresses.scanned.keys.map { |k| [k.titleize, k] }, {}, class: "form-control" %>
+  </div>
+
+  <div class="field form-group">
+  <%= form.label :lat, "Latitude" %>
+  <%= form.number_field :lat, step: "0.000001", class: "form-control", placeholder: "e.g. 37.774929" %>
+</div>
+
+<div class="field form-group">
+  <%= form.label :lng, "Longitude" %>
+  <%= form.number_field :lng, step: "0.000001", class: "form-control", placeholder: "e.g. -122.419416" %>
+</div>
 
   <div class="actions">
     <%= form.submit %>

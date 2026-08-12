@@ -70,6 +70,11 @@ class Uploaders::MediaUploader < CarrierWave::Uploader::Base
     MiniMagick
   end
 
+  def default_url(*args)
+    # Returns a fallback asset from app/assets/images/
+    ActionController::Base.helpers.asset_path("fallback/" + [version_name, "logo.jpg"].compact.join('_'))
+  end
+
 end
 
 

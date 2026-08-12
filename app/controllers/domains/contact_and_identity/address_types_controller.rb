@@ -68,6 +68,6 @@ class Domains::ContactAndIdentity::AddressTypesController < ApplicationControlle
 
     # Only allow a list of trusted parameters through.
     def address_type_params
-      params.require(:domains_contact_and_identity_address_type).permit(:name, :is_person_address)
+      params.require(:domains_contact_and_identity_address_type).permit(:name, :is_person_address, :scannable)
     end
 end

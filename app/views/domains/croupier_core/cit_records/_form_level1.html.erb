@@ -76,7 +76,7 @@
 
     <div class = "form-group col-md-8">
       <%= form.label :sector, "Display Industry Category" %>
-      <%= form.text_field :sector, class: "form-control"  %>
+      <%= form.text_field :sector, class: "form-control", readonly: true  %>
     </div>
 
     <div class="form-group col-md-4">
@@ -88,6 +88,22 @@
             value: form.object.established&.year %>
     </div>
 
+  </div>
+
+  <div class="form-row">
+    
+
+    <div class = "form-group col-md-8">
+      <%= form.label :easy_scan %>
+      <%= form.select :easy_scan, [['Yes', true], ['No', false]], { selected: false }, class: "form-control" %>
+    </div>
+
+    <div class="form-group col-md-4">
+      <%= form.label :symbology %><br>
+      <%= form.select :symbology, 
+        Domains::CroupierCore::Operations::BarcodeInterface::SUPPORTED_SYMBOLOGIES.map { |key, label| [label, key] }, 
+        {}, 
+        class: "form-control" %>
   </div>
 
 

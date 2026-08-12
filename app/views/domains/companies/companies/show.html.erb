@@ -1,7 +1,7 @@
 <div class="jumbotron">
   <div class="row">
     <div class="col">
-      <h1 class="display-4">
+      <h3 class="display-4">
         <%= @company.name %>
       </h3>
   
@@ -59,6 +59,17 @@
       <p>
         <strong>Diversity report:</strong>
         <%= link_to @company.diversity_report %>
+      </p>
+
+      <p>
+        <strong>Easy scan:</strong>
+        <%= @company.easy_scan? ? 'Yes' : 'No' %>
+      </p>
+
+
+      <p>
+        <strong>Symbology:</strong>
+        <%= @company.symbology %>
       </p>
 
         <p>
