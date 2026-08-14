@@ -70,6 +70,7 @@ class Domains::Companies::CompaniesController < ApplicationController
     else
           @company = Domains::Companies::Company.new(company_params.except(:mid, :id))
           @company.name = params[:domains_companies_company][:new_company_name]
+          @company.sector = mapped_industry_sector
           mid = company_params[:mid]
           cit_record = nil
           respond_to do |format|
@@ -289,6 +290,8 @@ filter_by: params[:filter_by]))
     company_id = params[:domains_companies_company][:company_id].presence || params[:domains_companies_company][:id]
     company = Domains::Companies::Company.find(company_id)
 
+    company.sector = mapped_industry_sector
+
     respond_to do |format|
       
         company.update!(company_params.except(:mid))
@@ -329,6 +332,20 @@ alert: e.message and return
         format.json { render json: company.errors, status: :unprocessable_entity and return }
       
     end
+  end
+
+
+  def mapped_industry_sector
+    from_id = company_params[:industry_category_type_id].presence
+    return "" unless from_id
+
+    industry_category_type = Domains::Companies::IndustryCategoryType.find_by(
+      id: Domains::Companies::IndustryCategoryTypeMapping
+            .where(category_code_type_from_id: from_id)
+            .select(:category_code_type_to_id)
+    )
+
+    industry_category_type&.title || ""
   end
 
 
