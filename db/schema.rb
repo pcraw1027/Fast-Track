@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_08_02_143933) do
+ActiveRecord::Schema.define(version: 2026_08_21_095853) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -309,7 +309,9 @@ ActiveRecord::Schema.define(version: 2026_08_02_143933) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "linkedin_version"
-    t.index ["category_code"], name: "index_industry_category_types_on_category_code", unique: true
+    t.index ["category_code", "linkedin_version"], name: "idx_ind_cat_types_unique_code_and_linkedin_ver", unique: true, where: "(linkedin_version IS NOT NULL)"
+    t.index ["category_code", "naics_year"], name: "idx_ind_cat_types_unique_code_and_year", unique: true, where: "(naics_year IS NOT NULL)"
+    t.index ["category_code"], name: "index_industry_category_types_on_category_code"
   end
 
   create_table "invitations", force: :cascade do |t|

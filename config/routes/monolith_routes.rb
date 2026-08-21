@@ -106,6 +106,8 @@ module MonolithRoutes
                 collection do
                   post :upload_linkedin_v_data
                   post :upload_linkedin_mappings
+                  post :upload_cat_type_data
+                  post :upload_2022_mappings
                 end
               end
 

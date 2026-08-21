@@ -226,7 +226,6 @@ def search
 end
 
 
-
   def new
     @company = Domains::Companies::Company.new
   end
@@ -339,13 +338,21 @@ alert: e.message and return
     from_id = company_params[:industry_category_type_id].presence
     return "" unless from_id
 
-    industry_category_type = Domains::Companies::IndustryCategoryType.find_by(
-      id: Domains::Companies::IndustryCategoryTypeMapping
-            .where(category_code_type_from_id: from_id)
-            .select(:category_code_type_to_id)
-    )
+    mapping = Domains::Companies::IndustryCategoryTypeMapping.find_by(category_code_type_from_id: from_id)
+    return "" unless mapping
 
-    industry_category_type&.title || ""
+    target_id = case mapping.mapping_type
+                when 1
+                  mapping.category_code_type_to_id
+                when 0
+                  Domains::Companies::IndustryCategoryTypeMapping
+                    .where(category_code_type_from_id: mapping.category_code_type_to_id, mapping_type: 1)
+                    .select(:category_code_type_to_id)
+                end
+
+    return "" unless target_id
+
+    Domains::Companies::IndustryCategoryType.find_by(id: target_id)&.title || ""
   end
 
 

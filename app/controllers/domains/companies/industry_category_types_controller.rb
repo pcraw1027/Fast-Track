@@ -16,6 +16,48 @@ class Domains::Companies::IndustryCategoryTypesController < ApplicationControlle
   def show
   end
 
+  
+  def upload_cat_type_data
+    file = params[:file]
+
+    if file.blank? || !file.original_filename.end_with?('.csv')
+      return redirect_to domains_companies_industry_category_types_path, alert: "Please upload a valid CSV file."
+    end
+
+    imported_count = 0
+
+    ActiveRecord::Base.transaction do
+      CSV.foreach(file.path, headers: true, header_converters: :symbol) do |row|
+        code = row[:naics_code]&.strip
+        year = row[:year]&.strip
+        title = row[:label]&.strip
+        linkedin_ver = row[:linkedin_version]&.strip
+
+        next if code.blank? || title.blank?
+
+        # Find or create based ONLY on the uniquely scoped attributes
+        category_type = Domains::Companies::IndustryCategoryType.find_or_initialize_by(
+          category_code: code,
+          naics_year: year.presence,
+          linkedin_version: linkedin_ver.presence
+        )
+
+        # Assign or update the title attribute
+        category_type.title = title
+        category_type.save!
+
+        imported_count += 1
+      end
+    end
+
+    redirect_to domains_companies_industry_category_type_mappings_path, 
+                notice: "Successfully imported #{imported_count} valid category type data."
+  rescue ActiveRecord::RecordInvalid, CSV::MalformedCSVError => e
+    redirect_to domains_companies_industry_category_type_mappings_path, 
+                alert: "Import failed: #{e.message}"
+  end
+
+
   def upload_linkedin_v_data
     file = params[:file]
 
@@ -27,20 +69,67 @@ class Domains::Companies::IndustryCategoryTypesController < ApplicationControlle
 
     ActiveRecord::Base.transaction do
       CSV.foreach(file.path, headers: true, header_converters: :symbol) do |row|
-        next if row[:industry_id].blank? || row[:label].blank?
-        # row[:category_code_type_id_from] and row[:category_code_type_id_to]
-        Domains::Companies::IndustryCategoryType.find_or_create_by!(
-          category_code: row[:industry_id]&.strip,
-          title: row[:label]&.strip,
+        code  = row[:industry_id].to_s.strip.presence
+        title = row[:label].to_s.strip.presence
+
+        next if code.blank? || title.blank?
+
+        # Find or initialize by unique lookup keys ONLY
+        category_type = Domains::Companies::IndustryCategoryType.find_or_initialize_by(
+          category_code: code,
           linkedin_version: "V2"
         )
+        category_type.title = title
+        category_type.save!
+
         imported_count += 1
       end
     end
 
-    redirect_to domains_companies_industry_category_type_mappings_path, notice: "Successfully imported #{imported_count} valid linkedin category data."
+    redirect_to domains_companies_industry_category_type_mappings_path, 
+                notice: "Successfully imported #{imported_count} valid linkedin category data."
   rescue ActiveRecord::RecordInvalid, CSV::MalformedCSVError => e
-    redirect_to domains_companies_industry_category_type_mappings_path, alert: "Import failed: #{e.message}"
+    redirect_to domains_companies_industry_category_type_mappings_path, 
+                alert: "Import failed: #{e.message}"
+  end
+
+
+  def upload_2022_mappings
+    file = params[:file]
+
+    if file.blank? || !file.original_filename.end_with?('.csv')
+      return redirect_to domains_companies_industry_category_types_path, alert: "Please upload a valid CSV file."
+    end
+
+    imported_count = 0
+
+    ActiveRecord::Base.transaction do
+      CSV.foreach(file.path, headers: true, header_converters: :symbol) do |row|
+        # header_converters: :symbol converts headers to downcased symbols
+        code_2017 = (row[:"2017_naics_code"] || row[:"2017_naics_code"]).to_s.strip.presence
+        code_2022 = (row[:"2022_naics_code"] || row[:"2022_naics_code"]).to_s.strip.presence
+
+        next if code_2017.blank? || code_2022.blank?
+
+        seventeen = Domains::Companies::IndustryCategoryType.find_by(category_code: code_2017, naics_year: 2017)
+        twentytwo = Domains::Companies::IndustryCategoryType.find_by(category_code: code_2022, naics_year: 2022)
+
+        if seventeen && twentytwo
+          Domains::Companies::IndustryCategoryTypeMapping.find_or_create_by!(
+            category_code_type_from_id: twentytwo.id,
+            category_code_type_to_id: seventeen.id,
+            mapping_type: 0
+          )
+          imported_count += 1
+        end
+      end
+    end
+
+    redirect_to domains_companies_industry_category_type_mappings_path, 
+                notice: "Successfully imported #{imported_count} valid mappings."
+  rescue ActiveRecord::RecordInvalid, CSV::MalformedCSVError => e
+    redirect_to domains_companies_industry_category_type_mappings_path, 
+                alert: "Import failed: #{e.message}"
   end
 
 
@@ -55,11 +144,15 @@ class Domains::Companies::IndustryCategoryTypesController < ApplicationControlle
 
     ActiveRecord::Base.transaction do
       CSV.foreach(file.path, headers: true, header_converters: :symbol) do |row|
-        next if row[:category_code_type_id_from].blank? || row[:category_code_type_id_to].blank?
-        
-        ct =  Domains::Companies::IndustryCategoryType.find_by(category_code: row[:category_code_type_id_from]&.strip)
-        lt = Domains::Companies::IndustryCategoryType.find_by(category_code: row[:category_code_type_id_to]&.strip)
-        if ct && lt 
+        code_from = row[:category_code_type_id_from].to_s.strip.presence
+        code_to   = row[:category_code_type_id_to].to_s.strip.presence
+
+        next if code_from.blank? || code_to.blank?
+
+        ct = Domains::Companies::IndustryCategoryType.find_by(category_code: code_from, naics_year: 2017)
+        lt = Domains::Companies::IndustryCategoryType.find_by(category_code: code_to, linkedin_version: "V2")
+
+        if ct && lt
           Domains::Companies::IndustryCategoryTypeMapping.find_or_create_by!(
             category_code_type_from_id: ct.id,
             category_code_type_to_id: lt.id,
@@ -70,9 +163,11 @@ class Domains::Companies::IndustryCategoryTypesController < ApplicationControlle
       end
     end
 
-    redirect_to domains_companies_industry_category_type_mappings_path, notice: "Successfully imported #{imported_count} valid mappings."
+    redirect_to domains_companies_industry_category_type_mappings_path, 
+                notice: "Successfully imported #{imported_count} valid mappings."
   rescue ActiveRecord::RecordInvalid, CSV::MalformedCSVError => e
-    redirect_to domains_companies_industry_category_type_mappings_path, alert: "Import failed: #{e.message}"
+    redirect_to domains_companies_industry_category_type_mappings_path, 
+                alert: "Import failed: #{e.message}"
   end
 
   def search

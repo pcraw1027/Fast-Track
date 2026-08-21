@@ -1,18 +1,19 @@
 <h3>Industry Category Type Mappings</h3>
 
   <div class="row">
-      <div class="card mb-6">
-        <div class="card-body">
-          <h5 class="card-title">Import Category Code</h5>
 
-          <%= form_with url: upload_linkedin_v_data_domains_companies_industry_category_types_path, multipart: true, local: true do |f| %>
+  <div class="card mb-6">
+        <div class="card-body">
+          <h5 class="card-title">Import 2017/2022 Industry Category Type</h5>
+
+          <%= form_with url: upload_cat_type_data_domains_companies_industry_category_types_path, multipart: true, local: true do |f| %>
             <div class="row">
-            <div class="form-group mb-3">
+            <div class="form-group mb-6">
               <%= f.label :file, "Select CSV File", class: "form-label" %>
               <%= f.file_field :file, accept: ".csv", class: "form-control-file", required: true %>
             </div>
 
-            <div class="form-group mb-3">
+            <div class="form-group mb-6">
               <%= f.submit "Import", class: "btn btn-primary" %>
             </div>
             
@@ -23,16 +24,57 @@
 
       <div class="card mb-6">
         <div class="card-body">
-          <h5 class="card-title">Import Category Code Mappings</h5>
+          <h5 class="card-title">Import 2022 to 2017 Mappings</h5>
 
-          <%= form_with url: upload_linkedin_mappings_domains_companies_industry_category_types_path, multipart: true, local: true do |f| %>
-             <div class="row">
-            <div class="form-group mb-3">
+          <%= form_with url: upload_2022_mappings_domains_companies_industry_category_types_path, multipart: true, local: true do |f| %>
+            <div class="row">
+            <div class="form-group mb-6">
               <%= f.label :file, "Select CSV File", class: "form-label" %>
               <%= f.file_field :file, accept: ".csv", class: "form-control-file", required: true %>
             </div>
 
-            <div class="form-group mb-3">
+            <div class="form-group mb-6">
+              <%= f.submit "Import", class: "btn btn-primary" %>
+            </div>
+            
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+
+      <div class="card mb-6">
+        <div class="card-body">
+          <h5 class="card-title">Import Linkedin V2 Category Type</h5>
+
+          <%= form_with url: upload_linkedin_v_data_domains_companies_industry_category_types_path, multipart: true, local: true do |f| %>
+            <div class="row">
+            <div class="form-group mb-6">
+              <%= f.label :file, "Select CSV File", class: "form-label" %>
+              <%= f.file_field :file, accept: ".csv", class: "form-control-file", required: true %>
+            </div>
+
+            <div class="form-group mb-6">
+              <%= f.submit "Import", class: "btn btn-primary" %>
+            </div>
+            
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="card mb-6">
+        <div class="card-body">
+          <h5 class="card-title">Import 2017 to V2 Mappings</h5>
+
+          <%= form_with url: upload_linkedin_mappings_domains_companies_industry_category_types_path, multipart: true, local: true do |f| %>
+             <div class="row">
+            <div class="form-group mb-6">
+              <%= f.label :file, "Select CSV File", class: "form-label" %>
+              <%= f.file_field :file, accept: ".csv", class: "form-control-file", required: true %>
+            </div>
+
+            <div class="form-group mb-6">
               <%= f.submit "Import", class: "btn btn-primary" %>
             </div>
             

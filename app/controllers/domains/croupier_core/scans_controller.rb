@@ -28,14 +28,14 @@ class Domains::CroupierCore::ScansController < ApplicationController
     if finder_claims.payload
       @scan = Domains::CroupierCore::Scan.create(user_id: current_user.id, product_id: finder_claims.payload.id, 
       scan_date: Time.zone.today, barcode: scan_params[:barcode], product_exists: true,
-      scan_mode: scan_params[:scan_mode],
+      scan_mode: scan_params[:scan_mode].to_i == 1 ? 1 : 0,
       lat: scan_params[:lat], lng: scan_params[:lng], address: scan_params[:address])
       Domains::CroupierCore::Operations::IncrPitCitProdCount.call!(barcode: scan_params[:barcode])
     else
 
       @scan = Domains::CroupierCore::Scan.create(user_id: current_user.id, 
       scan_date: Time.zone.today, barcode: scan_params[:barcode], product_exists: false,
-      scan_mode: scan_params[:scan_mode], lat: scan_params[:lat], lng: scan_params[:lng], 
+      scan_mode: scan_params[:scan_mode].to_i == 1 ? 1 : 0, lat: scan_params[:lat], lng: scan_params[:lng], 
       address: scan_params[:address])
         
       if @scan.id

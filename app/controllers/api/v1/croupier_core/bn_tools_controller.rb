@@ -12,14 +12,14 @@ class Api::V1::CroupierCore::BnToolsController < Api::V1::BaseController
   end
 
   def nearby_addresses
-    page = params[:page] || 1
-    per_page = params[:per_page] || 5
+    page = params[:page].to_i || 1
+    per_page = params[:per_page].to_i || 5
     per_page = 20 if per_page.to_i > 20
     nearest_locations = Domains::ContactAndIdentity::Address.closest_to( 
                                     lat: @lat, 
                                     lng: @lng, 
                                     page: page, 
-                                    per_page: 5
+                                    per_page: per_page
                                 )
     render json: nearest_locations, status: :ok
   end
