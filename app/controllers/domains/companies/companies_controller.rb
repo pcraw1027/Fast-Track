@@ -33,23 +33,30 @@ class Domains::Companies::CompaniesController < ApplicationController
 
     begin
       CSV.foreach(file.path, headers: true) do |row|
-        Domains::ContactAndIdentity::Address.create!(
-          address_type_id:    row['Address_Type_Id']&.to_i,
-          addressable_id:     row['Adressable_Id']&.to_i,
-          addressable_type: "Domains::Companies::Company",
-          site_location_name: row['Site_Location_Name'],
-          address1:           row['Adress1'],
-          address2:           row['Address2'],
-          city:               row['City'],
-          state:              row['State'],
-          postal_code:        row['Postal_Code'],
-          country_reference_id: row['Country_Code'],
-          lat:                row['Lat']&.to_f,
-          lng:                row['Lng']&.to_f,
-          scanned:            row['Scanned']&.strip&.downcase == 'none' ? 0 : 1,
-          easy_scan:          row['Easy_Scan']&.strip&.downcase == 'yes',
-          symbology:          row['Symbology']
+        # Find or initialize using ONLY the unique composite attributes
+        address = Domains::ContactAndIdentity::Address.find_or_initialize_by(
+          address_type_id: row['Address_Type_Id']&.to_i,
+          addressable_id:  row['Adressable_Id']&.to_i,
+          address1:        row['Adress1']&.strip.presence,
+          address2:        row['Address2']&.strip.presence,
+          postal_code:     row['Postal_Code']&.to_s&.strip.presence
         )
+
+        # Assign or update mutable attributes
+        address.assign_attributes(
+          addressable_type:     "Domains::Companies::Company",
+          site_location_name:   row['Site_Location_Name']&.strip,
+          city:                 row['City']&.strip,
+          state:                row['State']&.strip,
+          country_reference_id: row['Country_Code']&.strip,
+          lat:                  row['Lat']&.to_f,
+          lng:                  row['Lng']&.to_f,
+          scanned:              row['Scanned']&.strip&.downcase == 'none' ? 0 : 1,
+          easy_scan:            row['Easy_Scan']&.strip&.downcase == 'yes',
+          symbology:            row['Symbology']&.strip
+        )
+
+        address.save!
       end
 
       redirect_to company_capture_interface_path(mid:params[:mid], filter_by: params[:filter_by], level: params[:level]),  notice: 'Locations imported successfully.'
@@ -57,7 +64,6 @@ class Domains::Companies::CompaniesController < ApplicationController
       redirect_to company_capture_interface_path(mid: params[:mid], filter_by: params[:filter_by], level: params[:level]), alert: "Error importing CSV: #{e.message}"
     end
   end
-
 
   def insert_company
     if company_params[:industry_category_type_id].blank? 
@@ -335,7 +341,7 @@ alert: e.message and return
 
 
   def mapped_industry_sector
-    from_id = company_params[:industry_category_type_id].presence
+    from_id = company_params[:industry_category_type_id]
     return "" unless from_id
 
     mapping = Domains::Companies::IndustryCategoryTypeMapping.find_by(category_code_type_from_id: from_id)

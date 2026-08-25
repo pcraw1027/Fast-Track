@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_08_21_095853) do
+ActiveRecord::Schema.define(version: 2026_08_25_163207) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,6 +43,7 @@ ActiveRecord::Schema.define(version: 2026_08_21_095853) do
     t.decimal "lat", precision: 10, scale: 6
     t.decimal "lng", precision: 10, scale: 6
     t.geography "lonlat", limit: {srid: 4326, type: "st_point", geographic: true}
+    t.index ["address_type_id", "addressable_id", "address1", "address2", "postal_code"], name: "idx_addresses_unique_composite_full", unique: true
     t.index ["address_type_id"], name: "index_addresses_on_address_type_id"
     t.index ["addressable_type", "addressable_id"], name: "index_addresses_on_addressable"
     t.index ["addressable_type", "addressable_id"], name: "index_addresses_on_addressable_type_and_addressable_id"

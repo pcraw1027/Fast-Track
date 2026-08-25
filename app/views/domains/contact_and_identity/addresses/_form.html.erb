@@ -73,7 +73,7 @@
 
   <div class="field form-group">
     <%= form.label :scanned %>
-    <%= form.select :scanned, ContactAndIdentity::Addresses.scanned.keys.map { |k| [k.titleize, k] }, {}, class: "form-control" %>
+    <%= form.select :scanned, Domains::ContactAndIdentity::Address.scanneds.keys.map { |k| [k.titleize, k] }, {}, class: "form-control" %>
   </div>
 
   <div class="field form-group">
