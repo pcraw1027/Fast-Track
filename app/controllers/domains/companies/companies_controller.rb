@@ -295,71 +295,106 @@ filter_by: params[:filter_by]))
     company_id = params[:domains_companies_company][:company_id].presence || params[:domains_companies_company][:id]
     company = Domains::Companies::Company.find(company_id)
 
-    company.sector = mapped_industry_sector
-
     respond_to do |format|
-      
-        company.update!(company_params.except(:mid))
-         if company_params[:mid].blank?
+      company.update!(company_params.except(:mid).merge(sector: mapped_industry_sector))
 
-            sys_gen_mid = Domains::CroupierCore::CitRecord.generate_mid(company.id)
+      if company_params[:mid].blank?
+        sys_gen_mid = Domains::CroupierCore::CitRecord.generate_mid(company.id)
 
-            cit_record = Domains::CroupierCore::CitRecordHandler.update_or_create(nil, mid: sys_gen_mid, source: "Company Import", 
-                            user_id: current_user.id, company_id: company.id, brand: nil)
-            if company.level_1_flag
-              cit_record.update(capture_status: 0) 
-              Domains::CroupierCore::Operations::UpgradeCitLevel.call!(mid: sys_gen_mid, company_id: company.id, 
-                            user_id: current_user.id, level: 1) 
-            end
-
-         else
-            cit_record = Domains::CroupierCore::CitRecord.find_by(mid: company_params[:mid])
-            if company.level_1_flag
-              cit_record.update(capture_status: 0) if cit_record
-              Domains::CroupierCore::Operations::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: company.id, 
-              user_id: current_user.id, level: 1)
-            end
-         end
-         
-         
-                
-        
-        format.html do
- redirect_to edit_domains_companies_company_path(id: company.id, level: params[:domains_companies_company][:level], filter_by: params[:domains_companies_company][:filter_by]), 
-notice: "company was successfully updated." and return
+        cit_record = Domains::CroupierCore::CitRecordHandler.update_or_create(nil, mid: sys_gen_mid, source: "Company Import",
+                        user_id: current_user.id, company_id: company.id, brand: nil)
+        if company.level_1_flag
+          cit_record.update(capture_status: 0)
+          Domains::CroupierCore::Operations::UpgradeCitLevel.call!(mid: sys_gen_mid, company_id: company.id,
+                        user_id: current_user.id, level: 1)
         end
-        format.json { render json: company, status: :ok and return }
+      else
+        cit_record = Domains::CroupierCore::CitRecord.find_by(mid: company_params[:mid])
+        if company.level_1_flag
+          cit_record.update(capture_status: 0) if cit_record
+          Domains::CroupierCore::Operations::UpgradeCitLevel.call!(mid: company_params[:mid], company_id: company.id,
+          user_id: current_user.id, level: 1)
+        end
+      end
+
+      format.html do
+        redirect_to edit_domains_companies_company_path(id: company.id, level: params[:domains_companies_company][:level], filter_by: params[:domains_companies_company][:filter_by]),
+        notice: "company was successfully updated." and return
+      end
+      format.json { render json: company, status: :ok and return }
     rescue StandardError => e
-        format.html do
- redirect_to company_capture_interface_path(mid: company_params[:mid], level: params[:domains_companies_company][:level], filter_by: params[:domains_companies_company][:filter_by]), 
-alert: e.message and return
-        end
-        format.json { render json: company.errors, status: :unprocessable_entity and return }
-      
+      format.html do
+        redirect_to company_capture_interface_path(mid: company_params[:mid], level: params[:domains_companies_company][:level], filter_by: params[:domains_companies_company][:filter_by]),
+        alert: e.message and return
+      end
+      format.json { render json: company.errors, status: :unprocessable_entity and return }
     end
   end
 
 
-  def mapped_industry_sector
-    from_id = company_params[:industry_category_type_id]
-    return "" unless from_id
+def mapped_industry_sector
+  from_id = company_params[:industry_category_type_id]
+  log_step("from_id", from_id, class: from_id.class)
+  return "" if from_id.blank?
 
-    mapping = Domains::Companies::IndustryCategoryTypeMapping.find_by(category_code_type_from_id: from_id)
-    return "" unless mapping
+  from_category = Domains::Companies::IndustryCategoryType.find_by(id: from_id)
+  log_step("from_category", from_category&.attributes)
+  return "" unless from_category
 
-    target_id = case mapping.mapping_type
-                when 1
-                  mapping.category_code_type_to_id
-                when 0
-                  Domains::Companies::IndustryCategoryTypeMapping
-                    .where(category_code_type_from_id: mapping.category_code_type_to_id, mapping_type: 1)
-                    .select(:category_code_type_to_id)
-                end
+  raw_year = from_category.naics_year
+  log_step("naics_year raw", raw_year, class: raw_year.class, to_i: raw_year.to_i)
 
-    return "" unless target_id
+  mapping_type =
+    case raw_year.to_i
+    when 2017 then :naics_2017_to_v2
+    when 2022 then :naics_2022_to_2017
+    else
+      log_step("UNSUPPORTED naics_year", raw_year)
+      return ""
+    end
+  log_step("mapping_type selected", mapping_type)
 
-    Domains::Companies::IndustryCategoryType.find_by(id: target_id)&.title || ""
-  end
+  target_id =
+    if mapping_type == :naics_2017_to_v2
+      scope = Domains::Companies::IndustryCategoryTypeMapping
+                .where(category_code_type_from_id: from_id, mapping_type: :naics_2017_to_v2)
+      log_step("direct query SQL", scope.order(:id).to_sql)
+      log_step("direct query row count", scope.count)
+      log_step("direct query matching rows", scope.pluck(:id, :category_code_type_from_id, :category_code_type_to_id, :mapping_type))
+
+      scope.order(:id).pick(:category_code_type_to_id)
+    else
+      prev_scope = Domains::Companies::IndustryCategoryTypeMapping
+                     .where(category_code_type_from_id: from_id, mapping_type: :naics_2022_to_2017)
+      log_step("prev_ids query SQL", prev_scope.to_sql)
+      log_step("prev_ids matching rows", prev_scope.pluck(:id, :category_code_type_from_id, :category_code_type_to_id, :mapping_type))
+
+      prev_ids = prev_scope.distinct.pluck(:category_code_type_to_id)
+      log_step("prev_ids", prev_ids)
+
+      return "" if prev_ids.empty?
+
+      final_scope = Domains::Companies::IndustryCategoryTypeMapping
+                      .where(category_code_type_from_id: prev_ids, mapping_type: :naics_2017_to_v2)
+      log_step("final query SQL", final_scope.order(:id).to_sql)
+      log_step("final query matching rows", final_scope.pluck(:id, :category_code_type_from_id, :category_code_type_to_id, :mapping_type))
+
+      final_scope.order(:id).pick(:category_code_type_to_id)
+    end
+
+  log_step("target_id", target_id)
+  return "" if target_id.blank?
+
+  target_category = Domains::Companies::IndustryCategoryType.find_by(id: target_id)
+  log_step("target_category", target_category&.attributes)
+
+  target_category&.title&.to_s.to_s
+end
+
+
+def log_step(label, value, extra = {})
+  Rails.logger.info("[mapped_industry_sector] #{label}: #{value.inspect} #{extra.inspect unless extra.empty?}")
+end
 
 
 

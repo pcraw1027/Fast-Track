@@ -38,7 +38,7 @@ module Domains
 
         # Base scope filtered to 200 meters using spatial index
         base_scope = scannable.where(
-          "ST_DWithin(addresses.lonlat::geography, #{point_sql}::geography, 200)"
+          "ST_DWithin(addresses.lonlat::geography, #{point_sql}::geography, 800)"
         )
 
         records = base_scope
