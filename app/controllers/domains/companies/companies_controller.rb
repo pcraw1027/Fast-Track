@@ -332,69 +332,52 @@ filter_by: params[:filter_by]))
   end
 
 
-def mapped_industry_sector
-  from_id = company_params[:industry_category_type_id]
-  log_step("from_id", from_id, class: from_id.class)
-  return "" if from_id.blank?
+  def mapped_industry_sector
+    from_id = company_params[:industry_category_type_id]
+    return "" if from_id.blank?
 
-  from_category = Domains::Companies::IndustryCategoryType.find_by(id: from_id)
-  log_step("from_category", from_category&.attributes)
-  return "" unless from_category
+    from_category = Domains::Companies::IndustryCategoryType.find_by(id: from_id)
+    return "" unless from_category
 
-  raw_year = from_category.naics_year
-  log_step("naics_year raw", raw_year, class: raw_year.class, to_i: raw_year.to_i)
+    raw_year = from_category.naics_year
 
-  mapping_type =
-    case raw_year.to_i
-    when 2017 then :naics_2017_to_v2
-    when 2022 then :naics_2022_to_2017
-    else
-      log_step("UNSUPPORTED naics_year", raw_year)
-      return ""
-    end
-  log_step("mapping_type selected", mapping_type)
+    mapping_type =
+      case raw_year.to_i
+      when 2017 then :naics_2017_to_v2
+      when 2022 then :naics_2022_to_2017
+      else
+        return ""
+      end
 
-  target_id =
-    if mapping_type == :naics_2017_to_v2
-      scope = Domains::Companies::IndustryCategoryTypeMapping
-                .where(category_code_type_from_id: from_id, mapping_type: :naics_2017_to_v2)
-      log_step("direct query SQL", scope.order(:id).to_sql)
-      log_step("direct query row count", scope.count)
-      log_step("direct query matching rows", scope.pluck(:id, :category_code_type_from_id, :category_code_type_to_id, :mapping_type))
+    target_id =
+      if mapping_type == :naics_2017_to_v2
+        scope = Domains::Companies::IndustryCategoryTypeMapping
+                  .where(category_code_type_from_id: from_id, mapping_type: :naics_2017_to_v2)
 
-      scope.order(:id).pick(:category_code_type_to_id)
-    else
-      prev_scope = Domains::Companies::IndustryCategoryTypeMapping
-                     .where(category_code_type_from_id: from_id, mapping_type: :naics_2022_to_2017)
-      log_step("prev_ids query SQL", prev_scope.to_sql)
-      log_step("prev_ids matching rows", prev_scope.pluck(:id, :category_code_type_from_id, :category_code_type_to_id, :mapping_type))
+        scope.order(:id).pick(:category_code_type_to_id)
+      else
+        prev_scope = Domains::Companies::IndustryCategoryTypeMapping
+                      .where(category_code_type_from_id: from_id, mapping_type: :naics_2022_to_2017)
 
-      prev_ids = prev_scope.distinct.pluck(:category_code_type_to_id)
-      log_step("prev_ids", prev_ids)
+        prev_ids = prev_scope.distinct.pluck(:category_code_type_to_id)
 
-      return "" if prev_ids.empty?
+        return "" if prev_ids.empty?
 
-      final_scope = Domains::Companies::IndustryCategoryTypeMapping
-                      .where(category_code_type_from_id: prev_ids, mapping_type: :naics_2017_to_v2)
-      log_step("final query SQL", final_scope.order(:id).to_sql)
-      log_step("final query matching rows", final_scope.pluck(:id, :category_code_type_from_id, :category_code_type_to_id, :mapping_type))
+        final_scope = Domains::Companies::IndustryCategoryTypeMapping
+                        .where(category_code_type_from_id: prev_ids, mapping_type: :naics_2017_to_v2)
 
-      final_scope.order(:id).pick(:category_code_type_to_id)
-    end
+        final_scope.order(:id).pick(:category_code_type_to_id)
+      end
 
-  log_step("target_id", target_id)
-  return "" if target_id.blank?
+    return "" if target_id.blank?
 
-  target_category = Domains::Companies::IndustryCategoryType.find_by(id: target_id)
-  log_step("target_category", target_category&.attributes)
+    target_category = Domains::Companies::IndustryCategoryType.find_by(id: target_id)
 
-  target_category&.title&.to_s.to_s
-end
+    target_category&.title&.to_s.to_s
+  end
 
 
-def log_step(label, value, extra = {})
-  Rails.logger.info("[mapped_industry_sector] #{label}: #{value.inspect} #{extra.inspect unless extra.empty?}")
-end
+
 
 
 
