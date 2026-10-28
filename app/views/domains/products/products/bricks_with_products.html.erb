@@ -1,0 +1,74 @@
+<div class="bricks-container">
+  <h1>Bricks and Their Products</h1>
+
+  <% @bricks.each do |brick| %>
+    <section class="brick-group" style="margin-bottom: 2rem; border-bottom: 1px solid #ccc; padding-bottom: 1rem;">
+      <!-- Brick Code and Title -->
+      <h2>Brick: [<%= brick.code %>] <%= brick.title %></h2>
+
+      <% if brick.products.any? %>
+            <table class="table table-striped table-bordered table-hover table-sm container-fluid">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Company</th>
+                        <th>Name</th>
+                        <th>Images</th>
+                        <th>Barcode</th>
+                        <th>Size</th>
+                        <th>Segment</th>
+                        <th>Family</th>
+                        <th>Class</th>
+                        <th>Brick</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <% brick.products.each do |product| %>
+                    <tr>
+                        <td><%= product.company.name if product.company %></td>
+                        <td><%= product.name %></td>
+
+                    <td>
+                
+                        <% product.product_variants.each do |product_variant| %>
+
+                        
+                        <% product_variant.media.each do |media| %>
+                        
+                            <% if media.image? && media.file.present? %>
+                            <%= image_tag media.file.thumb.url, style: "width: 50px; height: 50px;" %>
+                            <% elsif media.video? && media.file.present? %>
+                            <video controls>
+                                <source src="<%= media.file.url %>" type="video/mp4">
+                            </video>
+                            <% elsif media.file.present? %>
+                            <%= link_to 'download file', media.file.url %>
+                            <% end %>
+                        
+                            <% end %>
+
+                    
+                        <% end %>
+
+                    </td>
+
+
+
+                        <td><%= product.product_variants.map(&:barcode).join(", ") %></td>
+                        <td><%= product.size %></td>
+                        <td><%= product.segment.title if product.segment%></td>
+                        <td><%= product.family.title if product.family %></td>
+                        <td><%= product.klass.title if product.klass %></td>
+                        <td><%= product.brick.title if product.brick %></td>
+                
+                </tr>
+                    <% end %>
+                </tbody>
+                </table>
+      <% else %>
+        <p>No products associated with this brick.</p>
+      <% end %>
+
+    </section>
+  <% end %>
+</div>

@@ -85,6 +85,7 @@ module MonolithRoutes
               resources :product_variants, only: [:edit, :update, :destroy]
               resources :products do 
                 put :update_to_level_two
+                get :bricks_with_products, on: :collection
               end
             end
 

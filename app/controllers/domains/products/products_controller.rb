@@ -27,6 +27,14 @@ class Domains::Products::ProductsController < ApplicationController
                 end
   end
 
+
+  # app/controllers/bricks_controller.rb (or your relevant controller)
+def bricks_with_products
+  @bricks = Domains::Classifications::Brick.joins(:products)
+    .includes(products: [ :company, :segment, :family, :klass, :brick, product_variants: :media ])
+    .distinct
+end
+
   def update_pit_status
     barcode = product_variant_params[:barcode]&.strip
     pit_record = Domains::CroupierCore::PitRecord.find_by(barcode: barcode)
