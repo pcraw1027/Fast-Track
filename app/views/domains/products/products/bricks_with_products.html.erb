@@ -71,4 +71,11 @@
 
     </section>
   <% end %>
+  <!-- will_paginate render helper -->
+  <div class="pagination-nav" style="margin-top: 2rem;">
+    <%= will_paginate @bricks, renderer: BootstrapPagination::Rails,
+      class: 'pagination justify-content-center' %>
+  </div>
+</div>
+
 </div>

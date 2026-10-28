@@ -29,11 +29,14 @@ class Domains::Products::ProductsController < ApplicationController
 
 
   # app/controllers/bricks_controller.rb (or your relevant controller)
-def bricks_with_products
-  @bricks = Domains::Classifications::Brick.joins(:products)
-    .includes(products: [ :company, :segment, :family, :klass, :brick, product_variants: :media ])
-    .distinct
-end
+  def bricks_with_products
+    @bricks = Domains::Classifications::Brick
+      .joins(:products)
+      .includes(products: [ :company, :segment, :family, :klass, :brick, product_variants: :media ])
+      .distinct
+      .order(id: :desc) # Ensures stable pagination order
+      .paginate(page: params[:page], per_page: 15)
+  end
 
   def update_pit_status
     barcode = product_variant_params[:barcode]&.strip
