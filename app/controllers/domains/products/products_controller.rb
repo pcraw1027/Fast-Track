@@ -33,6 +33,7 @@ class Domains::Products::ProductsController < ApplicationController
     @bricks = Domains::Classifications::Brick
       .joins(:products)
       .includes(products: [ :company, :segment, :family, :klass, :brick, product_variants: :media ])
+      .where(created_at: '2025-12-16 10:04:11 -0500'..'2026-03-19 13:07:23 -0400')
       .distinct
       .order(id: :desc) # Ensures stable pagination order
       .paginate(page: params[:page], per_page: 15)

@@ -28,8 +28,9 @@ module Domains
           bricks = bricks.where("bricks.title ILIKE ?", "%#{search_query}%") if search_query.present?
           bricks = bricks.includes(:klass)
                          .references(:klass)                                         
-                         .paginate(page: page, per_page: 15)
-                         .order("klasses.title ASC, bricks.title ASC")
+                         .paginate(page: page, per_page: 80)
+                         #.order("klasses.title ASC, bricks.title ASC")
+                         .order("bricks.created_at DESC")
           [klass, bricks]
         end
 
